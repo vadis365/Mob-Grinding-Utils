@@ -1,2 +1,2 @@
 # Mob-Grinding-Utils
-A mod that adds ways to farm mobs in fun ways
+A mod that adds fun ways to farm mobs.
