@@ -1,0 +1,16 @@
+{
+    "variants": {
+        "facing=down,powered=false": { "model": "mob_grinding_utils:blank" },
+        "facing=up,powered=false": { "model": "mob_grinding_utils:blank" },
+        "facing=north,powered=false": { "model": "mob_grinding_utils:blank" },
+        "facing=south,powered=false": { "model": "mob_grinding_utils:blank" },
+        "facing=west,powered=false":  { "model": "mob_grinding_utils:blank" },
+        "facing=east,powered=false":  { "model": "mob_grinding_utils:blank" },
+        "facing=down,powered=true": { "model": "mob_grinding_utils:blank" },
+        "facing=up,powered=true": { "model": "mob_grinding_utils:blank" },
+        "facing=north,powered=true": { "model": "mob_grinding_utils:blank" },
+        "facing=south,powered=true": { "model": "mob_grinding_utils:blank" },
+        "facing=west,powered=true":  { "model": "mob_grinding_utils:blank" },
+        "facing=east,powered=true":  { "model": "mob_grinding_utils:blank" }
+    }
+}

@@ -1,0 +1,20 @@
+tile.mob_grinding_utils.fan.name=Mob Fan
+tile.mob_grinding_utils.saw.name=Mob Masher
+tile.mob_grinding_utils.absorption_hopper.name=Absorption Hopper
+tile.mob_grinding_utils.spikes.name=Iron Spikes
+tile.mob_grinding_utils.tank.name=Singularity Tank
+tile.mob_grinding_utils.xp_tap.name=XP Tap
+tile.mob_grinding_utils.wither_muffler.name=Wither Boss Death Muffler
+tile.mob_grinding_utils.dragon_muffler.name=Ender Dragon Death Muffler
+fluid.mob_grinding_utils.fluid_xp=Fluid XP
+item.mob_grinding_utils.mob_swab.name=Mob Swab
+item.mob_grinding_utils.gm_chicken_feed.name=GM Chicken Feed
+item.mob_grinding_utils.fan_upgrade.name=Mob Fan Upgrade
+item.mob_grinding_utils.absorption_upgrade.name=Absorption Radius Upgrade
+item.mob_grinding_utils.saw_upgrade.name=Mob Masher Upgrade
+item.mob_grinding_utils.null_sword.name=Imaginary Not Here Sword
+
+itemGroup.mob_grinding_utils=Mob Grinding Utils
+
+death.attack.spikes=%1$s was impaled on spikes.
+death.attack.spikes.player=%1$s was impaled on spikes %2$s.

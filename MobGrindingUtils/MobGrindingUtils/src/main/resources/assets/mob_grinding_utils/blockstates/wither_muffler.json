@@ -1,0 +1,6 @@
+{
+    "variants": {
+        "mode=false": { "model": "mob_grinding_utils:wither_muffler" },
+        "mode=true": { "model": "mob_grinding_utils:wither_muffler_boss_bar" }
+    }
+}
