@@ -3,6 +3,7 @@ package mob_grinding_utils;
 import java.util.List;
 
 import mob_grinding_utils.blocks.BlockAbsorptionHopper;
+import mob_grinding_utils.blocks.BlockDarkOakStone;
 import mob_grinding_utils.blocks.BlockDragonMuffler;
 import mob_grinding_utils.blocks.BlockFan;
 import mob_grinding_utils.blocks.BlockSaw;
@@ -44,6 +45,7 @@ import mob_grinding_utils.network.WitherBarPacketHandler;
 import mob_grinding_utils.proxy.CommonProxy;
 import mob_grinding_utils.recipe.RecipeChickenFeed;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockStone;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -81,8 +83,8 @@ public class MobGrindingUtils {
 
 	@SidedProxy(clientSide = "mob_grinding_utils.proxy.ClientProxy", serverSide = "mob_grinding_utils.proxy.CommonProxy")
 	public static CommonProxy PROXY;
-	public static Block SPIKES, FAN, ABSORPTION_HOPPER, TANK, XP_TAP, WITHER_MUFFLER, DRAGON_MUFFLER, SAW;
-	public static Item SPIKES_ITEM, FAN_ITEM, ABSORPTION_HOPPER_ITEM, TANK_ITEM, FAN_UPGRADE, ABSORPTION_UPGRADE, XP_TAP_ITEM, MOB_SWAB, GM_CHICKEN_FEED, WITHER_MUFFLER_ITEM, DRAGON_MUFFLER_ITEM, SAW_ITEM, SAW_UPGRADE;
+	public static Block SPIKES, FAN, ABSORPTION_HOPPER, TANK, XP_TAP, WITHER_MUFFLER, DRAGON_MUFFLER, SAW, DARK_OAK_STONE;
+	public static Item SPIKES_ITEM, FAN_ITEM, ABSORPTION_HOPPER_ITEM, TANK_ITEM, FAN_UPGRADE, ABSORPTION_UPGRADE, XP_TAP_ITEM, MOB_SWAB, GM_CHICKEN_FEED, WITHER_MUFFLER_ITEM, DRAGON_MUFFLER_ITEM, SAW_ITEM, SAW_UPGRADE, DARK_OAK_STONE_ITEM;
 	public static ItemSword NULL_SWORD;
 	public static Fluid FLUID_XP;
 	public static SimpleNetworkWrapper NETWORK_WRAPPER;
@@ -162,6 +164,19 @@ public class MobGrindingUtils {
 		GameRegistry.register(DRAGON_MUFFLER.setRegistryName("mob_grinding_utils", "dragon_muffler").setUnlocalizedName("mob_grinding_utils.dragon_muffler"));
 		GameRegistry.register(DRAGON_MUFFLER_ITEM.setRegistryName(DRAGON_MUFFLER.getRegistryName()).setUnlocalizedName("mob_grinding_utils.dragon_muffler"));
 
+		DARK_OAK_STONE= new BlockDarkOakStone();
+		DARK_OAK_STONE_ITEM = new ItemBlock(DARK_OAK_STONE) {
+			@Override
+			@SideOnly(Side.CLIENT)
+			public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean flag) {
+				list.add(TextFormatting.GREEN + "And they said it couldn't be done...");
+			}
+		};
+
+		GameRegistry.register(DARK_OAK_STONE.setRegistryName("mob_grinding_utils", "dark_oak_stone").setUnlocalizedName("mob_grinding_utils.dark_oak_stone"));
+		GameRegistry.register(DARK_OAK_STONE_ITEM.setRegistryName(DARK_OAK_STONE.getRegistryName()).setUnlocalizedName("mob_grinding_utils.dark_oak_stone"));
+
+		
 		FAN_UPGRADE = new ItemFanUpgrade();
 		GameRegistry.register(FAN_UPGRADE.setRegistryName("mob_grinding_utils", "fan_upgrade").setUnlocalizedName("mob_grinding_utils.fan_upgrade"));
 

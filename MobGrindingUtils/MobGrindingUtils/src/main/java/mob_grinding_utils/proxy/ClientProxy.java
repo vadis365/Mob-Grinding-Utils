@@ -40,7 +40,8 @@ public class ClientProxy extends CommonProxy {
 		ModelLoader.setCustomModelResourceLocation(MobGrindingUtils.SAW_UPGRADE, 4, new ModelResourceLocation("mob_grinding_utils:saw_upgrade_arthropod", "inventory"));
 		ModelLoader.setCustomModelResourceLocation(MobGrindingUtils.SAW_UPGRADE, 5, new ModelResourceLocation("mob_grinding_utils:saw_upgrade_beheading", "inventory"));
 		ModelLoader.setCustomModelResourceLocation(MobGrindingUtils.NULL_SWORD, 0, new ModelResourceLocation("mob_grinding_utils:null_sword", "inventory"));
-
+		ModelLoader.setCustomModelResourceLocation(MobGrindingUtils.DARK_OAK_STONE_ITEM, 0, new ModelResourceLocation("mob_grinding_utils:dark_oak_stone", "inventory"));
+		
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityTank.class, new TileEntityTankRenderer());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntitySaw.class, new TileEntitySawRenderer());
 	}

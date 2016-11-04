@@ -6,6 +6,7 @@ tile.mob_grinding_utils.tank.name=Singularity Tank
 tile.mob_grinding_utils.xp_tap.name=XP Tap
 tile.mob_grinding_utils.wither_muffler.name=Wither Boss Death Muffler
 tile.mob_grinding_utils.dragon_muffler.name=Ender Dragon Death Muffler
+tile.mob_grinding_utils.dark_oak_stone.name=Dark Oak Stone
 fluid.mob_grinding_utils.fluid_xp=Fluid XP
 item.mob_grinding_utils.mob_swab.name=Mob Swab
 item.mob_grinding_utils.gm_chicken_feed.name=GM Chicken Feed
