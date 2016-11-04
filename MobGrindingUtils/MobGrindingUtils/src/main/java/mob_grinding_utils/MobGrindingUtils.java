@@ -45,7 +45,6 @@ import mob_grinding_utils.network.WitherBarPacketHandler;
 import mob_grinding_utils.proxy.CommonProxy;
 import mob_grinding_utils.recipe.RecipeChickenFeed;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockStone;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
