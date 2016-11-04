@@ -7,6 +7,7 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -24,17 +25,17 @@ public class ItemSawUpgrade extends Item {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean flag) {
 		if(stack.getItemDamage() == 0)
-			list.add("Sharpness: +1 Max of 10");
+			list.add(TextFormatting.YELLOW + "Sharpness: +1. Max of 10.");
 		if(stack.getItemDamage() == 1)
-			list.add("Looting: +1 Max of 10");
+			list.add(TextFormatting.YELLOW + "Looting: +1. Max of 10.");
 		if(stack.getItemDamage() == 2 )
-			list.add("Fire Aspect: +1 Max of 10");
+			list.add(TextFormatting.YELLOW + "Fire Aspect: +1. Max of 10.");
 		if(stack.getItemDamage() == 3)
-			list.add("Smite: +1 Max of 10");
+			list.add(TextFormatting.YELLOW + "Smite: +1. Max of 10.");
 		if(stack.getItemDamage() == 4)
-			list.add("Bane of Arthropods: +1 Max of 10");
+			list.add(TextFormatting.YELLOW + "Bane of Arthropods: +1. Max of 10.");
 		if(stack.getItemDamage() == 5 )
-			list.add("Beheading: +1 Max of 10");
+			list.add(TextFormatting.YELLOW + "Beheading: +1. Max of 10.");
 	}
 
 	@Override

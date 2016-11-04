@@ -104,29 +104,51 @@ public class MobGrindingUtils {
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
 		FAN = new BlockFan();
-		FAN_ITEM = new ItemBlock(FAN);
+		FAN_ITEM = new ItemBlock(FAN){
+			@Override
+			@SideOnly(Side.CLIENT)
+			public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean flag) {
+				list.add(TextFormatting.YELLOW + "Pushes Mobs in the facing direction.");
+				list.add(TextFormatting.YELLOW + "Can be modified with Mob Fan Upgrades.");
+			}
+		};
 		GameRegistry.register(FAN.setRegistryName("mob_grinding_utils", "fan").setUnlocalizedName("mob_grinding_utils.fan"));
 		GameRegistry.register(FAN_ITEM.setRegistryName(FAN.getRegistryName()).setUnlocalizedName("mob_grinding_utils.fan"));
 
 		SAW = new BlockSaw();
-		SAW_ITEM = new ItemBlock(SAW);
+		SAW_ITEM = new ItemBlock(SAW){
+			@Override
+			@SideOnly(Side.CLIENT)
+			public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean flag) {
+				list.add(TextFormatting.YELLOW + "Advanced Modular Mob grinder");
+				list.add(TextFormatting.YELLOW + "Can be enhanced with Mob Masher Upgrades");
+			}
+		};
 		GameRegistry.register(SAW.setRegistryName("mob_grinding_utils", "saw").setUnlocalizedName("mob_grinding_utils.saw"));
 		GameRegistry.register(SAW_ITEM.setRegistryName(SAW.getRegistryName()).setUnlocalizedName("mob_grinding_utils.saw"));
 
 		ABSORPTION_HOPPER = new BlockAbsorptionHopper();
-		ABSORPTION_HOPPER_ITEM = new ItemBlock(ABSORPTION_HOPPER){
+		ABSORPTION_HOPPER_ITEM = new ItemBlock(ABSORPTION_HOPPER) {
 			@Override
 			@SideOnly(Side.CLIENT)
 			public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean flag) {
-				list.add(TextFormatting.YELLOW + "Made for Darkosto's Birthday!");
-				list.add(TextFormatting.YELLOW + "Vacuums all the fun out of the world.");
+				list.add(TextFormatting.YELLOW + "Vacuums up Items and XP Orbs in a 7x7x7 area.");
+				list.add(TextFormatting.YELLOW + "Can be configured to push out on any side.");
+				list.add(TextFormatting.YELLOW + "Fluids will insert to Tanks and Items to Inventories.");
+				list.add(TextFormatting.YELLOW + "Range is increased by Absorption Radius Upgrades.");
 			}
 		};
 		GameRegistry.register(ABSORPTION_HOPPER.setRegistryName("mob_grinding_utils", "absorption_hopper").setUnlocalizedName("mob_grinding_utils.absorption_hopper"));
 		GameRegistry.register(ABSORPTION_HOPPER_ITEM.setRegistryName(ABSORPTION_HOPPER.getRegistryName()).setUnlocalizedName("mob_grinding_utils.absorption_hopper"));
 
 		SPIKES = new BlockSpikes();
-		SPIKES_ITEM = new ItemBlock(SPIKES);
+		SPIKES_ITEM = new ItemBlock(SPIKES) {
+			@Override
+			@SideOnly(Side.CLIENT)
+			public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean flag) {
+				list.add(TextFormatting.YELLOW + "Basic spikes - will also drop Mob's XP.");
+			}
+		};
 		GameRegistry.register(SPIKES.setRegistryName("mob_grinding_utils", "spikes").setUnlocalizedName("mob_grinding_utils.spikes"));
 		GameRegistry.register(SPIKES_ITEM.setRegistryName(SPIKES.getRegistryName()).setUnlocalizedName("mob_grinding_utils.spikes"));
 
@@ -144,22 +166,44 @@ public class MobGrindingUtils {
 				}
 			}
 		};
-
 		GameRegistry.register(TANK.setRegistryName("mob_grinding_utils", "tank").setUnlocalizedName("mob_grinding_utils.tank"));
 		GameRegistry.register(TANK_ITEM.setRegistryName(TANK.getRegistryName()).setUnlocalizedName("mob_grinding_utils.tank"));
 
 		XP_TAP = new BlockXPTap();
-		XP_TAP_ITEM = new ItemBlock(XP_TAP);
+		XP_TAP_ITEM = new ItemBlock(XP_TAP) {
+			@Override
+			@SideOnly(Side.CLIENT)
+			public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean flag) {
+				list.add(TextFormatting.YELLOW + "Attach to the side of a Singularity Tank.");
+				list.add(TextFormatting.YELLOW + "Will turn XP Fluid back to Orbs.");
+			}
+		};
 		GameRegistry.register(XP_TAP.setRegistryName("mob_grinding_utils", "xp_tap").setUnlocalizedName("mob_grinding_utils.xp_tap"));
 		GameRegistry.register(XP_TAP_ITEM.setRegistryName(XP_TAP.getRegistryName()).setUnlocalizedName("mob_grinding_utils.xp_tap"));
 
 		WITHER_MUFFLER = new BlockWitherMuffler();
-		WITHER_MUFFLER_ITEM = new ItemBlock(WITHER_MUFFLER);
+		WITHER_MUFFLER_ITEM = new ItemBlock(WITHER_MUFFLER) {
+			@Override
+			@SideOnly(Side.CLIENT)
+			public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean flag) {
+				list.add(TextFormatting.YELLOW + "Stops Wither Boss Death sounds");
+				list.add(TextFormatting.YELLOW + "within an 8 Block radius.");
+				list.add(TextFormatting.YELLOW + "Right Click to hide Boss Bar.");
+			}
+		};
 		GameRegistry.register(WITHER_MUFFLER.setRegistryName("mob_grinding_utils", "wither_muffler").setUnlocalizedName("mob_grinding_utils.wither_muffler"));
 		GameRegistry.register(WITHER_MUFFLER_ITEM.setRegistryName(WITHER_MUFFLER.getRegistryName()).setUnlocalizedName("mob_grinding_utils.wither_muffler"));
 
 		DRAGON_MUFFLER = new BlockDragonMuffler();
-		DRAGON_MUFFLER_ITEM = new ItemBlock(DRAGON_MUFFLER);
+		DRAGON_MUFFLER_ITEM = new ItemBlock(DRAGON_MUFFLER) {
+			@Override
+			@SideOnly(Side.CLIENT)
+			public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean flag) {
+				list.add(TextFormatting.YELLOW + "Stops Ender Dragon Death sounds");
+				list.add(TextFormatting.YELLOW + "within an 8 Block radius.");
+				list.add(TextFormatting.YELLOW + "Right Click to hide Boss Bar.");
+			}
+		};
 		GameRegistry.register(DRAGON_MUFFLER.setRegistryName("mob_grinding_utils", "dragon_muffler").setUnlocalizedName("mob_grinding_utils.dragon_muffler"));
 		GameRegistry.register(DRAGON_MUFFLER_ITEM.setRegistryName(DRAGON_MUFFLER.getRegistryName()).setUnlocalizedName("mob_grinding_utils.dragon_muffler"));
 
@@ -171,10 +215,8 @@ public class MobGrindingUtils {
 				list.add(TextFormatting.GREEN + "And they said it couldn't be done...");
 			}
 		};
-
 		GameRegistry.register(DARK_OAK_STONE.setRegistryName("mob_grinding_utils", "dark_oak_stone").setUnlocalizedName("mob_grinding_utils.dark_oak_stone"));
 		GameRegistry.register(DARK_OAK_STONE_ITEM.setRegistryName(DARK_OAK_STONE.getRegistryName()).setUnlocalizedName("mob_grinding_utils.dark_oak_stone"));
-
 		
 		FAN_UPGRADE = new ItemFanUpgrade();
 		GameRegistry.register(FAN_UPGRADE.setRegistryName("mob_grinding_utils", "fan_upgrade").setUnlocalizedName("mob_grinding_utils.fan_upgrade"));

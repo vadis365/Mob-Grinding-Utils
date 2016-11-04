@@ -12,6 +12,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -28,10 +29,10 @@ public class ItemMobSwab extends Item {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean flag) {
 		if (!stack.hasTagCompound())
-			list.add("Use on mobs to collect 'DNA'.");
+			list.add(TextFormatting.YELLOW + "Use on mobs to collect 'DNA'.");
 		else if (stack.hasTagCompound() && stack.getTagCompound().hasKey("mguMobName")) {
-			list.add("Craft with a Bucket of XP and Seeds.");
-			list.add("Contains: " + stack.getTagCompound().getTag("mguMobName") + " 'DNA'.");
+			list.add(TextFormatting.YELLOW + "Craft with a Bucket of XP and Seeds.");
+			list.add(TextFormatting.GREEN + "Contains: " + stack.getTagCompound().getTag("mguMobName") + " 'DNA'.");
 		}
 	}
 
