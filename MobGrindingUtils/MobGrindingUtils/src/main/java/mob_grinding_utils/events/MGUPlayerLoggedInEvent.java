@@ -4,6 +4,7 @@ import mob_grinding_utils.MobGrindingUtils;
 import mob_grinding_utils.network.DragonBarMessage;
 import mob_grinding_utils.network.WitherBarMessage;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 
@@ -12,17 +13,22 @@ public class MGUPlayerLoggedInEvent {
 	@SubscribeEvent
 	public void onPlayerLogin(PlayerEvent.PlayerLoggedInEvent event) {
 
-		if (!event.player.worldObj.isRemote && event.player instanceof EntityPlayerMP) {
-			EntityPlayerMP player = (EntityPlayerMP) event.player;
-			player.getServer().addScheduledTask(new Runnable() {
-				public void run() {
-					if (player.getEntityData().hasKey("turnOffWitherBossBar"))
-						MobGrindingUtils.NETWORK_WRAPPER.sendTo(new WitherBarMessage(player.getEntityData().getBoolean("turnOffWitherBossBar")), player);
+		if (!event.player.worldObj.isRemote && event.player instanceof EntityPlayerMP && !(event.player instanceof FakePlayer)) {
+			final EntityPlayerMP player = (EntityPlayerMP) event.player;
 
-					if (event.player.getEntityData().hasKey("turnOffDragonBossBar"))
+			if (player.getEntityData().hasKey("turnOffWitherBossBar"))
+				player.getServer().addScheduledTask(new Runnable() {
+					public void run() {
+						MobGrindingUtils.NETWORK_WRAPPER.sendTo(new WitherBarMessage(player.getEntityData().getBoolean("turnOffWitherBossBar")), player);
+					}
+				});
+
+			if (event.player.getEntityData().hasKey("turnOffDragonBossBar"))
+				player.getServer().addScheduledTask(new Runnable() {
+					public void run() {
 						MobGrindingUtils.NETWORK_WRAPPER.sendTo(new DragonBarMessage(player.getEntityData().getBoolean("turnOffDragonBossBar")), player);
-				}
-			});
+					}
+				});
 		}
 	}
 }

@@ -12,7 +12,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
@@ -65,7 +65,7 @@ public class TileEntitySaw extends TileEntityInventoryHelper implements ITickabl
 			Entity entity = list.get(i);
 			if (entity != null) {
 				if (entity instanceof EntityLivingBase) {
-					EntityPlayer fakePlayer = FakePlayerFactory.get((WorldServer)worldObj, new GameProfile(UUID.nameUUIDFromBytes("mob_grinding_utils".getBytes()), "[" + "mob_grinding_utils" + "]"));
+					EntityPlayerMP fakePlayer = FakePlayerFactory.get((WorldServer)worldObj, new GameProfile(UUID.nameUUIDFromBytes("mob_grinding_utils".getBytes()), "[" + "mob_grinding_utils" + "]"));
 					ItemStack tempSword = new ItemStack(MobGrindingUtils.NULL_SWORD, 1, 0);
 
 					if(!tempSword.hasTagCompound())
