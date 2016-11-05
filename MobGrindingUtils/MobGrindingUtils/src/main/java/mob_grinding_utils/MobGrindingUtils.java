@@ -74,7 +74,7 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-@Mod(modid = "mob_grinding_utils", name = "mob_grinding_utils", version = "0.1.7.8")
+@Mod(modid = "mob_grinding_utils", name = "mob_grinding_utils", version = "0.1.7.9")
 
 public class MobGrindingUtils {
 
