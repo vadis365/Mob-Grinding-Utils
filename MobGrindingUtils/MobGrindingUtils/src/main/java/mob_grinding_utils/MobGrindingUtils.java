@@ -54,6 +54,7 @@ import net.minecraft.item.ItemSword;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fluids.Fluid;
@@ -108,8 +109,8 @@ public class MobGrindingUtils {
 			@Override
 			@SideOnly(Side.CLIENT)
 			public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean flag) {
-				list.add(TextFormatting.YELLOW + "Pushes Mobs in the facing direction.");
-				list.add(TextFormatting.YELLOW + "Can be modified with Mob Fan Upgrades.");
+				list.add(TextFormatting.YELLOW + new TextComponentTranslation("tooltip.fan_1").getFormattedText());
+				list.add(TextFormatting.YELLOW + new TextComponentTranslation("tooltip.fan_2").getFormattedText());
 			}
 		};
 		GameRegistry.register(FAN.setRegistryName("mob_grinding_utils", "fan").setUnlocalizedName("mob_grinding_utils.fan"));
@@ -120,8 +121,8 @@ public class MobGrindingUtils {
 			@Override
 			@SideOnly(Side.CLIENT)
 			public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean flag) {
-				list.add(TextFormatting.YELLOW + "Advanced Modular Mob grinder");
-				list.add(TextFormatting.YELLOW + "Can be enhanced with Mob Masher Upgrades");
+				list.add(TextFormatting.YELLOW + new TextComponentTranslation("tooltip.saw_1").getFormattedText());
+				list.add(TextFormatting.YELLOW + new TextComponentTranslation("tooltip.saw_2").getFormattedText());
 			}
 		};
 		GameRegistry.register(SAW.setRegistryName("mob_grinding_utils", "saw").setUnlocalizedName("mob_grinding_utils.saw"));
@@ -132,10 +133,10 @@ public class MobGrindingUtils {
 			@Override
 			@SideOnly(Side.CLIENT)
 			public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean flag) {
-				list.add(TextFormatting.YELLOW + "Vacuums up Items and XP Orbs in a 7x7x7 area.");
-				list.add(TextFormatting.YELLOW + "Can be configured to push out on any side.");
-				list.add(TextFormatting.YELLOW + "Fluids will insert to Tanks and Items to Inventories.");
-				list.add(TextFormatting.YELLOW + "Range is increased by Absorption Radius Upgrades.");
+				list.add(TextFormatting.YELLOW + new TextComponentTranslation("tooltip.hopper_1").getFormattedText());
+				list.add(TextFormatting.YELLOW + new TextComponentTranslation("tooltip.hopper_2").getFormattedText());
+				list.add(TextFormatting.YELLOW + new TextComponentTranslation("tooltip.hopper_3").getFormattedText());
+				list.add(TextFormatting.YELLOW + new TextComponentTranslation("tooltip.hopper_4").getFormattedText());
 			}
 		};
 		GameRegistry.register(ABSORPTION_HOPPER.setRegistryName("mob_grinding_utils", "absorption_hopper").setUnlocalizedName("mob_grinding_utils.absorption_hopper"));
@@ -146,7 +147,7 @@ public class MobGrindingUtils {
 			@Override
 			@SideOnly(Side.CLIENT)
 			public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean flag) {
-				list.add(TextFormatting.YELLOW + "Basic spikes - will also drop Mob's XP.");
+				list.add(TextFormatting.YELLOW + new TextComponentTranslation("tooltip.spikes_1").getFormattedText());
 			}
 		};
 		GameRegistry.register(SPIKES.setRegistryName("mob_grinding_utils", "spikes").setUnlocalizedName("mob_grinding_utils.spikes"));
@@ -174,8 +175,8 @@ public class MobGrindingUtils {
 			@Override
 			@SideOnly(Side.CLIENT)
 			public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean flag) {
-				list.add(TextFormatting.YELLOW + "Attach to the side of a Singularity Tank.");
-				list.add(TextFormatting.YELLOW + "Will turn XP Fluid back to Orbs.");
+				list.add(TextFormatting.YELLOW + new TextComponentTranslation("tooltip.xptap_1").getFormattedText());
+				list.add(TextFormatting.YELLOW + new TextComponentTranslation("tooltip.xptap_2").getFormattedText());
 			}
 		};
 		GameRegistry.register(XP_TAP.setRegistryName("mob_grinding_utils", "xp_tap").setUnlocalizedName("mob_grinding_utils.xp_tap"));
@@ -186,9 +187,9 @@ public class MobGrindingUtils {
 			@Override
 			@SideOnly(Side.CLIENT)
 			public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean flag) {
-				list.add(TextFormatting.YELLOW + "Stops Wither Boss Death sounds");
-				list.add(TextFormatting.YELLOW + "within an 8 Block radius.");
-				list.add(TextFormatting.YELLOW + "Right Click to hide Boss Bar.");
+				list.add(TextFormatting.YELLOW + new TextComponentTranslation("tooltip.withermuffler_1").getFormattedText());
+				list.add(TextFormatting.YELLOW + new TextComponentTranslation("tooltip.withermuffler_2").getFormattedText());
+				list.add(TextFormatting.YELLOW + new TextComponentTranslation("tooltip.withermuffler_3").getFormattedText());
 			}
 		};
 		GameRegistry.register(WITHER_MUFFLER.setRegistryName("mob_grinding_utils", "wither_muffler").setUnlocalizedName("mob_grinding_utils.wither_muffler"));
@@ -199,9 +200,9 @@ public class MobGrindingUtils {
 			@Override
 			@SideOnly(Side.CLIENT)
 			public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean flag) {
-				list.add(TextFormatting.YELLOW + "Stops Ender Dragon Death sounds");
-				list.add(TextFormatting.YELLOW + "within an 8 Block radius.");
-				list.add(TextFormatting.YELLOW + "Right Click to hide Boss Bar.");
+				list.add(TextFormatting.YELLOW + new TextComponentTranslation("tooltip.dragonmuffler_1").getFormattedText());
+				list.add(TextFormatting.YELLOW + new TextComponentTranslation("tooltip.dragonmuffler_2").getFormattedText());
+				list.add(TextFormatting.YELLOW + new TextComponentTranslation("tooltip.dragonmuffler_3").getFormattedText());
 			}
 		};
 		GameRegistry.register(DRAGON_MUFFLER.setRegistryName("mob_grinding_utils", "dragon_muffler").setUnlocalizedName("mob_grinding_utils.dragon_muffler"));
@@ -212,7 +213,7 @@ public class MobGrindingUtils {
 			@Override
 			@SideOnly(Side.CLIENT)
 			public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean flag) {
-				list.add(TextFormatting.GREEN + "And they said it couldn't be done...");
+				list.add(TextFormatting.YELLOW + new TextComponentTranslation("tooltip.darkoakstone").getFormattedText());
 			}
 		};
 		GameRegistry.register(DARK_OAK_STONE.setRegistryName("mob_grinding_utils", "dark_oak_stone").setUnlocalizedName("mob_grinding_utils.dark_oak_stone"));
@@ -260,9 +261,7 @@ public class MobGrindingUtils {
 		MinecraftForge.EVENT_BUS.register(new ChickenInteractionEvent());
 		MinecraftForge.EVENT_BUS.register(new ChickenFuseEvent());
 		MinecraftForge.EVENT_BUS.register(new LocalWitherSoundEvent());
-		MinecraftForge.EVENT_BUS.register(new GlobalWitherSoundEvent());
 		MinecraftForge.EVENT_BUS.register(new LocalDragonSoundEvent());
-		MinecraftForge.EVENT_BUS.register(new GlobalDragonSoundEvent());
 		MinecraftForge.EVENT_BUS.register(new EntityHeadDropEvent());
 		MinecraftForge.EVENT_BUS.register(new PlayerCloneMufflerDataEvent());
 		MinecraftForge.EVENT_BUS.register(new MGUPlayerLoggedInEvent());
@@ -274,6 +273,8 @@ public class MobGrindingUtils {
 			MinecraftForge.EVENT_BUS.register(new RenderChickenSwell());
 			MinecraftForge.EVENT_BUS.register(new ParticleTextureStitchEvent());
 			MinecraftForge.EVENT_BUS.register(new BossBarHidingEvent());
+			MinecraftForge.EVENT_BUS.register(new GlobalWitherSoundEvent());
+			MinecraftForge.EVENT_BUS.register(new GlobalDragonSoundEvent());
 		}
 	}
 

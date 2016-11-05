@@ -7,6 +7,7 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -24,18 +25,18 @@ public class ItemSawUpgrade extends Item {
 	@SideOnly(Side.CLIENT)
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean flag) {
-		if(stack.getItemDamage() == 0)
-			list.add(TextFormatting.YELLOW + "Sharpness: +1. Max of 10.");
-		if(stack.getItemDamage() == 1)
-			list.add(TextFormatting.YELLOW + "Looting: +1. Max of 10.");
-		if(stack.getItemDamage() == 2 )
-			list.add(TextFormatting.YELLOW + "Fire Aspect: +1. Max of 10.");
-		if(stack.getItemDamage() == 3)
-			list.add(TextFormatting.YELLOW + "Smite: +1. Max of 10.");
-		if(stack.getItemDamage() == 4)
-			list.add(TextFormatting.YELLOW + "Bane of Arthropods: +1. Max of 10.");
-		if(stack.getItemDamage() == 5 )
-			list.add(TextFormatting.YELLOW + "Beheading: +1. Max of 10.");
+		if (stack.getItemDamage() == 0)
+			list.add(TextFormatting.YELLOW + new TextComponentTranslation("tooltip.sawupgrade_sharpness").getFormattedText());
+		if (stack.getItemDamage() == 1)
+			list.add(TextFormatting.YELLOW + new TextComponentTranslation("tooltip.sawupgrade_looting").getFormattedText());
+		if (stack.getItemDamage() == 2)
+			list.add(TextFormatting.YELLOW + new TextComponentTranslation("tooltip.sawupgrade_fire").getFormattedText());
+		if (stack.getItemDamage() == 3)
+			list.add(TextFormatting.YELLOW + new TextComponentTranslation("tooltip.sawupgrade_smite").getFormattedText());
+		if (stack.getItemDamage() == 4)
+			list.add(TextFormatting.YELLOW + new TextComponentTranslation("tooltip.sawupgrade_arthropods").getFormattedText());
+		if (stack.getItemDamage() == 5)
+			list.add(TextFormatting.YELLOW + new TextComponentTranslation("tooltip.sawupgrade_beheading").getFormattedText());
 	}
 
 	@Override
