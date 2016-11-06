@@ -89,7 +89,7 @@ public class MobGrindingUtils {
 	public static Fluid FLUID_XP;
 	public static SimpleNetworkWrapper NETWORK_WRAPPER;
 	public static DamageSource SPIKE_DAMAGE;
-	public static SoundEvent TAP_SQUEAK, ENTITY_WITHER_SPAWN_LOCAL, ENTITY_WITHER_DEATH_LOCAL, ENTITY_DRAGON_DEATH_LOCAL;
+	public static SoundEvent TAP_SQUEAK, ENTITY_WITHER_SPAWN_LOCAL, ENTITY_WITHER_DEATH_LOCAL, ENTITY_DRAGON_DEATH_LOCAL, CHICKEN_RISE;
 
 	public static CreativeTabs TAB = new CreativeTabs("mob_grinding_utils") {
 		@Override
@@ -288,6 +288,8 @@ public class MobGrindingUtils {
 		GameRegistry.register(ENTITY_WITHER_DEATH_LOCAL);
 		ENTITY_DRAGON_DEATH_LOCAL = new SoundEvent(new ResourceLocation("mob_grinding_utils", "entity_dragon_death_local")).setRegistryName("mob_grinding_utils", "entity_dragon_death_local");
 		GameRegistry.register(ENTITY_DRAGON_DEATH_LOCAL);
+		CHICKEN_RISE = new SoundEvent(new ResourceLocation("mob_grinding_utils", "chicken_rise")).setRegistryName("mob_grinding_utils", "chicken_rise");
+		GameRegistry.register(CHICKEN_RISE);
 		GameRegistry.addRecipe(new RecipeChickenFeed());
 	}
 

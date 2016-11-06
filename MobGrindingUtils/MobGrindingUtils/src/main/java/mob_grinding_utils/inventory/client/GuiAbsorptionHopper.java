@@ -19,6 +19,7 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -51,7 +52,7 @@ public class GuiAbsorptionHopper extends GuiContainer {
 
 	@Override
 	protected void drawGuiContainerForegroundLayer(int x, int y) {
-		fontRendererObj.drawString(I18n.format("Absorption Hopper"), xSize / 2 - fontRendererObj.getStringWidth(I18n.format("Absorption Hopper")) / 2, ySize - 218, 4210752);	
+		fontRendererObj.drawString(I18n.format(new TextComponentTranslation("tile.mob_grinding_utils.absorption_hopper.name").getFormattedText()), xSize / 2 - fontRendererObj.getStringWidth(I18n.format(new TextComponentTranslation("tile.mob_grinding_utils.absorption_hopper.name").getFormattedText())) / 2, ySize - 218, 4210752);	
 	}
 
 	@Override

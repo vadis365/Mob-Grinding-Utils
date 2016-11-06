@@ -35,6 +35,7 @@ public class ChickenFuseEvent {
 					if (startTime >= 20) {
 						entity.setDead();
 						entity.playSound(SoundEvents.ENTITY_CHICKEN_DEATH, 1F, 1F);
+						entity.playSound(MobGrindingUtils.CHICKEN_RISE, 0.5F, 1F);
 						String name = event.getEntity().getEntityData().getString("mguMobName");
 
 						if (EntityList.ENTITY_EGGS.containsKey(name)) {

@@ -22,5 +22,11 @@
     "sounds": [
       "minecraft:mob/enderdragon/end"
     ]
+  },
+    "chicken_rise": {
+    "category": "passive",
+    "sounds": [
+      "mob_grinding_utils:chicken_rise"
+    ]
   }
 }

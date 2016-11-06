@@ -21,6 +21,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.util.FakePlayerFactory;
 
@@ -65,7 +66,7 @@ public class TileEntitySaw extends TileEntityInventoryHelper implements ITickabl
 			Entity entity = list.get(i);
 			if (entity != null) {
 				if (entity instanceof EntityLivingBase) {
-					EntityPlayerMP fakePlayer = FakePlayerFactory.get((WorldServer)worldObj, new GameProfile(UUID.nameUUIDFromBytes("mob_grinding_utils".getBytes()), "[" + "mob_grinding_utils" + "]"));
+					EntityPlayerMP fakePlayer = FakePlayerFactory.get((WorldServer)worldObj, new GameProfile(UUID.nameUUIDFromBytes(new TextComponentTranslation("fakeplayer.mob_masher").getFormattedText().getBytes()), new TextComponentTranslation("fakeplayer.mob_masher").getFormattedText()));
 					ItemStack tempSword = new ItemStack(MobGrindingUtils.NULL_SWORD, 1, 0);
 
 					if(!tempSword.hasTagCompound())

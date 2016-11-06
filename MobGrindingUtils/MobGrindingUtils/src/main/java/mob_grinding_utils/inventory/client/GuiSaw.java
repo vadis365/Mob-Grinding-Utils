@@ -8,6 +8,7 @@ import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -25,7 +26,7 @@ public class GuiSaw extends GuiContainer {
 
 	@Override
 	protected void drawGuiContainerForegroundLayer(int x, int y) {
-		fontRendererObj.drawString(I18n.format("Mob Masher"), xSize / 2 - fontRendererObj.getStringWidth(I18n.format("Mob Masher")) / 2, ySize - 218, 4210752);	
+		fontRendererObj.drawString(I18n.format(new TextComponentTranslation("tile.mob_grinding_utils.saw.name").getFormattedText()), xSize / 2 - fontRendererObj.getStringWidth(I18n.format(new TextComponentTranslation("tile.mob_grinding_utils.saw.name").getFormattedText())) / 2, ySize - 218, 4210752);	
 	}
 
 	@Override
