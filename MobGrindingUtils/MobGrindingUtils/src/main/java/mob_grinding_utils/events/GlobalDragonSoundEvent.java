@@ -9,7 +9,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class GlobalDragonSoundEvent {
 	@SubscribeEvent
 	public void onDragonSound(PlaySoundEvent event) {
-		if (event.getName().equals("entity.enderdragon.death")) 
+		if (event.getName().equals("entity.enderdragon.death"))
 			event.setResultSound(null);
 	}
 }

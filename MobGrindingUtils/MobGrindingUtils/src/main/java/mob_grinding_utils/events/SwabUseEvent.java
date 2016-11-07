@@ -17,7 +17,7 @@ public class SwabUseEvent {
 		EntityLivingBase entity = (EntityLivingBase) event.getTarget();
 		World world = entity.worldObj;
 		if (!(entity instanceof EntityPlayer)) {
-			if (event.getItemStack() != null && event.getItemStack().getItem() == MobGrindingUtils.MOB_SWAB && event.getItemStack().getItemDamage() == 0) { 
+			if (event.getItemStack() != null && event.getItemStack().getItem() == MobGrindingUtils.MOB_SWAB && event.getItemStack().getItemDamage() == 0) {
 				if (!world.isRemote) {
 					String mobName = EntityList.getEntityString(entity);
 					ItemStack stack2 = new ItemStack(MobGrindingUtils.MOB_SWAB, 1, 1);

@@ -9,7 +9,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-
 public class LocalWitherSoundEvent {
 	@SubscribeEvent
 	public void onWitherBossDeath(LivingDeathEvent event) {

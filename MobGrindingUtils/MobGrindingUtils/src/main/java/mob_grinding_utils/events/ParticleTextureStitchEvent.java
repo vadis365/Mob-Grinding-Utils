@@ -7,7 +7,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ParticleTextureStitchEvent {
-	
+
 	@SubscribeEvent
 	@SideOnly(Side.CLIENT)
 	 public void onTextureStitchPre(TextureStitchEvent.Pre event) {
