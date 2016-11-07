@@ -212,7 +212,7 @@ public class MobGrindingUtils {
 		};
 		GameRegistry.register(DARK_OAK_STONE.setRegistryName("mob_grinding_utils", "dark_oak_stone").setUnlocalizedName("mob_grinding_utils.dark_oak_stone"));
 		GameRegistry.register(DARK_OAK_STONE_ITEM.setRegistryName(DARK_OAK_STONE.getRegistryName()).setUnlocalizedName("mob_grinding_utils.dark_oak_stone"));
-		
+
 		FAN_UPGRADE = new ItemFanUpgrade();
 		GameRegistry.register(FAN_UPGRADE.setRegistryName("mob_grinding_utils", "fan_upgrade").setUnlocalizedName("mob_grinding_utils.fan_upgrade"));
 
@@ -249,7 +249,7 @@ public class MobGrindingUtils {
 		NETWORK_WRAPPER.registerMessage(ChickenSyncPacketHandler.class, ChickenSyncMessage.class, 1, Side.CLIENT);
 		NETWORK_WRAPPER.registerMessage(TapParticleHandler.class, TapParticleMessage.class, 2, Side.CLIENT);
 		NETWORK_WRAPPER.registerMessage(MessageSyncEntityCapabilities.class, MessageSyncEntityCapabilities.class, 5, Side.CLIENT);
-		
+
 		MinecraftForge.EVENT_BUS.register(SPIKES);
 		MinecraftForge.EVENT_BUS.register(new ChickenInteractionEvent());
 		MinecraftForge.EVENT_BUS.register(new ChickenFuseEvent());
@@ -265,7 +265,7 @@ public class MobGrindingUtils {
 			MinecraftForge.EVENT_BUS.register(new GlobalWitherSoundEvent());
 			MinecraftForge.EVENT_BUS.register(new GlobalDragonSoundEvent());
 		}
-		
+
 		EntityCapabilityHandler.registerEntityCapability(new BossBarPlayerCapability());
 		EntityCapabilityHandler.registerCapabilities();
 	}
