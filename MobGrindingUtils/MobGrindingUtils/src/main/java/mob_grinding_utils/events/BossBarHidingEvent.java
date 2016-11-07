@@ -21,13 +21,16 @@ public class BossBarHidingEvent {
 				IBossBarCapability cap = player.getCapability(BossBarPlayerCapability.CAPABILITY_PLAYER_BOSS_BAR, null);
 				
 				if(!cap.renderWitherBar()) {
-					event.setCanceled(true);
+					if (event.getBossInfo().getName().getUnformattedText().equals("Wither"))  
+						event.setCanceled(true);
 				}
 				
 				if(!cap.renderEnderDragonBar()) {
-					event.setCanceled(true);
+					if (event.getBossInfo().getName().getUnformattedText().equals("Ender Dragon"))
+						event.setCanceled(true);
 				}
 			}
 		}
 	}
 }
+ 
