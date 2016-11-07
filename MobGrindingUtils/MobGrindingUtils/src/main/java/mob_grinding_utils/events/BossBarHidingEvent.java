@@ -19,13 +19,13 @@ public class BossBarHidingEvent {
 			EntityPlayer player = Minecraft.getMinecraft().thePlayer;
 			if (player != null) {
 				IBossBarCapability cap = player.getCapability(BossBarPlayerCapability.CAPABILITY_PLAYER_BOSS_BAR, null);
-				
-				if(!cap.renderWitherBar()) {
-					if (event.getBossInfo().getName().getUnformattedText().equals("Wither"))  
+
+				if (!cap.renderWitherBar()) {
+					if (event.getBossInfo().getName().getUnformattedText().equals("Wither"))
 						event.setCanceled(true);
 				}
-				
-				if(!cap.renderEnderDragonBar()) {
+
+				if (!cap.renderEnderDragonBar()) {
 					if (event.getBossInfo().getName().getUnformattedText().equals("Ender Dragon"))
 						event.setCanceled(true);
 				}
@@ -33,4 +33,3 @@ public class BossBarHidingEvent {
 		}
 	}
 }
- 
