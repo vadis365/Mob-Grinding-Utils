@@ -47,21 +47,21 @@ public class BlockSaw extends BlockDirectional implements ITileEntityProvider {
 		return new TileEntitySaw();
 	}
 
-    @Override
-    public AxisAlignedBB getCollisionBoundingBox(IBlockState blockState, World worldIn, BlockPos pos) {
-        return SAW_AABB;
-    }
-
-    @Override
-    @SideOnly(Side.CLIENT)
-    public AxisAlignedBB getSelectedBoundingBox(IBlockState state, World worldIn, BlockPos pos) {
-        return FULL_BLOCK_AABB;
-    }
+	@Override
+	public AxisAlignedBB getCollisionBoundingBox(IBlockState blockState, World worldIn, BlockPos pos) {
+		return SAW_AABB;
+	}
 
 	@Override
-    public EnumBlockRenderType getRenderType(IBlockState state) {
-        return EnumBlockRenderType.INVISIBLE;
-    }
+	@SideOnly(Side.CLIENT)
+	public AxisAlignedBB getSelectedBoundingBox(IBlockState state, World worldIn, BlockPos pos) {
+		return FULL_BLOCK_AABB;
+	}
+
+	@Override
+	public EnumBlockRenderType getRenderType(IBlockState state) {
+		return EnumBlockRenderType.INVISIBLE;
+	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
@@ -91,8 +91,16 @@ public class BlockSaw extends BlockDirectional implements ITileEntityProvider {
 	}
 
 	@Override
-    public IBlockState onBlockPlaced(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer) {
-        return this.getDefaultState().withProperty(FACING,  facing).withProperty(POWERED, false);
+	public IBlockState onBlockPlaced(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer) {
+		return this.getDefaultState().withProperty(FACING,  facing).withProperty(POWERED, world.isBlockPowered(pos));
+	}
+	
+	@Override
+	public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {
+		if(state.getValue(POWERED)) {
+			TileEntitySaw tile = (TileEntitySaw) world.getTileEntity(pos);
+			tile.setActive(true);
+		}
     }
 
 	@Override
@@ -110,12 +118,12 @@ public class BlockSaw extends BlockDirectional implements ITileEntityProvider {
 		return new BlockStateContainer(this, new IProperty[] {FACING, POWERED});
 	}
 
-	public static void setState(World world, BlockPos pos, IBlockState state) {
+	public static void setState(World world, BlockPos pos, IBlockState state, boolean powered) {
 		if (!world.isRemote) {
 			TileEntitySaw tile = (TileEntitySaw) world.getTileEntity(pos);
-			state = state.cycleProperty(POWERED);
+			state = state.withProperty(POWERED, powered);
 			world.setBlockState(pos, state, 3);
-			tile.setActive(((Boolean) state.getValue(POWERED)).booleanValue());
+			tile.setActive(powered);
 			if (tile != null) {
 				tile.validate();
 				world.setTileEntity(pos, tile);
@@ -146,16 +154,9 @@ public class BlockSaw extends BlockDirectional implements ITileEntityProvider {
 	public void neighborChanged(IBlockState state, World world, BlockPos pos, Block blockIn) {
 		if (!world.isRemote) {
 			if (((Boolean) state.getValue(POWERED)).booleanValue() && !world.isBlockPowered(pos))
-				world.scheduleUpdate(pos, this, 4);
+				setState(world, pos, state, false);
 			else if (!((Boolean) state.getValue(POWERED)).booleanValue() && world.isBlockPowered(pos))
-				setState(world, pos, state);
+				setState(world, pos, state, true);
 		}
-	}
-
-	@Override
-	public void updateTick(World world, BlockPos pos, IBlockState state, Random rand) {
-		if (!world.isRemote)
-			if (((Boolean) state.getValue(POWERED)).booleanValue() && !world.isBlockPowered(pos))
-				setState(world, pos, state);
 	}
 }

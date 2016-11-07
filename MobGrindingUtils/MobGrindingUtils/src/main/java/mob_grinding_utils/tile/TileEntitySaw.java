@@ -42,8 +42,8 @@ public class TileEntitySaw extends TileEntityInventoryHelper implements ITickabl
 			if (animationTicks < 360)
 				animationTicks += 18;
 			if (animationTicks >= 360) {
-				animationTicks = 0;
-				prevAnimationTicks = 0;
+				animationTicks -= 360;
+				prevAnimationTicks -= 360;
 			}
 		}
 
