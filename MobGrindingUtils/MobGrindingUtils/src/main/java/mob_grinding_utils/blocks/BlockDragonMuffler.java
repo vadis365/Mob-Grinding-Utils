@@ -1,7 +1,8 @@
 package mob_grinding_utils.blocks;
 
 import mob_grinding_utils.MobGrindingUtils;
-import mob_grinding_utils.network.DragonBarMessage;
+import mob_grinding_utils.capability.bossbars.BossBarPlayerCapability;
+import mob_grinding_utils.capability.bossbars.IBossBarCapability;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
@@ -11,7 +12,6 @@ import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
@@ -60,8 +60,8 @@ public class BlockDragonMuffler extends Block {
 		else {
 			state = state.cycleProperty(MODE);
 			world.setBlockState(pos, state, 3);
-			player.getEntityData().setBoolean("turnOffDragonBossBar", (Boolean) state.getValue(MODE).booleanValue());
-			MobGrindingUtils.NETWORK_WRAPPER.sendTo(new DragonBarMessage((Boolean) state.getValue(MODE).booleanValue()), (EntityPlayerMP) player);
+			IBossBarCapability cap = player.getCapability(BossBarPlayerCapability.CAPABILITY_PLAYER_BOSS_BAR, null);
+			cap.setRenderEnderDragonBar(!state.getValue(MODE).booleanValue());
 			return true;
 		}
 	}

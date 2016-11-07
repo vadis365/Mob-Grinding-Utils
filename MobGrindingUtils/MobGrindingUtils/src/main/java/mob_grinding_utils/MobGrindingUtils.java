@@ -11,6 +11,8 @@ import mob_grinding_utils.blocks.BlockSpikes;
 import mob_grinding_utils.blocks.BlockTank;
 import mob_grinding_utils.blocks.BlockWitherMuffler;
 import mob_grinding_utils.blocks.BlockXPTap;
+import mob_grinding_utils.capability.base.EntityCapabilityHandler;
+import mob_grinding_utils.capability.bossbars.BossBarPlayerCapability;
 import mob_grinding_utils.events.BossBarHidingEvent;
 import mob_grinding_utils.events.ChickenFuseEvent;
 import mob_grinding_utils.events.ChickenInteractionEvent;
@@ -19,12 +21,7 @@ import mob_grinding_utils.events.GlobalDragonSoundEvent;
 import mob_grinding_utils.events.GlobalWitherSoundEvent;
 import mob_grinding_utils.events.LocalDragonSoundEvent;
 import mob_grinding_utils.events.LocalWitherSoundEvent;
-import mob_grinding_utils.events.MGUEntityJoinedWorldEvent;
-import mob_grinding_utils.events.MGUEntityPlayerDimensionEvent;
-import mob_grinding_utils.events.MGUEntityPlayerSpawnedEvent;
-import mob_grinding_utils.events.MGUPlayerLoggedInEvent;
 import mob_grinding_utils.events.ParticleTextureStitchEvent;
-import mob_grinding_utils.events.PlayerCloneMufflerDataEvent;
 import mob_grinding_utils.events.RenderChickenSwell;
 import mob_grinding_utils.items.ItemAbsorptionUpgrade;
 import mob_grinding_utils.items.ItemFanUpgrade;
@@ -36,12 +33,9 @@ import mob_grinding_utils.network.AbsorptionHopperMessage;
 import mob_grinding_utils.network.AbsorptionHopperPacketHandler;
 import mob_grinding_utils.network.ChickenSyncMessage;
 import mob_grinding_utils.network.ChickenSyncPacketHandler;
-import mob_grinding_utils.network.DragonBarMessage;
-import mob_grinding_utils.network.DragonBarPacketHandler;
+import mob_grinding_utils.network.MessageSyncEntityCapabilities;
 import mob_grinding_utils.network.TapParticleHandler;
 import mob_grinding_utils.network.TapParticleMessage;
-import mob_grinding_utils.network.WitherBarMessage;
-import mob_grinding_utils.network.WitherBarPacketHandler;
 import mob_grinding_utils.proxy.CommonProxy;
 import mob_grinding_utils.recipe.RecipeChickenFeed;
 import net.minecraft.block.Block;
@@ -254,20 +248,15 @@ public class MobGrindingUtils {
 		NETWORK_WRAPPER.registerMessage(AbsorptionHopperPacketHandler.class, AbsorptionHopperMessage.class, 0, Side.SERVER);
 		NETWORK_WRAPPER.registerMessage(ChickenSyncPacketHandler.class, ChickenSyncMessage.class, 1, Side.CLIENT);
 		NETWORK_WRAPPER.registerMessage(TapParticleHandler.class, TapParticleMessage.class, 2, Side.CLIENT);
-		NETWORK_WRAPPER.registerMessage(WitherBarPacketHandler.class, WitherBarMessage.class, 3, Side.CLIENT);
-		NETWORK_WRAPPER.registerMessage(DragonBarPacketHandler.class, DragonBarMessage.class, 4, Side.CLIENT);
-
+		NETWORK_WRAPPER.registerMessage(MessageSyncEntityCapabilities.class, MessageSyncEntityCapabilities.class, 5, Side.CLIENT);
+		
 		MinecraftForge.EVENT_BUS.register(SPIKES);
 		MinecraftForge.EVENT_BUS.register(new ChickenInteractionEvent());
 		MinecraftForge.EVENT_BUS.register(new ChickenFuseEvent());
 		MinecraftForge.EVENT_BUS.register(new LocalWitherSoundEvent());
 		MinecraftForge.EVENT_BUS.register(new LocalDragonSoundEvent());
 		MinecraftForge.EVENT_BUS.register(new EntityHeadDropEvent());
-		MinecraftForge.EVENT_BUS.register(new PlayerCloneMufflerDataEvent());
-		MinecraftForge.EVENT_BUS.register(new MGUPlayerLoggedInEvent());
-		MinecraftForge.EVENT_BUS.register(new MGUEntityJoinedWorldEvent());
-		MinecraftForge.EVENT_BUS.register(new MGUEntityPlayerSpawnedEvent());
-		MinecraftForge.EVENT_BUS.register(new MGUEntityPlayerDimensionEvent());
+		MinecraftForge.EVENT_BUS.register(EntityCapabilityHandler.class);
 
 		if (event.getSide() == Side.CLIENT) {
 			MinecraftForge.EVENT_BUS.register(new RenderChickenSwell());
@@ -276,6 +265,9 @@ public class MobGrindingUtils {
 			MinecraftForge.EVENT_BUS.register(new GlobalWitherSoundEvent());
 			MinecraftForge.EVENT_BUS.register(new GlobalDragonSoundEvent());
 		}
+		
+		EntityCapabilityHandler.registerEntityCapability(new BossBarPlayerCapability());
+		EntityCapabilityHandler.registerCapabilities();
 	}
 
 	@EventHandler

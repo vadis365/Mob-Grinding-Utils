@@ -1,5 +1,7 @@
 package mob_grinding_utils.events;
 
+import mob_grinding_utils.capability.bossbars.BossBarPlayerCapability;
+import mob_grinding_utils.capability.bossbars.IBossBarCapability;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
@@ -15,14 +17,17 @@ public class BossBarHidingEvent {
 	public void onRenderHUD(BossInfo event) {
 		if (event.getType().equals(RenderGameOverlayEvent.ElementType.BOSSINFO)) {
 			EntityPlayer player = Minecraft.getMinecraft().thePlayer;
-			if (player != null && player.getEntityData().hasKey("turnOffWitherBossBar"))
-				if (player.getEntityData().getBoolean("turnOffWitherBossBar"))
-					if (event.getBossInfo().getName().getUnformattedText().equals("Wither"))
-						event.setCanceled(true);
-			if (player != null && player.getEntityData().hasKey("turnOffDragonBossBar"))
-				if (player.getEntityData().getBoolean("turnOffDragonBossBar"))
-					if (event.getBossInfo().getName().getUnformattedText().equals("Ender Dragon"))
-						event.setCanceled(true);
+			if (player != null) {
+				IBossBarCapability cap = player.getCapability(BossBarPlayerCapability.CAPABILITY_PLAYER_BOSS_BAR, null);
+				
+				if(!cap.renderWitherBar()) {
+					event.setCanceled(true);
+				}
+				
+				if(!cap.renderEnderDragonBar()) {
+					event.setCanceled(true);
+				}
+			}
 		}
 	}
 }

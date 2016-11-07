@@ -1,7 +1,8 @@
 package mob_grinding_utils.blocks;
 
 import mob_grinding_utils.MobGrindingUtils;
-import mob_grinding_utils.network.WitherBarMessage;
+import mob_grinding_utils.capability.bossbars.BossBarPlayerCapability;
+import mob_grinding_utils.capability.bossbars.IBossBarCapability;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
@@ -60,8 +61,8 @@ public class BlockWitherMuffler extends Block {
 		else {
 			state = state.cycleProperty(MODE);
 			world.setBlockState(pos, state, 3);
-			player.getEntityData().setBoolean("turnOffWitherBossBar", (Boolean) state.getValue(MODE).booleanValue());
-			MobGrindingUtils.NETWORK_WRAPPER.sendTo(new WitherBarMessage((Boolean) state.getValue(MODE).booleanValue()), (EntityPlayerMP) player);
+			IBossBarCapability cap = player.getCapability(BossBarPlayerCapability.CAPABILITY_PLAYER_BOSS_BAR, null);
+			cap.setRenderWitherBar(!state.getValue(MODE).booleanValue());
 			return true;
 		}
 
