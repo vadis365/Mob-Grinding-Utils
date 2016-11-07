@@ -39,19 +39,19 @@ public class BlockXPTap extends BlockDirectional implements ITileEntityProvider 
 	protected static final AxisAlignedBB XP_TAP_NORTH_AABB = new AxisAlignedBB(0.25D, 0.5D, 0.4375D, 0.75D, 1D, 1D);
 	public static final PropertyBool POWERED = PropertyBool.create("powered");
 
-    public BlockXPTap() {
-    	super(Material.IRON);
-    	setDefaultState(this.getBlockState().getBaseState().withProperty(POWERED, false));
-        setHardness(1.0F);
-        setSoundType(SoundType.METAL);
-        setCreativeTab(MobGrindingUtils.TAB);
-    }
+	public BlockXPTap() {
+		super(Material.IRON);
+		setDefaultState(this.getBlockState().getBaseState().withProperty(POWERED, false));
+		setHardness(1.0F);
+		setSoundType(SoundType.METAL);
+		setCreativeTab(MobGrindingUtils.TAB);
+	}
 
-    @Override
-    @SideOnly(Side.CLIENT)
-    public AxisAlignedBB getSelectedBoundingBox(IBlockState state, World world, BlockPos pos) {
-	state = state.getActualState(world, pos);
-  	switch ((EnumFacing)state.getValue(FACING)) {
+	@Override
+	@SideOnly(Side.CLIENT)
+	public AxisAlignedBB getSelectedBoundingBox(IBlockState state, World world, BlockPos pos) {
+		state = state.getActualState(world, pos);
+		switch ((EnumFacing) state.getValue(FACING)) {
 		default:
 		case EAST:
 			return XP_TAP_EAST_AABB;
@@ -62,11 +62,11 @@ public class BlockXPTap extends BlockDirectional implements ITileEntityProvider 
 		case NORTH:
 			return XP_TAP_NORTH_AABB;
 		}
-    }
+	}
 
-    @Override
-    public void addCollisionBoxToList(IBlockState state, World worldIn, BlockPos pos, AxisAlignedBB entityBox, List<AxisAlignedBB> collidingBoxes, @Nullable Entity entityIn) {
-        state = state.getActualState(worldIn, pos);
+	@Override
+	public void addCollisionBoxToList(IBlockState state, World worldIn, BlockPos pos, AxisAlignedBB entityBox, List<AxisAlignedBB> collidingBoxes, @Nullable Entity entityIn) {
+		state = state.getActualState(worldIn, pos);
 		switch ((EnumFacing) state.getValue(FACING)) {
 		default:
 		case EAST:
@@ -84,25 +84,25 @@ public class BlockXPTap extends BlockDirectional implements ITileEntityProvider 
 		}
 	}
 
-    @Override
-    public boolean isOpaqueCube(IBlockState state) {
-        return false;
-    }
-
-    @Override
-    public boolean isFullBlock(IBlockState state) {
-        return false;
-    }
-
-    @Override
-    public boolean isFullCube(IBlockState state) {
-        return false;
-    }
+	@Override
+	public boolean isOpaqueCube(IBlockState state) {
+		return false;
+	}
 
 	@Override
-    public EnumBlockRenderType getRenderType(IBlockState state) {
-        return EnumBlockRenderType.MODEL;
-    }
+	public boolean isFullBlock(IBlockState state) {
+		return false;
+	}
+
+	@Override
+	public boolean isFullCube(IBlockState state) {
+		return false;
+	}
+
+	@Override
+	public EnumBlockRenderType getRenderType(IBlockState state) {
+		return EnumBlockRenderType.MODEL;
+	}
 
 	public IBlockState onBlockPlaced(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer) {
 		if (canPlaceAt(world, pos, facing))
@@ -118,11 +118,11 @@ public class BlockXPTap extends BlockDirectional implements ITileEntityProvider 
 			world.setBlockState(pos, state, 3);
 			float f = ((Boolean) state.getValue(POWERED)).booleanValue() ? 0.6F : 0.5F;
 			world.playSound((EntityPlayer) null, pos, MobGrindingUtils.TAP_SQUEAK, SoundCategory.BLOCKS, 0.3F, f);
-			TileEntityXPTap tileentity = (TileEntityXPTap)world.getTileEntity(pos);
+			TileEntityXPTap tileentity = (TileEntityXPTap) world.getTileEntity(pos);
 			tileentity.setActive(((Boolean) state.getValue(POWERED)).booleanValue());
 			return true;
 		}
-	}    
+	}
 
 	@Override
 	public boolean canPlaceBlockAt(World world, BlockPos pos) {
@@ -159,17 +159,17 @@ public class BlockXPTap extends BlockDirectional implements ITileEntityProvider 
 
 	@Override
 	public IBlockState withRotation(IBlockState state, Rotation rot) {
-		return state.withProperty(FACING, rot.rotate((EnumFacing)state.getValue(FACING)));
+		return state.withProperty(FACING, rot.rotate((EnumFacing) state.getValue(FACING)));
 	}
 
 	@Override
 	public IBlockState withMirror(IBlockState state, Mirror mirrorIn) {
-		return state.withRotation(mirrorIn.toRotation((EnumFacing)state.getValue(FACING)));
+		return state.withRotation(mirrorIn.toRotation((EnumFacing) state.getValue(FACING)));
 	}
 
 	@Override
 	protected BlockStateContainer createBlockState() {
-		return new BlockStateContainer(this, new IProperty[] {FACING, POWERED});
+		return new BlockStateContainer(this, new IProperty[] { FACING, POWERED });
 	}
 
 	@Override

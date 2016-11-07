@@ -32,42 +32,42 @@ public class BlockSpikes extends BlockDirectional {
 
 	public static final AxisAlignedBB SPIKES_AABB = new AxisAlignedBB(0.0625D, 0.0625D, 0.0625D, 0.9375D, 0.9375D, 0.9375D);
 
-    public BlockSpikes() {
-    	super(Material.IRON);
-        setHardness(5.0F);
-        setSoundType(SoundType.METAL);
-        setCreativeTab(MobGrindingUtils.TAB);
-    }
-
-    @Override
-    public AxisAlignedBB getCollisionBoundingBox(IBlockState blockState, World worldIn, BlockPos pos) {
-        return SPIKES_AABB;
-    }
-
-    @Override
-    @SideOnly(Side.CLIENT)
-    public AxisAlignedBB getSelectedBoundingBox(IBlockState state, World worldIn, BlockPos pos) {
-        return FULL_BLOCK_AABB;
-    }
-
-    @Override
-    public boolean isOpaqueCube(IBlockState state) {
-        return false;
-    }
+	public BlockSpikes() {
+		super(Material.IRON);
+		setHardness(5.0F);
+		setSoundType(SoundType.METAL);
+		setCreativeTab(MobGrindingUtils.TAB);
+	}
 
 	@Override
-    public EnumBlockRenderType getRenderType(IBlockState state) {
-        return EnumBlockRenderType.MODEL;
-    }
+	public AxisAlignedBB getCollisionBoundingBox(IBlockState blockState, World worldIn, BlockPos pos) {
+		return SPIKES_AABB;
+	}
 
-    @Override
+	@Override
+	@SideOnly(Side.CLIENT)
+	public AxisAlignedBB getSelectedBoundingBox(IBlockState state, World worldIn, BlockPos pos) {
+		return FULL_BLOCK_AABB;
+	}
+
+	@Override
+	public boolean isOpaqueCube(IBlockState state) {
+		return false;
+	}
+
+	@Override
+	public EnumBlockRenderType getRenderType(IBlockState state) {
+		return EnumBlockRenderType.MODEL;
+	}
+
+	@Override
 	public IBlockState getStateFromMeta(int meta) {
 		return getDefaultState().withProperty(FACING, EnumFacing.getFront(meta));
 	}
 
 	@Override
 	public int getMetaFromState(IBlockState state) {
-		return ((EnumFacing)state.getValue(FACING)).getIndex();
+		return ((EnumFacing) state.getValue(FACING)).getIndex();
 	}
 
 	@Override
@@ -77,38 +77,39 @@ public class BlockSpikes extends BlockDirectional {
 
 	@Override
 	public IBlockState withRotation(IBlockState state, Rotation rot) {
-		return state.withProperty(FACING, rot.rotate((EnumFacing)state.getValue(FACING)));
+		return state.withProperty(FACING, rot.rotate((EnumFacing) state.getValue(FACING)));
 	}
 
 	@Override
 	public IBlockState withMirror(IBlockState state, Mirror mirrorIn) {
-		return state.withRotation(mirrorIn.toRotation((EnumFacing)state.getValue(FACING)));
+		return state.withRotation(mirrorIn.toRotation((EnumFacing) state.getValue(FACING)));
 	}
 
 	@Override
 	protected BlockStateContainer createBlockState() {
-		return new BlockStateContainer(this, new IProperty[] {FACING});
+		return new BlockStateContainer(this, new IProperty[] { FACING });
 	}
 
 	@Override
 	public void onEntityCollidedWithBlock(World worldIn, BlockPos pos, IBlockState state, Entity entity) {
-		if(!worldIn.isRemote && entity instanceof EntityLivingBase)
+		if (!worldIn.isRemote && entity instanceof EntityLivingBase)
 			entity.attackEntityFrom(MobGrindingUtils.SPIKE_DAMAGE, 5);
 	}
 
 	public static final Method xpPoints = getExperiencePoints();
 
 	@SubscribeEvent
-	public void dropXP(LivingDropsEvent event){
+	public void dropXP(LivingDropsEvent event) {
 		EntityLivingBase entity = event.getEntityLiving();
 		World world = entity.worldObj;
-		if(entity != null) {
-			if(!world.isRemote && !event.isRecentlyHit() && event.getSource() == MobGrindingUtils.SPIKE_DAMAGE){
+		if (entity != null) {
+			if (!world.isRemote && !event.isRecentlyHit() && event.getSource() == MobGrindingUtils.SPIKE_DAMAGE) {
 				int xp = 0;
-				try{
-					xp = (Integer)xpPoints.invoke(entity, FakePlayerFactory.getMinecraft((WorldServer)world));
-				}catch(Exception e){}
-				while(xp > 0){
+				try {
+					xp = (Integer) xpPoints.invoke(entity, FakePlayerFactory.getMinecraft((WorldServer) world));
+				} catch (Exception e) {
+				}
+				while (xp > 0) {
 					int cap = EntityXPOrb.getXPSplit(xp);
 					xp -= cap;
 					entity.worldObj.spawnEntityInWorld(new EntityXPOrb(entity.worldObj, entity.posX, entity.posY, entity.posZ, cap));
@@ -117,16 +118,18 @@ public class BlockSpikes extends BlockDirectional {
 		}
 	}
 
-	public static Method getExperiencePoints(){
+	public static Method getExperiencePoints() {
 		Method method = null;
-		try{
+		try {
 			method = EntityLiving.class.getDeclaredMethod("getExperiencePoints", EntityPlayer.class);
 			method.setAccessible(true);
-		}catch(Exception e){}
-		try{
+		} catch (Exception e) {
+		}
+		try {
 			method = EntityLiving.class.getDeclaredMethod("func_70693_a", EntityPlayer.class);
 			method.setAccessible(true);
-		}catch(Exception e){}
+		} catch (Exception e) {
+		}
 		return method;
 	}
 }

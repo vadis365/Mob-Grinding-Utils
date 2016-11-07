@@ -1,7 +1,5 @@
 package mob_grinding_utils.blocks;
 
-import java.util.Random;
-
 import mob_grinding_utils.MobGrindingUtils;
 import mob_grinding_utils.tile.TileEntitySaw;
 import net.minecraft.block.Block;
@@ -92,30 +90,31 @@ public class BlockSaw extends BlockDirectional implements ITileEntityProvider {
 
 	@Override
 	public IBlockState onBlockPlaced(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer) {
-		return this.getDefaultState().withProperty(FACING,  facing).withProperty(POWERED, world.isBlockPowered(pos));
+		return this.getDefaultState().withProperty(FACING, facing).withProperty(POWERED, world.isBlockPowered(pos));
 	}
-	
+
 	@Override
-	public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {
-		if(state.getValue(POWERED)) {
+	public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase placer,
+			ItemStack stack) {
+		if (state.getValue(POWERED)) {
 			TileEntitySaw tile = (TileEntitySaw) world.getTileEntity(pos);
 			tile.setActive(true);
 		}
-    }
+	}
 
 	@Override
 	public IBlockState withRotation(IBlockState state, Rotation rot) {
-		return state.withProperty(FACING, rot.rotate((EnumFacing)state.getValue(FACING)));
+		return state.withProperty(FACING, rot.rotate((EnumFacing) state.getValue(FACING)));
 	}
 
 	@Override
 	public IBlockState withMirror(IBlockState state, Mirror mirrorIn) {
-		return state.withRotation(mirrorIn.toRotation((EnumFacing)state.getValue(FACING)));
+		return state.withRotation(mirrorIn.toRotation((EnumFacing) state.getValue(FACING)));
 	}
 
 	@Override
 	protected BlockStateContainer createBlockState() {
-		return new BlockStateContainer(this, new IProperty[] {FACING, POWERED});
+		return new BlockStateContainer(this, new IProperty[] { FACING, POWERED });
 	}
 
 	public static void setState(World world, BlockPos pos, IBlockState state, boolean powered) {

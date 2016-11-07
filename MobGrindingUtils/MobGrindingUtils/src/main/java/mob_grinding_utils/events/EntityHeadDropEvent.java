@@ -37,7 +37,7 @@ public class EntityHeadDropEvent {
 		int beheadingLevel = 0;
 		if (event.getSource().getSourceOfDamage() instanceof EntityPlayer) {
 			EntityPlayer fakePlayer = (EntityPlayer) event.getSource().getSourceOfDamage();
-			if (fakePlayer.getDisplayNameString().matches(new TextComponentTranslation("fakeplayer.mob_masher").getFormattedText()) ) {
+			if (fakePlayer.getDisplayNameString().matches(new TextComponentTranslation("fakeplayer.mob_masher").getFormattedText())) {
 				if (fakePlayer.getHeldItemMainhand().getItem() instanceof ItemImaginaryInvisibleNotReallyThereSword) {
 					ItemStack tempSword = fakePlayer.getHeldItemMainhand();
 					if (tempSword.hasTagCompound() && tempSword.getTagCompound().hasKey("beheadingValue"))
@@ -56,9 +56,9 @@ public class EntityHeadDropEvent {
 	public static ItemStack getHeadfromEntity(EntityLivingBase target) {
 		if (target.isChild())
 			return null;
-		
+
 		if (target instanceof EntityEnderman)
-			if(Loader.isModLoaded("EnderIO"))
+			if (Loader.isModLoaded("EnderIO"))
 				return new ItemStack(Item.REGISTRY.getObject(new ResourceLocation("enderio:blockEndermanSkull")), 1, 0);
 		if (target instanceof EntityCreeper)
 			return new ItemStack(Items.SKULL, 1, 4);

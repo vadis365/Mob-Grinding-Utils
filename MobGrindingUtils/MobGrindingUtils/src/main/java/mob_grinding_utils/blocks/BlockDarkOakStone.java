@@ -13,18 +13,18 @@ import net.minecraft.item.Item;
 
 public class BlockDarkOakStone extends Block {
 
-    public BlockDarkOakStone() {
-        super(Material.ROCK);
-        setHardness(1.5F);
-        setResistance(10.0F);
-        setSoundType(SoundType.STONE);
-        setLightLevel(0.5F);
-        setCreativeTab(MobGrindingUtils.TAB);
-    }
+	public BlockDarkOakStone() {
+		super(Material.ROCK);
+		setHardness(1.5F);
+		setResistance(10.0F);
+		setSoundType(SoundType.STONE);
+		setLightLevel(0.5F);
+		setCreativeTab(MobGrindingUtils.TAB);
+	}
 
-    @Nullable
-    public Item getItemDropped(IBlockState state, Random rand, int fortune) {
-        return Item.getItemFromBlock(this);
-    }
+	@Nullable
+	public Item getItemDropped(IBlockState state, Random rand, int fortune) {
+		return Item.getItemFromBlock(this);
+	}
 
 }

@@ -22,13 +22,13 @@ public class BlockDragonMuffler extends Block {
 
 	public static final PropertyBool MODE = PropertyBool.create("mode");
 
-    public BlockDragonMuffler() {
-    	super(Material.CLOTH);
+	public BlockDragonMuffler() {
+		super(Material.CLOTH);
 		setDefaultState(this.getBlockState().getBaseState().withProperty(MODE, false));
-        setHardness(0.5F);
-        setSoundType(SoundType.CLOTH);
-        setCreativeTab(MobGrindingUtils.TAB);
-    }
+		setHardness(0.5F);
+		setSoundType(SoundType.CLOTH);
+		setCreativeTab(MobGrindingUtils.TAB);
+	}
 
 	@Override
 	public IBlockState getStateFromMeta(int meta) {
@@ -45,7 +45,7 @@ public class BlockDragonMuffler extends Block {
 
 	@Override
 	protected BlockStateContainer createBlockState() {
-		return new BlockStateContainer(this, new IProperty[] {MODE});
+		return new BlockStateContainer(this, new IProperty[] { MODE });
 	}
 
 	@Override

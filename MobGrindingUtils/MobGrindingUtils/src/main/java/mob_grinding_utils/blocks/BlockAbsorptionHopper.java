@@ -33,22 +33,22 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class BlockAbsorptionHopper extends BlockContainer {
-	
-	 public static final PropertyEnum<TileEntityAbsorptionHopper.EnumStatus> NORTH = PropertyEnum.create("north", TileEntityAbsorptionHopper.EnumStatus.class);
-	 public static final PropertyEnum<TileEntityAbsorptionHopper.EnumStatus> SOUTH = PropertyEnum.create("south", TileEntityAbsorptionHopper.EnumStatus.class);
-	 public static final PropertyEnum<TileEntityAbsorptionHopper.EnumStatus> WEST = PropertyEnum.create("west", TileEntityAbsorptionHopper.EnumStatus.class);
-	 public static final PropertyEnum<TileEntityAbsorptionHopper.EnumStatus> EAST = PropertyEnum.create("east", TileEntityAbsorptionHopper.EnumStatus.class);
-	 public static final PropertyEnum<TileEntityAbsorptionHopper.EnumStatus> UP = PropertyEnum.create("up", TileEntityAbsorptionHopper.EnumStatus.class);
-	 public static final PropertyEnum<TileEntityAbsorptionHopper.EnumStatus> DOWN = PropertyEnum.create("down", TileEntityAbsorptionHopper.EnumStatus.class);
-	 protected static final AxisAlignedBB HOPPER_AABB = new AxisAlignedBB(0.25D, 0.25D, 0.25D, 0.75D, 0.75D, 0.75D);
-	
-    public BlockAbsorptionHopper() {
-    	super(Material.IRON);
-        setHardness(10.0F);
-        setHarvestLevel("pickaxe", 0);
-        setSoundType(SoundType.METAL);
-        setCreativeTab(MobGrindingUtils.TAB);
-    }
+
+	public static final PropertyEnum<TileEntityAbsorptionHopper.EnumStatus> NORTH = PropertyEnum.create("north", TileEntityAbsorptionHopper.EnumStatus.class);
+	public static final PropertyEnum<TileEntityAbsorptionHopper.EnumStatus> SOUTH = PropertyEnum.create("south", TileEntityAbsorptionHopper.EnumStatus.class);
+	public static final PropertyEnum<TileEntityAbsorptionHopper.EnumStatus> WEST = PropertyEnum.create("west", TileEntityAbsorptionHopper.EnumStatus.class);
+	public static final PropertyEnum<TileEntityAbsorptionHopper.EnumStatus> EAST = PropertyEnum.create("east", TileEntityAbsorptionHopper.EnumStatus.class);
+	public static final PropertyEnum<TileEntityAbsorptionHopper.EnumStatus> UP = PropertyEnum.create("up", TileEntityAbsorptionHopper.EnumStatus.class);
+	public static final PropertyEnum<TileEntityAbsorptionHopper.EnumStatus> DOWN = PropertyEnum.create("down", TileEntityAbsorptionHopper.EnumStatus.class);
+	protected static final AxisAlignedBB HOPPER_AABB = new AxisAlignedBB(0.25D, 0.25D, 0.25D, 0.75D, 0.75D, 0.75D);
+
+	public BlockAbsorptionHopper() {
+		super(Material.IRON);
+		setHardness(10.0F);
+		setHarvestLevel("pickaxe", 0);
+		setSoundType(SoundType.METAL);
+		setCreativeTab(MobGrindingUtils.TAB);
+	}
 
 	@Override
 	public TileEntity createNewTileEntity(World worldIn, int meta) {
@@ -57,14 +57,15 @@ public class BlockAbsorptionHopper extends BlockContainer {
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public boolean shouldSideBeRendered(IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side) {
+	public boolean shouldSideBeRendered(IBlockState blockState, IBlockAccess blockAccess, BlockPos pos,
+			EnumFacing side) {
 		return true;
 	}
 
 	@Override
-    public EnumBlockRenderType getRenderType(IBlockState state) {
-        return EnumBlockRenderType.MODEL;
-    }
+	public EnumBlockRenderType getRenderType(IBlockState state) {
+		return EnumBlockRenderType.MODEL;
+	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
@@ -83,65 +84,65 @@ public class BlockAbsorptionHopper extends BlockContainer {
 		return BlockRenderLayer.SOLID;
 	}
 
-    @Override
-    public boolean isOpaqueCube(IBlockState state) {
-        return false;
-    }
-
-    @Override
-    public boolean isFullBlock(IBlockState state) {
-        return false;
-    }
-
-    @Override
-    public boolean isFullCube(IBlockState state) {
-        return false;
-    }
-
-    @Override
-    public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
-        if (world.isRemote)
-			return true;
-
-        if (!world.isRemote) {
-        	TileEntity tile = world.getTileEntity(pos);
-
-        	if (tile instanceof TileEntityAbsorptionHopper) {
-        		TileEntityAbsorptionHopper vacuum = (TileEntityAbsorptionHopper) tile;
-
-        		if(!player.isSneaking()) {
-        			world.notifyBlockUpdate(pos, state, state, 3);
-        			player.openGui(MobGrindingUtils.INSTANCE, MobGrindingUtils.PROXY.GUI_ID_ABSORPTION_HOPPER, world, pos.getX(), pos.getY(), pos.getZ());
-        		}
-        		else
-        			vacuum.toggleMode(side);
-
-        		world.notifyBlockUpdate(pos, state, state, 3);
-        	}
-        }
-        return true;
+	@Override
+	public boolean isOpaqueCube(IBlockState state) {
+		return false;
 	}
 
-    @Override
-    public IBlockState getActualState(IBlockState state, IBlockAccess world, BlockPos pos) {
-        TileEntity tileEntity = world.getTileEntity(pos);
-        if (tileEntity instanceof TileEntityAbsorptionHopper) {
-            TileEntityAbsorptionHopper tile = (TileEntityAbsorptionHopper) tileEntity;
-            TileEntityAbsorptionHopper.EnumStatus north = tile.getSideStatus(EnumFacing.NORTH);
-            TileEntityAbsorptionHopper.EnumStatus south = tile.getSideStatus(EnumFacing.SOUTH);
-            TileEntityAbsorptionHopper.EnumStatus west = tile.getSideStatus(EnumFacing.WEST);
-            TileEntityAbsorptionHopper.EnumStatus east = tile.getSideStatus(EnumFacing.EAST);
-            TileEntityAbsorptionHopper.EnumStatus up = tile.getSideStatus(EnumFacing.UP);
-            TileEntityAbsorptionHopper.EnumStatus down = tile.getSideStatus(EnumFacing.DOWN);
-            return state.withProperty(NORTH, north).withProperty(SOUTH, south).withProperty(WEST, west).withProperty(EAST, east).withProperty(UP, up).withProperty(DOWN, down);
-        }
-        return state.withProperty(NORTH, TileEntityAbsorptionHopper.EnumStatus.STATUS_NONE)
-                .withProperty(SOUTH, TileEntityAbsorptionHopper.EnumStatus.STATUS_NONE)
-                .withProperty(WEST, TileEntityAbsorptionHopper.EnumStatus.STATUS_NONE)
-                .withProperty(EAST, TileEntityAbsorptionHopper.EnumStatus.STATUS_NONE)
-                .withProperty(UP, TileEntityAbsorptionHopper.EnumStatus.STATUS_NONE)
-                .withProperty(DOWN, TileEntityAbsorptionHopper.EnumStatus.STATUS_NONE);
-    }
+	@Override
+	public boolean isFullBlock(IBlockState state) {
+		return false;
+	}
+
+	@Override
+	public boolean isFullCube(IBlockState state) {
+		return false;
+	}
+
+	@Override
+	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
+		if (world.isRemote)
+			return true;
+
+		if (!world.isRemote) {
+			TileEntity tile = world.getTileEntity(pos);
+
+			if (tile instanceof TileEntityAbsorptionHopper) {
+				TileEntityAbsorptionHopper vacuum = (TileEntityAbsorptionHopper) tile;
+
+				if (!player.isSneaking()) {
+					world.notifyBlockUpdate(pos, state, state, 3);
+					player.openGui(MobGrindingUtils.INSTANCE, MobGrindingUtils.PROXY.GUI_ID_ABSORPTION_HOPPER, world, pos.getX(), pos.getY(), pos.getZ());
+				} else
+					vacuum.toggleMode(side);
+
+				world.notifyBlockUpdate(pos, state, state, 3);
+			}
+		}
+		return true;
+	}
+
+	@Override
+	public IBlockState getActualState(IBlockState state, IBlockAccess world, BlockPos pos) {
+		TileEntity tileEntity = world.getTileEntity(pos);
+		if (tileEntity instanceof TileEntityAbsorptionHopper) {
+			TileEntityAbsorptionHopper tile = (TileEntityAbsorptionHopper) tileEntity;
+			TileEntityAbsorptionHopper.EnumStatus north = tile.getSideStatus(EnumFacing.NORTH);
+			TileEntityAbsorptionHopper.EnumStatus south = tile.getSideStatus(EnumFacing.SOUTH);
+			TileEntityAbsorptionHopper.EnumStatus west = tile.getSideStatus(EnumFacing.WEST);
+			TileEntityAbsorptionHopper.EnumStatus east = tile.getSideStatus(EnumFacing.EAST);
+			TileEntityAbsorptionHopper.EnumStatus up = tile.getSideStatus(EnumFacing.UP);
+			TileEntityAbsorptionHopper.EnumStatus down = tile.getSideStatus(EnumFacing.DOWN);
+			return state.withProperty(NORTH, north).withProperty(SOUTH, south).withProperty(WEST, west)
+					.withProperty(EAST, east).withProperty(UP, up).withProperty(DOWN, down);
+		}
+		return state.withProperty(NORTH, TileEntityAbsorptionHopper.EnumStatus.STATUS_NONE)
+				.withProperty(SOUTH, TileEntityAbsorptionHopper.EnumStatus.STATUS_NONE)
+				.withProperty(WEST, TileEntityAbsorptionHopper.EnumStatus.STATUS_NONE)
+				.withProperty(EAST, TileEntityAbsorptionHopper.EnumStatus.STATUS_NONE)
+				.withProperty(UP, TileEntityAbsorptionHopper.EnumStatus.STATUS_NONE)
+				.withProperty(DOWN, TileEntityAbsorptionHopper.EnumStatus.STATUS_NONE);
+	}
 
 	@Nullable
 	@Override
@@ -153,7 +154,7 @@ public class BlockAbsorptionHopper extends BlockContainer {
 	public void onBlockHarvested(World world, BlockPos pos, IBlockState state, EntityPlayer player) {
 		if (!world.isRemote) {
 			TileEntityAbsorptionHopper tile = (TileEntityAbsorptionHopper) world.getTileEntity(pos);
-			if (tile !=null) {
+			if (tile != null) {
 				InventoryHelper.dropInventoryItems(world, pos, (TileEntityAbsorptionHopper) tile);
 				world.removeTileEntity(pos);
 			}
@@ -165,19 +166,19 @@ public class BlockAbsorptionHopper extends BlockContainer {
 		return new BlockStateContainer(this, NORTH, SOUTH, WEST, EAST, UP, DOWN);
 	}
 
-    @Override
-    public IBlockState getStateFromMeta(int meta) {
-        return getDefaultState();
-    }
+	@Override
+	public IBlockState getStateFromMeta(int meta) {
+		return getDefaultState();
+	}
 
-    @Override
-    public int getMetaFromState(IBlockState state) {
-        return 0;
-    }
+	@Override
+	public int getMetaFromState(IBlockState state) {
+		return 0;
+	}
 
 	@SubscribeEvent
 	@SideOnly(Side.CLIENT)
-	 public void onTextureStitchPre(TextureStitchEvent.Pre event) {
+	public void onTextureStitchPre(TextureStitchEvent.Pre event) {
 		event.getMap().registerSprite(MobGrindingUtils.FLUID_XP.getStill());
 		event.getMap().registerSprite(MobGrindingUtils.FLUID_XP.getFlowing());
 	}

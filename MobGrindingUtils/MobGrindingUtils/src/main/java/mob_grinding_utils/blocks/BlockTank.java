@@ -32,12 +32,12 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class BlockTank extends BlockContainer {
-    public BlockTank() {
-    	super(Material.GLASS);
-        setHardness(5.0F);
-        setSoundType(SoundType.GLASS);
-        setCreativeTab(MobGrindingUtils.TAB);
-    }
+	public BlockTank() {
+		super(Material.GLASS);
+		setHardness(5.0F);
+		setSoundType(SoundType.GLASS);
+		setCreativeTab(MobGrindingUtils.TAB);
+	}
 
 	@Override
 	public TileEntity createNewTileEntity(World worldIn, int meta) {
@@ -45,9 +45,9 @@ public class BlockTank extends BlockContainer {
 	}
 
 	@Override
-    public EnumBlockRenderType getRenderType(IBlockState state) {
-        return EnumBlockRenderType.MODEL;
-    }
+	public EnumBlockRenderType getRenderType(IBlockState state) {
+		return EnumBlockRenderType.MODEL;
+	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
@@ -89,12 +89,12 @@ public class BlockTank extends BlockContainer {
 	}
 
 	@Override
-    public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {
+	public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {
 		super.onBlockPlacedBy(world, pos, state, placer, stack);
-		if(!world.isRemote && stack.hasTagCompound()) {
+		if (!world.isRemote && stack.hasTagCompound()) {
 			TileEntity tileentity = world.getTileEntity(pos);
 			if (tileentity instanceof TileEntityTank) {
-				if(!stack.getTagCompound().hasKey("Empty")) {
+				if (!stack.getTagCompound().hasKey("Empty")) {
 					FluidStack fluid = FluidStack.loadFluidStackFromNBT(stack.getTagCompound());
 					((TileEntityTank) tileentity).tank.fillInternal(fluid, true);
 				}
@@ -114,7 +114,7 @@ public class BlockTank extends BlockContainer {
 
 	@Nullable
 	private IFluidHandler getFluidHandler(IBlockAccess world, BlockPos pos) {
-		TileEntityTank tileentity = (TileEntityTank)world.getTileEntity(pos);
+		TileEntityTank tileentity = (TileEntityTank) world.getTileEntity(pos);
 		return tileentity.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null);
 	}
 
