@@ -13,8 +13,16 @@ import mob_grinding_utils.blocks.BlockWitherMuffler;
 import mob_grinding_utils.blocks.BlockXPTap;
 import mob_grinding_utils.capability.base.EntityCapabilityHandler;
 import mob_grinding_utils.capability.bossbars.BossBarPlayerCapability;
-import mob_grinding_utils.events.ClientEventHandlers;
-import mob_grinding_utils.events.ServerEventHandlers;
+import mob_grinding_utils.events.BossBarHidingEvent;
+import mob_grinding_utils.events.ChickenFuseEvent;
+import mob_grinding_utils.events.ChickenInteractionEvent;
+import mob_grinding_utils.events.EntityHeadDropEvent;
+import mob_grinding_utils.events.GlobalDragonSoundEvent;
+import mob_grinding_utils.events.GlobalWitherSoundEvent;
+import mob_grinding_utils.events.LocalDragonSoundEvent;
+import mob_grinding_utils.events.LocalWitherSoundEvent;
+import mob_grinding_utils.events.ParticleTextureStitchEvent;
+import mob_grinding_utils.events.RenderChickenSwell;
 import mob_grinding_utils.items.ItemAbsorptionUpgrade;
 import mob_grinding_utils.items.ItemFanUpgrade;
 import mob_grinding_utils.items.ItemGMChickenFeed;
@@ -245,11 +253,21 @@ public class MobGrindingUtils {
 		NETWORK_WRAPPER.registerMessage(TapParticleHandler.class, TapParticleMessage.class, 2, Side.CLIENT);
 		NETWORK_WRAPPER.registerMessage(MessageSyncEntityCapabilities.class, MessageSyncEntityCapabilities.class, 5, Side.CLIENT);
 
-		MinecraftForge.EVENT_BUS.register(new ServerEventHandlers());
+		MinecraftForge.EVENT_BUS.register(SPIKES);
+		MinecraftForge.EVENT_BUS.register(new ChickenInteractionEvent());
+		MinecraftForge.EVENT_BUS.register(new ChickenFuseEvent());
+		MinecraftForge.EVENT_BUS.register(new LocalWitherSoundEvent());
+		MinecraftForge.EVENT_BUS.register(new LocalDragonSoundEvent());
+		MinecraftForge.EVENT_BUS.register(new EntityHeadDropEvent());
 		MinecraftForge.EVENT_BUS.register(EntityCapabilityHandler.class);
 
-		if (event.getSide() == Side.CLIENT)
-			MinecraftForge.EVENT_BUS.register(new ClientEventHandlers());
+		if (event.getSide() == Side.CLIENT) {
+			MinecraftForge.EVENT_BUS.register(new RenderChickenSwell());
+			MinecraftForge.EVENT_BUS.register(new ParticleTextureStitchEvent());
+			MinecraftForge.EVENT_BUS.register(new BossBarHidingEvent());
+			MinecraftForge.EVENT_BUS.register(new GlobalWitherSoundEvent());
+			MinecraftForge.EVENT_BUS.register(new GlobalDragonSoundEvent());
+		}
 
 		EntityCapabilityHandler.registerEntityCapability(new BossBarPlayerCapability());
 		EntityCapabilityHandler.registerCapabilities();
@@ -268,6 +286,7 @@ public class MobGrindingUtils {
 		CHICKEN_RISE = new SoundEvent(new ResourceLocation("mob_grinding_utils", "chicken_rise")).setRegistryName("mob_grinding_utils", "chicken_rise");
 		GameRegistry.register(CHICKEN_RISE);
 		GameRegistry.addRecipe(new RecipeChickenFeed());
+		
 	}
 
 	@EventHandler
