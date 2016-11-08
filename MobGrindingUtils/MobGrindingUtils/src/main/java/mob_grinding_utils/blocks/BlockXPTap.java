@@ -27,6 +27,7 @@ import net.minecraft.util.Rotation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -40,11 +41,29 @@ public class BlockXPTap extends BlockDirectional implements ITileEntityProvider 
 	public static final PropertyBool POWERED = PropertyBool.create("powered");
 
 	public BlockXPTap() {
-		super(Material.IRON);
+		super(Material.CIRCUITS);
 		setDefaultState(this.getBlockState().getBaseState().withProperty(POWERED, false));
 		setHardness(1.0F);
 		setSoundType(SoundType.METAL);
 		setCreativeTab(MobGrindingUtils.TAB);
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {
+		state = state.getActualState(source, pos);
+		switch ((EnumFacing) state.getValue(FACING)) {
+		default:
+		case EAST:
+			return XP_TAP_EAST_AABB;
+		case WEST:
+			return XP_TAP_WEST_AABB;
+		case SOUTH:
+			return XP_TAP_SOUTH_AABB;
+		case NORTH:
+			return XP_TAP_NORTH_AABB;
+		}
+		
 	}
 
 	@Override
@@ -138,6 +157,15 @@ public class BlockXPTap extends BlockDirectional implements ITileEntityProvider 
 		boolean isSide = facing.getAxis().isHorizontal();
 		return isSide && world.getBlockState(blockpos).getBlock() instanceof BlockTank;
 	}
+
+	@Override
+    public void onNeighborChange(IBlockAccess world, BlockPos pos, BlockPos neighbor) {
+		EnumFacing facing = world.getBlockState(pos).getValue(FACING);
+    	if(!canPlaceAt((World) world, pos, facing)) {
+            this.dropBlockAsItem((World) world, pos, world.getBlockState(pos), 0);
+            ((World) world).setBlockToAir(pos);
+        }
+    }
 
 	@Override
 	public IBlockState getStateFromMeta(int meta) {
