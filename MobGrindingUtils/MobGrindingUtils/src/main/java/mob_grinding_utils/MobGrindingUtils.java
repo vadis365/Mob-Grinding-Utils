@@ -37,6 +37,7 @@ import mob_grinding_utils.network.MessageSyncEntityCapabilities;
 import mob_grinding_utils.network.TapParticleHandler;
 import mob_grinding_utils.network.TapParticleMessage;
 import mob_grinding_utils.proxy.CommonProxy;
+import mob_grinding_utils.recipe.ModRecipes;
 import mob_grinding_utils.recipe.RecipeChickenFeed;
 import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
@@ -243,6 +244,8 @@ public class MobGrindingUtils {
 
 		PROXY.registerTileEntities();
 		PROXY.registerRenderers();
+		ModRecipes.addRecipes();
+
 		NetworkRegistry.INSTANCE.registerGuiHandler(INSTANCE, PROXY);
 		NETWORK_WRAPPER = NetworkRegistry.INSTANCE.newSimpleChannel("mob_grinding_utils");
 		NETWORK_WRAPPER.registerMessage(AbsorptionHopperPacketHandler.class, AbsorptionHopperMessage.class, 0, Side.SERVER);
@@ -283,6 +286,7 @@ public class MobGrindingUtils {
 		CHICKEN_RISE = new SoundEvent(new ResourceLocation("mob_grinding_utils", "chicken_rise")).setRegistryName("mob_grinding_utils", "chicken_rise");
 		GameRegistry.register(CHICKEN_RISE);
 		GameRegistry.addRecipe(new RecipeChickenFeed());
+		
 	}
 
 	@EventHandler
