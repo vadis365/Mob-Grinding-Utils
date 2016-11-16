@@ -11,6 +11,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
@@ -35,12 +36,15 @@ public class MessageSyncEntityCapabilities implements IMessage, IMessageHandler<
 		return world.getEntityByID(this.entityID);
 	}
 
-
-
 	@Override
-	public MessageSyncEntityCapabilities onMessage(MessageSyncEntityCapabilities message, MessageContext ctx) {
+	public MessageSyncEntityCapabilities onMessage(final MessageSyncEntityCapabilities message, MessageContext ctx) {
 		if(ctx.side == Side.CLIENT) {
-			this.handleMessage(message);
+			Minecraft mc = FMLClientHandler.instance().getClient();
+			mc.addScheduledTask(new Runnable() {
+				public void run() {
+					handleMessage(message);
+				}
+			});
 		}
 		return null;
 	}
