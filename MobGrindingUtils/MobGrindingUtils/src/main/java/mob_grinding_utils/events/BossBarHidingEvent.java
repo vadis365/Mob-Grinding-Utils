@@ -21,7 +21,7 @@ public class BossBarHidingEvent {
 				IBossBarCapability cap = player.getCapability(BossBarPlayerCapability.CAPABILITY_PLAYER_BOSS_BAR, null);
 
 				if (!cap.renderWitherBar()) {
-					if (event.getBossInfo().getName().getUnformattedText().equals("Wither"))
+					if (event.getBossInfo().getName().getUnformattedText().equals("Wither") || event.getBossInfo().getName().getUnformattedText().equals("Wither_Crumb"))
 						event.setCanceled(true);
 				}
 
