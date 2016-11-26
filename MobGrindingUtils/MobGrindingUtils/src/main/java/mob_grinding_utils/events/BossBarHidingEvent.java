@@ -21,7 +21,7 @@ public class BossBarHidingEvent {
 				IBossBarCapability cap = player.getCapability(BossBarPlayerCapability.CAPABILITY_PLAYER_BOSS_BAR, null);
 
 				if (!cap.renderWitherBar()) {
-					if (event.getBossInfo().getName().getUnformattedText().equals("Wither") || event.getBossInfo().getName().getUnformattedText().equals("Wither_Crumb"))
+					if (event.getBossInfo().getName().getUnformattedText().equals("Wither") || isWitherCrumbsBoss(event.getBossInfo().getName().getUnformattedText()))
 						event.setCanceled(true);
 				}
 
@@ -31,5 +31,15 @@ public class BossBarHidingEvent {
 				}
 			}
 		}
+	}
+
+	//Maybe a little over the top on the checking - but meh it's safe :)
+	public boolean isWitherCrumbsBoss (String fullName) {
+		if(!fullName.startsWith("- ") || !fullName.endsWith(" -"))
+			return false;
+		String[] entry = fullName.split(" ");
+		if (entry.length != 3)
+			return false;
+		return entry[0].equals("-") && entry[2].equals("-");
 	}
 }
