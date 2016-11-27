@@ -35,6 +35,8 @@ public class BossBarHidingEvent {
 
 	//Maybe a little over the top on the checking - but meh it's safe :)
 	public boolean isWitherCrumbsBoss (String fullName) {
+		if(fullName.equals("- WitherCrumb -"))
+			return true;
 		if(!fullName.startsWith("- ") || !fullName.endsWith(" -"))
 			return false;
 		String[] entry = fullName.split(" ");

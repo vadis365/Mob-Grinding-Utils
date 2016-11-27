@@ -42,7 +42,7 @@ public class ModRecipes {
 		addShapedRecipe(new ItemStack(MobGrindingUtils.WITHER_MUFFLER), "WWW", "WSW", "WWW", 'W', Blocks.WOOL, 'S', new ItemStack(Items.SKULL, 1, 1));
 
 		//Dragon Muffler
-		addShapedRecipe(new ItemStack(MobGrindingUtils.WITHER_MUFFLER), "WWW", "WEW", "WWW", 'W', Blocks.WOOL, 'E', Blocks.DRAGON_EGG);
+		addShapedRecipe(new ItemStack(MobGrindingUtils.DRAGON_MUFFLER), "WWW", "WEW", "WWW", 'W', Blocks.WOOL, 'E', Blocks.DRAGON_EGG);
 
 		//Mob Masher
 		addShapedRecipe(new ItemStack(MobGrindingUtils.SAW), "SDS", "VRV", "DID", 'S', Items.IRON_SWORD, 'D', "gemDiamond", 'V', MobGrindingUtils.SPIKES, 'R', "blockRedstone", 'I', "blockIron");
