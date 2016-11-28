@@ -17,11 +17,12 @@ public class BossBarHidingEvent {
 	public void onRenderHUD(BossInfo event) {
 		if (event.getType().equals(RenderGameOverlayEvent.ElementType.BOSSINFO)) {
 			EntityPlayer player = Minecraft.getMinecraft().thePlayer;
+
 			if (player != null) {
 				IBossBarCapability cap = player.getCapability(BossBarPlayerCapability.CAPABILITY_PLAYER_BOSS_BAR, null);
 
 				if (!cap.renderWitherBar()) {
-					if (event.getBossInfo().getName().getUnformattedText().equals("Wither") || isWitherCrumbsBoss(event.getBossInfo().getName().getUnformattedText()))
+					if (event.getBossInfo().getName().getUnformattedText().equals("Wither") || isWitherCrumbsBoss(player))
 						event.setCanceled(true);
 				}
 
@@ -33,15 +34,14 @@ public class BossBarHidingEvent {
 		}
 	}
 
-	//Maybe a little over the top on the checking - but meh it's safe :)
-	public boolean isWitherCrumbsBoss (String fullName) {
-		if(fullName.equals("- WitherCrumb -"))
-			return true;
-		if(!fullName.startsWith("- ") || !fullName.endsWith(" -"))
-			return false;
-		String[] entry = fullName.split(" ");
-		if (entry.length != 3)
-			return false;
-		return entry[0].equals("-") && entry[2].equals("-");
+	// FFS This is Shit!
+	public boolean isWitherCrumbsBoss(EntityPlayer player) {
+		String name = null;
+		for (int mobs = 0; mobs < player.worldObj.getLoadedEntityList().size(); mobs++) {
+			name = player.worldObj.getLoadedEntityList().get(mobs).toString();
+			if (name.startsWith("EntityHumanWither"))
+				break;
+		}
+		return name.startsWith("EntityHumanWither");
 	}
 }
