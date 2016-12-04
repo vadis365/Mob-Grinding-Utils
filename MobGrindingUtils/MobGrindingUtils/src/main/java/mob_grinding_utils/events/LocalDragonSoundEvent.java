@@ -17,9 +17,9 @@ public class LocalDragonSoundEvent {
 			World world = dragon.worldObj;
 			boolean playsound = true;
 			if (!world.isRemote) {
-				for (int x = -8; x < 8; x++)
-					for (int y = -8; y < 8; y++)
-						for (int z = -8; z < 8; z++)
+				for (int x = -32; x < 32; x++)
+					for (int y = -32; y < 32; y++)
+						for (int z = -32; z < 32; z++)
 							if ((world.getBlockState(new BlockPos(dragon.posX + x, dragon.posY + y, dragon.posZ + z)).getBlock() instanceof BlockDragonMuffler))
 								playsound = false;
 				if (playsound) {
