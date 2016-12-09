@@ -4,9 +4,9 @@ import java.util.List;
 
 import mob_grinding_utils.MobGrindingUtils;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.passive.EntityChicken;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -14,6 +14,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -46,12 +47,19 @@ public class ItemMobSwab extends Item {
 	@Override
 	public boolean itemInteractionForEntity(ItemStack stack, EntityPlayer player, EntityLivingBase target, EnumHand hand) {
 		if (target instanceof EntityLiving && !(target instanceof EntityPlayer) && getDamage(stack) == 0) {
-			String mobName = EntityList.getEntityString(target);
+			String mobName = target.getName();
 			ItemStack stack2 = new ItemStack(MobGrindingUtils.MOB_SWAB, 1, 1);
 			if (!stack2.hasTagCompound())
 				stack2.setTagCompound(new NBTTagCompound());
-			if (!stack2.getTagCompound().hasKey("mguMobName"))
+			if (!stack2.getTagCompound().hasKey("mguMobName")) {
 				stack2.getTagCompound().setString("mguMobName", mobName);
+				NBTTagCompound nbt = new NBTTagCompound();
+				target.writeEntityToNBT(nbt);
+				if (Loader.isModLoaded("chickens")) {
+					if (target instanceof EntityChicken && nbt.hasKey("Type"))
+						stack2.getTagCompound().setInteger("chickenType", nbt.getInteger("Type"));
+				}
+			}
 			player.swingArm(hand);
 			player.setHeldItem(hand, stack2);
 			return true;

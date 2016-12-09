@@ -8,10 +8,13 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.passive.EntityChicken;
 import net.minecraft.init.Items;
 import net.minecraft.init.SoundEvents;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.event.entity.living.LivingEvent;
+import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class ChickenFuseEvent {
@@ -45,6 +48,12 @@ public class ChickenFuseEvent {
 							mobData.setString("id", name);
 							eggData.setTag("EntityTag", mobData);
 							mobEgg.setTagCompound(eggData);
+							entity.entityDropItem(mobEgg, 0.0F);
+						}
+
+						if (Loader.isModLoaded("chickens") && event.getEntity().getEntityData().hasKey("chickenType")) {
+							int type = event.getEntity().getEntityData().getInteger("chickenType");
+							ItemStack mobEgg = new ItemStack(Item.REGISTRY.getObject(new ResourceLocation("chickens:spawn_egg")), 1, type);
 							entity.entityDropItem(mobEgg, 0.0F);
 						}
 

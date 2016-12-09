@@ -10,7 +10,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.UniversalBucket;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 
@@ -75,6 +74,9 @@ public class RecipeChickenFeed implements IRecipe {
 
 		if (is.getTagCompound().hasKey("mguMobName"))
 			chickenFeed.getTagCompound().setString("mguMobName", is.getTagCompound().getString("mguMobName"));
+		
+		if(is.getTagCompound().hasKey("chickenType"))
+			chickenFeed.getTagCompound().setInteger("chickenType", is.getTagCompound().getInteger("chickenType"));
 
 		return chickenFeed;
 	}
