@@ -42,8 +42,8 @@ public class EntityHeadDropEvent {
 					ItemStack tempSword = fakePlayer.getHeldItemMainhand();
 					if (tempSword.hasTagCompound() && tempSword.getTagCompound().hasKey("beheadingValue"))
 						beheadingLevel = tempSword.getTagCompound().getInteger("beheadingValue");
-					int dropChance = 0 + event.getEntityLiving().worldObj.rand.nextInt(11 - beheadingLevel);
-					if (dropChance == 0 && beheadingLevel != 0) {
+					int dropChance = event.getEntityLiving().worldObj.rand.nextInt(10);
+					if (dropChance < beheadingLevel) {
 						ItemStack stack = getHeadfromEntity(event.getEntityLiving());
 						if (stack != null)
 							addDrop(stack, event.getEntityLiving(), event.getDrops());
