@@ -5,10 +5,6 @@ import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 
-/*
-	Borrowed From DarkHax - ;)
-*/
-
 public class FluidTankTile extends FluidTank {
 
 	public FluidTankTile(int capacity) {
@@ -30,10 +26,12 @@ public class FluidTankTile extends FluidTank {
 
 	@Override
 	public void onContentsChanged() {
-		if (this.tile != null) {
-			final IBlockState state = this.tile.getWorld().getBlockState(this.tile.getPos());
-			this.tile.getWorld().notifyBlockUpdate(this.tile.getPos(), state, state, 8);
-			this.tile.markDirty();
+		if (this.tile != null && !tile.getWorld().isRemote) {
+			if (tile.getWorld().getWorldTime() % 10 == 0) {
+				final IBlockState state = this.tile.getWorld().getBlockState(this.tile.getPos());
+				this.tile.getWorld().notifyBlockUpdate(this.tile.getPos(), state, state, 8);
+				this.tile.markDirty();
+			}
 		}
 	}
 }
