@@ -77,7 +77,7 @@ public class GuiAbsorptionHopper extends GuiContainer {
 		fontRendererObj.drawString(I18n.format(WEST.getName()), xOffSet + 133 - fontRendererObj.getStringWidth(I18n.format(WEST.getName())) / 2, yOffSet + 38, getModeColour(WEST.ordinal()));
 		fontRendererObj.drawString(I18n.format(EAST.getName()), xOffSet + 133 - fontRendererObj.getStringWidth(I18n.format(EAST.getName())) / 2, yOffSet + 55, getModeColour(EAST.ordinal()));
 
-		int fluid = tile.getScaledFluid(119);
+		int fluid = tile.getScaledFluid(121);
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		if (fluid >= 1) {
 			TextureAtlasSprite sprite = Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(tile.tank.getFluid().getFluid().getStill().toString());
