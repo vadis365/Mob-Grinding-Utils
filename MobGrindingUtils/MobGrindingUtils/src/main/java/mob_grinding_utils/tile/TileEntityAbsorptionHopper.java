@@ -178,7 +178,7 @@ public class TileEntityAbsorptionHopper extends TileEntityInventoryHelper implem
 			}
 		}
 
-		if (worldObj.getWorldTime() % 4 == 0) {
+		if (worldObj.getWorldTime() % 3 == 0) {
 			if(!isInventoryFull(this, null))
 				captureDroppedItems();
 			if(tank.getFluid() == null || tank.getFluid().containsFluid(new FluidStack(FluidRegistry.getFluid("xpjuice"), 0)))

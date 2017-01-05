@@ -52,7 +52,7 @@ tooltip.withermuffler_2=within an 8 Block radius.
 tooltip.withermuffler_3=Right Click to hide Boss Bar.
 
 tooltip.dragonmuffler_1=Stops Ender Dragon Death sounds
-tooltip.dragonmuffler_2=within an 8 Block radius.
+tooltip.dragonmuffler_2=within an 32 Block radius.
 tooltip.dragonmuffler_3=Right Click to hide Boss Bar.
 
 tooltip.darkoakstone=And they said it couldn't be done...

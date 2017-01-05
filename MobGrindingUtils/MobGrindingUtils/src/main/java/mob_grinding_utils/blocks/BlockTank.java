@@ -34,7 +34,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class BlockTank extends BlockContainer {
 	public BlockTank() {
 		super(Material.GLASS);
-		setHardness(5.0F);
+		setHardness(1.0F);
 		setSoundType(SoundType.GLASS);
 		setCreativeTab(MobGrindingUtils.TAB);
 	}

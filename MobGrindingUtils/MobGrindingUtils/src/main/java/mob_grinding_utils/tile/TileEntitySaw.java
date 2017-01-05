@@ -89,7 +89,6 @@ public class TileEntitySaw extends TileEntityInventoryHelper implements ITickabl
 					fakePlayer.attackTargetEntityWithCurrentItem(entity);
 					fakePlayer.resetCooldown();
 					fakePlayer.setHeldItem(EnumHand.MAIN_HAND, null);
-
 				}
 			}
 		}
@@ -150,7 +149,8 @@ public class TileEntitySaw extends TileEntityInventoryHelper implements ITickabl
 	public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity packet) {
 		super.onDataPacket(net, packet);
 		readFromNBT(packet.getNbtCompound());
-		worldObj.notifyBlockUpdate(pos, worldObj.getBlockState(pos), worldObj.getBlockState(pos), 3);
+		if(!worldObj.isRemote)
+			worldObj.notifyBlockUpdate(pos, worldObj.getBlockState(pos), worldObj.getBlockState(pos), 3);
 		return;
 	}
 
