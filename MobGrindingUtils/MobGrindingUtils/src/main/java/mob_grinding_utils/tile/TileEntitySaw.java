@@ -8,7 +8,6 @@ import com.mojang.authlib.GameProfile;
 import mob_grinding_utils.MobGrindingUtils;
 import mob_grinding_utils.blocks.BlockSaw;
 import mob_grinding_utils.items.ItemSawUpgrade;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -59,15 +58,13 @@ public class TileEntitySaw extends TileEntityInventoryHelper implements ITickabl
 
 	@SuppressWarnings("unchecked")
 	protected Entity activateBlock() {
-		IBlockState state = getWorld().getBlockState(pos);
-
 		List<EntityLivingBase> list = worldObj.getEntitiesWithinAABB(EntityLivingBase.class, new AxisAlignedBB(pos.getX(), pos.getY(), pos.getZ(), pos.getX() + 1D, pos.getY() + 1D, pos.getZ() + 1D));
 		for (int i = 0; i < list.size(); i++) {
 			Entity entity = list.get(i);
 			if (entity != null) {
 				if (entity instanceof EntityLivingBase) {
 					EntityPlayerMP fakePlayer = FakePlayerFactory.get((WorldServer)worldObj, new GameProfile(UUID.nameUUIDFromBytes(new TextComponentTranslation("fakeplayer.mob_masher").getFormattedText().getBytes()), new TextComponentTranslation("fakeplayer.mob_masher").getFormattedText()));
-					fakePlayer.setPosition(this.pos.getX(), this.pos.getY(), this.pos.getZ());
+					fakePlayer.setPosition(this.pos.getX(), -100D, this.pos.getZ());
 					ItemStack tempSword = new ItemStack(MobGrindingUtils.NULL_SWORD, 1, 0);
 
 					if(!tempSword.hasTagCompound())
@@ -85,12 +82,11 @@ public class TileEntitySaw extends TileEntityInventoryHelper implements ITickabl
 						tempSword.addEnchantment(Enchantment.getEnchantmentByLocation("bane_of_arthropods"), inventory[4].stackSize * 10);
 					if(hasBeheadingUpgrade())
 						tempSword.getTagCompound().setInteger("beheadingValue", inventory[5].stackSize);
-					
+
 					fakePlayer.setHeldItem(EnumHand.MAIN_HAND, tempSword);
 					fakePlayer.attackTargetEntityWithCurrentItem(entity);
 					fakePlayer.resetCooldown();
 					fakePlayer.setHeldItem(EnumHand.MAIN_HAND, null);
-					
 				}
 			}
 		}
@@ -185,5 +181,4 @@ public class TileEntitySaw extends TileEntityInventoryHelper implements ITickabl
 	public boolean canExtractItem(int slot, ItemStack stack, EnumFacing direction) {
 		return true;
 	}
-
 }

@@ -17,7 +17,6 @@ import mob_grinding_utils.events.BossBarHidingEvent;
 import mob_grinding_utils.events.ChickenFuseEvent;
 import mob_grinding_utils.events.ChickenInteractionEvent;
 import mob_grinding_utils.events.EntityHeadDropEvent;
-import mob_grinding_utils.events.FakeSwordSwingSoundEvent;
 import mob_grinding_utils.events.GlobalDragonSoundEvent;
 import mob_grinding_utils.events.GlobalWitherSoundEvent;
 import mob_grinding_utils.events.LocalDragonSoundEvent;
@@ -40,6 +39,7 @@ import mob_grinding_utils.network.TapParticleMessage;
 import mob_grinding_utils.proxy.CommonProxy;
 import mob_grinding_utils.recipe.ModRecipes;
 import mob_grinding_utils.recipe.RecipeChickenFeed;
+import mob_grinding_utils.tile.TileEntitySaw;
 import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
@@ -70,7 +70,7 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-@Mod(modid = "mob_grinding_utils", name = "mob_grinding_utils", version = "0.1.8.11")
+@Mod(modid = "mob_grinding_utils", name = "mob_grinding_utils", version = "0.1.8.12")
 
 public class MobGrindingUtils {
 
@@ -261,7 +261,6 @@ public class MobGrindingUtils {
 		MinecraftForge.EVENT_BUS.register(new LocalDragonSoundEvent());
 		MinecraftForge.EVENT_BUS.register(new EntityHeadDropEvent());
 		MinecraftForge.EVENT_BUS.register(EntityCapabilityHandler.class);
-		MinecraftForge.EVENT_BUS.register(new FakeSwordSwingSoundEvent());
 
 		if (event.getSide() == Side.CLIENT) {
 			MinecraftForge.EVENT_BUS.register(new RenderChickenSwell());
@@ -269,6 +268,7 @@ public class MobGrindingUtils {
 			MinecraftForge.EVENT_BUS.register(new BossBarHidingEvent());
 			MinecraftForge.EVENT_BUS.register(new GlobalWitherSoundEvent());
 			MinecraftForge.EVENT_BUS.register(new GlobalDragonSoundEvent());
+			MinecraftForge.EVENT_BUS.register(new TileEntitySaw());
 		}
 
 		EntityCapabilityHandler.registerEntityCapability(new BossBarPlayerCapability());
