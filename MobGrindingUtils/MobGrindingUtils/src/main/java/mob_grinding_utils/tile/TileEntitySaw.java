@@ -67,6 +67,7 @@ public class TileEntitySaw extends TileEntityInventoryHelper implements ITickabl
 			if (entity != null) {
 				if (entity instanceof EntityLivingBase) {
 					EntityPlayerMP fakePlayer = FakePlayerFactory.get((WorldServer)worldObj, new GameProfile(UUID.nameUUIDFromBytes(new TextComponentTranslation("fakeplayer.mob_masher").getFormattedText().getBytes()), new TextComponentTranslation("fakeplayer.mob_masher").getFormattedText()));
+					fakePlayer.setPosition(this.pos.getX(), this.pos.getY(), this.pos.getZ());
 					ItemStack tempSword = new ItemStack(MobGrindingUtils.NULL_SWORD, 1, 0);
 
 					if(!tempSword.hasTagCompound())
@@ -84,11 +85,12 @@ public class TileEntitySaw extends TileEntityInventoryHelper implements ITickabl
 						tempSword.addEnchantment(Enchantment.getEnchantmentByLocation("bane_of_arthropods"), inventory[4].stackSize * 10);
 					if(hasBeheadingUpgrade())
 						tempSword.getTagCompound().setInteger("beheadingValue", inventory[5].stackSize);
-
+					
 					fakePlayer.setHeldItem(EnumHand.MAIN_HAND, tempSword);
 					fakePlayer.attackTargetEntityWithCurrentItem(entity);
 					fakePlayer.resetCooldown();
 					fakePlayer.setHeldItem(EnumHand.MAIN_HAND, null);
+					
 				}
 			}
 		}

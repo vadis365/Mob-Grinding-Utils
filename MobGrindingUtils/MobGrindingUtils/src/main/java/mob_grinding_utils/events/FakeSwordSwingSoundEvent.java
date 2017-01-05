@@ -13,7 +13,6 @@ public class FakeSwordSwingSoundEvent {
 			if (event.getEntity() instanceof EntityPlayer) {
 				EntityPlayer fakePlayer = (EntityPlayer) event.getEntity();
 				if (fakePlayer.getDisplayNameString().matches(new TextComponentTranslation("fakeplayer.mob_masher").getFormattedText())) {
-					//System.out.println("WHY YOU NO STAHP SOUND HERE PLS!!!!?? - STOP MAKING THE FUCKING NOISE!");
 					event.setCanceled(true);
 				}
 			}
