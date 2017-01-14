@@ -28,10 +28,14 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.wrapper.InvWrapper;
 
 
 public class TileEntityAbsorptionHopper extends TileEntityInventoryHelper implements ITickable {
     public FluidTankTile tank;
+    private IItemHandler itemHandler;
     private static final int[] SLOTS = new int[] {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16};
 
 	public TileEntityAbsorptionHopper() {
@@ -362,7 +366,11 @@ public class TileEntityAbsorptionHopper extends TileEntityInventoryHelper implem
         return stack1.getItem() != stack2.getItem() ? false : (stack1.getMetadata() != stack2.getMetadata() ? false : (stack1.stackSize > stack1.getMaxStackSize() ? false : ItemStack.areItemStackTagsEqual(stack1, stack2)));
     }
 
-// FLUID STUFF
+// FLUID & INVENTORY CAPABILITIES STUFF
+
+    protected IItemHandler createUnSidedHandler() {
+        return new InvWrapper(this);
+    }
 
 	public int getScaledFluid(int scale) {
 		return tank.getFluid() != null ? (int) ((float) tank.getFluid().amount / (float) tank.getCapacity() * scale) : 0;
@@ -370,7 +378,7 @@ public class TileEntityAbsorptionHopper extends TileEntityInventoryHelper implem
 
 	@Override
 	public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
-		return capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY || super.hasCapability(capability, facing);
+		return capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY || capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY ||super.hasCapability(capability, facing);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -378,6 +386,8 @@ public class TileEntityAbsorptionHopper extends TileEntityInventoryHelper implem
 	public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
 		if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)
 			return (T) tank;
+        if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
+            return (T) (itemHandler == null ? (itemHandler = createUnSidedHandler()) : itemHandler);
 		return super.getCapability(capability, facing);
 	}
 }
