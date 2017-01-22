@@ -171,7 +171,7 @@ public class TileEntityAbsorptionHopper extends TileEntityInventoryHelper implem
 						if (properties.canFill() && properties.getCapacity() > 0) {
 							FluidStack contents = properties.getContents();
 							if (tank.getFluid() != null) {
-								if (contents == null || contents.amount <= properties.getCapacity() - 100 && contents.containsFluid(new FluidStack(tank.getFluid(), 100))) {
+								if (contents == null || contents.amount <= properties.getCapacity() - 100 && contents.containsFluid(new FluidStack(tank.getFluid(), 0))) {
 									recepticle.fill(tank.drain(new FluidStack(tank.getFluid(), 100), true), true);
 									markDirty();
 								}
