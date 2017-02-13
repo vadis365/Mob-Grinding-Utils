@@ -5,6 +5,7 @@ import java.util.List;
 import javax.annotation.Nullable;
 
 import mob_grinding_utils.MobGrindingUtils;
+import mob_grinding_utils.inventory.server.InventoryWrapperAH;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.item.EntityXPOrb;
 import net.minecraft.inventory.IInventory;
@@ -30,7 +31,6 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.wrapper.InvWrapper;
 
 
 public class TileEntityAbsorptionHopper extends TileEntityInventoryHelper implements ITickable {
@@ -369,7 +369,7 @@ public class TileEntityAbsorptionHopper extends TileEntityInventoryHelper implem
 // FLUID & INVENTORY CAPABILITIES STUFF
 
     protected IItemHandler createUnSidedHandler() {
-        return new InvWrapper(this);
+        return new InventoryWrapperAH(this);
     }
 
 	public int getScaledFluid(int scale) {
