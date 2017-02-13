@@ -21,6 +21,7 @@ import mob_grinding_utils.events.GlobalDragonSoundEvent;
 import mob_grinding_utils.events.GlobalWitherSoundEvent;
 import mob_grinding_utils.events.LocalDragonSoundEvent;
 import mob_grinding_utils.events.LocalWitherSoundEvent;
+import mob_grinding_utils.events.MGUZombieReinforcementEvent;
 import mob_grinding_utils.events.ParticleTextureStitchEvent;
 import mob_grinding_utils.events.RenderChickenSwell;
 import mob_grinding_utils.items.ItemAbsorptionUpgrade;
@@ -261,6 +262,7 @@ public class MobGrindingUtils {
 		MinecraftForge.EVENT_BUS.register(new LocalDragonSoundEvent());
 		MinecraftForge.EVENT_BUS.register(new EntityHeadDropEvent());
 		MinecraftForge.EVENT_BUS.register(EntityCapabilityHandler.class);
+		MinecraftForge.EVENT_BUS.register(new MGUZombieReinforcementEvent());
 
 		if (event.getSide() == Side.CLIENT) {
 			MinecraftForge.EVENT_BUS.register(new RenderChickenSwell());
