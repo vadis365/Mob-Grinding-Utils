@@ -31,6 +31,7 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.ItemHandlerHelper;
 
 
 public class TileEntityAbsorptionHopper extends TileEntityInventoryHelper implements ITickable {
@@ -142,14 +143,30 @@ public class TileEntityAbsorptionHopper extends TileEntityInventoryHelper implem
 		for (EnumFacing facing : EnumFacing.VALUES) {
 			if (status[facing.ordinal()] == EnumStatus.STATUS_OUTPUT_ITEM) {
 				TileEntity tile = worldObj.getTileEntity(pos.offset(facing));
-				if (tile != null && tile instanceof IInventory) {
+				
+				if (tile != null && tile.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, facing.getOpposite())) {
+					IItemHandler handler = tile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, facing.getOpposite());
+					if (worldObj.getWorldTime() % 8 == 0) {
+						for (int i = 0; i < this.getSizeInventory(); ++i) {
+							if (getStackInSlot(i) != null && i != 0) {
+								ItemStack stack = getStackInSlot(i).copy();
+								stack.stackSize = 1;
+								ItemStack stack1 = ItemHandlerHelper.insertItem(handler, stack, true);
+								if (stack1 == null || stack1.stackSize == 0) {
+									ItemHandlerHelper.insertItem(handler, this.decrStackSize(i, 1), false);
+									this.markDirty();
+								}
+							}
+						}
+					}
+				}
+				else if (tile != null && tile instanceof IInventory) {
 					IInventory iinventory = (IInventory) tile;
 					if (isInventoryFull(iinventory, facing)) {
 						break;
-					}
-					else if (worldObj.getWorldTime() % 8 == 0) {
+					} else if (worldObj.getWorldTime() % 8 == 0) {
 						for (int i = 0; i < this.getSizeInventory(); ++i) {
-							if (getStackInSlot(i) != null && i !=0) {
+							if (getStackInSlot(i) != null && i != 0) {
 								ItemStack stack = getStackInSlot(i).copy();
 								ItemStack stack1 = putStackInInventoryAllSlots(iinventory, decrStackSize(i, 1), facing.getOpposite());
 								if (stack1 == null || stack1.stackSize == 0)
@@ -368,9 +385,9 @@ public class TileEntityAbsorptionHopper extends TileEntityInventoryHelper implem
 
 // FLUID & INVENTORY CAPABILITIES STUFF
 
-    protected IItemHandler createUnSidedHandler() {
-        return new InventoryWrapperAH(this);
-    }
+	protected IItemHandler createUnSidedHandler() {
+		return new InventoryWrapperAH(this);
+	}
 
 	public int getScaledFluid(int scale) {
 		return tank.getFluid() != null ? (int) ((float) tank.getFluid().amount / (float) tank.getCapacity() * scale) : 0;
@@ -378,7 +395,7 @@ public class TileEntityAbsorptionHopper extends TileEntityInventoryHelper implem
 
 	@Override
 	public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
-		return capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY || capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY ||super.hasCapability(capability, facing);
+		return capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY || capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY || super.hasCapability(capability, facing);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -386,8 +403,8 @@ public class TileEntityAbsorptionHopper extends TileEntityInventoryHelper implem
 	public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
 		if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)
 			return (T) tank;
-        if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
-            return (T) (itemHandler == null ? (itemHandler = createUnSidedHandler()) : itemHandler);
+		if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
+			return (T) (itemHandler == null ? (itemHandler = createUnSidedHandler()) : itemHandler);
 		return super.getCapability(capability, facing);
 	}
 }

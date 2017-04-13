@@ -4,6 +4,7 @@ import java.util.List;
 
 import mob_grinding_utils.MobGrindingUtils;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.passive.EntityChicken;
@@ -34,7 +35,7 @@ public class ItemMobSwab extends Item {
 			list.add(TextFormatting.YELLOW + new TextComponentTranslation("tooltip.mobswab_1").getFormattedText());
 		else if (stack.hasTagCompound() && stack.getTagCompound().hasKey("mguMobName")) {
 			list.add(TextFormatting.YELLOW + new TextComponentTranslation("tooltip.mobswab_2").getFormattedText());
-			list.add(TextFormatting.GREEN + new TextComponentTranslation("tooltip.mobswab_3").getFormattedText()  + " "+ stack.getTagCompound().getTag("mguMobName") + TextFormatting.GREEN + " 'DNA'.");
+			list.add(TextFormatting.GREEN + new TextComponentTranslation("tooltip.mobswab_3").getFormattedText()  + " " + stack.getTagCompound().getTag("mguMobName") + TextFormatting.GREEN + " 'DNA'.");
 		}
 	}
 
@@ -47,7 +48,7 @@ public class ItemMobSwab extends Item {
 	@Override
 	public boolean itemInteractionForEntity(ItemStack stack, EntityPlayer player, EntityLivingBase target, EnumHand hand) {
 		if (target instanceof EntityLiving && !(target instanceof EntityPlayer) && getDamage(stack) == 0) {
-			String mobName = target.getName();
+			String mobName = EntityList.getEntityString(target);
 			ItemStack stack2 = new ItemStack(MobGrindingUtils.MOB_SWAB, 1, 1);
 			if (!stack2.hasTagCompound())
 				stack2.setTagCompound(new NBTTagCompound());
