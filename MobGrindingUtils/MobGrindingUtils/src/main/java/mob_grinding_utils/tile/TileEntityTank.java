@@ -5,16 +5,59 @@ import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.ITickable;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidTankProperties;
 
-public class TileEntityTank extends TileEntity {
+public class TileEntityTank extends TileEntity implements ITickable {
     public FluidTankTile tank;
 
 	public TileEntityTank() {
         this.tank = new FluidTankTile(null, Fluid.BUCKET_VOLUME * 32);
         this.tank.setTileEntity(this);
+	}
+	
+	@Override
+	public void update() {
+		if (worldObj.isRemote)
+			return;
+		
+		for (EnumFacing facing : EnumFacing.VALUES) {
+				TileEntity tile = worldObj.getTileEntity(pos.offset(facing));
+				if (tile != null && tile instanceof TileEntityTank && tile.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, facing)) {
+					IFluidHandler recepticle = tile.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, facing);
+					IFluidTankProperties[] tankProperties = recepticle.getTankProperties();
+					for (IFluidTankProperties properties : tankProperties) {
+						if (properties.canFill() && properties.getCapacity() > 0) {
+							FluidStack contents = properties.getContents();
+						if (tank.getFluid() != null) {
+							if (facing != EnumFacing.DOWN && facing != EnumFacing.UP) {
+								if (contents == null || contents.amount <= properties.getCapacity() - 100 && contents.containsFluid(new FluidStack(tank.getFluid(), 0)) && tank.getFluid().amount > contents.amount) {
+									recepticle.fill(tank.drain(new FluidStack(tank.getFluid(), 100), true), true);
+									markDirty();
+								}
+							} else if (facing == EnumFacing.DOWN) {
+								if (contents == null || contents.amount <= properties.getCapacity() - 100 && contents.containsFluid(new FluidStack(tank.getFluid(), 0))) {
+									recepticle.fill(tank.drain(new FluidStack(tank.getFluid(), 100), true), true);
+									markDirty();
+								}
+							}
+						/*	else if (facing == EnumFacing.UP) {
+								if (contents == null || contents.amount <= properties.getCapacity() - 100 && contents.containsFluid(new FluidStack(tank.getFluid(), 0)) && tank.getFluid().amount >= properties.getCapacity()) {
+									recepticle.fill(tank.drain(new FluidStack(tank.getFluid(), 100), true), true);
+									markDirty();
+								}
+							}
+						*/
+						}
+					}
+				}
+			}
+		}
 	}
 
 	@Override
