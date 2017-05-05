@@ -230,8 +230,8 @@ public class TileEntityAbsorptionHopper extends TileEntityInventoryHelper implem
 	public boolean captureDroppedXP() {
 		for (EntityXPOrb entity : getCaptureXP(getWorld(), getPos().getX() + 0.5D, getPos().getY() + 0.5D, getPos().getZ() + 0.5D)) {
 			int xpAmount = entity.getXpValue();
-			if (tank.getFluidAmount() < tank.getCapacity() - xpAmount * 10) {
-				tank.fill(new FluidStack(FluidRegistry.getFluid("xpjuice"), xpAmount * 10), true);
+			if (tank.getFluidAmount() < tank.getCapacity() - xpAmount * 20) {
+				tank.fill(new FluidStack(FluidRegistry.getFluid("xpjuice"), xpAmount * 20), true);
 				entity.setDead();
 			}
 			return true;

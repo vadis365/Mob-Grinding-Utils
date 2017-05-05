@@ -22,15 +22,15 @@ public class TileEntityXPTap extends TileEntity implements ITickable{
 			TileEntity tileentity = worldObj.getTileEntity(pos.offset(worldObj.getBlockState(pos).getValue(BlockXPTap.FACING).getOpposite()));
 			if (tileentity instanceof TileEntityTank) {
 				if (((TileEntityTank) tileentity).tank.getFluidAmount() > 0 && ((TileEntityTank) tileentity).tank.getFluid().getFluid().equals(FluidRegistry.getFluid("xpjuice")) && worldObj.getWorldTime() % 3 == 0) {
-					spawnXP(worldObj, pos, 20, (TileEntityTank) tileentity);
+					spawnXP(worldObj, pos, 5, (TileEntityTank) tileentity);
 					MobGrindingUtils.NETWORK_WRAPPER.sendToAll(new TapParticleMessage(getPos()));
 				}
 			}
 		}
 	}
 
-	public void spawnXP(World world, BlockPos pos, int xp, TileEntityTank tankTile) {;
-		tankTile.tank.drain(xp * 10, true);
+	public void spawnXP(World world, BlockPos pos, int xp, TileEntityTank tankTile) {
+		tankTile.tank.drain(xp * 20, true);
 		tankTile.markDirty();
 		EntityXPOrbFalling orb = new EntityXPOrbFalling(world, pos.getX() + 0.5D, pos.getY() - 0.125D, pos.getZ() + 0.5D, xp);
 		world.spawnEntityInWorld(orb);
