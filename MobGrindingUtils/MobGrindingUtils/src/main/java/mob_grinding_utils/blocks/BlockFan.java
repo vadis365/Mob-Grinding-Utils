@@ -60,7 +60,7 @@ public class BlockFan extends BlockDirectional implements ITileEntityProvider {
 
 	@Override
 	public IBlockState onBlockPlaced(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer) {
-		return this.getDefaultState().withProperty(FACING, getFacingFromEntity(pos, placer)).withProperty(POWERED, false);
+		return this.getDefaultState().withProperty(FACING, getFacingFromEntity(pos, placer)).withProperty(POWERED, world.isBlockPowered(pos));
 	}
 
 	public static EnumFacing getFacingFromEntity(BlockPos pos, EntityLivingBase entity) {
@@ -89,19 +89,6 @@ public class BlockFan extends BlockDirectional implements ITileEntityProvider {
 		return new BlockStateContainer(this, new IProperty[] { FACING, POWERED });
 	}
 
-	public static void setState(World world, BlockPos pos, IBlockState state) {
-		if (!world.isRemote) {
-			TileEntityFan tile = (TileEntityFan) world.getTileEntity(pos);
-			state = state.cycleProperty(POWERED);
-			world.setBlockState(pos, state, 3);
-			tile.setActive(((Boolean) state.getValue(POWERED)).booleanValue());
-			if (tile != null) {
-				tile.validate();
-				world.setTileEntity(pos, tile);
-			}
-		}
-	}
-
 	@Override
 	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
 		if (world.isRemote)
@@ -126,15 +113,19 @@ public class BlockFan extends BlockDirectional implements ITileEntityProvider {
 		if (!world.isRemote) {
 			if (((Boolean) state.getValue(POWERED)).booleanValue() && !world.isBlockPowered(pos))
 				world.scheduleUpdate(pos, this, 4);
-			else if (!((Boolean) state.getValue(POWERED)).booleanValue() && world.isBlockPowered(pos))
-				setState(world, pos, state);
+			else if (!((Boolean) state.getValue(POWERED)).booleanValue() && world.isBlockPowered(pos)) {
+				state = state.cycleProperty(POWERED);
+				world.setBlockState(pos, state, 3);
+			}
 		}
 	}
 
 	@Override
 	public void updateTick(World world, BlockPos pos, IBlockState state, Random rand) {
 		if (!world.isRemote)
-			if (((Boolean) state.getValue(POWERED)).booleanValue() && !world.isBlockPowered(pos))
-				setState(world, pos, state);
+			if (((Boolean) state.getValue(POWERED)).booleanValue() && !world.isBlockPowered(pos)) {
+				state = state.cycleProperty(POWERED);
+				world.setBlockState(pos, state, 3);
+			}
 	}
 }

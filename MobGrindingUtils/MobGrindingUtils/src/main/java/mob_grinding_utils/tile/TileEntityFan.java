@@ -16,7 +16,9 @@ import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.world.World;
 
 public class TileEntityFan extends TileEntityInventoryHelper implements ITickable {
 
@@ -33,6 +35,11 @@ public class TileEntityFan extends TileEntityInventoryHelper implements ITickabl
 			if (worldObj.getBlockState(pos).getValue(BlockFan.POWERED)) {
 				activateBlock();
 		}
+	}
+	
+	@Override
+	public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState) {
+		return oldState.getBlock() != newState.getBlock();
 	}
 
 	public void setActive(boolean isActive) {
