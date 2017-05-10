@@ -17,6 +17,7 @@ import mob_grinding_utils.events.BossBarHidingEvent;
 import mob_grinding_utils.events.ChickenFuseEvent;
 import mob_grinding_utils.events.ChickenInteractionEvent;
 import mob_grinding_utils.events.EntityHeadDropEvent;
+import mob_grinding_utils.events.FillXPBottleEvent;
 import mob_grinding_utils.events.GlobalDragonSoundEvent;
 import mob_grinding_utils.events.GlobalWitherSoundEvent;
 import mob_grinding_utils.events.LocalDragonSoundEvent;
@@ -263,6 +264,7 @@ public class MobGrindingUtils {
 		MinecraftForge.EVENT_BUS.register(new EntityHeadDropEvent());
 		MinecraftForge.EVENT_BUS.register(EntityCapabilityHandler.class);
 		MinecraftForge.EVENT_BUS.register(new MGUZombieReinforcementEvent());
+		MinecraftForge.EVENT_BUS.register(new FillXPBottleEvent());
 
 		if (event.getSide() == Side.CLIENT) {
 			MinecraftForge.EVENT_BUS.register(new RenderChickenSwell());
