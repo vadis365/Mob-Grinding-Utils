@@ -9,6 +9,7 @@ import mob_grinding_utils.inventory.server.ContainerSaw;
 import mob_grinding_utils.tile.TileEntityAbsorptionHopper;
 import mob_grinding_utils.tile.TileEntityFan;
 import mob_grinding_utils.tile.TileEntitySaw;
+import mob_grinding_utils.tile.TileEntitySinkTank;
 import mob_grinding_utils.tile.TileEntityTank;
 import mob_grinding_utils.tile.TileEntityXPTap;
 import net.minecraft.entity.player.EntityPlayer;
@@ -27,6 +28,7 @@ public class CommonProxy implements IGuiHandler {
 		registerTileEntity(TileEntityFan.class, "fan");
 		registerTileEntity(TileEntityAbsorptionHopper.class, "absorption_hopper");
 		registerTileEntity(TileEntityTank.class, "tank");
+		registerTileEntity(TileEntitySinkTank.class, "tank_sink");
 		registerTileEntity(TileEntityXPTap.class, "xp_tap");
 		registerTileEntity(TileEntitySaw.class, "saw");
 	}

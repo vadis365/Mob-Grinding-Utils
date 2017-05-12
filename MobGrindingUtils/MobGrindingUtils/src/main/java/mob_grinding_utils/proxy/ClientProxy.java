@@ -5,6 +5,7 @@ import mob_grinding_utils.client.particles.ParticleFluidXP;
 import mob_grinding_utils.client.render.TileEntitySawRenderer;
 import mob_grinding_utils.client.render.TileEntityTankRenderer;
 import mob_grinding_utils.tile.TileEntitySaw;
+import mob_grinding_utils.tile.TileEntitySinkTank;
 import mob_grinding_utils.tile.TileEntityTank;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.Particle;
@@ -22,6 +23,7 @@ public class ClientProxy extends CommonProxy {
 		ModelLoader.setCustomModelResourceLocation(MobGrindingUtils.FAN_ITEM, 0, new ModelResourceLocation("mob_grinding_utils:fan", "inventory"));
 		ModelLoader.setCustomModelResourceLocation(MobGrindingUtils.ABSORPTION_HOPPER_ITEM, 0, new ModelResourceLocation("mob_grinding_utils:absorption_hopper", "inventory"));
 		ModelLoader.setCustomModelResourceLocation(MobGrindingUtils.TANK_ITEM, 0, new ModelResourceLocation("mob_grinding_utils:tank", "inventory"));
+		ModelLoader.setCustomModelResourceLocation(MobGrindingUtils.TANK_SINK_ITEM, 0, new ModelResourceLocation("mob_grinding_utils:tank_sink", "inventory"));
 		ModelLoader.setCustomModelResourceLocation(MobGrindingUtils.XP_TAP_ITEM, 0, new ModelResourceLocation("mob_grinding_utils:xp_tap", "inventory"));
 		ModelLoader.setCustomModelResourceLocation(MobGrindingUtils.MOB_SWAB, 0, new ModelResourceLocation("mob_grinding_utils:mob_swab", "inventory"));
 		ModelLoader.setCustomModelResourceLocation(MobGrindingUtils.MOB_SWAB, 1, new ModelResourceLocation("mob_grinding_utils:mob_swab_used", "inventory"));
@@ -43,6 +45,7 @@ public class ClientProxy extends CommonProxy {
 		ModelLoader.setCustomModelResourceLocation(MobGrindingUtils.DARK_OAK_STONE_ITEM, 0, new ModelResourceLocation("mob_grinding_utils:dark_oak_stone", "inventory"));
 		
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityTank.class, new TileEntityTankRenderer());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntitySinkTank.class, new TileEntityTankRenderer());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntitySaw.class, new TileEntitySawRenderer());
 	}
 

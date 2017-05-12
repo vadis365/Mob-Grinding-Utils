@@ -9,6 +9,7 @@ import mob_grinding_utils.blocks.BlockFan;
 import mob_grinding_utils.blocks.BlockSaw;
 import mob_grinding_utils.blocks.BlockSpikes;
 import mob_grinding_utils.blocks.BlockTank;
+import mob_grinding_utils.blocks.BlockTankSink;
 import mob_grinding_utils.blocks.BlockWitherMuffler;
 import mob_grinding_utils.blocks.BlockXPTap;
 import mob_grinding_utils.capability.base.EntityCapabilityHandler;
@@ -81,8 +82,8 @@ public class MobGrindingUtils {
 
 	@SidedProxy(clientSide = "mob_grinding_utils.proxy.ClientProxy", serverSide = "mob_grinding_utils.proxy.CommonProxy")
 	public static CommonProxy PROXY;
-	public static Block SPIKES, FAN, ABSORPTION_HOPPER, TANK, XP_TAP, WITHER_MUFFLER, DRAGON_MUFFLER, SAW, DARK_OAK_STONE;
-	public static Item SPIKES_ITEM, FAN_ITEM, ABSORPTION_HOPPER_ITEM, TANK_ITEM, FAN_UPGRADE, ABSORPTION_UPGRADE, XP_TAP_ITEM, MOB_SWAB, GM_CHICKEN_FEED, WITHER_MUFFLER_ITEM, DRAGON_MUFFLER_ITEM, SAW_ITEM, SAW_UPGRADE, DARK_OAK_STONE_ITEM;
+	public static Block SPIKES, FAN, ABSORPTION_HOPPER, TANK, TANK_SINK, XP_TAP, WITHER_MUFFLER, DRAGON_MUFFLER, SAW, DARK_OAK_STONE;
+	public static Item SPIKES_ITEM, FAN_ITEM, ABSORPTION_HOPPER_ITEM, TANK_ITEM, TANK_SINK_ITEM, FAN_UPGRADE, ABSORPTION_UPGRADE, XP_TAP_ITEM, MOB_SWAB, GM_CHICKEN_FEED, WITHER_MUFFLER_ITEM, DRAGON_MUFFLER_ITEM, SAW_ITEM, SAW_UPGRADE, DARK_OAK_STONE_ITEM;
 	public static ItemSword NULL_SWORD;
 	public static Fluid FLUID_XP;
 	public static SimpleNetworkWrapper NETWORK_WRAPPER;
@@ -167,6 +168,23 @@ public class MobGrindingUtils {
 		};
 		GameRegistry.register(TANK.setRegistryName("mob_grinding_utils", "tank").setUnlocalizedName("mob_grinding_utils.tank"));
 		GameRegistry.register(TANK_ITEM.setRegistryName(TANK.getRegistryName()).setUnlocalizedName("mob_grinding_utils.tank"));
+
+		TANK_SINK = new BlockTankSink();
+		TANK_SINK_ITEM = new ItemBlock(TANK_SINK) {
+			@Override
+			@SideOnly(Side.CLIENT)
+			public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean flag) {
+				if(stack.hasTagCompound() && !stack.getTagCompound().hasKey("Empty")) {
+					FluidStack fluid = FluidStack.loadFluidStackFromNBT(stack.getTagCompound());
+					if(fluid !=null) {
+						list.add(TextFormatting.GREEN + "Contains: "+ fluid.getFluid().getLocalizedName(fluid));
+						list.add(TextFormatting.BLUE + ""+ fluid.amount +"Mb/32000Mb");
+					}
+				}
+			}
+		};
+		GameRegistry.register(TANK_SINK.setRegistryName("mob_grinding_utils", "tank_sink").setUnlocalizedName("mob_grinding_utils.tank_sink"));
+		GameRegistry.register(TANK_SINK_ITEM.setRegistryName(TANK_SINK.getRegistryName()).setUnlocalizedName("mob_grinding_utils.tank_sink"));
 
 		XP_TAP = new BlockXPTap();
 		XP_TAP_ITEM = new ItemBlock(XP_TAP) {
