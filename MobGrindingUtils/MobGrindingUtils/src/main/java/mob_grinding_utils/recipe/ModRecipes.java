@@ -23,6 +23,9 @@ public class ModRecipes {
 
 		//Tank
 		addShapedRecipe(new ItemStack(MobGrindingUtils.TANK), "IGI", "GGG", "IGI", 'I', "ingotIron", 'G', "blockGlass");
+		
+		//Tank Sink
+		addShapedRecipe(new ItemStack(MobGrindingUtils.TANK_SINK), " I ", "EHE", " T ", 'I', Blocks.IRON_BARS, 'H', Blocks.HOPPER, 'T', MobGrindingUtils.TANK, 'E', Items.ENDER_EYE);
 
 		//XP TAP
 		addShapedRecipe(new ItemStack(MobGrindingUtils.XP_TAP), "O  ", "II ", "I  ", 'O', "obsidian", 'I', "ingotIron");

@@ -25,8 +25,8 @@ public class FillXPBottleEvent {
 						TileEntityTank tileentity = (TileEntityTank) event.getWorld().getTileEntity(event.getPos());
 						if (tileentity != null) {
 							if (tileentity.tank.getFluid() != null && tileentity.tank.getFluid().containsFluid(new FluidStack(FluidRegistry.getFluid("xpjuice"), 220))) {
-								if (tileentity.tank.getFluidAmount() >= 220) {
-									tileentity.tank.drain(new FluidStack(tileentity.tank.getFluid(), 220), true);
+								if (tileentity.tank.getFluidAmount() >= 200) {
+									tileentity.tank.drain(new FluidStack(tileentity.tank.getFluid(), 200), true);
 									event.getWorld().playSound((EntityPlayer) null, player.posX, player.posY, player.posZ, SoundEvents.ITEM_BOTTLE_FILL, SoundCategory.NEUTRAL, 1.0F, 1.0F);
 									turnBottleIntoItem(handItem, player, new ItemStack(Items.EXPERIENCE_BOTTLE));
 									--handItem.stackSize;

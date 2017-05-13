@@ -2,6 +2,8 @@ package mob_grinding_utils.tile;
 
 import java.util.List;
 
+import mob_grinding_utils.MobGrindingUtils;
+import mob_grinding_utils.network.TapParticleMessage;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.util.EntitySelectors;
@@ -22,31 +24,29 @@ public class TileEntitySinkTank extends TileEntityTank implements ITickable {
 
 	@Override
 	public void update() {
-		if (!worldObj.isRemote && worldObj.getWorldTime() % 1 == 0) {
-		if(tank.getFluid() == null || tank.getFluid().containsFluid(new FluidStack(FluidRegistry.getFluid("xpjuice"), 0)))
-			captureDroppedXP();
-		}
+		if (!worldObj.isRemote)
+			if (tank.getFluid() == null || tank.getFluid().containsFluid(new FluidStack(FluidRegistry.getFluid("xpjuice"), 0)))
+				captureDroppedXP();
 	}
 
 	public boolean captureDroppedXP() {
 		for (EntityPlayer player : getCaptureXP(getWorld(), getPos().getX() + 0.5D, getPos().getY() + 0.5D, getPos().getZ() + 0.5D)) {
 			int xpAmount = getPlayerXP(player);
-			System.out.println("Player XP: " + xpAmount);
 			if (xpAmount <= 0)
 				return false;
 			if (tank.getFluidAmount() < tank.getCapacity()) {
-				tank.fill(new FluidStack(FluidRegistry.getFluid("xpjuice"), 20), true);
+				tank.fill(new FluidStack(FluidRegistry.getFluid("xpjuice"), 32), true);
 				addPlayerXP(player, -1);
 				worldObj.playSound((EntityPlayer) null, player.posX, player.posY, player.posZ, SoundEvents.ITEM_BOTTLE_FILL, SoundCategory.NEUTRAL , 0.1F, 0.5F * ((worldObj.rand.nextFloat() - worldObj.rand.nextFloat()) * 0.7F + 1.8F));
+				MobGrindingUtils.NETWORK_WRAPPER.sendToAll(new TapParticleMessage(getPos().up()));
 			}
-			System.out.println("Fluid Amount: " + tank.getFluidAmount());
 			return true;
 		}
 		return false;
 	}
 
 	public List<EntityPlayer> getCaptureXP(World world, double x, double y, double z) {
-        return world.<EntityPlayer>getEntitiesWithinAABB(EntityPlayer.class, new AxisAlignedBB(x - 0.5D, y - 0.5D, z - 0.5D, x + 0.5D, y + 1.5D, z + 0.5D), EntitySelectors.IS_ALIVE);
+        return world.<EntityPlayer>getEntitiesWithinAABB(EntityPlayer.class, new AxisAlignedBB(x - 0.45D, y - 0.5D, z - 0.45D, x + 0.45D, y + 1.03D, z + 0.45D), EntitySelectors.IS_ALIVE);
     }
 
 	public static void addPlayerXP(EntityPlayer player, int amount) {
