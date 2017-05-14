@@ -2,13 +2,11 @@ package mob_grinding_utils.events;
 
 import mob_grinding_utils.MobGrindingUtils;
 import mob_grinding_utils.network.ChickenSyncMessage;
-import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.passive.EntityChicken;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.EntityInteract;
-import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class ChickenInteractionEvent {
@@ -17,12 +15,8 @@ public class ChickenInteractionEvent {
 	public void clickOnChicken(EntityInteract event) {
 		if (event.getTarget() instanceof EntityLivingBase) {
 			EntityLivingBase entity = (EntityLivingBase) event.getTarget();
-			EntityLivingBase entityRooster = null;
-			if (Loader.isModLoaded("hatchery"))
-				entityRooster = (EntityLivingBase) EntityList.createEntityByName("hatchery.Rooster", entity.worldObj);
 
 			if (entity instanceof EntityChicken && !entity.isChild()) {
-				if (entity != null && !entity.getClass().getName().equals(entityRooster.getClass().getName())) {
 					World world = entity.worldObj;
 					if (event.getItemStack() != null && event.getItemStack().getItem() == MobGrindingUtils.GM_CHICKEN_FEED) {
 						if (!world.isRemote) {
@@ -48,5 +42,4 @@ public class ChickenInteractionEvent {
 				}
 			}
 		}
-	}
 }
