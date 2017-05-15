@@ -72,7 +72,7 @@ public class TileEntityAbsorptionHopper extends TileEntityInventoryHelper implem
 		tank.onContentsChanged();
 		for (EnumFacing facing : EnumFacing.VALUES) {
 			if (old[facing.ordinal()] != status[facing.ordinal()]) {
-				worldObj.markBlockRangeForRenderUpdate(getPos(), getPos());
+				getWorld().markBlockRangeForRenderUpdate(getPos(), getPos());
 				return;
 			}
 		}
@@ -137,22 +137,22 @@ public class TileEntityAbsorptionHopper extends TileEntityInventoryHelper implem
 
 	@Override
 	public void update() {
-		if (worldObj.isRemote)
+		if (getWorld().isRemote)
 			return;
 
 		for (EnumFacing facing : EnumFacing.VALUES) {
 			if (status[facing.ordinal()] == EnumStatus.STATUS_OUTPUT_ITEM) {
-				TileEntity tile = worldObj.getTileEntity(pos.offset(facing));
+				TileEntity tile = getWorld().getTileEntity(pos.offset(facing));
 				
 				if (tile != null && tile.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, facing.getOpposite())) {
 					IItemHandler handler = tile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, facing.getOpposite());
-					if (worldObj.getWorldTime() % 8 == 0) {
+					if (getWorld().getWorldTime() % 8 == 0) {
 						for (int i = 0; i < this.getSizeInventory(); ++i) {
 							if (getStackInSlot(i) != null && i != 0) {
 								ItemStack stack = getStackInSlot(i).copy();
-								stack.stackSize = 1;
+								stack.setCount(1);
 								ItemStack stack1 = ItemHandlerHelper.insertItem(handler, stack, true);
-								if (stack1 == null || stack1.stackSize == 0) {
+								if (stack1 == null || stack1.getCount() == 0) {
 									ItemHandlerHelper.insertItem(handler, this.decrStackSize(i, 1), false);
 									this.markDirty();
 								}
@@ -164,12 +164,12 @@ public class TileEntityAbsorptionHopper extends TileEntityInventoryHelper implem
 					IInventory iinventory = (IInventory) tile;
 					if (isInventoryFull(iinventory, facing)) {
 						break;
-					} else if (worldObj.getWorldTime() % 8 == 0) {
+					} else if (getWorld().getWorldTime() % 8 == 0) {
 						for (int i = 0; i < this.getSizeInventory(); ++i) {
 							if (getStackInSlot(i) != null && i != 0) {
 								ItemStack stack = getStackInSlot(i).copy();
 								ItemStack stack1 = putStackInInventoryAllSlots(iinventory, decrStackSize(i, 1), facing.getOpposite());
-								if (stack1 == null || stack1.stackSize == 0)
+								if (stack1 == null || stack1.getCount() == 0)
 									iinventory.markDirty();
 								else
 									setInventorySlotContents(i, stack);
@@ -180,7 +180,7 @@ public class TileEntityAbsorptionHopper extends TileEntityInventoryHelper implem
 			}
 
 			if (status[facing.ordinal()] == EnumStatus.STATUS_OUTPUT_FLUID) {
-				TileEntity tile = worldObj.getTileEntity(pos.offset(facing));
+				TileEntity tile = getWorld().getTileEntity(pos.offset(facing));
 				if (tile != null && tile.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, facing)) {
 					IFluidHandler recepticle = tile.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, facing);
 					IFluidTankProperties[] tankProperties = recepticle.getTankProperties();
@@ -199,7 +199,7 @@ public class TileEntityAbsorptionHopper extends TileEntityInventoryHelper implem
 			}
 		}
 
-		if (worldObj.getWorldTime() % 3 == 0) {
+		if (getWorld().getWorldTime() % 3 == 0) {
 			if(!isInventoryFull(this, null))
 				captureDroppedItems();
 			if(tank.getFluid() == null || tank.getFluid().containsFluid(new FluidStack(FluidRegistry.getFluid("xpjuice"), 0)))
@@ -210,7 +210,9 @@ public class TileEntityAbsorptionHopper extends TileEntityInventoryHelper implem
 	@Override
 	@Nullable
 	public ItemStack decrStackSize(int index, int count) {
-		return ItemStackHelper.getAndSplit(this.inventory, index, count);
+       // ItemStack itemstack = ItemStackHelper.getAndSplit(this.getItems(), index, count);
+       // return itemstack;
+		return ItemStackHelper.getAndSplit(getItems(), index, count);
 	}
 
 	public boolean captureDroppedItems() {
@@ -223,7 +225,7 @@ public class TileEntityAbsorptionHopper extends TileEntityInventoryHelper implem
     public List<EntityItem> getCaptureItems(World world, double x, double y, double z) {
 		int modifier = 0;
 		if(hasUpgrade())
-		 modifier = inventory[0].stackSize;
+		 modifier = getItems().get(0).getCount();
         return world.<EntityItem>getEntitiesWithinAABB(EntityItem.class, new AxisAlignedBB(x - 3.5D - modifier, y - 3.5D - modifier, z - 3.5D - modifier, x + 3.5D + modifier, y + 3.5D + modifier, z + 3.5D + modifier), EntitySelectors.IS_ALIVE);
     }
     
@@ -242,18 +244,18 @@ public class TileEntityAbsorptionHopper extends TileEntityInventoryHelper implem
 	public List<EntityXPOrb> getCaptureXP(World world, double x, double y, double z) {
 		int modifier = 0;
 		if(hasUpgrade())
-		 modifier = inventory[0].stackSize;
+		 modifier = getItems().get(0).getCount();
         return world.<EntityXPOrb>getEntitiesWithinAABB(EntityXPOrb.class, new AxisAlignedBB(x - 3.5D - modifier, y - 3.5D - modifier, z - 3.5D - modifier, x + 3.5D + modifier, y + 3.5D + modifier, z + 3.5D + modifier), EntitySelectors.IS_ALIVE);
     }
 
 	private boolean hasUpgrade() {
-		return inventory[0] != null && inventory[0].getItem() == MobGrindingUtils.ABSORPTION_UPGRADE;
+		return getItems().get(0) != null && getItems().get(0).getItem() == MobGrindingUtils.ABSORPTION_UPGRADE;
 	}
 
     @Override
     @Nullable
     public ItemStack removeStackFromSlot(int index) {
-        return ItemStackHelper.getAndRemove(this.inventory, index);
+        return ItemStackHelper.getAndRemove(getItems(), index);
     }
 
 	@Override
@@ -286,7 +288,7 @@ public class TileEntityAbsorptionHopper extends TileEntityInventoryHelper implem
 			for (int k : aint) {
 				ItemStack itemstack1 = isidedinventory.getStackInSlot(k);
 
-				if (itemstack1 == null || itemstack1.stackSize != itemstack1.getMaxStackSize())
+				if (itemstack1 == null || itemstack1.getCount() != itemstack1.getMaxStackSize())
 					return false;
 			}
 		} else {
@@ -295,7 +297,7 @@ public class TileEntityAbsorptionHopper extends TileEntityInventoryHelper implem
 			for (int j = 0; j < i; ++j) {
 				ItemStack itemstack = inventoryIn.getStackInSlot(j);
 
-				if (itemstack == null || itemstack.stackSize != itemstack.getMaxStackSize())
+				if (itemstack == null || itemstack.getCount() != itemstack.getMaxStackSize())
 					return false;
 			}
 		}
@@ -308,16 +310,16 @@ public class TileEntityAbsorptionHopper extends TileEntityInventoryHelper implem
 			ISidedInventory isidedinventory = (ISidedInventory) inventoryIn;
 			int[] aint = isidedinventory.getSlotsForFace(side);
 
-			for (int k = 0; k < aint.length && stack != null && stack.stackSize > 0; ++k)
+			for (int k = 0; k < aint.length && stack != null && stack.getCount() > 0; ++k)
 				stack = insertStack(inventoryIn, stack, aint[k], side);
 		} else {
 			int i = inventoryIn.getSizeInventory();
 
-			for (int j = 0; j < i && stack != null && stack.stackSize > 0; ++j)
+			for (int j = 0; j < i && stack != null && stack.getCount() > 0; ++j)
 				stack = insertStack(inventoryIn, stack, j, side);
 		}
 
-		if (stack != null && stack.stackSize == 0)
+		if (stack != null && stack.getCount() == 0)
 			stack = null;
 
 		return stack;
@@ -332,7 +334,7 @@ public class TileEntityAbsorptionHopper extends TileEntityInventoryHelper implem
 			ItemStack itemstack = itemIn.getEntityItem().copy();
 			ItemStack itemstack1 = putStackInInventoryAllSlots(inventoryIn, itemstack, (EnumFacing) null);
 
-			if (itemstack1 != null && itemstack1.stackSize != 0) {
+			if (itemstack1 != null && itemstack1.getCount() != 0) {
 				itemIn.setEntityItemStack(itemstack1);
 			} else {
 				flag = true;
@@ -355,7 +357,7 @@ public class TileEntityAbsorptionHopper extends TileEntityInventoryHelper implem
 			if (itemstack == null) {
 				// Forge: BUGFIX: Again, make things respect max stack sizes.
 				int max = Math.min(stack.getMaxStackSize(), inventoryIn.getInventoryStackLimit());
-				if (max >= stack.stackSize) {
+				if (max >= stack.getCount()) {
 					inventoryIn.setInventorySlotContents(index, stack);
 					stack = null;
 				} else
@@ -366,11 +368,11 @@ public class TileEntityAbsorptionHopper extends TileEntityInventoryHelper implem
 			} else if (canCombine(itemstack, stack)) {
 				// Forge: BUGFIX: Again, make things respect max stack sizes.
 				int max = Math.min(stack.getMaxStackSize(), inventoryIn.getInventoryStackLimit());
-				if (max > itemstack.stackSize) {
-					int i = max - itemstack.stackSize;
-					int j = Math.min(stack.stackSize, i);
-					stack.stackSize -= j;
-					itemstack.stackSize += j;
+				if (max > itemstack.getCount()) {
+					int i = max - itemstack.getCount();
+					int j = Math.min(stack.getCount(), i);
+					stack.shrink(j);
+					itemstack.grow(j);
 					flag = j > 0;
 				}
 			}
@@ -380,7 +382,7 @@ public class TileEntityAbsorptionHopper extends TileEntityInventoryHelper implem
 	}
   
     private static boolean canCombine(ItemStack stack1, ItemStack stack2) {
-        return stack1.getItem() != stack2.getItem() ? false : (stack1.getMetadata() != stack2.getMetadata() ? false : (stack1.stackSize > stack1.getMaxStackSize() ? false : ItemStack.areItemStackTagsEqual(stack1, stack2)));
+        return stack1.getItem() != stack2.getItem() ? false : (stack1.getMetadata() != stack2.getMetadata() ? false : (stack1.getCount() > stack1.getMaxStackSize() ? false : ItemStack.areItemStackTagsEqual(stack1, stack2)));
     }
 
 // FLUID & INVENTORY CAPABILITIES STUFF

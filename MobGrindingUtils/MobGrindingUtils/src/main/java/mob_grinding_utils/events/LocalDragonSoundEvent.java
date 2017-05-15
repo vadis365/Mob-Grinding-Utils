@@ -14,7 +14,7 @@ public class LocalDragonSoundEvent {
 	public void onDragonDeath(LivingDeathEvent event) {
 		if (event.getEntity() instanceof EntityDragon) {
 			EntityDragon dragon = (EntityDragon) event.getEntity();
-			World world = dragon.worldObj;
+			World world = dragon.getEntityWorld();
 			boolean playsound = true;
 			if (!world.isRemote) {
 				for (int x = -32; x < 32; x++)

@@ -2,7 +2,6 @@ package mob_grinding_utils.blocks;
 
 import mob_grinding_utils.MobGrindingUtils;
 import mob_grinding_utils.tile.TileEntitySaw;
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockDirectional;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.SoundType;
@@ -24,6 +23,7 @@ import net.minecraft.util.Mirror;
 import net.minecraft.util.Rotation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -46,7 +46,7 @@ public class BlockSaw extends BlockDirectional implements ITileEntityProvider {
 	}
 
 	@Override
-	public AxisAlignedBB getCollisionBoundingBox(IBlockState blockState, World worldIn, BlockPos pos) {
+	public AxisAlignedBB getCollisionBoundingBox(IBlockState blockState, IBlockAccess worldIn, BlockPos pos) {
 		return SAW_AABB;
 	}
 
@@ -89,7 +89,7 @@ public class BlockSaw extends BlockDirectional implements ITileEntityProvider {
 	}
 
 	@Override
-	public IBlockState onBlockPlaced(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer) {
+	 public IBlockState getStateForPlacement(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer) {
 		return this.getDefaultState().withProperty(FACING, facing).withProperty(POWERED, world.isBlockPowered(pos));
 	}
 
@@ -131,7 +131,7 @@ public class BlockSaw extends BlockDirectional implements ITileEntityProvider {
 	}
 
 	@Override
-	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
+	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
 		if (world.isRemote)
 			return true;
 		if (world.getTileEntity(pos) instanceof TileEntitySaw)
@@ -150,12 +150,14 @@ public class BlockSaw extends BlockDirectional implements ITileEntityProvider {
 	}
 
 	@Override
-	public void neighborChanged(IBlockState state, World world, BlockPos pos, Block blockIn) {
-		if (!world.isRemote) {
-			if (((Boolean) state.getValue(POWERED)).booleanValue() && !world.isBlockPowered(pos))
-				setState(world, pos, state, false);
-			else if (!((Boolean) state.getValue(POWERED)).booleanValue() && world.isBlockPowered(pos))
-				setState(world, pos, state, true);
+    public void onNeighborChange(IBlockAccess world, BlockPos pos, BlockPos neighbor) {
+		World worldIn = (World) world;
+		IBlockState state = world.getBlockState(pos);
+		if (!worldIn.isRemote) {
+			if (((Boolean) state.getValue(POWERED)).booleanValue() && !worldIn.isBlockPowered(pos))
+				setState(worldIn, pos, state, false);
+			else if (!((Boolean) state.getValue(POWERED)).booleanValue() && worldIn.isBlockPowered(pos))
+				setState(worldIn, pos, state, true);
 		}
 	}
 }

@@ -20,6 +20,7 @@ import net.minecraft.util.Mirror;
 import net.minecraft.util.Rotation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.util.FakePlayerFactory;
@@ -40,7 +41,7 @@ public class BlockSpikes extends BlockDirectional {
 	}
 
 	@Override
-	public AxisAlignedBB getCollisionBoundingBox(IBlockState blockState, World worldIn, BlockPos pos) {
+	public AxisAlignedBB getCollisionBoundingBox(IBlockState blockState, IBlockAccess worldIn, BlockPos pos) {
 		return SPIKES_AABB;
 	}
 
@@ -71,7 +72,7 @@ public class BlockSpikes extends BlockDirectional {
 	}
 
 	@Override
-	public IBlockState onBlockPlaced(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer) {
+	 public IBlockState getStateForPlacement(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer) {
 		return this.getDefaultState().withProperty(FACING, facing);
 	}
 
@@ -101,7 +102,7 @@ public class BlockSpikes extends BlockDirectional {
 	@SubscribeEvent
 	public void dropXP(LivingDropsEvent event) {
 		EntityLivingBase entity = event.getEntityLiving();
-		World world = entity.worldObj;
+		World world = entity.getEntityWorld();
 		if (entity != null) {
 			if (!world.isRemote && !event.isRecentlyHit() && event.getSource() == MobGrindingUtils.SPIKE_DAMAGE) {
 				int xp = 0;
@@ -112,7 +113,7 @@ public class BlockSpikes extends BlockDirectional {
 				while (xp > 0) {
 					int cap = EntityXPOrb.getXPSplit(xp);
 					xp -= cap;
-					entity.worldObj.spawnEntityInWorld(new EntityXPOrb(entity.worldObj, entity.posX, entity.posY, entity.posZ, cap));
+					entity.getEntityWorld().spawnEntity(new EntityXPOrb(entity.getEntityWorld(), entity.posX, entity.posY, entity.posZ, cap));
 				}
 			}
 		}

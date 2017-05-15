@@ -11,8 +11,8 @@ import net.minecraft.entity.monster.EntityCreeper;
 import net.minecraft.entity.monster.EntityEnderman;
 import net.minecraft.entity.monster.EntityPigZombie;
 import net.minecraft.entity.monster.EntitySkeleton;
+import net.minecraft.entity.monster.EntityWitherSkeleton;
 import net.minecraft.entity.monster.EntityZombie;
-import net.minecraft.entity.monster.SkeletonType;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
@@ -30,7 +30,7 @@ public class EntityHeadDropEvent {
 
 	@SubscribeEvent(priority = EventPriority.LOWEST)
 	public void dropEvent(LivingDropsEvent event) {
-		if (event.getEntityLiving().worldObj.isRemote)
+		if (event.getEntityLiving().getEntityWorld().isRemote)
 			return;
 		if (event.getEntityLiving().getHealth() > 0.0F)
 			return;
@@ -42,7 +42,7 @@ public class EntityHeadDropEvent {
 					ItemStack tempSword = fakePlayer.getHeldItemMainhand();
 					if (tempSword.hasTagCompound() && tempSword.getTagCompound().hasKey("beheadingValue"))
 						beheadingLevel = tempSword.getTagCompound().getInteger("beheadingValue");
-					int dropChance = event.getEntityLiving().worldObj.rand.nextInt(10);
+					int dropChance = event.getEntityLiving().getEntityWorld().rand.nextInt(10);
 					if (dropChance < beheadingLevel) {
 						ItemStack stack = getHeadfromEntity(event.getEntityLiving());
 						if (stack != null)
@@ -62,13 +62,10 @@ public class EntityHeadDropEvent {
 				return new ItemStack(Item.REGISTRY.getObject(new ResourceLocation("enderio:blockEndermanSkull")), 1, 0);
 		if (target instanceof EntityCreeper)
 			return new ItemStack(Items.SKULL, 1, 4);
-		if (target instanceof EntitySkeleton) {
-			SkeletonType type = ((EntitySkeleton) target).func_189771_df();
-			if (type == SkeletonType.WITHER)
-				return new ItemStack(Items.SKULL, 1, 1);
-			else if (type == SkeletonType.NORMAL)
-				return new ItemStack(Items.SKULL, 1, 0);
-		}
+		if (target instanceof EntitySkeleton)
+			return new ItemStack(Items.SKULL, 1, 0);
+		if (target instanceof EntityWitherSkeleton)
+			return new ItemStack(Items.SKULL, 1, 1);
 		if (target instanceof EntityZombie && !(target instanceof EntityPigZombie))
 			return new ItemStack(Items.SKULL, 1, 2);
 		if (target instanceof EntityPlayer)
@@ -90,9 +87,9 @@ public class EntityHeadDropEvent {
 	}
 
 	private void addDrop(ItemStack stack, EntityLivingBase entity, List<EntityItem> list) {
-		if (stack.stackSize <= 0)
+		if (stack.getCount() <= 0)
 			return;
-		EntityItem entityItem = new EntityItem(entity.worldObj, entity.posX, entity.posY, entity.posZ, stack);
+		EntityItem entityItem = new EntityItem(entity.getEntityWorld(), entity.posX, entity.posY, entity.posZ, stack);
 		entityItem.setDefaultPickupDelay();
 		list.add(entityItem);
 	}

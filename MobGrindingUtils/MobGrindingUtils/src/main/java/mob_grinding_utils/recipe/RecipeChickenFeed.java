@@ -6,6 +6,7 @@ import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.NonNullList;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
@@ -90,13 +91,15 @@ public class RecipeChickenFeed implements IRecipe {
 	public ItemStack getRecipeOutput() {
 		return new ItemStack(MobGrindingUtils.GM_CHICKEN_FEED, 1, 0);
 	}
+	
 
 	@Override
-    public ItemStack[] getRemainingItems(InventoryCrafting inv) {
-        ItemStack[] aitemstack = new ItemStack[inv.getSizeInventory()];
-        for (int i = 0; i < aitemstack.length; ++i) {
+    public NonNullList<ItemStack> getRemainingItems(InventoryCrafting inv) {
+        NonNullList<ItemStack> aitemstack = NonNullList.<ItemStack>withSize(inv.getSizeInventory(), ItemStack.EMPTY);
+        for (int i = 0; i < aitemstack.size(); ++i) {
             ItemStack itemstack = inv.getStackInSlot(i);
-            aitemstack[i] = net.minecraftforge.common.ForgeHooks.getContainerItem(itemstack);
+            aitemstack.set(i, inv.getStackInSlot(i));
+           // aitemstack = net.minecraftforge.common.ForgeHooks.getContainerItem(itemstack);
         }
         return aitemstack;
     }

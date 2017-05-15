@@ -104,7 +104,7 @@ public class TileEntitySawRenderer extends TileEntitySpecialRenderer<TileEntityS
 
 	@Override
 	public void renderTileEntityAt(TileEntitySaw te, double x, double y, double z, float partialTicks, int destroyStage) {
-		if(te == null || !te.hasWorldObj()) {
+		if(te == null || !te.hasWorld()) {
 			renderTileAsItem(x, y, z);
 			return;
 		}

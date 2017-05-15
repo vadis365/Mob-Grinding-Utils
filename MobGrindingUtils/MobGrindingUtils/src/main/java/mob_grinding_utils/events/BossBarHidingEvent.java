@@ -16,7 +16,7 @@ public class BossBarHidingEvent {
 	@SubscribeEvent
 	public void onRenderHUD(BossInfo event) {
 		if (event.getType().equals(RenderGameOverlayEvent.ElementType.BOSSINFO)) {
-			EntityPlayer player = Minecraft.getMinecraft().thePlayer;
+			EntityPlayer player = Minecraft.getMinecraft().player;
 
 			if (player != null) {
 				IBossBarCapability cap = player.getCapability(BossBarPlayerCapability.CAPABILITY_PLAYER_BOSS_BAR, null);
@@ -37,8 +37,8 @@ public class BossBarHidingEvent {
 	// FFS This is Shit!
 	public boolean isWitherCrumbsBoss(EntityPlayer player) {
 		String name = null;
-		for (int mobs = 0; mobs < player.worldObj.getLoadedEntityList().size(); mobs++) {
-			name = player.worldObj.getLoadedEntityList().get(mobs).toString();
+		for (int mobs = 0; mobs < player.getEntityWorld().getLoadedEntityList().size(); mobs++) {
+			name = player.getEntityWorld().getLoadedEntityList().get(mobs).toString();
 			if (name.startsWith("EntityHumanWither"))
 				break;
 		}

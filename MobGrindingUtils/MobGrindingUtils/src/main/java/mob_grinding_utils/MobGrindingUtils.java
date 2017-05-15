@@ -92,8 +92,8 @@ public class MobGrindingUtils {
 
 	public static CreativeTabs TAB = new CreativeTabs("mob_grinding_utils") {
 		@Override
-		public Item getTabIconItem() {
-			return SPIKES_ITEM;
+		public ItemStack getTabIconItem() {
+			return new ItemStack(SPIKES_ITEM);
 		}
 	};
 

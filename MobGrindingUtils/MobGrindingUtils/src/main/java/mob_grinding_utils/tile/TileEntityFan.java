@@ -31,8 +31,8 @@ public class TileEntityFan extends TileEntityInventoryHelper implements ITickabl
 
 	@Override
 	public void update() {
-		if (worldObj.getWorldTime()%2==0 && worldObj.getBlockState(pos).getBlock() != null)
-			if (worldObj.getBlockState(pos).getValue(BlockFan.POWERED)) {
+		if (getWorld().getWorldTime()%2==0 && getWorld().getBlockState(pos).getBlock() != null)
+			if (getWorld().getBlockState(pos).getValue(BlockFan.POWERED)) {
 				activateBlock();
 		}
 	}
@@ -44,7 +44,7 @@ public class TileEntityFan extends TileEntityInventoryHelper implements ITickabl
 
 	public void setActive(boolean isActive) {
 		active = isActive;
-		worldObj.notifyBlockUpdate(pos, worldObj.getBlockState(pos), worldObj.getBlockState(pos), 3);
+		getWorld().notifyBlockUpdate(pos, getWorld().getBlockState(pos), getWorld().getBlockState(pos), 3);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -58,11 +58,11 @@ public class TileEntityFan extends TileEntityInventoryHelper implements ITickabl
 		int speedMod = 0;
 		int distance;
 		if(hasWidthUpgrade())
-			widthMod = inventory[0].stackSize;
+			widthMod = getItems().get(0).getCount();
 		if(hasHeightUpgrade())
-			heightMod = inventory[1].stackSize;
+			heightMod = getItems().get(1).getCount();
 		if(hasSpeedUpgrade()) {
-			speedMod = inventory[2].stackSize;
+			speedMod = getItems().get(2).getCount();
 			if(speedMod > 10)
 				speedMod = 10;
 		}
@@ -120,7 +120,7 @@ public class TileEntityFan extends TileEntityInventoryHelper implements ITickabl
 			yPos = heightMod;
 			yNeg = heightMod;
 		}
-		List<EntityLivingBase> list = worldObj.getEntitiesWithinAABB(EntityLivingBase.class, new AxisAlignedBB(pos.getX() - xNeg, pos.getY() - yNeg, pos.getZ() - zNeg, pos.getX() + 1D  + xPos, pos.getY() + 1D  + yPos, pos.getZ() + 1D  + zPos));
+		List<EntityLivingBase> list = getWorld().getEntitiesWithinAABB(EntityLivingBase.class, new AxisAlignedBB(pos.getX() - xNeg, pos.getY() - yNeg, pos.getZ() - zNeg, pos.getX() + 1D  + xPos, pos.getY() + 1D  + yPos, pos.getZ() + 1D  + zPos));
 		for (int i = 0; i < list.size(); i++) {
 			Entity entity = list.get(i);
 			if (entity != null) {
@@ -140,15 +140,15 @@ public class TileEntityFan extends TileEntityInventoryHelper implements ITickabl
 	}
 
 	private boolean hasWidthUpgrade() {
-		return inventory[0] != null && inventory[0].getItem() == MobGrindingUtils.FAN_UPGRADE && inventory[0].getItemDamage() == 0;
+		return getItems().get(0) != null && getItems().get(0).getItem() == MobGrindingUtils.FAN_UPGRADE && getItems().get(0).getItemDamage() == 0;
 	}
 	
 	private boolean hasHeightUpgrade() {
-		return inventory[1] != null && inventory[1].getItem() == MobGrindingUtils.FAN_UPGRADE && inventory[1].getItemDamage() == 1;
+		return getItems().get(1) != null && getItems().get(1).getItem() == MobGrindingUtils.FAN_UPGRADE && getItems().get(1).getItemDamage() == 1;
 	}
 
 	private boolean hasSpeedUpgrade() {
-		return inventory[2] != null && inventory[2].getItem() == MobGrindingUtils.FAN_UPGRADE && inventory[2].getItemDamage() == 2;
+		return getItems().get(2) != null && getItems().get(2).getItem() == MobGrindingUtils.FAN_UPGRADE && getItems().get(2).getItemDamage() == 2;
 	}
 
 	@Override

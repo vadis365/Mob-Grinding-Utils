@@ -51,7 +51,7 @@ public class MessageSyncEntityCapabilities implements IMessage, IMessageHandler<
 
 	@SideOnly(Side.CLIENT)
 	private void handleMessage(MessageSyncEntityCapabilities message) {
-		World world = Minecraft.getMinecraft().theWorld;
+		World world = Minecraft.getMinecraft().world;
 		Entity entity = world.getEntityByID(message.entityID);
 		if(entity != null) {
 			EntityCapability<?, ?, Entity> capability = EntityCapabilityHandler.getCapability(message.capability, entity);
@@ -64,10 +64,10 @@ public class MessageSyncEntityCapabilities implements IMessage, IMessageHandler<
 	@Override
 	public void fromBytes(ByteBuf buffer) {
 		PacketBuffer buf = new PacketBuffer(buffer);
-		this.capability = new ResourceLocation(buf.readStringFromBuffer(128));
+		this.capability = new ResourceLocation(buf.readString(128));
 		this.entityID = buf.readInt();
 		try {
-			this.nbt = buf.readNBTTagCompoundFromBuffer();
+			this.nbt = buf.readCompoundTag();
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}		
@@ -78,6 +78,6 @@ public class MessageSyncEntityCapabilities implements IMessage, IMessageHandler<
 		PacketBuffer buf = new PacketBuffer(buffer);
 		buf.writeString(this.capability.toString());
 		buf.writeInt(this.entityID);
-		buf.writeNBTTagCompoundToBuffer(this.nbt);
+		buf.writeCompoundTag(this.nbt);
 	}
 }

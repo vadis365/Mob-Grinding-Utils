@@ -84,7 +84,7 @@ public class BlockXPTap extends BlockDirectional implements ITileEntityProvider 
 	}
 
 	@Override
-	public void addCollisionBoxToList(IBlockState state, World worldIn, BlockPos pos, AxisAlignedBB entityBox, List<AxisAlignedBB> collidingBoxes, @Nullable Entity entityIn) {
+	public void addCollisionBoxToList(IBlockState state, World worldIn, BlockPos pos, AxisAlignedBB entityBox, List<AxisAlignedBB> collidingBoxes, @Nullable Entity entityIn, boolean whatIsThis) {
 		state = state.getActualState(worldIn, pos);
 		switch ((EnumFacing) state.getValue(FACING)) {
 		default:
@@ -123,13 +123,15 @@ public class BlockXPTap extends BlockDirectional implements ITileEntityProvider 
 		return EnumBlockRenderType.MODEL;
 	}
 
-	public IBlockState onBlockPlaced(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer) {
+	@Override
+	 public IBlockState getStateForPlacement(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer) {
 		if (canPlaceAt(world, pos, facing))
 			return this.getDefaultState().withProperty(FACING, facing).withProperty(POWERED, false);
 		return this.getDefaultState();
 	}
 
-	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, @Nullable ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
+	@Override
+	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
 		if (world.isRemote) {
 			return true;
 		} else {

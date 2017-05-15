@@ -23,7 +23,7 @@ public class ChickenFuseEvent {
 	public void startChickenFuse(LivingEvent event) {
 		EntityLivingBase entity = (EntityLivingBase) event.getEntity();
 		if (entity instanceof EntityChicken) {
-			World world = entity.worldObj;
+			World world = entity.getEntityWorld();
 			if (!world.isRemote) {
 				NBTTagCompound nbt = new NBTTagCompound();
 				nbt = entity.getEntityData();
@@ -60,7 +60,7 @@ public class ChickenFuseEvent {
 						for (int k = 0; k < 4; ++k) {
 							ItemStack stack = new ItemStack(Items.FEATHER);
 							EntityItem feather = new EntityItem(world, entity.posX + (double) (world.rand.nextFloat() * entity.width * 2.0F) - (double) entity.width, entity.posY + (double) (world.rand.nextFloat() * entity.height), entity.posZ + (double) (world.rand.nextFloat() * entity.width * 2.0F) - (double) entity.width, stack);
-							world.spawnEntityInWorld(feather);
+							world.spawnEntity(feather);
 						}
 					}
 				}

@@ -64,7 +64,7 @@ public class ParticleFluidXP extends Particle {
 		prevPosY = posY;
 		prevPosZ = posZ;
 		motionY -= (double) particleGravity;
-		moveEntity(motionX, motionY, motionZ);
+		move(motionX, motionY, motionZ);
 		motionY *= 0.9800000190734863D;
 
         if (this.particleAge++ >= this.particleMaxAge)

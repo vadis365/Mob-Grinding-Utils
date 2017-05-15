@@ -1,5 +1,6 @@
 package mob_grinding_utils.entity;
 
+import net.minecraft.entity.MoverType;
 import net.minecraft.entity.item.EntityXPOrb;
 import net.minecraft.world.World;
 
@@ -29,7 +30,7 @@ public class EntityXPOrbFalling extends EntityXPOrb {
 		this.motionY -= 0.029999999329447746D;
 
 		pushOutOfBlocks(this.posX, (getEntityBoundingBox().minY + getEntityBoundingBox().maxY) / 2.0D, this.posZ);
-		moveEntity(this.motionX, this.motionY, this.motionZ);
+		move(MoverType.SELF, this.motionX, this.motionY, this.motionZ);
 
 		if (this.onGround)
 			this.motionY *= -0.8999999761581421D;

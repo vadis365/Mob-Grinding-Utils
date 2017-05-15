@@ -17,7 +17,7 @@ public class ChickenInteractionEvent {
 			EntityLivingBase entity = (EntityLivingBase) event.getTarget();
 
 			if (entity instanceof EntityChicken && !entity.isChild()) {
-					World world = entity.worldObj;
+					World world = entity.getEntityWorld();
 					if (event.getItemStack() != null && event.getItemStack().getItem() == MobGrindingUtils.GM_CHICKEN_FEED) {
 						if (!world.isRemote) {
 							NBTTagCompound nbt = new NBTTagCompound();
@@ -33,10 +33,10 @@ public class ChickenInteractionEvent {
 								MobGrindingUtils.NETWORK_WRAPPER.sendToAll(new ChickenSyncMessage(entity, nbt));
 							}
 							entity.motionY += (0.06D * (double) (10) - entity.motionY) * 0.2D;
-							((EntityChicken) entity).func_189654_d(true);
+							((EntityChicken) entity).setNoGravity(true);
 
 							if (!event.getEntityPlayer().capabilities.isCreativeMode)
-								event.getItemStack().stackSize--;
+								event.getItemStack().shrink(1);
 						}
 					}
 				}

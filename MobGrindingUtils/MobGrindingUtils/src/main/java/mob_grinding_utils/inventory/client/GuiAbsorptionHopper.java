@@ -112,7 +112,7 @@ public class GuiAbsorptionHopper extends GuiContainer {
 	@Override
 	protected void actionPerformed(GuiButton guibutton) {
 		if (guibutton instanceof GuiButton)
-			MobGrindingUtils.NETWORK_WRAPPER.sendToServer(new AbsorptionHopperMessage(mc.thePlayer, guibutton.id, tile.getPos()));
+			MobGrindingUtils.NETWORK_WRAPPER.sendToServer(new AbsorptionHopperMessage(mc.player, guibutton.id, tile.getPos()));
 	}
 
 }

@@ -212,7 +212,7 @@ public class EntityCapabilityHandler {
 				while(it.hasNext()) {
 					Entry<EntityPlayerMP, List<EntityCapabilityTracker>> entry = it.next();
 					EntityPlayerMP player = entry.getKey();
-					if(!player.getServerWorld().getMinecraftServer().getPlayerList().getPlayerList().contains(player))
+					if(!player.getServerWorld().getMinecraftServer().getPlayerList().getPlayers().contains(player))
 						it.remove();
 				}
 			}

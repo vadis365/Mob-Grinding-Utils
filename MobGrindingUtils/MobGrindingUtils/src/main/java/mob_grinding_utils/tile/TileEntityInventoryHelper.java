@@ -1,66 +1,58 @@
 package mob_grinding_utils.tile;
 
+import javax.annotation.Nullable;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ISidedInventory;
+import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityShulkerBox;
+import net.minecraft.util.NonNullList;
+import net.minecraft.util.datafix.DataFixer;
+import net.minecraft.util.datafix.FixTypes;
+import net.minecraft.util.datafix.walkers.ItemStackDataLists;
 import net.minecraft.util.text.ITextComponent;
 
 public abstract class TileEntityInventoryHelper extends TileEntity implements ISidedInventory {
 
-	public ItemStack[] inventory;
+	private NonNullList<ItemStack> inventory;
 
 	public TileEntityInventoryHelper(int invtSize) {
-		inventory = new ItemStack[invtSize];
+		inventory = NonNullList.<ItemStack>withSize(invtSize, ItemStack.EMPTY);
 	}
 
 	@Override
 	public int getSizeInventory() {
-		return inventory.length;
+		return inventory.size();
 	}
 
 	@Override
 	public ItemStack getStackInSlot(int slot) {
-		return inventory[slot];
+		return inventory.get(slot);
+	}
+
+    protected NonNullList<ItemStack> getItems() {
+        return inventory;
+    }
+
+	@Override
+    public ItemStack decrStackSize(int index, int count) {
+		ItemStack itemstack = ItemStackHelper.getAndSplit(inventory, index, count);
+		if (!itemstack.isEmpty())
+			this.markDirty();
+		return itemstack;
 	}
 
 	@Override
-	public ItemStack decrStackSize(int slot, int size) {
-		if (inventory[slot] != null) {
-			ItemStack itemstack;
-			if (inventory[slot].stackSize <= size) {
-				itemstack = inventory[slot];
-				inventory[slot] = null;
-				return itemstack;
-			} else {
-				itemstack = inventory[slot].splitStack(size);
-				if (inventory[slot].stackSize == 0)
-					inventory[slot] = null;
-				return itemstack;
-			}
-		} else
-			return null;
-	}
-
-	//@Override
-	public ItemStack getStackInSlotOnClosing(int slot) {
-		if (inventory[slot] != null) {
-			ItemStack itemstack = inventory[slot];
-			inventory[slot] = null;
-			return itemstack;
-		} else
-			return null;
-	}
-
-	@Override
-	public void setInventorySlotContents(int slot, ItemStack stack) {
-		inventory[slot] = stack;
-
-		if (stack != null && stack.stackSize > getInventoryStackLimit())
-			stack.stackSize = getInventoryStackLimit();
-	}
+    public void setInventorySlotContents(int index, @Nullable ItemStack stack) {
+        inventory.set(index, stack);
+        if (stack.getCount() > this.getInventoryStackLimit())
+            stack.setCount(this.getInventoryStackLimit());
+        this.markDirty();
+    }
 
 	@Override
 	public int getInventoryStackLimit() {
@@ -68,40 +60,42 @@ public abstract class TileEntityInventoryHelper extends TileEntity implements IS
 	}
 
 	@Override
-	public boolean isUseableByPlayer(EntityPlayer player) {
+	public boolean isUsableByPlayer(EntityPlayer player) {
 		return true;
 	}
 
 	@Override
-	public void readFromNBT(NBTTagCompound nbt) {
-		super.readFromNBT(nbt);
-		NBTTagList tags = nbt.getTagList("Items", 10);
-		inventory = new ItemStack[getSizeInventory()];
-
-		for (int i = 0; i < tags.tagCount(); i++) {
-			NBTTagCompound data = tags.getCompoundTagAt(i);
-			int j = data.getByte("Slot") & 255;
-
-			if (j >= 0 && j < inventory.length)
-				inventory[j] = ItemStack.loadItemStackFromNBT(data);
+	public boolean isEmpty() {
+		for (ItemStack itemstack : inventory) {
+			if (!itemstack.isEmpty()) {
+				return false;
+			}
 		}
+
+		return true;
 	}
 
 	@Override
-	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
-		super.writeToNBT(nbt);
-		NBTTagList tags = new NBTTagList();
+	public void readFromNBT(NBTTagCompound compound) {
+		super.readFromNBT(compound);
+		this.loadFromNbt(compound);
+	}
 
-		for (int i = 0; i < inventory.length; i++)
-			if (inventory[i] != null) {
-				NBTTagCompound data = new NBTTagCompound();
-				data.setByte("Slot", (byte) i);
-				inventory[i].writeToNBT(data);
-				tags.appendTag(data);
-			}
+	@Override
+	public NBTTagCompound writeToNBT(NBTTagCompound compound) {
+		super.writeToNBT(compound);
+		return this.saveToNbt(compound);
+	}
 
-		nbt.setTag("Items", tags);
-		return nbt;
+	public void loadFromNbt(NBTTagCompound compound) {
+		inventory = NonNullList.<ItemStack>withSize(this.getSizeInventory(), ItemStack.EMPTY);
+		if (compound.hasKey("Items", 9))
+			ItemStackHelper.loadAllItems(compound, inventory);
+	}
+
+	public NBTTagCompound saveToNbt(NBTTagCompound compound) {
+		ItemStackHelper.saveAllItems(compound, inventory, false);
+		return compound;
 	}
 
 	@Override
@@ -128,8 +122,7 @@ public abstract class TileEntityInventoryHelper extends TileEntity implements IS
 
 	@Override
 	public void clear() {
-		for (int i = 0; i < inventory.length; i++)
-			inventory[i] = null;
+		inventory.clear();
 	}
 
 	@Override

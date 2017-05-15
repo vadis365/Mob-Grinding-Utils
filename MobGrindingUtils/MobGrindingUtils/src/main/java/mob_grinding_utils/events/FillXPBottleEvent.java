@@ -29,7 +29,7 @@ public class FillXPBottleEvent {
 									tileentity.tank.drain(new FluidStack(tileentity.tank.getFluid(), 200), true);
 									event.getWorld().playSound((EntityPlayer) null, player.posX, player.posY, player.posZ, SoundEvents.ITEM_BOTTLE_FILL, SoundCategory.NEUTRAL, 1.0F, 1.0F);
 									turnBottleIntoItem(handItem, player, new ItemStack(Items.EXPERIENCE_BOTTLE));
-									--handItem.stackSize;
+									handItem.shrink(1);
 									tileentity.tank.onContentsChanged();
 								}
 							}
@@ -41,7 +41,7 @@ public class FillXPBottleEvent {
 	}
 
 	protected ItemStack turnBottleIntoItem(ItemStack stackIn, EntityPlayer player, ItemStack stack) {
-		if (stackIn.stackSize <= 0)
+		if (stackIn.getCount() <= 0)
 			return stack;
 		else {
 			if (!player.inventory.addItemStackToInventory(stack))

@@ -1,5 +1,7 @@
 package mob_grinding_utils.inventory.server;
 
+import javax.annotation.Nonnull;
+
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.IItemHandlerModifiable;
@@ -36,53 +38,58 @@ public class InventoryWrapperAH implements IItemHandlerModifiable {
 	}
 
 	@Override
+	@Nonnull
 	public ItemStack getStackInSlot(int slot) {
 		return getInv().getStackInSlot(slot);
 	}
 
 	@Override
-	public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
-		if (stack == null)
-			return null;
-
-		if (!getInv().isItemValidForSlot(slot, stack))
-			return stack;
+	@Nonnull
+	public ItemStack insertItem(int slot, @Nonnull ItemStack stack, boolean simulate) {
+		if (stack.isEmpty())
+			return ItemStack.EMPTY;
 
 		ItemStack stackInSlot = getInv().getStackInSlot(slot);
 
 		int m;
-		if (stackInSlot != null) {
+		if (!stackInSlot.isEmpty()) {
 			if (!ItemHandlerHelper.canItemStacksStack(stack, stackInSlot))
 				return stack;
 
-			m = Math.min(stack.getMaxStackSize(), getInv().getInventoryStackLimit()) - stackInSlot.stackSize;
+			if (!getInv().isItemValidForSlot(slot, stack))
+				return stack;
 
-			if (stack.stackSize <= m) {
+			m = Math.min(stack.getMaxStackSize(), getSlotLimit(slot)) - stackInSlot.getCount();
+
+			if (stack.getCount() <= m) {
 				if (!simulate) {
 					ItemStack copy = stack.copy();
-					copy.stackSize += stackInSlot.stackSize;
+					copy.grow(stackInSlot.getCount());
 					getInv().setInventorySlotContents(slot, copy);
 					getInv().markDirty();
 				}
 
-				return null;
+				return ItemStack.EMPTY;
 			} else {
 				// copy the stack to not modify the original one
 				stack = stack.copy();
 				if (!simulate) {
 					ItemStack copy = stack.splitStack(m);
-					copy.stackSize += stackInSlot.stackSize;
+					copy.grow(stackInSlot.getCount());
 					getInv().setInventorySlotContents(slot, copy);
 					getInv().markDirty();
 					return stack;
 				} else {
-					stack.stackSize -= m;
+					stack.shrink(m);
 					return stack;
 				}
 			}
 		} else {
-			m = Math.min(stack.getMaxStackSize(), getInv().getInventoryStackLimit());
-			if (m < stack.stackSize) {
+			if (!getInv().isItemValidForSlot(slot, stack))
+				return stack;
+
+			m = Math.min(stack.getMaxStackSize(), getSlotLimit(slot));
+			if (m < stack.getCount()) {
 				// copy the stack to not modify the original one
 				stack = stack.copy();
 				if (!simulate) {
@@ -90,7 +97,7 @@ public class InventoryWrapperAH implements IItemHandlerModifiable {
 					getInv().markDirty();
 					return stack;
 				} else {
-					stack.stackSize -= m;
+					stack.shrink(m);
 					return stack;
 				}
 			} else {
@@ -98,35 +105,36 @@ public class InventoryWrapperAH implements IItemHandlerModifiable {
 					getInv().setInventorySlotContents(slot, stack);
 					getInv().markDirty();
 				}
-				return null;
+				return ItemStack.EMPTY;
 			}
 		}
 
 	}
 
 	@Override
+	@Nonnull
 	public ItemStack extractItem(int slot, int amount, boolean simulate) {
 		if (amount == 0)
-			return null;
+			return ItemStack.EMPTY;
 
 		ItemStack stackInSlot = getInv().getStackInSlot(slot);
 
-		if (stackInSlot == null)
-			return null;
+		if (stackInSlot.isEmpty())
+			return ItemStack.EMPTY;
 
 		if (slot == 0)
-			return null;
+			return ItemStack.EMPTY;
 
 		if (simulate) {
-			if (stackInSlot.stackSize < amount) {
+			if (stackInSlot.getCount() < amount) {
 				return stackInSlot.copy();
 			} else {
 				ItemStack copy = stackInSlot.copy();
-				copy.stackSize = amount;
+				copy.setCount(amount);
 				return copy;
 			}
 		} else {
-			int m = Math.min(stackInSlot.stackSize, amount);
+			int m = Math.min(stackInSlot.getCount(), amount);
 
 			ItemStack decrStackSize = getInv().decrStackSize(slot, m);
 			getInv().markDirty();
@@ -135,8 +143,13 @@ public class InventoryWrapperAH implements IItemHandlerModifiable {
 	}
 
 	@Override
-	public void setStackInSlot(int slot, ItemStack stack) {
+	public void setStackInSlot(int slot, @Nonnull ItemStack stack) {
 		getInv().setInventorySlotContents(slot, stack);
+	}
+
+	@Override
+	public int getSlotLimit(int slot) {
+		return getInv().getInventoryStackLimit();
 	}
 
 	public IInventory getInv() {

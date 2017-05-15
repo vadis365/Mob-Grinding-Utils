@@ -51,12 +51,12 @@ public class ContainerAbsorptionHopper extends Container {
 			} else if (!mergeItemStack(stack1, 0, numRows * 8 + 1, false))
 				return null;
 
-			if (stack1.stackSize == 0)
+			if (stack1.getCount() == 0)
 				slot.putStack(null);
 			else
 				slot.onSlotChanged();
-			if (stack1.stackSize != stack.stackSize)
-				slot.onPickupFromSlot(player, stack1);
+			if (stack1.getCount() != stack.getCount())
+				slot.onTake(player, stack1);
 			else
 				return null;
 		}
@@ -75,28 +75,30 @@ public class ContainerAbsorptionHopper extends Container {
 		ItemStack slotstack;
 
 		if (stack.isStackable()) {
-			while (stack.stackSize > 0 && (!reverseDirection && slotIndex < endIndex || reverseDirection && slotIndex >= startIndex)) {
+			while (stack.getCount() > 0 && (!reverseDirection && slotIndex < endIndex || reverseDirection && slotIndex >= startIndex)) {
 				slot = (Slot) this.inventorySlots.get(slotIndex);
 				slotstack = slot.getStack();
 
-				if (slotstack != null && slotstack.getItem() == stack.getItem() && stack.getItemDamage() == slotstack.getItemDamage() && ItemStack.areItemStackTagsEqual(stack, slotstack) && slotstack.stackSize < slot.getSlotStackLimit()) {
-					int mergedStackSize = stack.stackSize + getSmaller(slotstack.stackSize, slot.getSlotStackLimit());
+				if (slotstack != null && slotstack.getItem() == stack.getItem() && stack.getItemDamage() == slotstack.getItemDamage() && ItemStack.areItemStackTagsEqual(stack, slotstack) && slotstack.getCount() < slot.getSlotStackLimit()) {
+					int mergedStackSize = stack.getCount() + getSmaller(slotstack.getCount(), slot.getSlotStackLimit());
 
 					if (mergedStackSize <= stack.getMaxStackSize() && mergedStackSize <= slot.getSlotStackLimit()) {
-						stack.stackSize = 0;
-						slotstack.stackSize = mergedStackSize;
+						stack.setCount(0);
+						slotstack.setCount(mergedStackSize);
 						slot.onSlotChanged();
 						merged = true;
-					} else if (slotstack.stackSize < stack.getMaxStackSize() && slotstack.stackSize < slot.getSlotStackLimit()) {
+					} else if (slotstack.getCount() < stack.getMaxStackSize() && slotstack.getCount() < slot.getSlotStackLimit()) {
 						if (slot.getSlotStackLimit() >= stack.getMaxStackSize()) {
-							stack.stackSize -= stack.getMaxStackSize() - slotstack.stackSize;
-							slotstack.stackSize = stack.getMaxStackSize();
+							stack.shrink(stack.getMaxStackSize() - slotstack.getCount());
+							//stack.getCount() -= stack.getMaxStackSize() - slotstack.getCount();
+							slotstack.setCount(stack.getMaxStackSize());
 							slot.onSlotChanged();
 							merged = true;
 						}
 						else if (slot.getSlotStackLimit() < stack.getMaxStackSize()) {
-							stack.stackSize -= slot.getSlotStackLimit() - slotstack.stackSize;
-							slotstack.stackSize = slot.getSlotStackLimit();
+							//stack.stackSize -= slot.getSlotStackLimit() - slotstack.stackSize;
+							stack.shrink(slot.getSlotStackLimit() - slotstack.getCount());
+							slotstack.setCount(slot.getSlotStackLimit());
 							slot.onSlotChanged();
 							merged = true;
 						}
@@ -110,7 +112,7 @@ public class ContainerAbsorptionHopper extends Container {
 			}
 		}
 
-		if (stack.stackSize > 0) {
+		if (stack.getCount() > 0) {
 			if (reverseDirection)
 				slotIndex = endIndex - 1;
 			else
@@ -119,10 +121,10 @@ public class ContainerAbsorptionHopper extends Container {
 			while (!reverseDirection && slotIndex < endIndex || reverseDirection && slotIndex >= startIndex) {
 				slot = (Slot) this.inventorySlots.get(slotIndex);
 				slotstack = slot.getStack();
-				if (slotstack == null && slot.isItemValid(stack) && slot.getSlotStackLimit() < stack.stackSize) {
+				if (slotstack == null && slot.isItemValid(stack) && slot.getSlotStackLimit() < stack.getCount()) {
 					ItemStack copy = stack.copy();
-					copy.stackSize = slot.getSlotStackLimit();
-					stack.stackSize -= slot.getSlotStackLimit();
+					copy.setCount(slot.getSlotStackLimit());
+					stack.shrink(slot.getSlotStackLimit());
 					slot.putStack(copy);
 					slot.onSlotChanged();
 					merged = true;
@@ -130,7 +132,7 @@ public class ContainerAbsorptionHopper extends Container {
 				} else if (slotstack == null && slot.isItemValid(stack)) {
 					slot.putStack(stack.copy());
 					slot.onSlotChanged();
-					stack.stackSize = 0;
+					stack.setCount(0);
 					merged = true;
 					break;
 				}

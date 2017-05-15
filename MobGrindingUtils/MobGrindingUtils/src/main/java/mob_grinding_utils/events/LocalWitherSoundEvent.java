@@ -14,7 +14,7 @@ public class LocalWitherSoundEvent {
 	public void onWitherBossDeath(LivingDeathEvent event) {
 		if (event.getEntity() instanceof EntityWither) {
 			EntityWither wither = (EntityWither) event.getEntity();
-			World world = wither.worldObj;
+			World world = wither.getEntityWorld();
 			boolean playsound = true;
 			if (!world.isRemote) {
 				for (int x = -8; x < 8; x++)

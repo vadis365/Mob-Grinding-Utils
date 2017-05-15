@@ -18,13 +18,13 @@ public class TileEntityXPTap extends TileEntity implements ITickable{
 
 	@Override
 	public void update() {
-		if (!worldObj.isRemote && active) {
-			TileEntity tileentity = worldObj.getTileEntity(pos.offset(worldObj.getBlockState(pos).getValue(BlockXPTap.FACING).getOpposite()));
+		if (!getWorld().isRemote && active) {
+			TileEntity tileentity = getWorld().getTileEntity(pos.offset(getWorld().getBlockState(pos).getValue(BlockXPTap.FACING).getOpposite()));
 			if (tileentity instanceof TileEntityTank) {
-				if (((TileEntityTank) tileentity).tank.getFluidAmount() > 0 && ((TileEntityTank) tileentity).tank.getFluid().getFluid().equals(FluidRegistry.getFluid("xpjuice")) && worldObj.getWorldTime() % 3 == 0) {
+				if (((TileEntityTank) tileentity).tank.getFluidAmount() > 0 && ((TileEntityTank) tileentity).tank.getFluid().getFluid().equals(FluidRegistry.getFluid("xpjuice")) && getWorld().getWorldTime() % 3 == 0) {
 					int xpAmount = EntityXPOrbFalling.getXPSplit(Math.min(20, ((TileEntityTank) tileentity).tank.getFluidAmount() / 20));
 					((TileEntityTank) tileentity).tank.drain(xpAmount * 20, true);
-					spawnXP(worldObj, pos, xpAmount, (TileEntityTank) tileentity);
+					spawnXP(getWorld(), pos, xpAmount, (TileEntityTank) tileentity);
 					MobGrindingUtils.NETWORK_WRAPPER.sendToAll(new TapParticleMessage(getPos()));
 				}
 			}
@@ -34,12 +34,12 @@ public class TileEntityXPTap extends TileEntity implements ITickable{
 	public void spawnXP(World world, BlockPos pos, int xp, TileEntityTank tankTile) {
 		tankTile.markDirty();
 		EntityXPOrbFalling orb = new EntityXPOrbFalling(world, pos.getX() + 0.5D, pos.getY() - 0.125D, pos.getZ() + 0.5D, xp);
-		world.spawnEntityInWorld(orb);
+		world.spawnEntity(orb);
 	}
 
 	public void setActive(boolean isActive) {
 		active = isActive;
-		worldObj.notifyBlockUpdate(pos, worldObj.getBlockState(pos), worldObj.getBlockState(pos), 3);
+		getWorld().notifyBlockUpdate(pos, getWorld().getBlockState(pos), getWorld().getBlockState(pos), 3);
 	}
 
 	@Override

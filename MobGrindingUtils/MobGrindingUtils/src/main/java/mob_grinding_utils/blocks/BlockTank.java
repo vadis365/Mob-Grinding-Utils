@@ -103,11 +103,11 @@ public class BlockTank extends BlockContainer {
 	}
 
 	@Override
-	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, @Nullable ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
-		final IFluidHandler fluidHandler = getFluidHandler(worldIn, pos);
+	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
+		final IFluidHandler fluidHandler = getFluidHandler(world, pos);
 		if (fluidHandler != null) {
-			FluidUtil.interactWithFluidHandler(heldItem, fluidHandler, playerIn);
-			return FluidUtil.getFluidHandler(heldItem) != null;
+			FluidUtil.interactWithFluidHandler(player, hand, world, pos, side);//(heldItem, fluidHandler, player);
+			return FluidUtil.getFluidHandler(player.getHeldItem(hand)) != null;
 		}
 		return false;
 	}
