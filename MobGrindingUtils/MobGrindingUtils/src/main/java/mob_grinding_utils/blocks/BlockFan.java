@@ -4,6 +4,7 @@ import java.util.Random;
 
 import mob_grinding_utils.MobGrindingUtils;
 import mob_grinding_utils.tile.TileEntityFan;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockDirectional;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.SoundType;
@@ -22,7 +23,6 @@ import net.minecraft.util.Mirror;
 import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
 public class BlockFan extends BlockDirectional implements ITileEntityProvider {
@@ -108,15 +108,13 @@ public class BlockFan extends BlockDirectional implements ITileEntityProvider {
 	}
 
 	@Override
-    public void onNeighborChange(IBlockAccess world, BlockPos pos, BlockPos neighbor) {
-		World worldIn = (World) world;
-		IBlockState state = world.getBlockState(pos);
-		if (!worldIn.isRemote) {
-			if (((Boolean) state.getValue(POWERED)).booleanValue() && !worldIn.isBlockPowered(pos))
-				worldIn.scheduleUpdate(pos, this, 4);
-			else if (!((Boolean) state.getValue(POWERED)).booleanValue() && worldIn.isBlockPowered(pos)) {
+	public void neighborChanged(IBlockState state, World world, BlockPos pos, Block blockIn, BlockPos fromPos) {
+		if (!world.isRemote) {
+			if (((Boolean) state.getValue(POWERED)).booleanValue() && !world.isBlockPowered(pos))
+				world.scheduleUpdate(pos, this, 4);
+			else if (!((Boolean) state.getValue(POWERED)).booleanValue() && world.isBlockPowered(pos)) {
 				state = state.cycleProperty(POWERED);
-				worldIn.setBlockState(pos, state, 3);
+				world.setBlockState(pos, state, 3);
 			}
 		}
 	}

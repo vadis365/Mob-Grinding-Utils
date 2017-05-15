@@ -2,6 +2,7 @@ package mob_grinding_utils.blocks;
 
 import mob_grinding_utils.MobGrindingUtils;
 import mob_grinding_utils.tile.TileEntitySaw;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockDirectional;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.SoundType;
@@ -150,14 +151,12 @@ public class BlockSaw extends BlockDirectional implements ITileEntityProvider {
 	}
 
 	@Override
-    public void onNeighborChange(IBlockAccess world, BlockPos pos, BlockPos neighbor) {
-		World worldIn = (World) world;
-		IBlockState state = world.getBlockState(pos);
-		if (!worldIn.isRemote) {
-			if (((Boolean) state.getValue(POWERED)).booleanValue() && !worldIn.isBlockPowered(pos))
-				setState(worldIn, pos, state, false);
-			else if (!((Boolean) state.getValue(POWERED)).booleanValue() && worldIn.isBlockPowered(pos))
-				setState(worldIn, pos, state, true);
+	public void neighborChanged(IBlockState state, World world, BlockPos pos, Block blockIn, BlockPos fromPos) {
+		if (!world.isRemote) {
+			if (((Boolean) state.getValue(POWERED)).booleanValue() && !world.isBlockPowered(pos))
+				setState(world, pos, state, false);
+			else if (!((Boolean) state.getValue(POWERED)).booleanValue() && world.isBlockPowered(pos))
+				setState(world, pos, state, true);
 		}
 	}
 }

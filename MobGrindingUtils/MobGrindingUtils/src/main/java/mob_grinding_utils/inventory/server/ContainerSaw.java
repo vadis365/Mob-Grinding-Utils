@@ -36,7 +36,7 @@ public class ContainerSaw extends Container {
 	
 	@Override
 	public ItemStack transferStackInSlot(EntityPlayer player, int slotIndex) {
-		ItemStack stack = null;
+		ItemStack stack = ItemStack.EMPTY;
 		Slot slot = (Slot) inventorySlots.get(slotIndex);
 		if (slot != null && slot.getHasStack()) {
 			ItemStack stack1 = slot.getStack();
@@ -44,32 +44,32 @@ public class ContainerSaw extends Container {
 			if (slotIndex > 5) {
 				if (stack1.getItem() == MobGrindingUtils.SAW_UPGRADE && stack1.getItemDamage() == 0)
 					if (!mergeItemStack(stack1, 0, 1, false))
-						return null;
+						return ItemStack.EMPTY;
 				if (stack1.getItem() == MobGrindingUtils.SAW_UPGRADE && stack1.getItemDamage() == 1)
 					if (!mergeItemStack(stack1, 1, 2, false))
-						return null;
+						return ItemStack.EMPTY;
 				if (stack1.getItem() == MobGrindingUtils.SAW_UPGRADE && stack1.getItemDamage() == 2)
 					if (!mergeItemStack(stack1, 2, 3, false))
-						return null;
+						return ItemStack.EMPTY;
 				if (stack1.getItem() == MobGrindingUtils.SAW_UPGRADE && stack1.getItemDamage() == 3)
 					if (!mergeItemStack(stack1, 3, 4, false))
-						return null;
+						return ItemStack.EMPTY;
 				if (stack1.getItem() == MobGrindingUtils.SAW_UPGRADE && stack1.getItemDamage() == 4)
 					if (!mergeItemStack(stack1, 4, 5, false))
-						return null;
+						return ItemStack.EMPTY;
 				if (stack1.getItem() == MobGrindingUtils.SAW_UPGRADE && stack1.getItemDamage() == 5)
 					if (!mergeItemStack(stack1, 5, 6, false))
-						return null;
+						return ItemStack.EMPTY;
 			} else if (!mergeItemStack(stack1, 6, inventorySlots.size(), false))
-				return null;
-			if (stack1.getCount() == 0)
-				slot.putStack(null);
+				return ItemStack.EMPTY;
+			if (stack1.isEmpty())
+				slot.putStack(ItemStack.EMPTY);
 			else
 				slot.onSlotChanged();
 			if (stack1.getCount() != stack.getCount())
 				slot.onTake(player, stack1);
 			else
-				return null;
+				return ItemStack.EMPTY;
 		}
 		return stack;
 	}
@@ -90,7 +90,7 @@ public class ContainerSaw extends Container {
 				slot = (Slot) this.inventorySlots.get(slotIndex);
 				slotstack = slot.getStack();
 
-				if (slotstack != null && slotstack.getItem() == stack.getItem() && stack.getItemDamage() == slotstack.getItemDamage() && ItemStack.areItemStackTagsEqual(stack, slotstack) && slotstack.getCount() < slot.getSlotStackLimit()) {
+				if (!slotstack.isEmpty() && slotstack.getItem() == stack.getItem() && stack.getItemDamage() == slotstack.getItemDamage() && ItemStack.areItemStackTagsEqual(stack, slotstack) && slotstack.getCount() < slot.getSlotStackLimit()) {
 					int mergedStackSize = stack.getCount() + getSmaller(slotstack.getCount(), slot.getSlotStackLimit());
 
 					if (mergedStackSize <= stack.getMaxStackSize() && mergedStackSize <= slot.getSlotStackLimit()) {
@@ -132,7 +132,7 @@ public class ContainerSaw extends Container {
 			while (!reverseDirection && slotIndex < endIndex || reverseDirection && slotIndex >= startIndex) {
 				slot = (Slot) this.inventorySlots.get(slotIndex);
 				slotstack = slot.getStack();
-				if (slotstack == null && slot.isItemValid(stack) && slot.getSlotStackLimit() < stack.getCount()) {
+				if (slotstack.isEmpty() && slot.isItemValid(stack) && slot.getSlotStackLimit() < stack.getCount()) {
 					ItemStack copy = stack.copy();
 					copy.setCount(slot.getSlotStackLimit());
 					stack.shrink(slot.getSlotStackLimit());
@@ -140,7 +140,7 @@ public class ContainerSaw extends Container {
 					slot.onSlotChanged();
 					merged = true;
 					break;
-				} else if (slotstack == null && slot.isItemValid(stack)) {
+				} else if (slotstack.isEmpty() && slot.isItemValid(stack)) {
 					slot.putStack(stack.copy());
 					slot.onSlotChanged();
 					stack.setCount(0);
