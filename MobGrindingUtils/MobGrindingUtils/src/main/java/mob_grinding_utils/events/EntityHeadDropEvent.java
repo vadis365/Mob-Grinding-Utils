@@ -58,7 +58,7 @@ public class EntityHeadDropEvent {
 			return null;
 
 		if (target instanceof EntityEnderman)
-			if (Loader.isModLoaded("EnderIO"))
+			if (Loader.isModLoaded("enderio"))
 				return new ItemStack(Item.REGISTRY.getObject(new ResourceLocation("enderio:blockEndermanSkull")), 1, 0);
 		if (target instanceof EntityCreeper)
 			return new ItemStack(Items.SKULL, 1, 4);

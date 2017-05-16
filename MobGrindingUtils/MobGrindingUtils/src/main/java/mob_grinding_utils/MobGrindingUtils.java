@@ -73,7 +73,7 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-@Mod(modid = "mob_grinding_utils", name = "mob_grinding_utils", version = "0.1.8.21")
+@Mod(modid = "mob_grinding_utils", name = "mob_grinding_utils", version = "0.1.8.22")
 
 public class MobGrindingUtils {
 
@@ -250,7 +250,7 @@ public class MobGrindingUtils {
 		GM_CHICKEN_FEED = new ItemGMChickenFeed();
 		GameRegistry.register(GM_CHICKEN_FEED.setRegistryName("mob_grinding_utils", "gm_chicken_feed").setUnlocalizedName("mob_grinding_utils.gm_chicken_feed"));
 
-		if (!Loader.isModLoaded("OpenBlocks") && !Loader.isModLoaded("EnderIO")) {
+		if (!Loader.isModLoaded("openblocks") && !Loader.isModLoaded("enderio")) {
 			FLUID_XP = new Fluid("xpjuice", new ResourceLocation("mob_grinding_utils:fluids/fluid_xp"), new ResourceLocation("mob_grinding_utils:fluids/fluid_xp")).setLuminosity(10).setDensity(800).setViscosity(1500).setUnlocalizedName("mob_grinding_utils.fluid_xp");
 			FluidRegistry.registerFluid(FLUID_XP);
 			FluidRegistry.addBucketForFluid(FLUID_XP);
