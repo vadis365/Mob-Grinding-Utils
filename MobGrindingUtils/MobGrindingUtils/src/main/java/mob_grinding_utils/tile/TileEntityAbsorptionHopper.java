@@ -311,7 +311,6 @@ public class TileEntityAbsorptionHopper extends TileEntityInventoryHelper implem
             int[] aint = isidedinventory.getSlotsForFace(facing);
             for (int k = 0; k < aint.length && !stack.isEmpty(); ++k)
             	stack = insertStack(inventory, stack, aint[k], facing);
-
         } else {
             int i = inventory.getSizeInventory();
             for (int j = 0; j < i && !stack.isEmpty(); ++j)

@@ -49,7 +49,8 @@ public class ItemMobSwab extends Item {
 	@Override
 	public boolean itemInteractionForEntity(ItemStack stack, EntityPlayer player, EntityLivingBase target, EnumHand hand) {
 		if (target instanceof EntityLiving && !(target instanceof EntityPlayer) && getDamage(stack) == 0) {
-			String mobName = EntityList.getEntityString(target);
+			String[] mobName1 = EntityList.getKey(target).toString().split(":");
+			String mobName = mobName1[1];
 			ItemStack stack2 = new ItemStack(MobGrindingUtils.MOB_SWAB, 1, 1);
 			if (!stack2.hasTagCompound())
 				stack2.setTagCompound(new NBTTagCompound());

@@ -40,8 +40,8 @@ public class ChickenFuseEvent {
 						entity.playSound(SoundEvents.ENTITY_CHICKEN_DEATH, 1F, 1F);
 						entity.playSound(MobGrindingUtils.CHICKEN_RISE, 0.5F, 1F);
 						String name = event.getEntity().getEntityData().getString("mguMobName");
-
-						if (EntityList.ENTITY_EGGS.containsKey(name)) {
+						ResourceLocation resourcelocation = new ResourceLocation(name);
+						if (EntityList.ENTITY_EGGS.containsKey(resourcelocation)) {
 							ItemStack mobEgg = new ItemStack(Items.SPAWN_EGG);
 							NBTTagCompound eggData = new NBTTagCompound();
 							NBTTagCompound mobData = new NBTTagCompound();
@@ -49,6 +49,7 @@ public class ChickenFuseEvent {
 							eggData.setTag("EntityTag", mobData);
 							mobEgg.setTagCompound(eggData);
 							entity.entityDropItem(mobEgg, 0.0F);
+							System.out.println("Should drop egg here");
 						}
 
 						if (Loader.isModLoaded("chickens") && event.getEntity().getEntityData().hasKey("chickenType")) {
