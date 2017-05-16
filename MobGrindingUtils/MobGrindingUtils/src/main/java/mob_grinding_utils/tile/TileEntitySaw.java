@@ -86,7 +86,7 @@ public class TileEntitySaw extends TileEntityInventoryHelper implements ITickabl
 					fakePlayer.setHeldItem(EnumHand.MAIN_HAND, tempSword);
 					fakePlayer.attackTargetEntityWithCurrentItem(entity);
 					fakePlayer.resetCooldown();
-					fakePlayer.setHeldItem(EnumHand.MAIN_HAND, null);
+					fakePlayer.setHeldItem(EnumHand.MAIN_HAND, ItemStack.EMPTY);
 				}
 			}
 		}
@@ -94,27 +94,27 @@ public class TileEntitySaw extends TileEntityInventoryHelper implements ITickabl
 	}
 
 	private boolean hasSharpnessUpgrade() {
-		return getItems().get(0) != null && getItems().get(0).getItem() == MobGrindingUtils.SAW_UPGRADE && getItems().get(0).getItemDamage() == 0;
+		return !getItems().get(0).isEmpty() && getItems().get(0).getItem() == MobGrindingUtils.SAW_UPGRADE && getItems().get(0).getItemDamage() == 0;
 	}
 	
 	private boolean hasLootingUpgrade() {
-		return getItems().get(1) != null && getItems().get(1).getItem() == MobGrindingUtils.SAW_UPGRADE && getItems().get(1).getItemDamage() == 1;
+		return !getItems().get(1).isEmpty() && getItems().get(1).getItem() == MobGrindingUtils.SAW_UPGRADE && getItems().get(1).getItemDamage() == 1;
 	}
 
 	private boolean hasFlameUpgrade() {
-		return getItems().get(2) != null && getItems().get(2).getItem() == MobGrindingUtils.SAW_UPGRADE && getItems().get(2).getItemDamage() == 2;
+		return !getItems().get(2).isEmpty() && getItems().get(2).getItem() == MobGrindingUtils.SAW_UPGRADE && getItems().get(2).getItemDamage() == 2;
 	}
 	
 	private boolean hasSmiteUpgrade() {
-		return getItems().get(3) != null && getItems().get(3).getItem() == MobGrindingUtils.SAW_UPGRADE && getItems().get(3).getItemDamage() == 3;
+		return !getItems().get(3).isEmpty() && getItems().get(3).getItem() == MobGrindingUtils.SAW_UPGRADE && getItems().get(3).getItemDamage() == 3;
 	}
 	
 	private boolean hasArthropodUpgrade() {
-		return getItems().get(4) != null && getItems().get(4).getItem() == MobGrindingUtils.SAW_UPGRADE && getItems().get(4).getItemDamage() == 4;
+		return !getItems().get(4).isEmpty() && getItems().get(4).getItem() == MobGrindingUtils.SAW_UPGRADE && getItems().get(4).getItemDamage() == 4;
 	}
 
 	private boolean hasBeheadingUpgrade() {
-		return getItems().get(5) != null && getItems().get(5).getItem() == MobGrindingUtils.SAW_UPGRADE && getItems().get(5).getItemDamage() == 5;
+		return !getItems().get(5).isEmpty() && getItems().get(5).getItem() == MobGrindingUtils.SAW_UPGRADE && getItems().get(5).getItemDamage() == 5;
 	}
 
 	@Override

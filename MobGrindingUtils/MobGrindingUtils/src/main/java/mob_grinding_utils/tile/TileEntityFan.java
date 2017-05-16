@@ -140,15 +140,15 @@ public class TileEntityFan extends TileEntityInventoryHelper implements ITickabl
 	}
 
 	private boolean hasWidthUpgrade() {
-		return getItems().get(0) != null && getItems().get(0).getItem() == MobGrindingUtils.FAN_UPGRADE && getItems().get(0).getItemDamage() == 0;
+		return !getItems().get(0).isEmpty() && getItems().get(0).getItem() == MobGrindingUtils.FAN_UPGRADE && getItems().get(0).getItemDamage() == 0;
 	}
 	
 	private boolean hasHeightUpgrade() {
-		return getItems().get(1) != null && getItems().get(1).getItem() == MobGrindingUtils.FAN_UPGRADE && getItems().get(1).getItemDamage() == 1;
+		return !getItems().get(1).isEmpty() && getItems().get(1).getItem() == MobGrindingUtils.FAN_UPGRADE && getItems().get(1).getItemDamage() == 1;
 	}
 
 	private boolean hasSpeedUpgrade() {
-		return getItems().get(2) != null && getItems().get(2).getItem() == MobGrindingUtils.FAN_UPGRADE && getItems().get(2).getItemDamage() == 2;
+		return !getItems().get(2).isEmpty() && getItems().get(2).getItem() == MobGrindingUtils.FAN_UPGRADE && getItems().get(2).getItemDamage() == 2;
 	}
 
 	@Override
