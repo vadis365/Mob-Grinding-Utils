@@ -35,7 +35,7 @@ public class TileEntitySinkTank extends TileEntityTank implements ITickable {
 			if (xpAmount <= 0)
 				return false;
 			if (tank.getFluidAmount() < tank.getCapacity()) {
-				tank.fill(new FluidStack(FluidRegistry.getFluid("xpjuice"), 32), true);
+				tank.fill(new FluidStack(FluidRegistry.getFluid("xpjuice"), 20), true);
 				addPlayerXP(player, -1);
 				getWorld().playSound((EntityPlayer) null, player.posX, player.posY, player.posZ, SoundEvents.ITEM_BOTTLE_FILL, SoundCategory.NEUTRAL , 0.1F, 0.5F * ((getWorld().rand.nextFloat() - getWorld().rand.nextFloat()) * 0.7F + 1.8F));
 				MobGrindingUtils.NETWORK_WRAPPER.sendToAll(new TapParticleMessage(getPos().up()));
