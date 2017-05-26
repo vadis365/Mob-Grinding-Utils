@@ -146,7 +146,7 @@ public class TileEntityAbsorptionHopper extends TileEntityInventoryHelper implem
 				
 				if (tile != null && tile.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, facing.getOpposite())) {
 					IItemHandler handler = tile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, facing.getOpposite());
-					if (getWorld().getWorldTime() % 8 == 0) {
+					if (getWorld().getTotalWorldTime() % 8 == 0) {
 						for (int i = 0; i < this.getSizeInventory(); ++i) {
 							if (!getStackInSlot(i).isEmpty() && i != 0) {
 								ItemStack stack = getStackInSlot(i).copy();
@@ -164,7 +164,7 @@ public class TileEntityAbsorptionHopper extends TileEntityInventoryHelper implem
 					IInventory iinventory = (IInventory) tile;
 					if (isInventoryFull(iinventory, facing)) {
 						break;
-					} else if (getWorld().getWorldTime() % 8 == 0) {
+					} else if (getWorld().getTotalWorldTime() % 8 == 0) {
 						for (int i = 0; i < this.getSizeInventory(); ++i) {
 							if (!getStackInSlot(i).isEmpty() && i != 0) {
 								ItemStack stack = getStackInSlot(i).copy();
@@ -199,7 +199,7 @@ public class TileEntityAbsorptionHopper extends TileEntityInventoryHelper implem
 			}
 		}
 
-		if (getWorld().getWorldTime() % 3 == 0) {
+		if (getWorld().getTotalWorldTime() % 3 == 0) {
 			if(!isInventoryFull(this, null))
 				captureDroppedItems();
 			if(tank.getFluid() == null || tank.getFluid().containsFluid(new FluidStack(FluidRegistry.getFluid("xpjuice"), 0)))

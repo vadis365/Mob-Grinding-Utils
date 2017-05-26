@@ -20,12 +20,12 @@ plugins {
     id "net.minecraftforge.gradle.forge" version "2.0.2"
 }
 */
-version = "0.2.0"
+version = "0.2.1"
 group= "somepeople" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "MobGrindingUtils"
 sourceCompatibility = targetCompatibility = "1.8"
 minecraft {
-    version = "1.11.2-13.20.0.2296"
+    version = "1.11.2-13.20.0.2299"
     runDir = "run"
     
     // the mappings can be changed at any time, and must be in the following format.
