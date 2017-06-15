@@ -1,0 +1,32 @@
+{
+  "tap_squeak": {
+    "category": "block",
+    "sounds": [
+      "mob_grinding_utils:tap_squeak"
+    ]
+  },
+   "entity_wither_spawn_local": {
+    "category": "hostile",
+    "sounds": [
+      "minecraft:mob/wither/spawn"
+    ]
+  },
+    "entity_wither_death_local": {
+    "category": "hostile",
+    "sounds": [
+      "minecraft:mob/wither/death"
+    ]
+  },
+    "entity_dragon_death_local": {
+    "category": "hostile",
+    "sounds": [
+      "minecraft:mob/enderdragon/end"
+    ]
+  },
+    "chicken_rise": {
+    "category": "passive",
+    "sounds": [
+      "mob_grinding_utils:chicken_rise"
+    ]
+  }
+}

@@ -1,0 +1,46 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "model": "mob_grinding_utils:absorption_hopper",
+    "custom": { "flip-v": true },
+    "textures": {
+      "particle": "mob_grinding_utils:blocks/absorption_hopper",
+      "side": "mob_grinding_utils:blocks/absorption_hopper"
+    },
+    "transform": "forge:default-block"
+  },
+  "variants": {
+    "normal": [{}],
+    "inventory": [{}],
+    "down": {
+      "none": {},
+      "item": { "submodel": "mob_grinding_utils:vacuum_items", "x": 270 },
+      "fluid": { "submodel": "mob_grinding_utils:vacuum_xp", "x": 270 }
+    },
+    "east": {
+      "none": {},
+      "item": { "submodel": "mob_grinding_utils:vacuum_items", "y": 270 },
+      "fluid": { "submodel": "mob_grinding_utils:vacuum_xp", "y": 270 }
+    },
+    "north": {
+      "none": {},
+      "item": { "submodel": "mob_grinding_utils:vacuum_items", "x": 180 },
+      "fluid": { "submodel": "mob_grinding_utils:vacuum_xp", "x": 180 }
+    },
+    "south": {
+      "none": {},
+      "item": { "submodel": "mob_grinding_utils:vacuum_items" },
+      "fluid": { "submodel": "mob_grinding_utils:vacuum_xp" }
+    },
+    "up": {
+      "none": {},
+      "item": { "submodel": "mob_grinding_utils:vacuum_items", "x": 90 },
+      "fluid": { "submodel": "mob_grinding_utils:vacuum_xp", "x": 90 }
+    },
+    "west": {
+      "none": {},
+      "item": { "submodel": "mob_grinding_utils:vacuum_items", "y": 90 },
+      "fluid": { "submodel": "mob_grinding_utils:vacuum_xp", "y": 90 }
+    }
+  }
+}

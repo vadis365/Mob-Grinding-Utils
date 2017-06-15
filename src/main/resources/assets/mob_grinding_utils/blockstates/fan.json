@@ -1,0 +1,16 @@
+{
+    "variants": {
+        "facing=down,powered=false": { "model": "mob_grinding_utils:fan", "x": 270 },
+        "facing=up,powered=false": { "model": "mob_grinding_utils:fan", "x": 90 },
+        "facing=north,powered=false": { "model": "mob_grinding_utils:fan", "y": 180 },
+        "facing=south,powered=false": { "model": "mob_grinding_utils:fan" },
+        "facing=west,powered=false":  { "model": "mob_grinding_utils:fan", "y": 90},
+        "facing=east,powered=false":  { "model": "mob_grinding_utils:fan" , "y": 270 },
+        "facing=down,powered=true": { "model": "mob_grinding_utils:fan_on", "x": 270 },
+        "facing=up,powered=true": { "model": "mob_grinding_utils:fan_on", "x": 90 },
+        "facing=north,powered=true": { "model": "mob_grinding_utils:fan_on", "y": 180 },
+        "facing=south,powered=true": { "model": "mob_grinding_utils:fan_on" },
+        "facing=west,powered=true":  { "model": "mob_grinding_utils:fan_on", "y": 90},
+        "facing=east,powered=true":  { "model": "mob_grinding_utils:fan_on" , "y": 270 }
+    }
+}

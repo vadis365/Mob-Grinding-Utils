@@ -1,0 +1,6 @@
+{
+    "parent": "block/cube_all",
+    "textures": {
+        "all": "mob_grinding_utils:blocks/wither_muffler_boss_bar"
+    }
+}

@@ -1,0 +1,16 @@
+{
+    "variants": {
+        "facing=up,powered=false": { "model": "mob_grinding_utils:xp_tap" },
+        "facing=down,powered=false": { "model": "mob_grinding_utils:xp_tap" },
+        "facing=north,powered=false": { "model": "mob_grinding_utils:xp_tap", "y": 180 },
+        "facing=south,powered=false": { "model": "mob_grinding_utils:xp_tap" },
+        "facing=west,powered=false":  { "model": "mob_grinding_utils:xp_tap", "y": 90 },
+        "facing=east,powered=false":  { "model": "mob_grinding_utils:xp_tap", "y": 270  },
+        "facing=up,powered=true": { "model": "mob_grinding_utils:xp_tap_on" },
+        "facing=down,powered=true": { "model": "mob_grinding_utils:xp_tap_on" },
+        "facing=north,powered=true": { "model": "mob_grinding_utils:xp_tap_on", "y": 180 },
+        "facing=south,powered=true": { "model": "mob_grinding_utils:xp_tap_on" },
+        "facing=west,powered=true":  { "model": "mob_grinding_utils:xp_tap_on", "y": 90 },
+        "facing=east,powered=true":  { "model": "mob_grinding_utils:xp_tap_on", "y": 270  }
+    }
+}
