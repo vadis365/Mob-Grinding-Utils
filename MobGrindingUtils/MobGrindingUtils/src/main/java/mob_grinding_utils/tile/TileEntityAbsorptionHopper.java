@@ -146,7 +146,7 @@ public class TileEntityAbsorptionHopper extends TileEntityInventoryHelper implem
 				
 				if (tile != null && tile.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, facing.getOpposite())) {
 					IItemHandler handler = tile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, facing.getOpposite());
-					if (worldObj.getWorldTime() % 8 == 0) {
+					if (worldObj.getTotalWorldTime() % 8 == 0) {
 						for (int i = 0; i < this.getSizeInventory(); ++i) {
 							if (getStackInSlot(i) != null && i != 0) {
 								ItemStack stack = getStackInSlot(i).copy();
