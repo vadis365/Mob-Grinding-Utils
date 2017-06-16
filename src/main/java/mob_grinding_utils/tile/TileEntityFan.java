@@ -4,7 +4,7 @@ import java.util.List;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import mcp.MethodsReturnNonnullByDefault;
-import mob_grinding_utils.MobGrindingUtils;
+import mob_grinding_utils.ItemBlockRegister;
 import mob_grinding_utils.blocks.BlockFan;
 import mob_grinding_utils.items.ItemFanUpgrade;
 import net.minecraft.block.state.IBlockState;
@@ -147,15 +147,15 @@ public class TileEntityFan extends TileEntityInventoryHelper implements ITickabl
 	}
 
 	private boolean hasWidthUpgrade() {
-		return inventory[0] != null && inventory[0].getItem() == MobGrindingUtils.FAN_UPGRADE && inventory[0].getItemDamage() == 0;
+		return inventory[0] != null && inventory[0].getItem() == ItemBlockRegister.FAN_UPGRADE && inventory[0].getItemDamage() == 0;
 	}
 	
 	private boolean hasHeightUpgrade() {
-		return inventory[1] != null && inventory[1].getItem() == MobGrindingUtils.FAN_UPGRADE && inventory[1].getItemDamage() == 1;
+		return inventory[1] != null && inventory[1].getItem() == ItemBlockRegister.FAN_UPGRADE && inventory[1].getItemDamage() == 1;
 	}
 
 	private boolean hasSpeedUpgrade() {
-		return inventory[2] != null && inventory[2].getItem() == MobGrindingUtils.FAN_UPGRADE && inventory[2].getItemDamage() == 2;
+		return inventory[2] != null && inventory[2].getItem() == ItemBlockRegister.FAN_UPGRADE && inventory[2].getItemDamage() == 2;
 	}
 
 	@Override

@@ -1,5 +1,6 @@
 package mob_grinding_utils.client.render;
 
+import mob_grinding_utils.ItemBlockRegister;
 import mob_grinding_utils.MobGrindingUtils;
 import mob_grinding_utils.blocks.BlockSaw;
 import mob_grinding_utils.models.ModelSawBase;
@@ -23,7 +24,7 @@ public class TileEntitySawRenderer extends TileEntitySpecialRenderer<TileEntityS
 	public void renderTile(TileEntitySaw tile, double x, double y, double z, float partialTick, int destroyStage) {
 		IBlockState state = tile.getWorld().getBlockState(tile.getPos());
 
-		if(state == null || state.getBlock() != MobGrindingUtils.SAW)
+		if(state == null || state.getBlock() != ItemBlockRegister.SAW)
 			return;
 
 		EnumFacing facing = state.getValue(BlockSaw.FACING);

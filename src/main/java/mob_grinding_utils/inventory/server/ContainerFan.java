@@ -1,6 +1,6 @@
 package mob_grinding_utils.inventory.server;
 
-import mob_grinding_utils.MobGrindingUtils;
+import mob_grinding_utils.ItemBlockRegister;
 import mob_grinding_utils.tile.TileEntityFan;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -15,9 +15,9 @@ public class ContainerFan extends Container {
 		InventoryPlayer playerInventory = player.inventory;
 		fan = tile;
 		int i = (numRows - 4) * 18;
-		addSlotToContainer(new SlotRestriction(tile, 0, 44, 18, new ItemStack(MobGrindingUtils.FAN_UPGRADE, 1, 0), 3));
-		addSlotToContainer(new SlotRestriction(tile, 1, 80, 18, new ItemStack(MobGrindingUtils.FAN_UPGRADE, 1, 1), 3));
-		addSlotToContainer(new SlotRestriction(tile, 2, 116, 18, new ItemStack(MobGrindingUtils.FAN_UPGRADE, 1, 2), 10));
+		addSlotToContainer(new SlotRestriction(tile, 0, 44, 18, new ItemStack(ItemBlockRegister.FAN_UPGRADE, 1, 0), 3));
+		addSlotToContainer(new SlotRestriction(tile, 1, 80, 18, new ItemStack(ItemBlockRegister.FAN_UPGRADE, 1, 1), 3));
+		addSlotToContainer(new SlotRestriction(tile, 2, 116, 18, new ItemStack(ItemBlockRegister.FAN_UPGRADE, 1, 2), 10));
 
 		for (int j = 0; j < 3; j++)
 			for (int k = 0; k < 9; k++)
@@ -39,13 +39,13 @@ public class ContainerFan extends Container {
 			ItemStack stack1 = slot.getStack();
 			stack = stack1.copy();
 			if (slotIndex > 2) {
-				if (stack1.getItem() == MobGrindingUtils.FAN_UPGRADE && stack1.getItemDamage() == 0)
+				if (stack1.getItem() == ItemBlockRegister.FAN_UPGRADE && stack1.getItemDamage() == 0)
 					if (!mergeItemStack(stack1, 0, 1, false))
 						return null;
-				if (stack1.getItem() == MobGrindingUtils.FAN_UPGRADE && stack1.getItemDamage() == 1)
+				if (stack1.getItem() == ItemBlockRegister.FAN_UPGRADE && stack1.getItemDamage() == 1)
 					if (!mergeItemStack(stack1, 1, 2, false))
 						return null;
-				if (stack1.getItem() == MobGrindingUtils.FAN_UPGRADE && stack1.getItemDamage() == 2)
+				if (stack1.getItem() == ItemBlockRegister.FAN_UPGRADE && stack1.getItemDamage() == 2)
 					if (!mergeItemStack(stack1, 2, 3, false))
 						return null;
 			} else if (!mergeItemStack(stack1, 3, inventorySlots.size(), false))

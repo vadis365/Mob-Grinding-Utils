@@ -1,6 +1,6 @@
 package mob_grinding_utils.inventory.server;
 
-import mob_grinding_utils.MobGrindingUtils;
+import mob_grinding_utils.ItemBlockRegister;
 import mob_grinding_utils.tile.TileEntityAbsorptionHopper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -19,7 +19,7 @@ public class ContainerAbsorptionHopper extends Container {
 		int j;
 		int k;
 
-		addSlotToContainer(new SlotRestriction(tile, 0, 134, 72, new ItemStack(MobGrindingUtils.ABSORPTION_UPGRADE, 1, 0), 6)); // change to hopper upgrade
+		addSlotToContainer(new SlotRestriction(tile, 0, 134, 72, new ItemStack(ItemBlockRegister.ABSORPTION_UPGRADE, 1, 0), 6)); // change to hopper upgrade
 
 		for (j = 0; j < numRows; ++j)
 			for (k = 0; k < 8; ++k)

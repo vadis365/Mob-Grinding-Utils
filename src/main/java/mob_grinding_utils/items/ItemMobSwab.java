@@ -2,6 +2,7 @@ package mob_grinding_utils.items;
 
 import java.util.List;
 
+import mob_grinding_utils.ItemBlockRegister;
 import mob_grinding_utils.MobGrindingUtils;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityList;
@@ -49,7 +50,7 @@ public class ItemMobSwab extends Item {
 	public boolean itemInteractionForEntity(ItemStack stack, EntityPlayer player, EntityLivingBase target, EnumHand hand) {
 		if (target instanceof EntityLiving && !(target instanceof EntityPlayer) && getDamage(stack) == 0) {
 			String mobName = EntityList.getEntityString(target);
-			ItemStack stack2 = new ItemStack(MobGrindingUtils.MOB_SWAB, 1, 1);
+			ItemStack stack2 = new ItemStack(ItemBlockRegister.MOB_SWAB, 1, 1);
 			if (!stack2.hasTagCompound())
 				stack2.setTagCompound(new NBTTagCompound());
 			if (!stack2.getTagCompound().hasKey("mguMobName")) {

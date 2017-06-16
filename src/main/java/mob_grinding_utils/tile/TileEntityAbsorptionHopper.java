@@ -6,6 +6,7 @@ import javax.annotation.Nullable;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import mcp.MethodsReturnNonnullByDefault;
+import mob_grinding_utils.ItemBlockRegister;
 import mob_grinding_utils.MobGrindingUtils;
 import mob_grinding_utils.inventory.server.InventoryWrapperAH;
 import net.minecraft.entity.item.EntityItem;
@@ -254,7 +255,7 @@ public class TileEntityAbsorptionHopper extends TileEntityInventoryHelper implem
     }
 
 	private boolean hasUpgrade() {
-		return inventory[0] != null && inventory[0].getItem() == MobGrindingUtils.ABSORPTION_UPGRADE;
+		return inventory[0] != null && inventory[0].getItem() == ItemBlockRegister.ABSORPTION_UPGRADE;
 	}
 
     @Override

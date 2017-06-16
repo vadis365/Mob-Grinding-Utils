@@ -1,5 +1,6 @@
 package mob_grinding_utils;
 
+import static mob_grinding_utils.ItemBlockRegister.*;
 import mob_grinding_utils.capability.base.EntityCapabilityHandler;
 import mob_grinding_utils.capability.bossbars.BossBarPlayerCapability;
 import mob_grinding_utils.events.BossBarHidingEvent;
@@ -65,10 +66,6 @@ public class MobGrindingUtils {
 	@SidedProxy(clientSide = "mob_grinding_utils.proxy.ClientProxy", serverSide = "mob_grinding_utils.proxy.CommonProxy")
 	public static CommonProxy PROXY;
 	public static Fluid FLUID_XP;
-	public static Block SPIKES, FAN, ABSORPTION_HOPPER, TANK, TANK_SINK, XP_TAP, WITHER_MUFFLER, DRAGON_MUFFLER, SAW, DARK_OAK_STONE;
-	public static Item SPIKES_ITEM, FAN_ITEM, ABSORPTION_HOPPER_ITEM, TANK_ITEM, TANK_SINK_ITEM, FAN_UPGRADE, ABSORPTION_UPGRADE, XP_TAP_ITEM, MOB_SWAB, GM_CHICKEN_FEED, WITHER_MUFFLER_ITEM, DRAGON_MUFFLER_ITEM, SAW_ITEM, SAW_UPGRADE, DARK_OAK_STONE_ITEM;
-	public static ItemSword NULL_SWORD;
-
 	public static SimpleNetworkWrapper NETWORK_WRAPPER;
 	public static DamageSource SPIKE_DAMAGE;
 	public static SoundEvent TAP_SQUEAK, ENTITY_WITHER_SPAWN_LOCAL, ENTITY_WITHER_DEATH_LOCAL, ENTITY_DRAGON_DEATH_LOCAL, CHICKEN_RISE;

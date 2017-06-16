@@ -1,6 +1,7 @@
 package mob_grinding_utils.recipe;
 
-import mob_grinding_utils.MobGrindingUtils;
+import mob_grinding_utils.ItemBlockRegister;
+import mob_grinding_utils.ItemBlockRegister;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
@@ -40,7 +41,7 @@ public class RecipeChickenFeed implements IRecipe {
 			else if (is.getItem() == Items.WHEAT_SEEDS)
 				hasSeeds = true;
 
-			else if (is.getItem() == MobGrindingUtils.MOB_SWAB && is.getItemDamage() == 1)
+			else if (is.getItem() == ItemBlockRegister.MOB_SWAB && is.getItemDamage() == 1)
 				mobSwab = is;
 		}
 
@@ -63,14 +64,14 @@ public class RecipeChickenFeed implements IRecipe {
 
 		for (int a = 0; a < craftMatrix.getSizeInventory(); a++) {
 			is = craftMatrix.getStackInSlot(a);
-			if (is != null && is.getItem() == MobGrindingUtils.MOB_SWAB && is.getItemDamage() == 1)
+			if (is != null && is.getItem() == ItemBlockRegister.MOB_SWAB && is.getItemDamage() == 1)
 				break;
 		}
 
 		if (is == null)
 			return null;
 
-		ItemStack chickenFeed = new ItemStack(MobGrindingUtils.GM_CHICKEN_FEED, 1, 0);
+		ItemStack chickenFeed = new ItemStack(ItemBlockRegister.GM_CHICKEN_FEED, 1, 0);
 		
 		if (!chickenFeed.hasTagCompound())
 			chickenFeed.setTagCompound(new NBTTagCompound());
@@ -94,7 +95,7 @@ public class RecipeChickenFeed implements IRecipe {
 
 	@Override
 	public ItemStack getRecipeOutput() {
-		return new ItemStack(MobGrindingUtils.GM_CHICKEN_FEED, 1, 0);
+		return new ItemStack(ItemBlockRegister.GM_CHICKEN_FEED, 1, 0);
 	}
 
 	@Override

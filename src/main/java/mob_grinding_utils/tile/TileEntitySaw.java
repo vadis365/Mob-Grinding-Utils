@@ -5,7 +5,7 @@ import java.util.UUID;
 
 import com.mojang.authlib.GameProfile;
 
-import mob_grinding_utils.MobGrindingUtils;
+import mob_grinding_utils.ItemBlockRegister;
 import mob_grinding_utils.blocks.BlockSaw;
 import mob_grinding_utils.items.ItemSawUpgrade;
 import net.minecraft.enchantment.Enchantment;
@@ -65,7 +65,7 @@ public class TileEntitySaw extends TileEntityInventoryHelper implements ITickabl
 				if (entity instanceof EntityLivingBase) {
 					EntityPlayerMP fakePlayer = FakePlayerFactory.get((WorldServer)worldObj, new GameProfile(UUID.nameUUIDFromBytes(new TextComponentTranslation("fakeplayer.mob_masher").getFormattedText().getBytes()), new TextComponentTranslation("fakeplayer.mob_masher").getFormattedText()));
 					fakePlayer.setPosition(this.pos.getX(), -100D, this.pos.getZ());
-					ItemStack tempSword = new ItemStack(MobGrindingUtils.NULL_SWORD, 1, 0);
+					ItemStack tempSword = new ItemStack(ItemBlockRegister.NULL_SWORD, 1, 0);
 
 					if(!tempSword.hasTagCompound())
 						tempSword.setTagCompound(new NBTTagCompound());
@@ -94,27 +94,27 @@ public class TileEntitySaw extends TileEntityInventoryHelper implements ITickabl
 	}
 
 	private boolean hasSharpnessUpgrade() {
-		return inventory[0] != null && inventory[0].getItem() == MobGrindingUtils.SAW_UPGRADE && inventory[0].getItemDamage() == 0;
+		return inventory[0] != null && inventory[0].getItem() == ItemBlockRegister.SAW_UPGRADE && inventory[0].getItemDamage() == 0;
 	}
 	
 	private boolean hasLootingUpgrade() {
-		return inventory[1] != null && inventory[1].getItem() == MobGrindingUtils.SAW_UPGRADE && inventory[1].getItemDamage() == 1;
+		return inventory[1] != null && inventory[1].getItem() == ItemBlockRegister.SAW_UPGRADE && inventory[1].getItemDamage() == 1;
 	}
 
 	private boolean hasFlameUpgrade() {
-		return inventory[2] != null && inventory[2].getItem() == MobGrindingUtils.SAW_UPGRADE && inventory[2].getItemDamage() == 2;
+		return inventory[2] != null && inventory[2].getItem() == ItemBlockRegister.SAW_UPGRADE && inventory[2].getItemDamage() == 2;
 	}
 	
 	private boolean hasSmiteUpgrade() {
-		return inventory[3] != null && inventory[3].getItem() == MobGrindingUtils.SAW_UPGRADE && inventory[3].getItemDamage() == 3;
+		return inventory[3] != null && inventory[3].getItem() == ItemBlockRegister.SAW_UPGRADE && inventory[3].getItemDamage() == 3;
 	}
 	
 	private boolean hasArthropodUpgrade() {
-		return inventory[4] != null && inventory[4].getItem() == MobGrindingUtils.SAW_UPGRADE && inventory[4].getItemDamage() == 4;
+		return inventory[4] != null && inventory[4].getItem() == ItemBlockRegister.SAW_UPGRADE && inventory[4].getItemDamage() == 4;
 	}
 
 	private boolean hasBeheadingUpgrade() {
-		return inventory[5] != null && inventory[5].getItem() == MobGrindingUtils.SAW_UPGRADE && inventory[5].getItemDamage() == 5;
+		return inventory[5] != null && inventory[5].getItem() == ItemBlockRegister.SAW_UPGRADE && inventory[5].getItemDamage() == 5;
 	}
 
 	@Override
