@@ -3,4 +3,11 @@ MobGrindingUtils/.project
 MobGrindingUtils/bin
 MobGrindingUtils/MobGrindingUtils/.gradle
 MobGrindingUtils/MobGrindingUtils/build
-
+build
+run
+.gradle
+.idea
+.git
+out
+*.ipr
+*.iws
