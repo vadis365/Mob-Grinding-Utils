@@ -1,6 +1,7 @@
 package mob_grinding_utils.events;
 
 import mob_grinding_utils.MobGrindingUtils;
+import mob_grinding_utils.ModSounds;
 import mob_grinding_utils.network.ChickenSyncMessage;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLivingBase;
@@ -38,7 +39,7 @@ public class ChickenFuseEvent {
 					if (startTime >= 20) {
 						entity.setDead();
 						entity.playSound(SoundEvents.ENTITY_CHICKEN_DEATH, 1F, 1F);
-						entity.playSound(MobGrindingUtils.CHICKEN_RISE, 0.5F, 1F);
+						entity.playSound(ModSounds.CHICKEN_RISE, 0.5F, 1F);
 						String name = event.getEntity().getEntityData().getString("mguMobName");
 						ResourceLocation resourcelocation = new ResourceLocation(name);
 						if (EntityList.ENTITY_EGGS.containsKey(resourcelocation)) {

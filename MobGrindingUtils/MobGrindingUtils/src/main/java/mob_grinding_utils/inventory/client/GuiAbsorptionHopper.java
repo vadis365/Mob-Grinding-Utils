@@ -10,8 +10,8 @@ import mob_grinding_utils.tile.TileEntityAbsorptionHopper.EnumStatus;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
@@ -52,7 +52,7 @@ public class GuiAbsorptionHopper extends GuiContainer {
 
 	@Override
 	protected void drawGuiContainerForegroundLayer(int x, int y) {
-		fontRendererObj.drawString(I18n.format(new TextComponentTranslation("tile.mob_grinding_utils.absorption_hopper.name").getFormattedText()), xSize / 2 - fontRendererObj.getStringWidth(I18n.format(new TextComponentTranslation("tile.mob_grinding_utils.absorption_hopper.name").getFormattedText())) / 2, ySize - 218, 4210752);	
+		fontRenderer.drawString(I18n.format(new TextComponentTranslation("tile.mob_grinding_utils.absorption_hopper.name").getFormattedText()), xSize / 2 - fontRenderer.getStringWidth(I18n.format(new TextComponentTranslation("tile.mob_grinding_utils.absorption_hopper.name").getFormattedText())) / 2, ySize - 218, 4210752);	
 	}
 
 	@Override
@@ -70,19 +70,19 @@ public class GuiAbsorptionHopper extends GuiContainer {
 		EnumStatus WEST = tile.getSideStatus(EnumFacing.WEST);
 		EnumStatus EAST = tile.getSideStatus(EnumFacing.EAST);
 
-		fontRendererObj.drawString(I18n.format(DOWN.getName()), xOffSet + 58 - fontRendererObj.getStringWidth(I18n.format(DOWN.getName())) / 2, yOffSet + 21, getModeColour(DOWN.ordinal()));
-		fontRendererObj.drawString(I18n.format(UP.getName()), xOffSet + 58 - fontRendererObj.getStringWidth(I18n.format(UP.getName())) / 2, yOffSet + 38, getModeColour(UP.ordinal()));
-		fontRendererObj.drawString(I18n.format(NORTH.getName()), xOffSet + 58 - fontRendererObj.getStringWidth(I18n.format(NORTH.getName())) / 2, yOffSet + 55, getModeColour(NORTH.ordinal()));
-		fontRendererObj.drawString(I18n.format(SOUTH.getName()), xOffSet + 133 - fontRendererObj.getStringWidth(I18n.format(SOUTH.getName())) / 2, yOffSet + 21, getModeColour(SOUTH.ordinal()));
-		fontRendererObj.drawString(I18n.format(WEST.getName()), xOffSet + 133 - fontRendererObj.getStringWidth(I18n.format(WEST.getName())) / 2, yOffSet + 38, getModeColour(WEST.ordinal()));
-		fontRendererObj.drawString(I18n.format(EAST.getName()), xOffSet + 133 - fontRendererObj.getStringWidth(I18n.format(EAST.getName())) / 2, yOffSet + 55, getModeColour(EAST.ordinal()));
+		fontRenderer.drawString(I18n.format(DOWN.getName()), xOffSet + 58 - fontRenderer.getStringWidth(I18n.format(DOWN.getName())) / 2, yOffSet + 21, getModeColour(DOWN.ordinal()));
+		fontRenderer.drawString(I18n.format(UP.getName()), xOffSet + 58 - fontRenderer.getStringWidth(I18n.format(UP.getName())) / 2, yOffSet + 38, getModeColour(UP.ordinal()));
+		fontRenderer.drawString(I18n.format(NORTH.getName()), xOffSet + 58 - fontRenderer.getStringWidth(I18n.format(NORTH.getName())) / 2, yOffSet + 55, getModeColour(NORTH.ordinal()));
+		fontRenderer.drawString(I18n.format(SOUTH.getName()), xOffSet + 133 - fontRenderer.getStringWidth(I18n.format(SOUTH.getName())) / 2, yOffSet + 21, getModeColour(SOUTH.ordinal()));
+		fontRenderer.drawString(I18n.format(WEST.getName()), xOffSet + 133 - fontRenderer.getStringWidth(I18n.format(WEST.getName())) / 2, yOffSet + 38, getModeColour(WEST.ordinal()));
+		fontRenderer.drawString(I18n.format(EAST.getName()), xOffSet + 133 - fontRenderer.getStringWidth(I18n.format(EAST.getName())) / 2, yOffSet + 55, getModeColour(EAST.ordinal()));
 
 		int fluid = tile.getScaledFluid(121);
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		if (fluid >= 1) {
 			TextureAtlasSprite sprite = Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(tile.tank.getFluid().getFluid().getStill().toString());
 			Tessellator tessellator = Tessellator.getInstance();
-			VertexBuffer buffer = tessellator.getBuffer();
+			BufferBuilder buffer = tessellator.getBuffer();
 			mc.getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
 			buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 			buffer.pos(xOffSet + 156, yOffSet + 128, zLevel).tex(sprite.getMinU(), sprite.getMinV()).endVertex();

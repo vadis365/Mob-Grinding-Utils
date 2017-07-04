@@ -1,6 +1,6 @@
 package mob_grinding_utils.events;
 
-import mob_grinding_utils.MobGrindingUtils;
+import mob_grinding_utils.ModSounds;
 import mob_grinding_utils.blocks.BlockWitherMuffler;
 import net.minecraft.entity.boss.EntityWither;
 import net.minecraft.util.SoundCategory;
@@ -23,8 +23,8 @@ public class LocalWitherSoundEvent {
 							if ((world.getBlockState(new BlockPos(wither.posX + x, wither.posY + y, wither.posZ + z)).getBlock() instanceof BlockWitherMuffler))
 								playsound = false;
 				if (playsound) {
-					world.playSound(null, wither.posX, wither.posY, wither.posZ, MobGrindingUtils.ENTITY_WITHER_SPAWN_LOCAL, SoundCategory.HOSTILE, 1.0F, 1.0F);
-					world.playSound(null, wither.posX, wither.posY, wither.posZ, MobGrindingUtils.ENTITY_WITHER_DEATH_LOCAL, SoundCategory.HOSTILE, 1.0F, 1.0F);
+					world.playSound(null, wither.posX, wither.posY, wither.posZ, ModSounds.ENTITY_WITHER_SPAWN_LOCAL, SoundCategory.HOSTILE, 1.0F, 1.0F);
+					world.playSound(null, wither.posX, wither.posY, wither.posZ, ModSounds.ENTITY_WITHER_DEATH_LOCAL, SoundCategory.HOSTILE, 1.0F, 1.0F);
 				}
 			}
 		}

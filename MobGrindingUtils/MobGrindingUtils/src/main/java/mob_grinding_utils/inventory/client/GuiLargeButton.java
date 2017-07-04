@@ -19,15 +19,15 @@ public class GuiLargeButton extends GuiButton {
 	}
 
 	@Override
-	public void drawButton(Minecraft mc, int mouseX, int mouseY) {
-		FontRenderer fontrenderer = mc.fontRendererObj;
+	public void drawButton(Minecraft mc, int mouseX, int mouseY, float partialTicks) {
+		FontRenderer fontrenderer = mc.fontRenderer;
 		if (visible) {
 			mc.getTextureManager().bindTexture(TEXTURES);
 			GL11.glColor4f(0.75F, 0.75F, 0.75F, 0.5F);
-			boolean hover = mouseX >= xPosition && mouseY >= yPosition && mouseX < xPosition + width && mouseY < yPosition + height;
+			boolean hover = mouseX >= x && mouseY >= y && mouseX < x + width && mouseY < y + height;
 			if(hover)
 				GL11.glColor4f(0.75F, 1, 0.75F, 1);	
-			drawTexturedModalRect(xPosition, yPosition, u, v, width, height);
+			drawTexturedModalRect(x, y, u, v, width, height);
 			
 			int textColour = 14737632;
 			if (packedFGColour != 0)
@@ -36,7 +36,7 @@ public class GuiLargeButton extends GuiButton {
 				textColour = 10526880;
 			else if (this.hovered)
 				textColour = 16777120;
-			drawCenteredString(fontrenderer, this.displayString, this.xPosition + this.width / 2, this.yPosition + (this.height - 8) / 2, textColour);
+			drawCenteredString(fontrenderer, this.displayString, this.x + this.width / 2, this.y + (this.height - 8) / 2, textColour);
 		}
 	}
 }

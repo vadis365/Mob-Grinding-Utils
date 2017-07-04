@@ -2,7 +2,11 @@ package mob_grinding_utils.items;
 
 import java.util.List;
 
+import javax.annotation.Nullable;
+
 import mob_grinding_utils.MobGrindingUtils;
+import mob_grinding_utils.ModItems;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLiving;
@@ -16,6 +20,7 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraft.world.World;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -30,8 +35,7 @@ public class ItemMobSwab extends Item {
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean flag) {
+	public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> list, ITooltipFlag flag) {
 		if (!stack.hasTagCompound())
 			list.add(TextFormatting.YELLOW + new TextComponentTranslation("tooltip.mobswab_1").getFormattedText());
 		else if (stack.hasTagCompound() && stack.getTagCompound().hasKey("mguMobName")) {
@@ -42,8 +46,10 @@ public class ItemMobSwab extends Item {
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void getSubItems(Item item, CreativeTabs tab, NonNullList<ItemStack> list) {
-		list.add(new ItemStack((item), 1, 0));
+	public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> list) {
+		if (tab == MobGrindingUtils.TAB) {
+			list.add(new ItemStack(this, 1, 0));
+		}
 	}
 
 	@Override
@@ -51,7 +57,7 @@ public class ItemMobSwab extends Item {
 		if (target instanceof EntityLiving && !(target instanceof EntityPlayer) && getDamage(stack) == 0) {
 			String[] mobName1 = EntityList.getKey(target).toString().split(":");
 			String mobName = mobName1[1];
-			ItemStack stack2 = new ItemStack(MobGrindingUtils.MOB_SWAB, 1, 1);
+			ItemStack stack2 = new ItemStack(ModItems.MOB_SWAB, 1, 1);
 			if (!stack2.hasTagCompound())
 				stack2.setTagCompound(new NBTTagCompound());
 			if (!stack2.getTagCompound().hasKey("mguMobName")) {

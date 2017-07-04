@@ -26,7 +26,7 @@ public class GuiSaw extends GuiContainer {
 
 	@Override
 	protected void drawGuiContainerForegroundLayer(int x, int y) {
-		fontRendererObj.drawString(I18n.format(new TextComponentTranslation("tile.mob_grinding_utils.saw.name").getFormattedText()), xSize / 2 - fontRendererObj.getStringWidth(I18n.format(new TextComponentTranslation("tile.mob_grinding_utils.saw.name").getFormattedText())) / 2, ySize - 218, 4210752);	
+		fontRenderer.drawString(I18n.format(new TextComponentTranslation("tile.mob_grinding_utils.saw.name").getFormattedText()), xSize / 2 - fontRenderer.getStringWidth(I18n.format(new TextComponentTranslation("tile.mob_grinding_utils.saw.name").getFormattedText())) / 2, ySize - 218, 4210752);	
 	}
 
 	@Override

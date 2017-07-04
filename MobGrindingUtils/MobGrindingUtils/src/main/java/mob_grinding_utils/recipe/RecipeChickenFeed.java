@@ -1,12 +1,13 @@
 package mob_grinding_utils.recipe;
 
-import mob_grinding_utils.MobGrindingUtils;
+import mob_grinding_utils.ModItems;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.NonNullList;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.fluids.Fluid;
@@ -38,7 +39,7 @@ public class RecipeChickenFeed implements IRecipe {
 			}
 			else if (is.getItem() == Items.WHEAT_SEEDS)
 				hasSeeds = true;
-			else if (is.getItem() == MobGrindingUtils.MOB_SWAB && is.getItemDamage() == 1)
+			else if (is.getItem() == ModItems.MOB_SWAB && is.getItemDamage() == 1)
 				mobSwab = is;
 		}
 		if (cnt == 3 && hasSeeds && hasBucket && !mobSwab.isEmpty())
@@ -52,14 +53,14 @@ public class RecipeChickenFeed implements IRecipe {
 
 		for (int a = 0; a < craftMatrix.getSizeInventory(); a++) {
 			ItemStack is2 = craftMatrix.getStackInSlot(a);
-			if (!is2.isEmpty() && is2.getItem() == MobGrindingUtils.MOB_SWAB && is2.getItemDamage() == 1)
+			if (!is2.isEmpty() && is2.getItem() == ModItems.MOB_SWAB && is2.getItemDamage() == 1)
 				is = is2;
 		}
 
 		if (is.isEmpty())
 			return ItemStack.EMPTY;
 
-		ItemStack chickenFeed = new ItemStack(MobGrindingUtils.GM_CHICKEN_FEED, 1, 0);
+		ItemStack chickenFeed = new ItemStack(ModItems.GM_CHICKEN_FEED, 1, 0);
 
 		if (!chickenFeed.hasTagCompound())
 			chickenFeed.setTagCompound(new NBTTagCompound());
@@ -77,13 +78,8 @@ public class RecipeChickenFeed implements IRecipe {
 	}
 
 	@Override
-	public int getRecipeSize() {
-		return 10;
-	}
-
-	@Override
 	public ItemStack getRecipeOutput() {
-		return new ItemStack(MobGrindingUtils.GM_CHICKEN_FEED, 1, 0);
+		return new ItemStack(ModItems.GM_CHICKEN_FEED, 1, 0);
 	}
 
 	@Override
@@ -95,4 +91,27 @@ public class RecipeChickenFeed implements IRecipe {
         }
         return aitemstack;
     }
+
+	@Override
+	public boolean canFit(int width, int height) {
+		return width * height >= 2;
+	}
+
+	@Override
+	public IRecipe setRegistryName(ResourceLocation name) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public ResourceLocation getRegistryName() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Class<IRecipe> getRegistryType() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

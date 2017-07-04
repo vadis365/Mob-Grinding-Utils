@@ -4,7 +4,7 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
-import mob_grinding_utils.MobGrindingUtils;
+import mob_grinding_utils.ModItems;
 import mob_grinding_utils.inventory.server.InventoryWrapperAH;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.item.EntityXPOrb;
@@ -249,7 +249,7 @@ public class TileEntityAbsorptionHopper extends TileEntityInventoryHelper implem
     }
 
 	private boolean hasUpgrade() {
-		return !getItems().get(0).isEmpty() && getItems().get(0).getItem() == MobGrindingUtils.ABSORPTION_UPGRADE;
+		return !getItems().get(0).isEmpty() && getItems().get(0).getItem() == ModItems.ABSORPTION_UPGRADE;
 	}
 
     @Override
@@ -322,14 +322,14 @@ public class TileEntityAbsorptionHopper extends TileEntityInventoryHelper implem
 	public static boolean putDropInInventoryAllSlots(IInventory inventoryIn, EntityItem itemIn) {
 		boolean flag = false;
 
-		if (itemIn == null || inventoryIn instanceof TileEntityAbsorptionHopper && inventoryIn.isItemValidForSlot(0, itemIn.getEntityItem().copy())) {
+		if (itemIn == null || inventoryIn instanceof TileEntityAbsorptionHopper && inventoryIn.isItemValidForSlot(0, itemIn.getItem().copy())) {
 			return false;
 		} else {
-			ItemStack itemstack = itemIn.getEntityItem().copy();
+			ItemStack itemstack = itemIn.getItem().copy();
 			ItemStack itemstack1 = putStackInInventoryAllSlots(inventoryIn, itemstack, (EnumFacing) null);
 
 			if (!itemstack1.isEmpty()) {
-				itemIn.setEntityItemStack(itemstack1);
+				itemIn.setItem(itemstack1);
 			} else {
 				flag = true;
 				itemIn.setDead();

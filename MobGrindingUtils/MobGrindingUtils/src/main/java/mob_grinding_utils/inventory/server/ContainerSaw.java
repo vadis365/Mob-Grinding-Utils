@@ -1,6 +1,6 @@
 package mob_grinding_utils.inventory.server;
 
-import mob_grinding_utils.MobGrindingUtils;
+import mob_grinding_utils.ModItems;
 import mob_grinding_utils.tile.TileEntitySaw;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -15,12 +15,12 @@ public class ContainerSaw extends Container {
 		InventoryPlayer playerInventory = player.inventory;
 		fan = tile;
 		int i = (numRows - 4) * 18;
-		addSlotToContainer(new SlotRestriction(tile, 0, 18, 18, new ItemStack(MobGrindingUtils.SAW_UPGRADE, 1, 0), 10));
-		addSlotToContainer(new SlotRestriction(tile, 1, 43, 18, new ItemStack(MobGrindingUtils.SAW_UPGRADE, 1, 1), 10));
-		addSlotToContainer(new SlotRestriction(tile, 2, 68, 18, new ItemStack(MobGrindingUtils.SAW_UPGRADE, 1, 2), 10));
-		addSlotToContainer(new SlotRestriction(tile, 3, 93, 18, new ItemStack(MobGrindingUtils.SAW_UPGRADE, 1, 3), 10));
-		addSlotToContainer(new SlotRestriction(tile, 4, 118, 18, new ItemStack(MobGrindingUtils.SAW_UPGRADE, 1, 4), 10));
-		addSlotToContainer(new SlotRestriction(tile, 5, 143, 18, new ItemStack(MobGrindingUtils.SAW_UPGRADE, 1, 5), 10));
+		addSlotToContainer(new SlotRestriction(tile, 0, 18, 18, new ItemStack(ModItems.SAW_UPGRADE, 1, 0), 10));
+		addSlotToContainer(new SlotRestriction(tile, 1, 43, 18, new ItemStack(ModItems.SAW_UPGRADE, 1, 1), 10));
+		addSlotToContainer(new SlotRestriction(tile, 2, 68, 18, new ItemStack(ModItems.SAW_UPGRADE, 1, 2), 10));
+		addSlotToContainer(new SlotRestriction(tile, 3, 93, 18, new ItemStack(ModItems.SAW_UPGRADE, 1, 3), 10));
+		addSlotToContainer(new SlotRestriction(tile, 4, 118, 18, new ItemStack(ModItems.SAW_UPGRADE, 1, 4), 10));
+		addSlotToContainer(new SlotRestriction(tile, 5, 143, 18, new ItemStack(ModItems.SAW_UPGRADE, 1, 5), 10));
 
 		for (int j = 0; j < 3; j++)
 			for (int k = 0; k < 9; k++)
@@ -42,22 +42,22 @@ public class ContainerSaw extends Container {
 			ItemStack stack1 = slot.getStack();
 			stack = stack1.copy();
 			if (slotIndex > 5) {
-				if (stack1.getItem() == MobGrindingUtils.SAW_UPGRADE && stack1.getItemDamage() == 0)
+				if (stack1.getItem() == ModItems.SAW_UPGRADE && stack1.getItemDamage() == 0)
 					if (!mergeItemStack(stack1, 0, 1, false))
 						return ItemStack.EMPTY;
-				if (stack1.getItem() == MobGrindingUtils.SAW_UPGRADE && stack1.getItemDamage() == 1)
+				if (stack1.getItem() == ModItems.SAW_UPGRADE && stack1.getItemDamage() == 1)
 					if (!mergeItemStack(stack1, 1, 2, false))
 						return ItemStack.EMPTY;
-				if (stack1.getItem() == MobGrindingUtils.SAW_UPGRADE && stack1.getItemDamage() == 2)
+				if (stack1.getItem() == ModItems.SAW_UPGRADE && stack1.getItemDamage() == 2)
 					if (!mergeItemStack(stack1, 2, 3, false))
 						return ItemStack.EMPTY;
-				if (stack1.getItem() == MobGrindingUtils.SAW_UPGRADE && stack1.getItemDamage() == 3)
+				if (stack1.getItem() == ModItems.SAW_UPGRADE && stack1.getItemDamage() == 3)
 					if (!mergeItemStack(stack1, 3, 4, false))
 						return ItemStack.EMPTY;
-				if (stack1.getItem() == MobGrindingUtils.SAW_UPGRADE && stack1.getItemDamage() == 4)
+				if (stack1.getItem() == ModItems.SAW_UPGRADE && stack1.getItemDamage() == 4)
 					if (!mergeItemStack(stack1, 4, 5, false))
 						return ItemStack.EMPTY;
-				if (stack1.getItem() == MobGrindingUtils.SAW_UPGRADE && stack1.getItemDamage() == 5)
+				if (stack1.getItem() == ModItems.SAW_UPGRADE && stack1.getItemDamage() == 5)
 					if (!mergeItemStack(stack1, 5, 6, false))
 						return ItemStack.EMPTY;
 			} else if (!mergeItemStack(stack1, 6, inventorySlots.size(), false))

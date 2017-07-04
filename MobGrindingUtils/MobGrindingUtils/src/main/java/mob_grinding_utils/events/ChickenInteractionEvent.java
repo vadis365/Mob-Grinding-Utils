@@ -1,6 +1,7 @@
 package mob_grinding_utils.events;
 
 import mob_grinding_utils.MobGrindingUtils;
+import mob_grinding_utils.ModItems;
 import mob_grinding_utils.network.ChickenSyncMessage;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.passive.EntityChicken;
@@ -18,7 +19,7 @@ public class ChickenInteractionEvent {
 
 			if (entity instanceof EntityChicken && !entity.isChild()) {
 					World world = entity.getEntityWorld();
-					if (event.getItemStack() != null && event.getItemStack().getItem() == MobGrindingUtils.GM_CHICKEN_FEED) {
+					if (event.getItemStack() != null && event.getItemStack().getItem() == ModItems.GM_CHICKEN_FEED) {
 						if (!world.isRemote) {
 							NBTTagCompound nbt = new NBTTagCompound();
 							nbt = entity.getEntityData();

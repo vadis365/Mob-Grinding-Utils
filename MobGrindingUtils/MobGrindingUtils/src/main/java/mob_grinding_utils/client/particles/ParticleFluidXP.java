@@ -52,10 +52,10 @@ public class ParticleFluidXP extends Particle {
 		setParticleTexture(Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(TEXTURE[0].toString()));
 	}
 
-	@Override
-	public boolean isTransparent() {
-		return true;
-	}
+	//@Override
+	//public boolean isTransparent() {
+	//	return true;
+	//}
 
 	@Override
 	public void onUpdate() {

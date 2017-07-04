@@ -6,6 +6,7 @@ import java.util.concurrent.Callable;
 
 import com.google.common.base.Preconditions;
 
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
@@ -69,9 +70,9 @@ public class ItemCapabilityHandler {
 	}
 
 	@SubscribeEvent
-	public static void onAttachCapabilities(final AttachCapabilitiesEvent.Item event) {
+	public static void onAttachCapabilities(final AttachCapabilitiesEvent<ItemStack> event) {
 		for(ItemCapability<?, ?> itemCapability : REGISTERED_CAPABILITIES) {
-			if(itemCapability.isApplicable(event.getItemStack())) {
+			if(itemCapability.isApplicable(event.getObject())) {
 				final Capability<?> capabilityInstance = itemCapability.getCapability();
 
 				event.addCapability(itemCapability.getID(), new ICapabilitySerializable<NBTTagCompound>() {
@@ -79,7 +80,7 @@ public class ItemCapabilityHandler {
 
 					private ItemCapability<?, ?> getNewInstance() {
 						ItemCapability<?, ?> itemCapability = (ItemCapability<?, ?>)capabilityInstance.getDefaultInstance();
-						itemCapability.setStack(event.getItemStack());
+						itemCapability.setStack(event.getObject());
 						itemCapability.init();
 						return itemCapability;
 					}

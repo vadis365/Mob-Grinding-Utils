@@ -104,9 +104,9 @@ public class EntityCapabilityHandler {
 	}
 
 	@SubscribeEvent
-	public static void onAttachCapabilities(final AttachCapabilitiesEvent.Entity event) {
+	public static void onAttachCapabilities(final AttachCapabilitiesEvent<Entity> event) {
 		for(EntityCapability<?, ?, ?> entityCapability : REGISTERED_CAPABILITIES) {
-			if(entityCapability.isApplicable(event.getEntity())) {
+			if(entityCapability.isApplicable(event.getObject())) {
 				final Capability<?> capabilityInstance = entityCapability.getCapability();
 
 				event.addCapability(entityCapability.getID(), new ICapabilitySerializable<NBTTagCompound>() {
@@ -114,7 +114,7 @@ public class EntityCapabilityHandler {
 
 					private EntityCapability<?, ?, ?> getNewInstance() {
 						EntityCapability<?, ?, ?> entityCapability = (EntityCapability<?, ?, ?>)capabilityInstance.getDefaultInstance();
-						entityCapability.setEntity(event.getEntity());
+						entityCapability.setEntity(event.getObject());
 						entityCapability.init();
 						return entityCapability;
 					}

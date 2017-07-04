@@ -5,6 +5,7 @@ import java.util.List;
 import javax.annotation.Nullable;
 
 import mob_grinding_utils.MobGrindingUtils;
+import mob_grinding_utils.ModSounds;
 import mob_grinding_utils.tile.TileEntityXPTap;
 import net.minecraft.block.BlockDirectional;
 import net.minecraft.block.ITileEntityProvider;
@@ -17,7 +18,6 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
@@ -138,7 +138,7 @@ public class BlockXPTap extends BlockDirectional implements ITileEntityProvider 
 			state = state.cycleProperty(POWERED);
 			world.setBlockState(pos, state, 3);
 			float f = ((Boolean) state.getValue(POWERED)).booleanValue() ? 0.6F : 0.5F;
-			world.playSound((EntityPlayer) null, pos, MobGrindingUtils.TAP_SQUEAK, SoundCategory.BLOCKS, 0.3F, f);
+			world.playSound((EntityPlayer) null, pos, ModSounds.TAP_SQUEAK, SoundCategory.BLOCKS, 0.3F, f);
 			TileEntityXPTap tileentity = (TileEntityXPTap) world.getTileEntity(pos);
 			tileentity.setActive(((Boolean) state.getValue(POWERED)).booleanValue());
 			return true;

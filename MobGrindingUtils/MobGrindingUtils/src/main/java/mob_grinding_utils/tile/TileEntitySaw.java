@@ -5,7 +5,7 @@ import java.util.UUID;
 
 import com.mojang.authlib.GameProfile;
 
-import mob_grinding_utils.MobGrindingUtils;
+import mob_grinding_utils.ModItems;
 import mob_grinding_utils.blocks.BlockSaw;
 import mob_grinding_utils.items.ItemSawUpgrade;
 import net.minecraft.enchantment.Enchantment;
@@ -65,7 +65,7 @@ public class TileEntitySaw extends TileEntityInventoryHelper implements ITickabl
 				if (entity instanceof EntityLivingBase) {
 					EntityPlayerMP fakePlayer = FakePlayerFactory.get((WorldServer)getWorld(), new GameProfile(UUID.nameUUIDFromBytes(new TextComponentTranslation("fakeplayer.mob_masher").getFormattedText().getBytes()), new TextComponentTranslation("fakeplayer.mob_masher").getFormattedText()));
 					fakePlayer.setPosition(this.pos.getX(), -100D, this.pos.getZ());
-					ItemStack tempSword = new ItemStack(MobGrindingUtils.NULL_SWORD, 1, 0);
+					ItemStack tempSword = new ItemStack(ModItems.NULL_SWORD, 1, 0);
 
 					if(!tempSword.hasTagCompound())
 						tempSword.setTagCompound(new NBTTagCompound());
@@ -94,27 +94,27 @@ public class TileEntitySaw extends TileEntityInventoryHelper implements ITickabl
 	}
 
 	private boolean hasSharpnessUpgrade() {
-		return !getItems().get(0).isEmpty() && getItems().get(0).getItem() == MobGrindingUtils.SAW_UPGRADE && getItems().get(0).getItemDamage() == 0;
+		return !getItems().get(0).isEmpty() && getItems().get(0).getItem() == ModItems.SAW_UPGRADE && getItems().get(0).getItemDamage() == 0;
 	}
 	
 	private boolean hasLootingUpgrade() {
-		return !getItems().get(1).isEmpty() && getItems().get(1).getItem() == MobGrindingUtils.SAW_UPGRADE && getItems().get(1).getItemDamage() == 1;
+		return !getItems().get(1).isEmpty() && getItems().get(1).getItem() == ModItems.SAW_UPGRADE && getItems().get(1).getItemDamage() == 1;
 	}
 
 	private boolean hasFlameUpgrade() {
-		return !getItems().get(2).isEmpty() && getItems().get(2).getItem() == MobGrindingUtils.SAW_UPGRADE && getItems().get(2).getItemDamage() == 2;
+		return !getItems().get(2).isEmpty() && getItems().get(2).getItem() == ModItems.SAW_UPGRADE && getItems().get(2).getItemDamage() == 2;
 	}
 	
 	private boolean hasSmiteUpgrade() {
-		return !getItems().get(3).isEmpty() && getItems().get(3).getItem() == MobGrindingUtils.SAW_UPGRADE && getItems().get(3).getItemDamage() == 3;
+		return !getItems().get(3).isEmpty() && getItems().get(3).getItem() == ModItems.SAW_UPGRADE && getItems().get(3).getItemDamage() == 3;
 	}
 	
 	private boolean hasArthropodUpgrade() {
-		return !getItems().get(4).isEmpty() && getItems().get(4).getItem() == MobGrindingUtils.SAW_UPGRADE && getItems().get(4).getItemDamage() == 4;
+		return !getItems().get(4).isEmpty() && getItems().get(4).getItem() == ModItems.SAW_UPGRADE && getItems().get(4).getItemDamage() == 4;
 	}
 
 	private boolean hasBeheadingUpgrade() {
-		return !getItems().get(5).isEmpty() && getItems().get(5).getItem() == MobGrindingUtils.SAW_UPGRADE && getItems().get(5).getItemDamage() == 5;
+		return !getItems().get(5).isEmpty() && getItems().get(5).getItem() == ModItems.SAW_UPGRADE && getItems().get(5).getItemDamage() == 5;
 	}
 
 	@Override

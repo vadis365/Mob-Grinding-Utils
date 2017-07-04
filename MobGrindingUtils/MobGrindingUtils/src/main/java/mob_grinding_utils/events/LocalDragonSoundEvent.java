@@ -1,6 +1,6 @@
 package mob_grinding_utils.events;
 
-import mob_grinding_utils.MobGrindingUtils;
+import mob_grinding_utils.ModSounds;
 import mob_grinding_utils.blocks.BlockDragonMuffler;
 import net.minecraft.entity.boss.EntityDragon;
 import net.minecraft.util.SoundCategory;
@@ -23,7 +23,7 @@ public class LocalDragonSoundEvent {
 							if ((world.getBlockState(new BlockPos(dragon.posX + x, dragon.posY + y, dragon.posZ + z)).getBlock() instanceof BlockDragonMuffler))
 								playsound = false;
 				if (playsound) {
-					world.playSound(null, dragon.posX, dragon.posY, dragon.posZ, MobGrindingUtils.ENTITY_DRAGON_DEATH_LOCAL, SoundCategory.HOSTILE, 5.0F, 1.0F);
+					world.playSound(null, dragon.posX, dragon.posY, dragon.posZ, ModSounds.ENTITY_DRAGON_DEATH_LOCAL, SoundCategory.HOSTILE, 5.0F, 1.0F);
 				}
 			}
 		}
