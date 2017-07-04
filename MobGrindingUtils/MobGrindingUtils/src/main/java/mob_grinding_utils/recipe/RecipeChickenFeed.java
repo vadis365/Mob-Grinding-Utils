@@ -7,7 +7,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.NonNullList;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.fluids.Fluid;
@@ -16,7 +15,7 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 
-public class RecipeChickenFeed implements IRecipe {
+public class RecipeChickenFeed extends net.minecraftforge.registries.IForgeRegistryEntry.Impl<IRecipe> implements IRecipe {
 
 	@Override
 	public boolean matches(InventoryCrafting craftMatrix, World world) {
@@ -95,23 +94,5 @@ public class RecipeChickenFeed implements IRecipe {
 	@Override
 	public boolean canFit(int width, int height) {
 		return width * height >= 2;
-	}
-
-	@Override
-	public IRecipe setRegistryName(ResourceLocation name) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public ResourceLocation getRegistryName() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Class<IRecipe> getRegistryType() {
-		// TODO Auto-generated method stub
-		return null;
 	}
 }

@@ -45,7 +45,7 @@ import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.relauncher.Side;
 
-@Mod(modid = "mob_grinding_utils", name = "mob_grinding_utils", version = "0.2.1")
+@Mod(modid = "mob_grinding_utils", name = "mob_grinding_utils", version = "0.3.0")
 
 public class MobGrindingUtils {
 
@@ -121,7 +121,6 @@ public class MobGrindingUtils {
 
 	@EventHandler
 	public void init(FMLInitializationEvent event) {
-		//GameRegistry.addRecipe(new RecipeChickenFeed());
 	}
 
 	@EventHandler
