@@ -88,8 +88,6 @@ public class MobGrindingUtils {
 		PROXY.registerTileEntities();
 		PROXY.registerRenderers();
 		ModRecipes.addRecipes();
-		if (event.getSide() == Side.CLIENT)
-			MinecraftForge.EVENT_BUS.register(new ModModels());
 		NetworkRegistry.INSTANCE.registerGuiHandler(INSTANCE, PROXY);
 		NETWORK_WRAPPER = NetworkRegistry.INSTANCE.newSimpleChannel("mob_grinding_utils");
 		NETWORK_WRAPPER.registerMessage(AbsorptionHopperPacketHandler.class, AbsorptionHopperMessage.class, 0, Side.SERVER);
