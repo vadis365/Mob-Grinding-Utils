@@ -45,7 +45,7 @@ import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.relauncher.Side;
 
-@Mod(modid = "mob_grinding_utils", name = "mob_grinding_utils", version = "0.3.1")
+@Mod(modid = "mob_grinding_utils", name = "mob_grinding_utils", version = "0.3.2")
 
 public class MobGrindingUtils {
 
@@ -74,6 +74,7 @@ public class MobGrindingUtils {
 		ModBlocks.init();
 		ModItems.init();
 		ModSounds.init();
+		ModRecipes.init();
 
 		if (!Loader.isModLoaded("openblocks") && !Loader.isModLoaded("enderio")) {
 			FLUID_XP = new Fluid("xpjuice", new ResourceLocation("mob_grinding_utils:fluids/fluid_xp"), new ResourceLocation("mob_grinding_utils:fluids/fluid_xp")).setLuminosity(10).setDensity(800).setViscosity(1500).setUnlocalizedName("mob_grinding_utils.fluid_xp");
@@ -87,7 +88,6 @@ public class MobGrindingUtils {
 
 		PROXY.registerTileEntities();
 		PROXY.registerRenderers();
-		ModRecipes.addRecipes();
 		NetworkRegistry.INSTANCE.registerGuiHandler(INSTANCE, PROXY);
 		NETWORK_WRAPPER = NetworkRegistry.INSTANCE.newSimpleChannel("mob_grinding_utils");
 		NETWORK_WRAPPER.registerMessage(AbsorptionHopperPacketHandler.class, AbsorptionHopperMessage.class, 0, Side.SERVER);
