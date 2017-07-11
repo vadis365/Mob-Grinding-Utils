@@ -7,3 +7,4 @@ MobGrindingUtils/MobGrindingUtils/build
 MobGrindingUtils/MobGrindingUtils/.classpath
 *.project
 .classpath
+/bin/
