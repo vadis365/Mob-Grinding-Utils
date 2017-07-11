@@ -63,7 +63,7 @@ public class EntityHeadDropEvent {
 		if (target instanceof EntityCreeper)
 			return new ItemStack(Items.SKULL, 1, 4);
 		if (target instanceof EntitySkeleton) {
-			SkeletonType type = ((EntitySkeleton) target).func_189771_df();
+			SkeletonType type = ((EntitySkeleton) target).getSkeletonType();
 			if (type == SkeletonType.WITHER)
 				return new ItemStack(Items.SKULL, 1, 1);
 			else if (type == SkeletonType.NORMAL)

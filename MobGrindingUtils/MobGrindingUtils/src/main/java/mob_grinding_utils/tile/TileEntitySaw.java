@@ -46,7 +46,7 @@ public class TileEntitySaw extends TileEntityInventoryHelper implements ITickabl
 			}
 		}
 
-		if (!worldObj.isRemote && worldObj.getWorldTime() % 10 == 0 && worldObj.getBlockState(pos).getBlock() != null)
+		if (!worldObj.isRemote && worldObj.getTotalWorldTime() % 10 == 0 && worldObj.getBlockState(pos).getBlock() != null)
 			if (worldObj.getBlockState(pos).getValue(BlockSaw.POWERED))
 				activateBlock();
 	}

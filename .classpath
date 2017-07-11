@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="MobGrindingUtils/MobGrindingUtils/src/main/java"/>
+	<classpathentry kind="src" path="MobGrindingUtils/MobGrindingUtils/src/main/resources"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="C:/Users/Dave/.gradle/caches/minecraft/net/minecraftforge/forge/1.11.2-13.20.1.2388/snapshot/20161220/forgeSrc-1.11.2-13.20.1.2388.jar" sourcepath="C:/Users/Dave/.gradle/caches/minecraft/net/minecraftforge/forge/1.11.2-13.20.1.2388/snapshot/20161220/forgeSrc-1.11.2-13.20.1.2388-sources.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Dave/.gradle/caches/modules-2/files-2.1/com.google.guava/guava/18.0/cce0823396aa693798f8882e64213b1772032b09/guava-18.0.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Dave/.gradle/caches/modules-2/files-2.1/com.mojang/authlib/1.5.24/889ff5477b844800cff734babbf42c1bbda4b10/authlib-1.5.24.jar" sourcepath="C:/Users/Dave/.gradle/caches/modules-2/files-2.1/com.mojang/authlib/1.5.24/ed92f0044f5b3fd8d4b831cf0e213fefbff6e33a/authlib-1.5.24-sources.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Dave/.gradle/caches/modules-2/files-2.1/org.lwjgl.lwjgl/lwjgl_util/2.9.4-nightly-20150209/d51a7c040a721d13efdfbd34f8b257b2df882ad0/lwjgl_util-2.9.4-nightly-20150209.jar" sourcepath="C:/Users/Dave/.gradle/caches/modules-2/files-2.1/org.lwjgl.lwjgl/lwjgl_util/2.9.4-nightly-20150209/2e3787f55c68a245e994f88755795b3a7684b3/lwjgl_util-2.9.4-nightly-20150209-sources.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Dave/.gradle/caches/modules-2/files-2.1/io.netty/netty-all/4.0.23.Final/294104aaf1781d6a56a07d561e792c5d0c95f45/netty-all-4.0.23.Final.jar" sourcepath="C:/Users/Dave/.gradle/caches/modules-2/files-2.1/io.netty/netty-all/4.0.23.Final/fd8e5b2341f3a08b02fe116d6e9886654e65b219/netty-all-4.0.23.Final-sources.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Dave/.gradle/caches/modules-2/files-2.1/com.google.code.findbugs/jsr305/3.0.1/f7be08ec23c21485b9b5a1cf1654c2ec8c58168d/jsr305-3.0.1.jar" sourcepath="C:/Users/Dave/.gradle/caches/modules-2/files-2.1/com.google.code.findbugs/jsr305/3.0.1/a2926c057ca3b662b9db194c869bdbe7d3bb8aef/jsr305-3.0.1-sources.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Dave/.gradle/caches/modules-2/files-2.1/org.lwjgl.lwjgl/lwjgl/2.9.4-nightly-20150209/697517568c68e78ae0b4544145af031c81082dfe/lwjgl-2.9.4-nightly-20150209.jar" sourcepath="C:/Users/Dave/.gradle/caches/modules-2/files-2.1/org.lwjgl.lwjgl/lwjgl/2.9.4-nightly-20150209/7da2cff65127b558a66e8e38456174161723d3a7/lwjgl-2.9.4-nightly-20150209-sources.jar"/>
+	<classpathentry kind="output" path="MobGrindingUtils/MobGrindingUtils/build/classes/main"/>
+</classpath>
