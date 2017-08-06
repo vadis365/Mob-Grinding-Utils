@@ -4,6 +4,7 @@ import mob_grinding_utils.ModBlocks;
 import mob_grinding_utils.ModItems;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.util.ResourceLocation;
@@ -51,7 +52,7 @@ public class ModRecipes {
 		XP_TAP.setRegistryName(getResource("xp_tap"));
 
 		//Fan
-		FAN = new ShapedOreRecipe(getResource("recipe_fan"), new ItemStack(ModBlocks.FAN_ITEM), "SIS", "IRI", "SIS", 'S', new ItemStack(Blocks.STONE_SLAB, 1, OreDictionary.WILDCARD_VALUE), 'I', "ingotIron", 'R', "blockRedstone");
+		FAN = new ShapedOreRecipe(getResource("recipe_fan"), new ItemStack(ModBlocks.FAN_ITEM), "SIS", "IRI", "SIS", 'S', new ItemStack(Blocks.STONE_SLAB), 'I', "ingotIron", 'R', "blockRedstone");
 		FAN.setRegistryName(getResource("fan"));
 
 		//Fan Upgrades
