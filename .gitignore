@@ -1,11 +1,8 @@
-MobGrindingUtils/.classpath
-MobGrindingUtils/.project
-MobGrindingUtils/bin
+
 MobGrindingUtils/MobGrindingUtils/.gradle
 MobGrindingUtils/MobGrindingUtils/build
-
-MobGrindingUtils/MobGrindingUtils/.classpath
 *.project
 .classpath
-bin
-bin1
+
+bin1/
+bin/
