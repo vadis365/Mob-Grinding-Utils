@@ -24,7 +24,7 @@ public class RenderChickenSwell {
 						scale = 0.75F;
 					GlStateManager.pushMatrix();
 					GlStateManager.translate(event.getX(), event.getY() - 0.5D - scale, event.getZ());
-					GlStateManager.rotate(event.getEntity().renderYawOffset, 0, -1, 0);
+					GlStateManager.rotate(event.getEntity().renderYawOffset, 0F, -1F, 0F);
 					GlStateManager.scale(1F + scale, 1F + scale, 1F + scale * 0.75F);
 					model.body.render(0.0625F);
 					GlStateManager.popMatrix();
