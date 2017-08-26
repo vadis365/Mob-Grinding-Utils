@@ -1,8 +1,5 @@
 
 MobGrindingUtils/MobGrindingUtils/.gradle
 MobGrindingUtils/MobGrindingUtils/build
-*.project
-.classpath
-
 bin1/
 bin/
