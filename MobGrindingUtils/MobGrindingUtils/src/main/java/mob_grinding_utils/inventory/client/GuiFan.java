@@ -25,6 +25,12 @@ public class GuiFan extends GuiContainer {
 	}
 
 	@Override
+    public void drawScreen(int mouseX, int mouseY, float partialTicks) {
+        super.drawScreen(mouseX, mouseY, partialTicks);
+        renderHoveredToolTip(mouseX, mouseY);
+    }
+
+	@Override
 	protected void drawGuiContainerForegroundLayer(int x, int y) {
 		fontRenderer.drawString(I18n.format(new TextComponentTranslation("tile.mob_grinding_utils.fan.name").getFormattedText()), xSize / 2 - fontRenderer.getStringWidth(I18n.format(new TextComponentTranslation("tile.mob_grinding_utils.fan.name").getFormattedText())) / 2, ySize - 218, 4210752);	
 	}
