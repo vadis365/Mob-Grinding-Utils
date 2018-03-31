@@ -45,7 +45,7 @@ import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.relauncher.Side;
 
-@Mod(modid = "mob_grinding_utils", name = "mob_grinding_utils", version = "0.3.4")
+@Mod(modid = "mob_grinding_utils", name = "mob_grinding_utils", version = "0.3.5")
 
 public class MobGrindingUtils {
 
