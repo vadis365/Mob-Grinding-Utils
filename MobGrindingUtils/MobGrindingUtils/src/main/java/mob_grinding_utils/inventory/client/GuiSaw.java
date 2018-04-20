@@ -1,10 +1,9 @@
 package mob_grinding_utils.inventory.client;
 
-import org.lwjgl.opengl.GL11;
-
 import mob_grinding_utils.inventory.server.ContainerSaw;
 import mob_grinding_utils.tile.TileEntitySaw;
 import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
@@ -37,7 +36,7 @@ public class GuiSaw extends GuiContainer {
 
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float partialTickTime, int x, int y) {
-		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 		mc.getTextureManager().bindTexture(GUI_SAW);
 		int xOffSet = (width - xSize) / 2;
 		int yOffSet = (height - ySize) / 2;

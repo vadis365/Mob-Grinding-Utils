@@ -1,10 +1,9 @@
 package mob_grinding_utils.inventory.client;
 
-import org.lwjgl.opengl.GL11;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
 
 public class GuiLargeButton extends GuiButton {
@@ -23,10 +22,10 @@ public class GuiLargeButton extends GuiButton {
 		FontRenderer fontrenderer = mc.fontRenderer;
 		if (visible) {
 			mc.getTextureManager().bindTexture(TEXTURES);
-			GL11.glColor4f(0.75F, 0.75F, 0.75F, 0.5F);
+			GlStateManager.color(0.75F, 0.75F, 0.75F, 0.5F);
 			boolean hover = mouseX >= x && mouseY >= y && mouseX < x + width && mouseY < y + height;
 			if(hover)
-				GL11.glColor4f(0.75F, 1, 0.75F, 1);	
+				GlStateManager.color(0.75F, 1, 0.75F, 1);	
 			drawTexturedModalRect(x, y, u, v, width, height);
 			
 			int textColour = 14737632;

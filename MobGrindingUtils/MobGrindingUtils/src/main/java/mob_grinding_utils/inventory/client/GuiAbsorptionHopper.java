@@ -11,6 +11,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureMap;
@@ -63,7 +64,7 @@ public class GuiAbsorptionHopper extends GuiContainer {
 
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float partialTickTime, int x, int y) {
-		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 		mc.getTextureManager().bindTexture(GUI_ABSORPTION_HOPPER);
 		int xOffSet = (width - xSize) / 2;
 		int yOffSet = (height - ySize) / 2;
@@ -84,7 +85,7 @@ public class GuiAbsorptionHopper extends GuiContainer {
 		fontRenderer.drawString(I18n.format(EAST.getName()), xOffSet + 133 - fontRenderer.getStringWidth(I18n.format(EAST.getName())) / 2, yOffSet + 55, getModeColour(EAST.ordinal()));
 
 		int fluid = tile.getScaledFluid(121);
-		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 		if (fluid >= 1) {
 			TextureAtlasSprite sprite = Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(tile.tank.getFluid().getFluid().getStill().toString());
 			Tessellator tessellator = Tessellator.getInstance();
