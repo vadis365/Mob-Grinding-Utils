@@ -24,7 +24,6 @@ import mob_grinding_utils.network.MessageSyncEntityCapabilities;
 import mob_grinding_utils.network.TapParticleHandler;
 import mob_grinding_utils.network.TapParticleMessage;
 import mob_grinding_utils.proxy.CommonProxy;
-import mob_grinding_utils.recipe.ModRecipes;
 import mob_grinding_utils.tile.TileEntitySaw;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
@@ -45,20 +44,20 @@ import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.relauncher.Side;
 
-@Mod(modid = "mob_grinding_utils", name = "mob_grinding_utils", version = "0.3.5")
+@Mod(modid = Reference.MOD_ID, name = Reference.MOD_NAME, version = Reference.VERSION)
 
 public class MobGrindingUtils {
 
-	@Instance("mob_grinding_utils")
+	@Instance(Reference.MOD_ID)
 	public static MobGrindingUtils INSTANCE;
 
-	@SidedProxy(clientSide = "mob_grinding_utils.proxy.ClientProxy", serverSide = "mob_grinding_utils.proxy.CommonProxy")
+	@SidedProxy(clientSide = Reference.PROXY_CLIENT, serverSide = Reference.PROXY_COMMON)
 	public static CommonProxy PROXY;
 	public static Fluid FLUID_XP;
 	public static SimpleNetworkWrapper NETWORK_WRAPPER;
 	public static DamageSource SPIKE_DAMAGE;
 
-	public static CreativeTabs TAB = new CreativeTabs("mob_grinding_utils") {
+	public static CreativeTabs TAB = new CreativeTabs(Reference.MOD_NAME) {
 		@Override
 		public ItemStack getTabIconItem() {
 			return new ItemStack(ModBlocks.SPIKES_ITEM);
@@ -71,11 +70,6 @@ public class MobGrindingUtils {
 
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
-		ModBlocks.init();
-		ModItems.init();
-		ModSounds.init();
-		ModRecipes.init();
-
 		if (!Loader.isModLoaded("openblocks") && !Loader.isModLoaded("enderio")) {
 			FLUID_XP = new Fluid("xpjuice", new ResourceLocation("mob_grinding_utils:fluids/fluid_xp"), new ResourceLocation("mob_grinding_utils:fluids/fluid_xp")).setLuminosity(10).setDensity(800).setViscosity(1500).setUnlocalizedName("mob_grinding_utils.fluid_xp");
 			FluidRegistry.registerFluid(FLUID_XP);
@@ -89,7 +83,7 @@ public class MobGrindingUtils {
 		PROXY.registerTileEntities();
 		PROXY.registerRenderers();
 		NetworkRegistry.INSTANCE.registerGuiHandler(INSTANCE, PROXY);
-		NETWORK_WRAPPER = NetworkRegistry.INSTANCE.newSimpleChannel("mob_grinding_utils");
+		NETWORK_WRAPPER = NetworkRegistry.INSTANCE.newSimpleChannel(Reference.MOD_NAME);
 		NETWORK_WRAPPER.registerMessage(AbsorptionHopperPacketHandler.class, AbsorptionHopperMessage.class, 0, Side.SERVER);
 		NETWORK_WRAPPER.registerMessage(ChickenSyncPacketHandler.class, ChickenSyncMessage.class, 1, Side.CLIENT);
 		NETWORK_WRAPPER.registerMessage(TapParticleHandler.class, TapParticleMessage.class, 2, Side.CLIENT);

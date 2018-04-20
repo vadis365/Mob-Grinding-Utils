@@ -37,6 +37,7 @@ public class BlockSaw extends BlockDirectional implements ITileEntityProvider {
 		super(Material.IRON);
 		setDefaultState(this.getBlockState().getBaseState().withProperty(POWERED, false));
 		setHardness(10.0F);
+		setResistance(2000.0F);
 		setSoundType(SoundType.METAL);
 		setCreativeTab(MobGrindingUtils.TAB);
 	}

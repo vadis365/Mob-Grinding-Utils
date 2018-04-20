@@ -1,11 +1,14 @@
 package mob_grinding_utils.items;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import javax.annotation.Nullable;
 
 import mob_grinding_utils.MobGrindingUtils;
 import mob_grinding_utils.ModItems;
+import mob_grinding_utils.ModItems.ISubItemsItem;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityList;
@@ -25,7 +28,7 @@ import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class ItemMobSwab extends Item {
+public class ItemMobSwab extends Item implements ISubItemsItem {
 
 	public ItemMobSwab() {
 		super();
@@ -55,8 +58,7 @@ public class ItemMobSwab extends Item {
 	@Override
 	public boolean itemInteractionForEntity(ItemStack stack, EntityPlayer player, EntityLivingBase target, EnumHand hand) {
 		if (target instanceof EntityLiving && !(target instanceof EntityPlayer) && getDamage(stack) == 0) {
-			String[] mobName1 = EntityList.getKey(target).toString().split(":");
-			String mobName = mobName1[1];
+			String mobName = EntityList.getKey(target).toString();
 			ItemStack stack2 = new ItemStack(ModItems.MOB_SWAB, 1, 1);
 			if (!stack2.hasTagCompound())
 				stack2.setTagCompound(new NBTTagCompound());
@@ -74,6 +76,29 @@ public class ItemMobSwab extends Item {
 			return true;
 		} else {
 			return super.itemInteractionForEntity(stack, player, target, hand);
+		}
+	}
+	
+	@Override
+	public List<String> getModels() {
+		List<String> models = new ArrayList<String>();
+		for (EnumSwabType type : EnumSwabType.values())
+			models.add(type.getName());
+		return models;
+	}
+
+	public enum EnumSwabType implements IMGUItemEnum {
+		MOB_SWAB,
+		MOB_SWAB_USED;
+
+		@Override
+		public String getName() {
+			return name().toLowerCase(Locale.ENGLISH);
+		}
+
+		@Override
+		public ItemStack createStack(int size) {
+			return new ItemStack(ModItems.MOB_SWAB, size, ordinal());
 		}
 	}
 }
