@@ -6,13 +6,13 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
 
-public class GuiLargeButton extends GuiButton {
+public class GuiSmallButton extends GuiButton {
 	private static final ResourceLocation TEXTURES = new ResourceLocation("mob_grinding_utils:textures/gui/absorption_hopper_gui.png");
 	private int u;
 	private int v;
 
-	public GuiLargeButton(int id, int x, int y, int u, int v, String name) {
-		super(id, x, y, 32, 16, name);
+	public GuiSmallButton(int id, int x, int y, int u, int v, String name) {
+		super(id, x, y, 16, 16, name);
 		this.u = u;
 		this.v = v;
 	}

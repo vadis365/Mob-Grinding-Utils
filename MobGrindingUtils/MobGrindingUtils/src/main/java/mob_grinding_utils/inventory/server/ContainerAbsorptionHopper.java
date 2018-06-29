@@ -27,10 +27,10 @@ public class ContainerAbsorptionHopper extends Container {
 
 		for (j = 0; j < 3; ++j)
 			for (k = 0; k < 9; ++k)
-				addSlotToContainer(new Slot(playerInventory, k + j * 9 + 9, 8 + k * 18, 180 + j * 18 + i));
+				addSlotToContainer(new Slot(playerInventory, k + j * 9 + 9, 44 + k * 18, 180 + j * 18 + i));
 
 		for (j = 0; j < 9; ++j)
-			addSlotToContainer(new Slot(playerInventory, j, 8 + j * 18, 238 + i));
+			addSlotToContainer(new Slot(playerInventory, j, 44 + j * 18, 238 + i));
 	}
 
 	@Override
@@ -90,13 +90,11 @@ public class ContainerAbsorptionHopper extends Container {
 					} else if (slotstack.getCount() < stack.getMaxStackSize() && slotstack.getCount() < slot.getSlotStackLimit()) {
 						if (slot.getSlotStackLimit() >= stack.getMaxStackSize()) {
 							stack.shrink(stack.getMaxStackSize() - slotstack.getCount());
-							//stack.getCount() -= stack.getMaxStackSize() - slotstack.getCount();
 							slotstack.setCount(stack.getMaxStackSize());
 							slot.onSlotChanged();
 							merged = true;
 						}
 						else if (slot.getSlotStackLimit() < stack.getMaxStackSize()) {
-							//stack.stackSize -= slot.getSlotStackLimit() - slotstack.stackSize;
 							stack.shrink(slot.getSlotStackLimit() - slotstack.getCount());
 							slotstack.setCount(slot.getSlotStackLimit());
 							slot.onSlotChanged();

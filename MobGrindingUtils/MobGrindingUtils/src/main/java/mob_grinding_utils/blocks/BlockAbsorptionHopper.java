@@ -14,6 +14,8 @@ import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.boss.EntityDragon;
+import net.minecraft.entity.boss.EntityWither;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.Item;
@@ -44,6 +46,7 @@ public class BlockAbsorptionHopper extends BlockContainer {
 	public BlockAbsorptionHopper() {
 		super(Material.IRON);
 		setHardness(10.0F);
+		setResistance(2000.0F);
 		setHarvestLevel("pickaxe", 0);
 		setSoundType(SoundType.METAL);
 		setCreativeTab(MobGrindingUtils.TAB);
@@ -142,6 +145,11 @@ public class BlockAbsorptionHopper extends BlockContainer {
 				.withProperty(UP, TileEntityAbsorptionHopper.EnumStatus.STATUS_NONE)
 				.withProperty(DOWN, TileEntityAbsorptionHopper.EnumStatus.STATUS_NONE);
 	}
+
+	@Override
+	public boolean canEntityDestroy(IBlockState state, IBlockAccess world, BlockPos pos, Entity entity) {
+      return !(entity instanceof EntityWither) && !(entity instanceof EntityDragon);
+    }
 
 	@Nullable
 	@Override

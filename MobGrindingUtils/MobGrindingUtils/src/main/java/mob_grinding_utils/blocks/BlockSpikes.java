@@ -12,6 +12,8 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.boss.EntityDragon;
+import net.minecraft.entity.boss.EntityWither;
 import net.minecraft.entity.item.EntityXPOrb;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EnumBlockRenderType;
@@ -36,6 +38,7 @@ public class BlockSpikes extends BlockDirectional {
 	public BlockSpikes() {
 		super(Material.IRON);
 		setHardness(5.0F);
+		setResistance(2000.0F);
 		setSoundType(SoundType.METAL);
 		setCreativeTab(MobGrindingUtils.TAB);
 	}
@@ -89,6 +92,11 @@ public class BlockSpikes extends BlockDirectional {
 	@Override
 	protected BlockStateContainer createBlockState() {
 		return new BlockStateContainer(this, new IProperty[] { FACING });
+	}
+
+	@Override
+	public boolean canEntityDestroy(IBlockState state, IBlockAccess world, BlockPos pos, Entity entity) {
+      return !(entity instanceof EntityWither) && !(entity instanceof EntityDragon);
 	}
 
 	@Override

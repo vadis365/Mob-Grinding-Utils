@@ -4,6 +4,7 @@ import mob_grinding_utils.MobGrindingUtils;
 import mob_grinding_utils.blocks.BlockXPTap;
 import mob_grinding_utils.entity.EntityXPOrbFalling;
 import mob_grinding_utils.network.TapParticleMessage;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
@@ -15,6 +16,11 @@ import net.minecraftforge.fluids.FluidRegistry;
 
 public class TileEntityXPTap extends TileEntity implements ITickable{
 	public boolean active;
+
+	@Override
+	public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState) {
+		return oldState.getBlock() != newState.getBlock();
+	}
 
 	@Override
 	public void update() {

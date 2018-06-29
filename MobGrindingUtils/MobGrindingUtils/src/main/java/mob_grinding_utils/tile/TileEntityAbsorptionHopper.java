@@ -6,6 +6,7 @@ import javax.annotation.Nullable;
 
 import mob_grinding_utils.ModItems;
 import mob_grinding_utils.inventory.server.InventoryWrapperAH;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.item.EntityXPOrb;
 import net.minecraft.inventory.IInventory;
@@ -21,6 +22,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.Fluid;
@@ -29,6 +31,8 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
@@ -63,6 +67,8 @@ public class TileEntityAbsorptionHopper extends TileEntityInventoryHelper implem
 	}
 
 	public EnumStatus status[] = new EnumStatus[] { EnumStatus.STATUS_NONE, EnumStatus.STATUS_NONE, EnumStatus.STATUS_NONE, EnumStatus.STATUS_NONE, EnumStatus.STATUS_NONE, EnumStatus.STATUS_NONE };
+	public boolean showRenderBox;
+	public int offsetX, offsetY, offsetZ;
 
 	@Override
 	public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity packet) {
@@ -100,6 +106,10 @@ public class TileEntityAbsorptionHopper extends TileEntityInventoryHelper implem
 		status[3] = EnumStatus.values()[tagCompound.getByte("south")];
 		status[4] = EnumStatus.values()[tagCompound.getByte("west")];
 		status[5] = EnumStatus.values()[tagCompound.getByte("east")];
+		showRenderBox = tagCompound.getBoolean("showRenderBox");
+		offsetX = tagCompound.getInteger("offsetX");
+		offsetY = tagCompound.getInteger("offsetY");
+		offsetZ = tagCompound.getInteger("offsetZ");
 		tank.readFromNBT(tagCompound);
 	}
 
@@ -112,6 +122,10 @@ public class TileEntityAbsorptionHopper extends TileEntityInventoryHelper implem
 		tagCompound.setByte("south", (byte) status[3].ordinal());
 		tagCompound.setByte("west", (byte) status[4].ordinal());
 		tagCompound.setByte("east", (byte) status[5].ordinal());
+		tagCompound.setBoolean("showRenderBox", showRenderBox);
+		tagCompound.setInteger("offsetX", offsetX);
+		tagCompound.setInteger("offsetY", offsetY);
+		tagCompound.setInteger("offsetZ", offsetZ);
 		tank.writeToNBT(tagCompound);
 		return tagCompound;
 	}
@@ -133,6 +147,49 @@ public class TileEntityAbsorptionHopper extends TileEntityInventoryHelper implem
 			break;
 		}
 		markDirty();
+	}
+
+	public void toggleRenderBox() {
+		if (!showRenderBox)
+			showRenderBox = true;
+		else
+			showRenderBox = false;
+		markDirty();
+	}
+
+	public void toggleOffset(int direction) {
+		switch (direction) {
+		case 7:
+			if (getoffsetY() >= -3 - getModifierAmount())
+				offsetY = getoffsetY() - 1;
+			break;
+		case 8:
+			if (getoffsetY() <= 3 + getModifierAmount())
+				offsetY = getoffsetY() + 1;
+			break;
+		case 9:
+			if (getoffsetZ() >= -3 - getModifierAmount())
+				offsetZ = getoffsetZ() - 1;
+			break;
+		case 10:
+			if (getoffsetZ() <= 3 + getModifierAmount())
+				offsetZ = getoffsetZ() + 1;
+			break;
+		case 11:
+			if (getoffsetX() >= -3 - getModifierAmount())
+				offsetX = getoffsetX() - 1;
+			break;
+		case 12:
+			if (getoffsetX() <= 3 + getModifierAmount())
+				offsetX = getoffsetX() + 1;
+			break;
+		}
+		markDirty();
+	}
+
+	@Override
+	public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState) {
+		return oldState.getBlock() != newState.getBlock();
 	}
 
 	@Override
@@ -210,27 +267,22 @@ public class TileEntityAbsorptionHopper extends TileEntityInventoryHelper implem
 	@Override
 	@Nullable
 	public ItemStack decrStackSize(int index, int count) {
-       // ItemStack itemstack = ItemStackHelper.getAndSplit(this.getItems(), index, count);
-       // return itemstack;
 		return ItemStackHelper.getAndSplit(getItems(), index, count);
 	}
 
 	public boolean captureDroppedItems() {
-		for (EntityItem entityitem : getCaptureItems(getWorld(), getPos().getX() + 0.5D, getPos().getY() + 0.5D, getPos().getZ() + 0.5D))
+		for (EntityItem entityitem : getCaptureItems())
 			if (putDropInInventoryAllSlots(this, entityitem))
                     return true;
         return false;
     }
 
-    public List<EntityItem> getCaptureItems(World world, double x, double y, double z) {
-		int modifier = 0;
-		if(hasUpgrade())
-		 modifier = getItems().get(0).getCount();
-        return world.<EntityItem>getEntitiesWithinAABB(EntityItem.class, new AxisAlignedBB(x - 3.5D - modifier, y - 3.5D - modifier, z - 3.5D - modifier, x + 3.5D + modifier, y + 3.5D + modifier, z + 3.5D + modifier), EntitySelectors.IS_ALIVE);
+    public List<EntityItem> getCaptureItems() {
+    	return getWorld().<EntityItem>getEntitiesWithinAABB(EntityItem.class, getAABBWithModifiers(), EntitySelectors.IS_ALIVE);
     }
-    
+
 	public boolean captureDroppedXP() {
-		for (EntityXPOrb entity : getCaptureXP(getWorld(), getPos().getX() + 0.5D, getPos().getY() + 0.5D, getPos().getZ() + 0.5D)) {
+		for (EntityXPOrb entity : getCaptureXP()) {
 			int xpAmount = entity.getXpValue();
 			if (tank.getFluidAmount() < tank.getCapacity() - xpAmount * 20) {
 				tank.fill(new FluidStack(FluidRegistry.getFluid("xpjuice"), xpAmount * 20), true);
@@ -241,15 +293,47 @@ public class TileEntityAbsorptionHopper extends TileEntityInventoryHelper implem
 		return false;
 	}
 
-	public List<EntityXPOrb> getCaptureXP(World world, double x, double y, double z) {
-		int modifier = 0;
-		if(hasUpgrade())
-		 modifier = getItems().get(0).getCount();
-        return world.<EntityXPOrb>getEntitiesWithinAABB(EntityXPOrb.class, new AxisAlignedBB(x - 3.5D - modifier, y - 3.5D - modifier, z - 3.5D - modifier, x + 3.5D + modifier, y + 3.5D + modifier, z + 3.5D + modifier), EntitySelectors.IS_ALIVE);
+	public List<EntityXPOrb> getCaptureXP() {
+		return getWorld().<EntityXPOrb>getEntitiesWithinAABB(EntityXPOrb.class, getAABBWithModifiers(), EntitySelectors.IS_ALIVE);
     }
+
+	public AxisAlignedBB getAABBWithModifiers() {
+		
+		double x = getPos().getX() + 0.5D;
+		double y = getPos().getY() + 0.5D;
+		double z = getPos().getZ() + 0.5D;
+		return new AxisAlignedBB(x - 3.5D - getModifierAmount(), y - 3.5D - getModifierAmount(), z - 3.5D - getModifierAmount(), x + 3.5D + getModifierAmount(), y + 3.5D + getModifierAmount(), z + 3.5D + getModifierAmount()).offset(getoffsetX(), getoffsetY(), getoffsetZ());
+	}
+
+	@SideOnly(Side.CLIENT)
+	public AxisAlignedBB getAABBForRender() {
+		return new AxisAlignedBB(- 3D - getModifierAmount(), - 3D - getModifierAmount(), - 3D - getModifierAmount(), 4D + getModifierAmount(), 4D + getModifierAmount(), 4D + getModifierAmount()).offset(getoffsetX(), getoffsetY(), getoffsetZ());
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public AxisAlignedBB getRenderBoundingBox() {
+		return getAABBWithModifiers();
+	}
+
+	public int getoffsetX() {
+		return Math.max(- 4 - getModifierAmount(), Math.min(offsetX, 4 + getModifierAmount()));
+	}
+
+	public int getoffsetY() {
+		return Math.max(- 4 - getModifierAmount(), Math.min(offsetY, 4 + getModifierAmount()));
+	}
+
+	public int getoffsetZ() {
+		return Math.max(- 4 - getModifierAmount(), Math.min(offsetZ, 4 + getModifierAmount()));
+	}
 
 	private boolean hasUpgrade() {
 		return !getItems().get(0).isEmpty() && getItems().get(0).getItem() == ModItems.ABSORPTION_UPGRADE;
+	}
+
+	public int getModifierAmount() {
+		return hasUpgrade() ? getItems().get(0).getCount() : 0;
 	}
 
     @Override
@@ -390,5 +474,6 @@ public class TileEntityAbsorptionHopper extends TileEntityInventoryHelper implem
 			return (T) (itemHandler == null ? (itemHandler = createUnSidedHandler()) : itemHandler);
 		return super.getCapability(capability, facing);
 	}
+
 }
 

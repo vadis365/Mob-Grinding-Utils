@@ -9,6 +9,7 @@ import net.minecraft.world.World;
 public class BlockTankSink extends BlockTank {
 	public BlockTankSink() {
 		setHardness(1.0F);
+		setResistance(2000.0F);
 		setSoundType(SoundType.GLASS);
 		setCreativeTab(MobGrindingUtils.TAB);
 	}

@@ -13,7 +13,10 @@ import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.boss.EntityDragon;
+import net.minecraft.entity.boss.EntityWither;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.tileentity.TileEntity;
@@ -23,6 +26,7 @@ import net.minecraft.util.Mirror;
 import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
 public class BlockFan extends BlockDirectional implements ITileEntityProvider {
@@ -32,6 +36,7 @@ public class BlockFan extends BlockDirectional implements ITileEntityProvider {
 		super(Material.IRON);
 		setDefaultState(this.getBlockState().getBaseState().withProperty(POWERED, false));
 		setHardness(10.0F);
+		setResistance(2000.0F);
 		setSoundType(SoundType.METAL);
 		setCreativeTab(MobGrindingUtils.TAB);
 	}
@@ -95,6 +100,11 @@ public class BlockFan extends BlockDirectional implements ITileEntityProvider {
 		if (world.getTileEntity(pos) instanceof TileEntityFan)
 			player.openGui(MobGrindingUtils.INSTANCE, MobGrindingUtils.PROXY.GUI_ID_FAN, world, pos.getX(), pos.getY(), pos.getZ());
 		return true;
+	}
+
+	@Override
+	public boolean canEntityDestroy(IBlockState state, IBlockAccess world, BlockPos pos, Entity entity) {
+      return !(entity instanceof EntityWither) && !(entity instanceof EntityDragon);
 	}
 
 	@Override

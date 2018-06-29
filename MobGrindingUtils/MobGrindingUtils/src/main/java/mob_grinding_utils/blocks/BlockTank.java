@@ -10,7 +10,10 @@ import net.minecraft.block.BlockContainer;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.boss.EntityDragon;
+import net.minecraft.entity.boss.EntityWither;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.Item;
@@ -35,6 +38,7 @@ public class BlockTank extends BlockContainer {
 	public BlockTank() {
 		super(Material.GLASS);
 		setHardness(1.0F);
+		setResistance(2000.0F);
 		setSoundType(SoundType.GLASS);
 		setCreativeTab(MobGrindingUtils.TAB);
 	}
@@ -64,6 +68,11 @@ public class BlockTank extends BlockContainer {
 	@Override
 	public boolean isOpaqueCube(IBlockState state) {
 		return false;
+	}
+
+	@Override
+	public boolean canEntityDestroy(IBlockState state, IBlockAccess world, BlockPos pos, Entity entity) {
+      return !(entity instanceof EntityWither) && !(entity instanceof EntityDragon);
 	}
 
 	@Nullable

@@ -17,6 +17,8 @@ import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.boss.EntityDragon;
+import net.minecraft.entity.boss.EntityWither;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumBlockRenderType;
@@ -44,6 +46,7 @@ public class BlockXPTap extends BlockDirectional implements ITileEntityProvider 
 		super(Material.CIRCUITS);
 		setDefaultState(this.getBlockState().getBaseState().withProperty(POWERED, false));
 		setHardness(1.0F);
+		setResistance(2000.0F);
 		setSoundType(SoundType.METAL);
 		setCreativeTab(MobGrindingUtils.TAB);
 	}
@@ -128,6 +131,11 @@ public class BlockXPTap extends BlockDirectional implements ITileEntityProvider 
 		if (canPlaceAt(world, pos, facing))
 			return this.getDefaultState().withProperty(FACING, facing).withProperty(POWERED, false);
 		return this.getDefaultState();
+	}
+
+	@Override
+	public boolean canEntityDestroy(IBlockState state, IBlockAccess world, BlockPos pos, Entity entity) {
+      return !(entity instanceof EntityWither) && !(entity instanceof EntityDragon);
 	}
 
 	@Override

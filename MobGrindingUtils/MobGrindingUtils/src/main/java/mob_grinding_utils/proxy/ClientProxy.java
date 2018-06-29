@@ -2,8 +2,10 @@ package mob_grinding_utils.proxy;
 
 import mob_grinding_utils.ModBlocks;
 import mob_grinding_utils.client.particles.ParticleFluidXP;
+import mob_grinding_utils.client.render.TileEntityAbsorptionRenderer;
 import mob_grinding_utils.client.render.TileEntitySawRenderer;
 import mob_grinding_utils.client.render.TileEntityTankRenderer;
+import mob_grinding_utils.tile.TileEntityAbsorptionHopper;
 import mob_grinding_utils.tile.TileEntitySaw;
 import mob_grinding_utils.tile.TileEntitySinkTank;
 import mob_grinding_utils.tile.TileEntityTank;
@@ -20,6 +22,7 @@ public class ClientProxy extends CommonProxy {
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityTank.class, new TileEntityTankRenderer());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntitySinkTank.class, new TileEntityTankRenderer());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntitySaw.class, new TileEntitySawRenderer());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityAbsorptionHopper.class, new TileEntityAbsorptionRenderer());
 	}
 
 	@Override

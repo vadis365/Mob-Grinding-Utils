@@ -25,9 +25,17 @@ public class AbsorptionHopperPacketHandler implements IMessageHandler<Absorption
 				final EntityPlayerMP player = ctx.getServerHandler().player;
 				player.getServer().addScheduledTask(new Runnable() {
 					public void run() {
-						TileEntityAbsorptionHopper hopper = (TileEntityAbsorptionHopper ) world.getTileEntity(message.tilePos);
+						TileEntityAbsorptionHopper hopper = (TileEntityAbsorptionHopper) world.getTileEntity(message.tilePos);
 						if (hopper != null) {
-							hopper.toggleMode(EnumFacing.getFront(message.buttonID));
+							if (message.buttonID < 6)
+								hopper.toggleMode(EnumFacing.getFront(message.buttonID));
+
+							if (message.buttonID == 6)
+								hopper.toggleRenderBox();
+
+							if (message.buttonID > 6 && message.buttonID <= 12)
+								hopper.toggleOffset(message.buttonID);
+
 							IBlockState state = world.getBlockState(message.tilePos);
 							world.notifyBlockUpdate(message.tilePos, state, state, 3);
 						}
