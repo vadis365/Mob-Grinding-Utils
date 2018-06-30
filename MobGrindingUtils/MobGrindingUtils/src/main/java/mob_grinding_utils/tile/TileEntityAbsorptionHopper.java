@@ -298,7 +298,6 @@ public class TileEntityAbsorptionHopper extends TileEntityInventoryHelper implem
     }
 
 	public AxisAlignedBB getAABBWithModifiers() {
-		
 		double x = getPos().getX() + 0.5D;
 		double y = getPos().getY() + 0.5D;
 		double z = getPos().getZ() + 0.5D;

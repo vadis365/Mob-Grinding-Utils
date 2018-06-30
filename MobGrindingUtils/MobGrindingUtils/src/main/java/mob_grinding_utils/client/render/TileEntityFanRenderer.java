@@ -1,6 +1,6 @@
 package mob_grinding_utils.client.render;
 
-import mob_grinding_utils.tile.TileEntityAbsorptionHopper;
+import mob_grinding_utils.tile.TileEntityFan;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderGlobal;
@@ -9,10 +9,10 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class TileEntityAbsorptionRenderer extends TileEntitySpecialRenderer<TileEntityAbsorptionHopper> {
+public class TileEntityFanRenderer extends TileEntitySpecialRenderer<TileEntityFan> {
 
 	@Override
-	public void render(TileEntityAbsorptionHopper tile, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
+	public void render(TileEntityFan tile, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
 		if (tile == null || !tile.hasWorld())
 			return;
 
@@ -31,8 +31,8 @@ public class TileEntityAbsorptionRenderer extends TileEntitySpecialRenderer<Tile
 		int j = i % 65536;
 		int k = i / 65536;
 		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, (float) j, (float) k);
-		RenderGlobal.renderFilledBox(tile.getAABBForRender(), 0F, 1F, 0F, 0.75F);
-		RenderGlobal.drawSelectionBoundingBox(tile.getAABBForRender(), 1F, 1F, 0F, 1F);
+		RenderGlobal.renderFilledBox(tile.getAABBForRender(), 0F, 0F, 1F, 0.75F);
+		RenderGlobal.drawSelectionBoundingBox(tile.getAABBForRender(), 1F, 1F, 1F, 1F);
 		GlStateManager.enableCull();
 		GlStateManager.enableLighting();
 		GlStateManager.enableTexture2D();
@@ -40,4 +40,6 @@ public class TileEntityAbsorptionRenderer extends TileEntitySpecialRenderer<Tile
 		GlStateManager.depthMask(true);
 		GlStateManager.popMatrix();
 	}
+	
+	
 }

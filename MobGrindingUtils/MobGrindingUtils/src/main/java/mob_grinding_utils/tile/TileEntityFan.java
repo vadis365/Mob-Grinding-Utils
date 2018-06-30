@@ -19,20 +19,24 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class TileEntityFan extends TileEntityInventoryHelper implements ITickable {
 
 	public boolean active;
 	private static final int[] SLOTS = new int[] {0, 1, 2};
+	public boolean showRenderBox = true;
 
 	public TileEntityFan() {
 		super(3);
+		showRenderBox = true;
 	}
 
 	@Override
 	public void update() {
-		if (getWorld().getTotalWorldTime()%2==0 && getWorld().getBlockState(pos).getBlock() != null)
-			if (getWorld().getBlockState(pos).getValue(BlockFan.POWERED)) {
+		if (getWorld().getTotalWorldTime()%2==0 && getWorld().getBlockState(getPos()).getBlock() != null)
+			if (getWorld().getBlockState(getPos()).getValue(BlockFan.POWERED)) {
 				activateBlock();
 		}
 	}
@@ -44,83 +48,102 @@ public class TileEntityFan extends TileEntityInventoryHelper implements ITickabl
 
 	public void setActive(boolean isActive) {
 		active = isActive;
-		getWorld().notifyBlockUpdate(pos, getWorld().getBlockState(pos), getWorld().getBlockState(pos), 3);
+		getWorld().notifyBlockUpdate(getPos(), getWorld().getBlockState(getPos()), getWorld().getBlockState(getPos()), 3);
+	}
+
+	public int getWidthModifier() {
+		return hasWidthUpgrade() ? getItems().get(0).getCount() : 0;
+	}
+
+	public int getHeightModifier() {
+		return hasHeightUpgrade() ? getItems().get(1).getCount() : 0;
+
+	}
+
+	public int getSpeedModifier() {
+		return hasSpeedUpgrade() ? getItems().get(2).getCount() : 0;
+	}
+
+	public AxisAlignedBB getAABBWithModifiers() {
+		IBlockState state = getWorld().getBlockState(getPos());
+		EnumFacing facing = state.getValue(BlockFan.FACING);
+		float xPos = 0, yPos = 0, zPos = 0;
+		float xNeg = 0, yNeg = 0, zNeg = 0;
+
+		int distance;
+		for (distance = 1; distance < 5 + getSpeedModifier(); distance++) {
+			IBlockState state2 = getWorld().getBlockState(getPos().offset(facing, distance));
+			if (state2 != Blocks.AIR.getDefaultState())
+				break;
+		}
+
+		if (facing == EnumFacing.UP) {
+			yPos = distance;
+			yNeg = -1;
+			xPos = getHeightModifier();
+			xNeg = getHeightModifier();
+			zPos = getWidthModifier();
+			zNeg = getWidthModifier();
+		}
+		if (facing == EnumFacing.DOWN) {
+			yNeg = distance;
+			yPos = -1;
+			xPos = getHeightModifier();
+			xNeg = getHeightModifier();
+			zPos = getWidthModifier();
+			zNeg = getWidthModifier();
+		}
+		if (facing == EnumFacing.WEST) {
+			xNeg = distance;
+			xPos = -1;
+			zPos = getWidthModifier();
+			zNeg = getWidthModifier();
+			yPos = getHeightModifier();
+			yNeg = getHeightModifier();
+		}
+		if (facing == EnumFacing.EAST) {
+			xPos = distance;
+			xNeg = -1;
+			zPos = getWidthModifier();
+			zNeg = getWidthModifier();
+			yPos = getHeightModifier();
+			yNeg = getHeightModifier();
+		}
+		if (facing == EnumFacing.NORTH) {
+			zNeg = distance;
+			zPos = -1;
+			xPos = getWidthModifier();
+			xNeg = getWidthModifier();
+			yPos = getHeightModifier();
+			yNeg = getHeightModifier();
+		}
+		if (facing == EnumFacing.SOUTH) {
+			zPos = distance;
+			zNeg = -1;
+			xPos = getWidthModifier();
+			xNeg = getWidthModifier();
+			yPos = getHeightModifier();
+			yNeg = getHeightModifier();
+		}
+		return new AxisAlignedBB(getPos().getX() - xNeg, getPos().getY() - yNeg, getPos().getZ() - zNeg, getPos().getX() + 1D + xPos, getPos().getY() + 1D + yPos, getPos().getZ() + 1D + zPos);
+	}
+
+	@SideOnly(Side.CLIENT)
+	public AxisAlignedBB getAABBForRender() {
+		return getAABBWithModifiers().offset(-getPos().getX(), -getPos().getY(), -getPos().getZ());
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public AxisAlignedBB getRenderBoundingBox() {
+		return getAABBWithModifiers();
 	}
 
 	@SuppressWarnings("unchecked")
 	protected Entity activateBlock() {
-		IBlockState state = getWorld().getBlockState(pos);
+		IBlockState state = getWorld().getBlockState(getPos());
 		EnumFacing facing = state.getValue(BlockFan.FACING);
-		float xPos = 0, yPos = 0 , zPos = 0;
-		float xNeg = 0, yNeg = 0 , zNeg = 0;
-		int widthMod = 0;
-		int heightMod = 0;
-		int speedMod = 0;
-		int distance;
-		if(hasWidthUpgrade())
-			widthMod = getItems().get(0).getCount();
-		if(hasHeightUpgrade())
-			heightMod = getItems().get(1).getCount();
-		if(hasSpeedUpgrade()) {
-			speedMod = getItems().get(2).getCount();
-			if(speedMod > 10)
-				speedMod = 10;
-		}
-		for(distance = 1; distance < 5 + speedMod; distance++) {
-			IBlockState state2 = getWorld().getBlockState(pos.offset(facing, distance));
-			if(state2 != Blocks.AIR.getDefaultState())
-				break;
-		}
-
-		if(facing == EnumFacing.UP) {
-			yPos = distance;
-			yNeg = - 1;
-			xPos = heightMod;
-			xNeg = heightMod;
-			zPos = widthMod;
-			zNeg = widthMod;
-		}
-		if(facing == EnumFacing.DOWN) {
-			yNeg = distance;
-			yPos =  - 1;
-			xPos = heightMod;
-			xNeg = heightMod;
-			zPos = widthMod;
-			zNeg = widthMod;
-		}
-		if(facing == EnumFacing.WEST) {
-			xNeg = distance;
-			xPos = - 1;
-			zPos = widthMod;
-			zNeg = widthMod;
-			yPos = heightMod;
-			yNeg = heightMod;
-		}
-		if(facing == EnumFacing.EAST) {
-			xPos = distance;
-			xNeg = - 1;
-			zPos = widthMod;
-			zNeg = widthMod;
-			yPos = heightMod;
-			yNeg = heightMod;
-		}
-		if(facing == EnumFacing.NORTH) {
-			zNeg = distance;
-			zPos = - 1;
-			xPos = widthMod;
-			xNeg = widthMod;
-			yPos = heightMod;
-			yNeg = heightMod;
-		}
-		if(facing == EnumFacing.SOUTH) {
-			zPos = distance;
-			zNeg = - 1;
-			xPos = widthMod;
-			xNeg = widthMod;
-			yPos = heightMod;
-			yNeg = heightMod;
-		}
-		List<EntityLivingBase> list = getWorld().getEntitiesWithinAABB(EntityLivingBase.class, new AxisAlignedBB(pos.getX() - xNeg, pos.getY() - yNeg, pos.getZ() - zNeg, pos.getX() + 1D  + xPos, pos.getY() + 1D  + yPos, pos.getZ() + 1D  + zPos));
+		List<EntityLivingBase> list = getWorld().getEntitiesWithinAABB(EntityLivingBase.class, getAABBWithModifiers());
 		for (int i = 0; i < list.size(); i++) {
 			Entity entity = list.get(i);
 			if (entity != null) {
@@ -142,7 +165,7 @@ public class TileEntityFan extends TileEntityInventoryHelper implements ITickabl
 	private boolean hasWidthUpgrade() {
 		return !getItems().get(0).isEmpty() && getItems().get(0).getItem() == ModItems.FAN_UPGRADE && getItems().get(0).getItemDamage() == 0;
 	}
-	
+
 	private boolean hasHeightUpgrade() {
 		return !getItems().get(1).isEmpty() && getItems().get(1).getItem() == ModItems.FAN_UPGRADE && getItems().get(1).getItemDamage() == 1;
 	}
@@ -155,6 +178,7 @@ public class TileEntityFan extends TileEntityInventoryHelper implements ITickabl
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
 		super.writeToNBT(nbt);
 		nbt.setBoolean("active", active);
+		nbt.setBoolean("showRenderBox", showRenderBox);
 		return nbt;
 	}
 
@@ -162,6 +186,7 @@ public class TileEntityFan extends TileEntityInventoryHelper implements ITickabl
 	public void readFromNBT(NBTTagCompound nbt) {
 		super.readFromNBT(nbt);
 		active = nbt.getBoolean("active");
+		showRenderBox = nbt.getBoolean("showRenderBox");
 	}
 
 	@Override
@@ -174,7 +199,7 @@ public class TileEntityFan extends TileEntityInventoryHelper implements ITickabl
 	public SPacketUpdateTileEntity getUpdatePacket() {
 		NBTTagCompound nbt = new NBTTagCompound();
 		writeToNBT(nbt);
-		return new SPacketUpdateTileEntity(pos, 0, nbt);
+		return new SPacketUpdateTileEntity(getPos(), 0, nbt);
 	}
 
 	@Override
