@@ -2,7 +2,7 @@ package mob_grinding_utils.events;
 
 import mob_grinding_utils.MobGrindingUtils;
 import mob_grinding_utils.ModItems;
-import mob_grinding_utils.network.ChickenSyncMessage;
+import mob_grinding_utils.network.MessageChickenSync;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.passive.EntityChicken;
 import net.minecraft.nbt.NBTTagCompound;
@@ -31,7 +31,7 @@ public class ChickenInteractionEvent {
 									nbt.setString("mguMobName", event.getItemStack().getTagCompound().getString("mguMobName"));
 								if (event.getItemStack().hasTagCompound() && event.getItemStack().getTagCompound().hasKey("chickenType"))
 									nbt.setInteger("chickenType", event.getItemStack().getTagCompound().getInteger("chickenType"));
-								MobGrindingUtils.NETWORK_WRAPPER.sendToAll(new ChickenSyncMessage(entity, nbt));
+								MobGrindingUtils.NETWORK_WRAPPER.sendToAll(new MessageChickenSync(entity, nbt));
 							}
 							entity.motionY += (0.06D * (double) (10) - entity.motionY) * 0.2D;
 							((EntityChicken) entity).setNoGravity(true);

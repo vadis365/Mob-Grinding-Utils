@@ -21,9 +21,9 @@ public class ContainerFan extends Container {
 
 		for (int j = 0; j < 3; j++)
 			for (int k = 0; k < 9; k++)
-				addSlotToContainer(new Slot(playerInventory, k + j * 9 + 9, 8 + k * 18, 86 + j * 18 + i));
+				addSlotToContainer(new Slot(playerInventory, k + j * 9 + 9, 8 + k * 18, 104 + j * 18 + i));
 		for (int j = 0; j < 9; j++)
-			addSlotToContainer(new Slot(playerInventory, j, 8 + j * 18, 144 + i));
+			addSlotToContainer(new Slot(playerInventory, j, 8 + j * 18, 162 + i));
 	}
 	
 	@Override

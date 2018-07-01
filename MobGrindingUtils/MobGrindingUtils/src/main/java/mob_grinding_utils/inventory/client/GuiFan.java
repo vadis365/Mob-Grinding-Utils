@@ -1,7 +1,10 @@
 package mob_grinding_utils.inventory.client;
 
+import mob_grinding_utils.MobGrindingUtils;
 import mob_grinding_utils.inventory.server.ContainerFan;
+import mob_grinding_utils.network.MessageFan;
 import mob_grinding_utils.tile.TileEntityFan;
+import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
@@ -24,6 +27,15 @@ public class GuiFan extends GuiContainer {
 	}
 
 	@Override
+	public void initGui() {
+		super.initGui();
+		buttonList.clear();
+		int xOffSet = (width - xSize) / 2;
+		int yOffSet = (height - ySize) / 2;
+		buttonList.add(new GuiBigButton(0, xOffSet + 54, yOffSet + 42, 33, 228, ""));
+	}
+
+	@Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
         super.drawScreen(mouseX, mouseY, partialTicks);
         renderHoveredToolTip(mouseX, mouseY);
@@ -32,6 +44,7 @@ public class GuiFan extends GuiContainer {
 	@Override
 	protected void drawGuiContainerForegroundLayer(int x, int y) {
 		fontRenderer.drawString(I18n.format(new TextComponentTranslation("tile.mob_grinding_utils.fan.name").getFormattedText()), xSize / 2 - fontRenderer.getStringWidth(I18n.format(new TextComponentTranslation("tile.mob_grinding_utils.fan.name").getFormattedText())) / 2, ySize - 218, 4210752);	
+		fontRenderer.drawStringWithShadow(I18n.format(!tile.showRenderBox ? "Show Area" : "Hide Area"), xSize - 88 - fontRenderer.getStringWidth(I18n.format(!tile.showRenderBox ? "Show Area" : "Hide Area")) / 2, ySize - 178, 14737632);
 	}
 
 	@Override
@@ -41,5 +54,11 @@ public class GuiFan extends GuiContainer {
 		int xOffSet = (width - xSize) / 2;
 		int yOffSet = (height - ySize) / 2;
 		drawTexturedModalRect(xOffSet, yOffSet, 0, 0, xSize, ySize);
+	}
+	
+	@Override
+	protected void actionPerformed(GuiButton guibutton) {
+		if (guibutton instanceof GuiButton)
+			MobGrindingUtils.NETWORK_WRAPPER.sendToServer(new MessageFan(mc.player, guibutton.id, tile.getPos()));
 	}
 }

@@ -3,15 +3,13 @@ package mob_grinding_utils.tile;
 import java.util.List;
 
 import mob_grinding_utils.MobGrindingUtils;
-import mob_grinding_utils.network.TapParticleMessage;
-import net.minecraft.block.state.IBlockState;
+import mob_grinding_utils.network.MessageTapParticle;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.util.EntitySelectors;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
@@ -40,7 +38,7 @@ public class TileEntitySinkTank extends TileEntityTank implements ITickable {
 				tank.fill(new FluidStack(FluidRegistry.getFluid("xpjuice"), 20), true);
 				addPlayerXP(player, -1);
 				getWorld().playSound((EntityPlayer) null, player.posX, player.posY, player.posZ, SoundEvents.ITEM_BOTTLE_FILL, SoundCategory.NEUTRAL , 0.1F, 0.5F * ((getWorld().rand.nextFloat() - getWorld().rand.nextFloat()) * 0.7F + 1.8F));
-				MobGrindingUtils.NETWORK_WRAPPER.sendToAll(new TapParticleMessage(getPos().up()));
+				MobGrindingUtils.NETWORK_WRAPPER.sendToAll(new MessageTapParticle(getPos().up()));
 			}
 			return true;
 		}

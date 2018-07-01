@@ -3,7 +3,7 @@ package mob_grinding_utils.tile;
 import mob_grinding_utils.MobGrindingUtils;
 import mob_grinding_utils.blocks.BlockXPTap;
 import mob_grinding_utils.entity.EntityXPOrbFalling;
-import mob_grinding_utils.network.TapParticleMessage;
+import mob_grinding_utils.network.MessageTapParticle;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
@@ -31,7 +31,7 @@ public class TileEntityXPTap extends TileEntity implements ITickable{
 					int xpAmount = EntityXPOrbFalling.getXPSplit(Math.min(20, ((TileEntityTank) tileentity).tank.getFluidAmount() / 20));
 					((TileEntityTank) tileentity).tank.drain(xpAmount * 20, true);
 					spawnXP(getWorld(), pos, xpAmount, (TileEntityTank) tileentity);
-					MobGrindingUtils.NETWORK_WRAPPER.sendToAll(new TapParticleMessage(getPos()));
+					MobGrindingUtils.NETWORK_WRAPPER.sendToAll(new MessageTapParticle(getPos()));
 				}
 			}
 		}

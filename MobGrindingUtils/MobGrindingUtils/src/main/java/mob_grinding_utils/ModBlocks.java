@@ -11,6 +11,9 @@ import javax.annotation.Nullable;
 import mob_grinding_utils.blocks.BlockAbsorptionHopper;
 import mob_grinding_utils.blocks.BlockDarkOakStone;
 import mob_grinding_utils.blocks.BlockDragonMuffler;
+import mob_grinding_utils.blocks.BlockEnderInhibitorOff;
+import mob_grinding_utils.blocks.BlockEnderInhibitorOn;
+import mob_grinding_utils.blocks.BlockEntityConveyor;
 import mob_grinding_utils.blocks.BlockFan;
 import mob_grinding_utils.blocks.BlockSaw;
 import mob_grinding_utils.blocks.BlockSpikes;
@@ -150,6 +153,33 @@ public class ModBlocks {
 			@SideOnly(Side.CLIENT)
 			public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> list, ITooltipFlag flag) {
 				list.add(TextFormatting.YELLOW + new TextComponentTranslation("tooltip.darkoakstone").getFormattedText());
+			}
+		};
+
+		public static final Block ENTITY_CONVEYOR = new BlockEntityConveyor();
+		public static final ItemBlock ENTITY_CONVEYOR_ITEM = new ItemBlock(ENTITY_CONVEYOR) {
+			@Override
+			@SideOnly(Side.CLIENT)
+			public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> list, ITooltipFlag flag) {
+				list.add(TextFormatting.YELLOW + new TextComponentTranslation("tooltip.entityconveyor").getFormattedText());
+			}
+		};
+
+		public static final Block ENDER_INHIBITOR_ON = new BlockEnderInhibitorOn().setCreativeTab(MobGrindingUtils.TAB);
+		public static final ItemBlock ENDER_INHIBITOR_ON_ITEM = new ItemBlock(ENDER_INHIBITOR_ON) {
+			@Override
+			@SideOnly(Side.CLIENT)
+			public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> list, ITooltipFlag flag) {
+				list.add(TextFormatting.YELLOW + new TextComponentTranslation("tooltip.enderinhibitor").getFormattedText());
+			}
+		};
+
+		public static final Block ENDER_INHIBITOR_OFF = new BlockEnderInhibitorOff();
+		public static final ItemBlock ENDER_INHIBITOR_OFF_ITEM = new ItemBlock(ENDER_INHIBITOR_OFF) {
+			@Override
+			@SideOnly(Side.CLIENT)
+			public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> list, ITooltipFlag flag) {
+				list.add(TextFormatting.YELLOW + new TextComponentTranslation("tooltip.enderinhibitor").getFormattedText());
 			}
 		};
 

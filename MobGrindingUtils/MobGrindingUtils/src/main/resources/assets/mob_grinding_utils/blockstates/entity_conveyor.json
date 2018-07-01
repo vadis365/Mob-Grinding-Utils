@@ -1,0 +1,8 @@
+{
+    "variants": {
+        "facing=north": { "model": "mob_grinding_utils:entity_conveyor" },
+        "facing=south": { "model": "mob_grinding_utils:entity_conveyor", "y": 180 },
+        "facing=west":  { "model": "mob_grinding_utils:entity_conveyor", "y": 270 },
+        "facing=east":  { "model": "mob_grinding_utils:entity_conveyor" , "y": 90 }
+    }
+}

@@ -13,16 +13,15 @@ import mob_grinding_utils.events.GlobalDragonSoundEvent;
 import mob_grinding_utils.events.GlobalWitherSoundEvent;
 import mob_grinding_utils.events.LocalDragonSoundEvent;
 import mob_grinding_utils.events.LocalWitherSoundEvent;
+import mob_grinding_utils.events.MGUEndermanInhibitEvent;
 import mob_grinding_utils.events.MGUZombieReinforcementEvent;
 import mob_grinding_utils.events.ParticleTextureStitchEvent;
 import mob_grinding_utils.events.RenderChickenSwell;
-import mob_grinding_utils.network.AbsorptionHopperMessage;
-import mob_grinding_utils.network.AbsorptionHopperPacketHandler;
-import mob_grinding_utils.network.ChickenSyncMessage;
-import mob_grinding_utils.network.ChickenSyncPacketHandler;
+import mob_grinding_utils.network.MessageAbsorptionHopper;
+import mob_grinding_utils.network.MessageChickenSync;
+import mob_grinding_utils.network.MessageFan;
 import mob_grinding_utils.network.MessageSyncEntityCapabilities;
-import mob_grinding_utils.network.TapParticleHandler;
-import mob_grinding_utils.network.TapParticleMessage;
+import mob_grinding_utils.network.MessageTapParticle;
 import mob_grinding_utils.proxy.CommonProxy;
 import mob_grinding_utils.tile.TileEntitySaw;
 import net.minecraft.creativetab.CreativeTabs;
@@ -84,10 +83,11 @@ public class MobGrindingUtils {
 		PROXY.registerRenderers();
 		NetworkRegistry.INSTANCE.registerGuiHandler(INSTANCE, PROXY);
 		NETWORK_WRAPPER = NetworkRegistry.INSTANCE.newSimpleChannel(Reference.MOD_NAME);
-		NETWORK_WRAPPER.registerMessage(AbsorptionHopperPacketHandler.class, AbsorptionHopperMessage.class, 0, Side.SERVER);
-		NETWORK_WRAPPER.registerMessage(ChickenSyncPacketHandler.class, ChickenSyncMessage.class, 1, Side.CLIENT);
-		NETWORK_WRAPPER.registerMessage(TapParticleHandler.class, TapParticleMessage.class, 2, Side.CLIENT);
-		NETWORK_WRAPPER.registerMessage(MessageSyncEntityCapabilities.class, MessageSyncEntityCapabilities.class, 5, Side.CLIENT);
+		NETWORK_WRAPPER.registerMessage(MessageAbsorptionHopper.class, MessageAbsorptionHopper.class, 0, Side.SERVER);
+		NETWORK_WRAPPER.registerMessage(MessageChickenSync.class, MessageChickenSync.class, 1, Side.CLIENT);
+		NETWORK_WRAPPER.registerMessage(MessageTapParticle.class, MessageTapParticle.class, 2, Side.CLIENT);
+		NETWORK_WRAPPER.registerMessage(MessageSyncEntityCapabilities.class, MessageSyncEntityCapabilities.class, 3, Side.CLIENT);
+		NETWORK_WRAPPER.registerMessage(MessageFan.class, MessageFan.class, 4, Side.SERVER);
 		
 		MinecraftForge.EVENT_BUS.register(new BlockSpikes());
 		MinecraftForge.EVENT_BUS.register(new ChickenInteractionEvent());
@@ -98,6 +98,7 @@ public class MobGrindingUtils {
 		MinecraftForge.EVENT_BUS.register(EntityCapabilityHandler.class);
 		MinecraftForge.EVENT_BUS.register(new MGUZombieReinforcementEvent());
 		MinecraftForge.EVENT_BUS.register(new FillXPBottleEvent());
+		MinecraftForge.EVENT_BUS.register(new MGUEndermanInhibitEvent());
 
 		if (event.getSide() == Side.CLIENT) {
 			MinecraftForge.EVENT_BUS.register(new RenderChickenSwell());

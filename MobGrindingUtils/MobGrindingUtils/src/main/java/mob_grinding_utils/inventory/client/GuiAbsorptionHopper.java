@@ -4,7 +4,7 @@ import org.lwjgl.opengl.GL11;
 
 import mob_grinding_utils.MobGrindingUtils;
 import mob_grinding_utils.inventory.server.ContainerAbsorptionHopper;
-import mob_grinding_utils.network.AbsorptionHopperMessage;
+import mob_grinding_utils.network.MessageAbsorptionHopper;
 import mob_grinding_utils.tile.TileEntityAbsorptionHopper;
 import mob_grinding_utils.tile.TileEntityAbsorptionHopper.EnumStatus;
 import net.minecraft.client.Minecraft;
@@ -38,7 +38,6 @@ public class GuiAbsorptionHopper extends GuiContainer {
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
 	public void initGui() {
 		super.initGui();
 		buttonList.clear();
@@ -145,7 +144,7 @@ public class GuiAbsorptionHopper extends GuiContainer {
 	@Override
 	protected void actionPerformed(GuiButton guibutton) {
 		if (guibutton instanceof GuiButton)
-			MobGrindingUtils.NETWORK_WRAPPER.sendToServer(new AbsorptionHopperMessage(mc.player, guibutton.id, tile.getPos()));
+			MobGrindingUtils.NETWORK_WRAPPER.sendToServer(new MessageAbsorptionHopper(mc.player, guibutton.id, tile.getPos()));
 	}
 
 }

@@ -26,11 +26,10 @@ public class TileEntityFan extends TileEntityInventoryHelper implements ITickabl
 
 	public boolean active;
 	private static final int[] SLOTS = new int[] {0, 1, 2};
-	public boolean showRenderBox = true;
+	public boolean showRenderBox;
 
 	public TileEntityFan() {
 		super(3);
-		showRenderBox = true;
 	}
 
 	@Override
@@ -137,6 +136,14 @@ public class TileEntityFan extends TileEntityInventoryHelper implements ITickabl
 	@SideOnly(Side.CLIENT)
 	public AxisAlignedBB getRenderBoundingBox() {
 		return getAABBWithModifiers();
+	}
+
+	public void toggleRenderBox() {
+		if (!showRenderBox)
+			showRenderBox = true;
+		else
+			showRenderBox = false;
+		markDirty();
 	}
 
 	@SuppressWarnings("unchecked")

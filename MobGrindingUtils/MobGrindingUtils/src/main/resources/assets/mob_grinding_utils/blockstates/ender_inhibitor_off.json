@@ -1,0 +1,16 @@
+{
+  "variants": {
+      "type=down_north": { "model": "mob_grinding_utils:ender_inhibitor_off" },
+      "type=down_east": { "model": "mob_grinding_utils:ender_inhibitor_off", "y": 270 },
+      "type=down_south": { "model": "mob_grinding_utils:ender_inhibitor_off", "y": 180 },
+      "type=down_west": { "model": "mob_grinding_utils:ender_inhibitor_off", "y": 90 },
+      "type=up_north": { "model": "mob_grinding_utils:ender_inhibitor_off", "x": 180 },
+      "type=up_east": { "model": "mob_grinding_utils:ender_inhibitor_off", "x": 180, "y": 270  },
+      "type=up_south": { "model": "mob_grinding_utils:ender_inhibitor_off", "x": 180, "y": 180 },
+      "type=up_west": { "model": "mob_grinding_utils:ender_inhibitor_off", "x": 180, "y": 90 },
+      "type=north": { "model": "mob_grinding_utils:ender_inhibitor_off", "x": 270 },
+      "type=east": { "model": "mob_grinding_utils:ender_inhibitor_off", "x": 270, "y": 90 },
+      "type=south": { "model": "mob_grinding_utils:ender_inhibitor_off", "x": 270, "y": 180 },
+      "type=west": { "model": "mob_grinding_utils:ender_inhibitor_off", "x": 270, "y": 270 }
+  }
+}

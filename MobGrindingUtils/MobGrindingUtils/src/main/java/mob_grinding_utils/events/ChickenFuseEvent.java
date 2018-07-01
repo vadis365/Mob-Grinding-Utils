@@ -2,7 +2,7 @@ package mob_grinding_utils.events;
 
 import mob_grinding_utils.MobGrindingUtils;
 import mob_grinding_utils.ModSounds;
-import mob_grinding_utils.network.ChickenSyncMessage;
+import mob_grinding_utils.network.MessageChickenSync;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
@@ -33,7 +33,7 @@ public class ChickenFuseEvent {
 
 					if (startTime <= 19) {
 						nbt.setInteger("countDown", nbt.getInteger("countDown") + 1);
-						MobGrindingUtils.NETWORK_WRAPPER.sendToAll(new ChickenSyncMessage(entity, nbt));
+						MobGrindingUtils.NETWORK_WRAPPER.sendToAll(new MessageChickenSync(entity, nbt));
 					}
 
 					if (startTime >= 20) {
