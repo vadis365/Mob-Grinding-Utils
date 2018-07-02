@@ -12,7 +12,10 @@ import net.minecraft.block.state.BlockFaceShape;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.boss.EntityDragon;
+import net.minecraft.entity.boss.EntityWither;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
@@ -36,9 +39,16 @@ public class BlockEnderInhibitorOn extends Block {
 	public static final PropertyEnum<EnumGemDirection> TYPE = PropertyEnum.create("type", EnumGemDirection.class);
 
 	public BlockEnderInhibitorOn() {
-		super(Material.GLASS);
+		super(Material.CIRCUITS);
+		setHardness(0.2F);
+		setResistance(2000.0F);
 		setDefaultState(blockState.getBaseState().withProperty(TYPE, EnumGemDirection.DOWN_NORTH));
 	}
+
+	@Override
+	public boolean canEntityDestroy(IBlockState state, IBlockAccess world, BlockPos pos, Entity entity) {
+      return !(entity instanceof EntityWither) && !(entity instanceof EntityDragon);
+    }
 
 	@Override
 	public boolean isOpaqueCube(IBlockState state) {

@@ -51,6 +51,7 @@ public class ModBlocks {
 			public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> list, ITooltipFlag flag) {
 				list.add(TextFormatting.YELLOW + new TextComponentTranslation("tooltip.fan_1").getFormattedText());
 				list.add(TextFormatting.YELLOW + new TextComponentTranslation("tooltip.fan_2").getFormattedText());
+				list.add(TextFormatting.YELLOW + new TextComponentTranslation("tooltip.fan_3").getFormattedText());
 			}
 		};
 
@@ -61,6 +62,7 @@ public class ModBlocks {
 			public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> list, ITooltipFlag flag) {
 				list.add(TextFormatting.YELLOW + new TextComponentTranslation("tooltip.saw_1").getFormattedText());
 				list.add(TextFormatting.YELLOW + new TextComponentTranslation("tooltip.saw_2").getFormattedText());
+				list.add(TextFormatting.YELLOW + new TextComponentTranslation("tooltip.saw_3").getFormattedText());
 			}
 		};
 
@@ -73,6 +75,8 @@ public class ModBlocks {
 				list.add(TextFormatting.YELLOW + new TextComponentTranslation("tooltip.hopper_2").getFormattedText());
 				list.add(TextFormatting.YELLOW + new TextComponentTranslation("tooltip.hopper_3").getFormattedText());
 				list.add(TextFormatting.YELLOW + new TextComponentTranslation("tooltip.hopper_4").getFormattedText());
+				list.add(TextFormatting.YELLOW + new TextComponentTranslation("tooltip.hopper_5").getFormattedText());
+				list.add(TextFormatting.YELLOW + new TextComponentTranslation("tooltip.hopper_6").getFormattedText());
 			}
 		};
 
@@ -82,6 +86,7 @@ public class ModBlocks {
 			@SideOnly(Side.CLIENT)
 			public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> list, ITooltipFlag flag) {
 				list.add(TextFormatting.YELLOW + new TextComponentTranslation("tooltip.spikes_1").getFormattedText());
+				list.add(TextFormatting.YELLOW + new TextComponentTranslation("tooltip.spikes_2").getFormattedText());
 			}
 		};
 
@@ -161,7 +166,8 @@ public class ModBlocks {
 			@Override
 			@SideOnly(Side.CLIENT)
 			public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> list, ITooltipFlag flag) {
-				list.add(TextFormatting.YELLOW + new TextComponentTranslation("tooltip.entityconveyor").getFormattedText());
+				list.add(TextFormatting.YELLOW + new TextComponentTranslation("tooltip.entityconveyor_1").getFormattedText());
+				list.add(TextFormatting.YELLOW + new TextComponentTranslation("tooltip.entityconveyor_2").getFormattedText());
 			}
 		};
 
@@ -170,7 +176,9 @@ public class ModBlocks {
 			@Override
 			@SideOnly(Side.CLIENT)
 			public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> list, ITooltipFlag flag) {
-				list.add(TextFormatting.YELLOW + new TextComponentTranslation("tooltip.enderinhibitor").getFormattedText());
+				list.add(TextFormatting.YELLOW + new TextComponentTranslation("tooltip.enderinhibitor_1").getFormattedText());
+				list.add(TextFormatting.YELLOW + new TextComponentTranslation("tooltip.enderinhibitor_2").getFormattedText());
+				list.add(TextFormatting.YELLOW + new TextComponentTranslation("tooltip.enderinhibitor_3").getFormattedText());
 			}
 		};
 
@@ -179,7 +187,9 @@ public class ModBlocks {
 			@Override
 			@SideOnly(Side.CLIENT)
 			public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> list, ITooltipFlag flag) {
-				list.add(TextFormatting.YELLOW + new TextComponentTranslation("tooltip.enderinhibitor").getFormattedText());
+				list.add(TextFormatting.YELLOW + new TextComponentTranslation("tooltip.enderinhibitor_1").getFormattedText());
+				list.add(TextFormatting.YELLOW + new TextComponentTranslation("tooltip.enderinhibitor_2").getFormattedText());
+				list.add(TextFormatting.YELLOW + new TextComponentTranslation("tooltip.enderinhibitor_3").getFormattedText());
 			}
 		};
 

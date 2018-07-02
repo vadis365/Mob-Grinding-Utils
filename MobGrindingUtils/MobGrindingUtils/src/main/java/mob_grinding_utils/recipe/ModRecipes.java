@@ -72,6 +72,12 @@ public class ModRecipes {
 	public static final IRecipe SAW_UPGRADE_5 = new ShapedOreRecipe(getResource("recipe_saw_upgrade_5"), new ItemStack(ModItems.SAW_UPGRADE, 1, 4), "GSG", "SRS", "GSG", 'G', "nuggetGold", 'S', new ItemStack(Items.SPIDER_EYE), 'R', "dustRedstone");
 	public static final IRecipe SAW_UPGRADE_6 = new ShapedOreRecipe(getResource("recipe_saw_upgrade_6"), new ItemStack(ModItems.SAW_UPGRADE, 1, 5), "GHG", "IRI", "GHG", 'G', "nuggetGold", 'H', new ItemStack(Items.GOLDEN_HELMET), 'I', new ItemStack(Items.IRON_HELMET), 'R', "dustRedstone");
 
+	// Entity Conveyor
+	public static final IRecipe ENTITY_CONVEYOR = new ShapedOreRecipe(getResource("recipe_entity_conveyor"), new ItemStack(ModBlocks.ENTITY_CONVEYOR_ITEM, 6, 0), " S ", "IRI", "ISI", 'I', "ingotIron", 'S', "slimeball", 'R', "dustRedstone");
+
+	// Ender Inhibitor
+	public static final IRecipe ENDER_INHIBITOR = new ShapedOreRecipe(getResource("recipe_ender_inhibitor"), new ItemStack(ModBlocks.ENDER_INHIBITOR_ON_ITEM, 1, 0), " R ", "IEI", " G ", 'I', "ingotIron", 'E', new ItemStack(Items.ENDER_EYE), 'R', "dustRedstone", 'G', "dustGlowstone");
+
 	private static ResourceLocation getResource(String inName) {
 		return new ResourceLocation(Reference.MOD_ID, inName);
 	}
