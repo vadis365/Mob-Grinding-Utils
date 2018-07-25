@@ -27,6 +27,8 @@ public class TileEntityFan extends TileEntityInventoryHelper implements ITickabl
 	public boolean active;
 	private static final int[] SLOTS = new int[] {0, 1, 2};
 	public boolean showRenderBox;
+	float xPos, yPos, zPos;
+	float xNeg, yNeg, zNeg;
 
 	public TileEntityFan() {
 		super(3);
@@ -38,8 +40,10 @@ public class TileEntityFan extends TileEntityInventoryHelper implements ITickabl
 			if (getWorld().getBlockState(getPos()).getValue(BlockFan.POWERED)) {
 				activateBlock();
 		}
+		if (!getWorld().isRemote)
+			setAABBWithModifiers();
 	}
-	
+
 	@Override
 	public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState) {
 		return oldState.getBlock() != newState.getBlock();
@@ -56,18 +60,15 @@ public class TileEntityFan extends TileEntityInventoryHelper implements ITickabl
 
 	public int getHeightModifier() {
 		return hasHeightUpgrade() ? getItems().get(1).getCount() : 0;
-
 	}
 
 	public int getSpeedModifier() {
 		return hasSpeedUpgrade() ? getItems().get(2).getCount() : 0;
 	}
-
-	public AxisAlignedBB getAABBWithModifiers() {
+	
+	public void setAABBWithModifiers() {
 		IBlockState state = getWorld().getBlockState(getPos());
 		EnumFacing facing = state.getValue(BlockFan.FACING);
-		float xPos = 0, yPos = 0, zPos = 0;
-		float xNeg = 0, yNeg = 0, zNeg = 0;
 
 		int distance;
 		for (distance = 1; distance < 5 + getSpeedModifier(); distance++) {
@@ -124,18 +125,22 @@ public class TileEntityFan extends TileEntityInventoryHelper implements ITickabl
 			yPos = getHeightModifier();
 			yNeg = getHeightModifier();
 		}
+		getWorld().notifyBlockUpdate(getPos(), state, state, 8);
+	}
+
+	public AxisAlignedBB getAABBWithModifiers() {
 		return new AxisAlignedBB(getPos().getX() - xNeg, getPos().getY() - yNeg, getPos().getZ() - zNeg, getPos().getX() + 1D + xPos, getPos().getY() + 1D + yPos, getPos().getZ() + 1D + zPos);
 	}
 
 	@SideOnly(Side.CLIENT)
 	public AxisAlignedBB getAABBForRender() {
-		return getAABBWithModifiers().offset(-getPos().getX(), -getPos().getY(), -getPos().getZ());
+		return new AxisAlignedBB(- xNeg, - yNeg, - zNeg, 1D + xPos, 1D + yPos, 1D + zPos);
 	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
 	public AxisAlignedBB getRenderBoundingBox() {
-		return getAABBWithModifiers();
+		return new AxisAlignedBB(getPos().getX() - xNeg, getPos().getY() - yNeg, getPos().getZ() - zNeg, getPos().getX() + 1D + xPos, getPos().getY() + 1D + yPos, getPos().getZ() + 1D + zPos);
 	}
 
 	public void toggleRenderBox() {
@@ -186,6 +191,12 @@ public class TileEntityFan extends TileEntityInventoryHelper implements ITickabl
 		super.writeToNBT(nbt);
 		nbt.setBoolean("active", active);
 		nbt.setBoolean("showRenderBox", showRenderBox);
+		nbt.setFloat("xPos", xPos);
+		nbt.setFloat("yPos", yPos);
+		nbt.setFloat("zPos", zPos);
+		nbt.setFloat("xNeg", xNeg);
+		nbt.setFloat("yNeg", yNeg);
+		nbt.setFloat("zNeg", zNeg);
 		return nbt;
 	}
 
@@ -194,6 +205,12 @@ public class TileEntityFan extends TileEntityInventoryHelper implements ITickabl
 		super.readFromNBT(nbt);
 		active = nbt.getBoolean("active");
 		showRenderBox = nbt.getBoolean("showRenderBox");
+		xPos = nbt.getFloat("xPos");
+		yPos = nbt.getFloat("yPos");
+		zPos = nbt.getFloat("zPos");
+		xNeg = nbt.getFloat("xNeg");
+		yNeg = nbt.getFloat("yNeg");
+		zNeg = nbt.getFloat("zNeg");
 	}
 
 	@Override
@@ -212,6 +229,16 @@ public class TileEntityFan extends TileEntityInventoryHelper implements ITickabl
 	@Override
 	public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity packet) {
 		readFromNBT(packet.getNbtCompound());
+		onContentsChanged();
+	}
+
+	public void onContentsChanged() {
+		if (this != null && !getWorld().isRemote) {
+			final IBlockState state = getWorld().getBlockState(getPos());
+			setAABBWithModifiers();
+			getWorld().notifyBlockUpdate(getPos(), state, state, 8);
+			markDirty();
+		}
 	}
 
 	@Override
