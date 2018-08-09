@@ -13,6 +13,7 @@ import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
@@ -166,8 +167,8 @@ public class TileEntitySaw extends TileEntityInventoryHelper implements ITickabl
 	}
 
 	@Override
-	public ItemStack removeStackFromSlot(int slot) {
-		return null;
+	public ItemStack removeStackFromSlot(int index) {
+		return ItemStackHelper.getAndRemove(getItems(), index);
 	}
 
 	@Override
