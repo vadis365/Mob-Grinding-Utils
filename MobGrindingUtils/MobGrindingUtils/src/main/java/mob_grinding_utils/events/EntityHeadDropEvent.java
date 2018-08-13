@@ -45,7 +45,7 @@ public class EntityHeadDropEvent {
 					int dropChance = event.getEntityLiving().getEntityWorld().rand.nextInt(10);
 					if (dropChance < beheadingLevel) {
 						ItemStack stack = getHeadfromEntity(event.getEntityLiving());
-						if (stack != null)
+						if (!stack.isEmpty())
 							addDrop(stack, event.getEntityLiving(), event.getDrops());
 					}
 				}
@@ -55,11 +55,11 @@ public class EntityHeadDropEvent {
 
 	public static ItemStack getHeadfromEntity(EntityLivingBase target) {
 		if (target.isChild())
-			return null;
+			return ItemStack.EMPTY;
 
 		if (target instanceof EntityEnderman)
 			if (Loader.isModLoaded("enderio"))
-				return new ItemStack(Item.REGISTRY.getObject(new ResourceLocation("enderio:blockEndermanSkull")), 1, 0);
+				return new ItemStack(Item.REGISTRY.getObject(new ResourceLocation("enderio:block_enderman_skull")), 1, 0);
 		if (target instanceof EntityCreeper)
 			return new ItemStack(Items.SKULL, 1, 4);
 		if (target instanceof EntitySkeleton)
@@ -70,7 +70,7 @@ public class EntityHeadDropEvent {
 			return new ItemStack(Items.SKULL, 1, 2);
 		if (target instanceof EntityPlayer)
 			return createHeadFor((EntityPlayer) target);
-		return null;
+		return ItemStack.EMPTY;
 	}
 
 	public static ItemStack createHeadFor(EntityPlayer player) {

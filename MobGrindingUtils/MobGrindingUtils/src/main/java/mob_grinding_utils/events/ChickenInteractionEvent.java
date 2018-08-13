@@ -19,7 +19,7 @@ public class ChickenInteractionEvent {
 
 			if (entity instanceof EntityChicken && !entity.isChild()) {
 					World world = entity.getEntityWorld();
-					if (event.getItemStack() != null && event.getItemStack().getItem() == ModItems.GM_CHICKEN_FEED) {
+					if (!event.getItemStack().isEmpty() && event.getItemStack().getItem() == ModItems.GM_CHICKEN_FEED) {
 						if (!world.isRemote) {
 							NBTTagCompound nbt = new NBTTagCompound();
 							nbt = entity.getEntityData();

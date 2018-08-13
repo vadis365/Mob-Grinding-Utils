@@ -50,7 +50,7 @@ public class ChickenFuseEvent {
 							eggData.setTag("EntityTag", mobData);
 							mobEgg.setTagCompound(eggData);
 							entity.entityDropItem(mobEgg, 0.0F);
-							System.out.println("Should drop egg here");
+							//System.out.println("Should drop egg here");
 						}
 
 						if (Loader.isModLoaded("chickens") && event.getEntity().getEntityData().hasKey("chickenType")) {

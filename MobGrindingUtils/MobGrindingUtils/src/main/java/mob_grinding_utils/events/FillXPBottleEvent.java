@@ -19,7 +19,7 @@ public class FillXPBottleEvent {
 		if (!event.getWorld().isRemote && event.getEntityLiving() instanceof EntityPlayer) {
 			EntityPlayer player = (EntityPlayer) event.getEntityLiving();
 			ItemStack handItem = player.getHeldItem(event.getHand());
-			if (handItem != null) {
+			if (!handItem.isEmpty()) {
 				if (handItem.getItem() == Items.GLASS_BOTTLE) {
 					if (event.getWorld().getBlockState(event.getPos()).getBlock() instanceof BlockTank) {
 						TileEntityTank tileentity = (TileEntityTank) event.getWorld().getTileEntity(event.getPos());
