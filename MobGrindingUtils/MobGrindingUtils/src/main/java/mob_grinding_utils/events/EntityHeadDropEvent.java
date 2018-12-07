@@ -5,10 +5,13 @@ import java.util.List;
 import com.mojang.authlib.GameProfile;
 
 import mob_grinding_utils.items.ItemImaginaryInvisibleNotReallyThereSword;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.monster.EntityCreeper;
 import net.minecraft.entity.monster.EntityEnderman;
+import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.monster.EntityPigZombie;
 import net.minecraft.entity.monster.EntitySkeleton;
 import net.minecraft.entity.monster.EntityWitherSkeleton;
@@ -60,6 +63,10 @@ public class EntityHeadDropEvent {
 		if (target instanceof EntityEnderman)
 			if (Loader.isModLoaded("enderio"))
 				return new ItemStack(Item.REGISTRY.getObject(new ResourceLocation("enderio:block_enderman_skull")), 1, 0);
+		if (target instanceof EntityMob)
+			if (Loader.isModLoaded("headcrumbs"))
+				if (isHeadCrumb(target))
+				return createHeadFor(getPlayerByUsername(target.getName()));
 		if (target instanceof EntityCreeper)
 			return new ItemStack(Items.SKULL, 1, 4);
 		if (target instanceof EntitySkeleton)
@@ -71,6 +78,17 @@ public class EntityHeadDropEvent {
 		if (target instanceof EntityPlayer)
 			return createHeadFor((EntityPlayer) target);
 		return ItemStack.EMPTY;
+	}
+
+	public static boolean isHeadCrumb(Entity entity) {
+		String mobName = EntityList.getEntityString(entity);
+		if (mobName == null)
+			return false;
+		return mobName == "Human";
+	}
+
+	public static GameProfile getPlayerByUsername(String name) {
+		return new GameProfile(null, name);
 	}
 
 	public static ItemStack createHeadFor(EntityPlayer player) {
