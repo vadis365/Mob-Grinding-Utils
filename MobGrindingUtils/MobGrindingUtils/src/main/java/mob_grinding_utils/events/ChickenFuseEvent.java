@@ -54,9 +54,15 @@ public class ChickenFuseEvent {
 						}
 
 						if (Loader.isModLoaded("chickens") && event.getEntity().getEntityData().hasKey("chickenType")) {
-							int type = event.getEntity().getEntityData().getInteger("chickenType");
-							ItemStack mobEgg = new ItemStack(Item.REGISTRY.getObject(new ResourceLocation("chickens:spawn_egg")), 1, type);
+							NBTTagCompound eggData = new NBTTagCompound();
+							NBTTagCompound mobData = new NBTTagCompound();
+							String type = event.getEntity().getEntityData().getString("chickenType");
+							mobData.setString("id", type);
+							eggData.setTag("ChickenType", mobData);
+							ItemStack mobEgg = new ItemStack(Item.REGISTRY.getObject(new ResourceLocation("chickens:spawn_egg")), 1);
+							mobEgg.setTagCompound(eggData);
 							entity.entityDropItem(mobEgg, 0.0F);
+							//System.out.println("Should drop Modded Chicken egg here " + type);
 						}
 
 						for (int k = 0; k < 4; ++k) {

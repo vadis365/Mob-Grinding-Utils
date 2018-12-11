@@ -28,7 +28,10 @@ public class ItemGMChickenFeed extends Item {
 		list.add(TextFormatting.YELLOW + new TextComponentTranslation("tooltip.chickenfeed_1").getFormattedText());
 		if (stack.hasTagCompound() && stack.getTagCompound().hasKey("mguMobName")) {
 			list.add(TextFormatting.YELLOW + new TextComponentTranslation("tooltip.chickenfeed_2").getFormattedText());
-			list.add(TextFormatting.GREEN + new TextComponentTranslation("tooltip.chickenfeed_3").getFormattedText()  + " "+ stack.getTagCompound().getTag("mguMobName") + TextFormatting.GREEN + " 'DNA'.");
+			if(stack.getTagCompound().hasKey("chickenType"))
+				list.add(TextFormatting.GREEN + new TextComponentTranslation("tooltip..chickenfeed_3").getFormattedText()  + " " + stack.getTagCompound().getTag("chickenType") + TextFormatting.GREEN + " 'DNA'.");
+			else
+				list.add(TextFormatting.GREEN + new TextComponentTranslation("tooltip.chickenfeed_3").getFormattedText()  + " " + stack.getTagCompound().getTag("mguMobName") + TextFormatting.GREEN + " 'DNA'.");
 		}
 	}
 

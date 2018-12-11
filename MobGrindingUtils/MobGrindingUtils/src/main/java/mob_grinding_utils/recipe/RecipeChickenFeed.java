@@ -71,7 +71,7 @@ public class RecipeChickenFeed extends net.minecraftforge.registries.IForgeRegis
 			chickenFeed.getTagCompound().setString("mguMobName", is.getTagCompound().getString("mguMobName"));
 		
 		if(is.getTagCompound().hasKey("chickenType"))
-			chickenFeed.getTagCompound().setInteger("chickenType", is.getTagCompound().getInteger("chickenType"));
+			chickenFeed.getTagCompound().setString("chickenType", is.getTagCompound().getString("chickenType"));
 
 		return chickenFeed;
 	}

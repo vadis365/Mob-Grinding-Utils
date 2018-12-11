@@ -28,7 +28,7 @@ public class BlockEntityConveyor extends Block {
 	public static final AxisAlignedBB CONVEYOR_AABB = new AxisAlignedBB(0D, 0D, 0D, 1D, 0.875D, 1D);
 
 	public BlockEntityConveyor() {
-		super(Material.CIRCUITS);
+		super(Material.ROCK);
 		setHardness(0.5F);
 		setResistance(2000.0F);
 		setSoundType(SoundType.STONE);

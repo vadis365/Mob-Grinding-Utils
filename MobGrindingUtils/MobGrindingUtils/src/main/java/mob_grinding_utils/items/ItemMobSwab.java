@@ -43,7 +43,10 @@ public class ItemMobSwab extends Item implements ISubItemsItem {
 			list.add(TextFormatting.YELLOW + new TextComponentTranslation("tooltip.mobswab_1").getFormattedText());
 		else if (stack.hasTagCompound() && stack.getTagCompound().hasKey("mguMobName")) {
 			list.add(TextFormatting.YELLOW + new TextComponentTranslation("tooltip.mobswab_2").getFormattedText());
-			list.add(TextFormatting.GREEN + new TextComponentTranslation("tooltip.mobswab_3").getFormattedText()  + " " + stack.getTagCompound().getTag("mguMobName") + TextFormatting.GREEN + " 'DNA'.");
+			if(stack.getTagCompound().hasKey("chickenType"))
+				list.add(TextFormatting.GREEN + new TextComponentTranslation("tooltip.mobswab_3").getFormattedText()  + " " + stack.getTagCompound().getTag("chickenType") + TextFormatting.GREEN + " 'DNA'.");
+			else
+				list.add(TextFormatting.GREEN + new TextComponentTranslation("tooltip.mobswab_3").getFormattedText()  + " " + stack.getTagCompound().getTag("mguMobName") + TextFormatting.GREEN + " 'DNA'.");
 		}
 	}
 
@@ -68,7 +71,7 @@ public class ItemMobSwab extends Item implements ISubItemsItem {
 				target.writeEntityToNBT(nbt);
 				if (Loader.isModLoaded("chickens")) {
 					if (target instanceof EntityChicken && nbt.hasKey("Type"))
-						stack2.getTagCompound().setInteger("chickenType", nbt.getInteger("Type"));
+						stack2.getTagCompound().setString("chickenType", nbt.getString("Type"));
 				}
 			}
 			player.swingArm(hand);

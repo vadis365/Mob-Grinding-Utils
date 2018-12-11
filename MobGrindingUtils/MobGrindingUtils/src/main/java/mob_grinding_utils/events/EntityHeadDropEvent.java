@@ -63,10 +63,14 @@ public class EntityHeadDropEvent {
 		if (target instanceof EntityEnderman)
 			if (Loader.isModLoaded("enderio"))
 				return new ItemStack(Item.REGISTRY.getObject(new ResourceLocation("enderio:block_enderman_skull")), 1, 0);
-		if (target instanceof EntityMob)
+		if (target instanceof EntityMob) {
 			if (Loader.isModLoaded("headcrumbs"))
 				if (isHeadCrumb(target))
 				return createHeadFor(getPlayerByUsername(target.getName()));
+			if (Loader.isModLoaded("raiders"))
+				if (isPlayerRaider(target))
+				return createHeadFor(getPlayerByUsername(target.getName()));
+		}
 		if (target instanceof EntityCreeper)
 			return new ItemStack(Items.SKULL, 1, 4);
 		if (target instanceof EntitySkeleton)
@@ -81,10 +85,25 @@ public class EntityHeadDropEvent {
 	}
 
 	public static boolean isHeadCrumb(Entity entity) {
-		String mobName = EntityList.getEntityString(entity);
-		if (mobName == null)
-			return false;
-		return mobName == "Human";
+		ResourceLocation resourcelocation = EntityList.getKey(entity);
+		return resourcelocation.toString().equals("headcrumbs:human");
+	}
+
+	public static boolean isPlayerRaider(Entity entity) {
+		ResourceLocation resourcelocation = EntityList.getKey(entity);
+		if(resourcelocation.toString().equals("raiders:raider"))
+			return true;
+		if(resourcelocation.toString().equals("raiders:brute"))
+			return true;
+		if(resourcelocation.toString().equals("raiders:witch"))
+			return true;
+		if(resourcelocation.toString().equals("raiders:tweaker"))
+			return true;
+		if(resourcelocation.toString().equals("raiders:pyromaniac"))
+			return true;
+		if(resourcelocation.toString().equals("raiders:ranger"))
+			return true;
+		return false;
 	}
 
 	public static GameProfile getPlayerByUsername(String name) {
