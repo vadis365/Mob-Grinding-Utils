@@ -1,5 +1,7 @@
 package mob_grinding_utils.blocks;
 
+import java.util.Random;
+
 import mob_grinding_utils.MobGrindingUtils;
 import mob_grinding_utils.tile.TileEntitySaw;
 import net.minecraft.block.Block;
@@ -99,8 +101,7 @@ public class BlockSaw extends BlockDirectional implements ITileEntityProvider {
 	}
 
 	@Override
-	public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase placer,
-			ItemStack stack) {
+	public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {
 		if (state.getValue(POWERED)) {
 			TileEntitySaw tile = (TileEntitySaw) world.getTileEntity(pos);
 			tile.setActive(true);
@@ -120,19 +121,6 @@ public class BlockSaw extends BlockDirectional implements ITileEntityProvider {
 	@Override
 	protected BlockStateContainer createBlockState() {
 		return new BlockStateContainer(this, new IProperty[] { FACING, POWERED });
-	}
-
-	public static void setState(World world, BlockPos pos, IBlockState state, boolean powered) {
-		if (!world.isRemote) {
-			TileEntitySaw tile = (TileEntitySaw) world.getTileEntity(pos);
-			state = state.withProperty(POWERED, powered);
-			world.setBlockState(pos, state, 3);
-			tile.setActive(powered);
-			if (tile != null) {
-				tile.validate();
-				world.setTileEntity(pos, tile);
-			}
-		}
 	}
 
 	@Override
@@ -162,10 +150,30 @@ public class BlockSaw extends BlockDirectional implements ITileEntityProvider {
 	@Override
 	public void neighborChanged(IBlockState state, World world, BlockPos pos, Block blockIn, BlockPos fromPos) {
 		if (!world.isRemote) {
-			if (((Boolean) state.getValue(POWERED)).booleanValue() && !world.isBlockPowered(pos))
-				setState(world, pos, state, false);
-			else if (!((Boolean) state.getValue(POWERED)).booleanValue() && world.isBlockPowered(pos))
-				setState(world, pos, state, true);
+			TileEntitySaw tile = (TileEntitySaw) world.getTileEntity(pos);
+			if (state.getValue(POWERED) && !world.isBlockPowered(pos)) {
+				world.scheduleUpdate(pos, this, 4);
+			}
+			else if (!state.getValue(POWERED) && world.isBlockPowered(pos)) {
+				state = state.cycleProperty(POWERED);
+				world.setBlockState(pos, state, 3);
+				if (tile != null)
+					tile.setActive(state.getValue(POWERED));
+			}
+
+		}
+	}
+
+	@Override
+	public void updateTick(World world, BlockPos pos, IBlockState state, Random rand) {
+		if (!world.isRemote) {
+			TileEntitySaw tile = (TileEntitySaw) world.getTileEntity(pos);
+			if (state.getValue(POWERED) && !world.isBlockPowered(pos)) {
+				state = state.cycleProperty(POWERED);
+				world.setBlockState(pos, state, 3);
+				if (tile != null)
+					tile.setActive(state.getValue(POWERED));
+			}
 		}
 	}
 }

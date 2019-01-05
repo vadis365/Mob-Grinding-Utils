@@ -25,7 +25,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class TileEntityFan extends TileEntityInventoryHelper implements ITickable {
 
-	public boolean active;
 	private static final int[] SLOTS = new int[] {0, 1, 2};
 	public boolean showRenderBox;
 	float xPos, yPos, zPos;
@@ -48,11 +47,6 @@ public class TileEntityFan extends TileEntityInventoryHelper implements ITickabl
 	@Override
 	public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState) {
 		return oldState.getBlock() != newState.getBlock();
-	}
-
-	public void setActive(boolean isActive) {
-		active = isActive;
-		getWorld().notifyBlockUpdate(getPos(), getWorld().getBlockState(getPos()), getWorld().getBlockState(getPos()), 3);
 	}
 
 	public int getWidthModifier() {
@@ -190,7 +184,6 @@ public class TileEntityFan extends TileEntityInventoryHelper implements ITickabl
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
 		super.writeToNBT(nbt);
-		nbt.setBoolean("active", active);
 		nbt.setBoolean("showRenderBox", showRenderBox);
 		nbt.setFloat("xPos", xPos);
 		nbt.setFloat("yPos", yPos);
@@ -204,7 +197,6 @@ public class TileEntityFan extends TileEntityInventoryHelper implements ITickabl
 	@Override
 	public void readFromNBT(NBTTagCompound nbt) {
 		super.readFromNBT(nbt);
-		active = nbt.getBoolean("active");
 		showRenderBox = nbt.getBoolean("showRenderBox");
 		xPos = nbt.getFloat("xPos");
 		yPos = nbt.getFloat("yPos");
