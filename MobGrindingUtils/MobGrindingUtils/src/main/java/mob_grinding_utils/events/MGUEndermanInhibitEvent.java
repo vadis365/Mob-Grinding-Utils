@@ -8,9 +8,8 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.event.entity.living.EnderTeleportEvent;
-import net.minecraftforge.fml.common.eventhandler.Event.Result;
-import net.minecraftforge.fml.common.eventhandler.EventPriority;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.eventbus.api.EventPriority;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class MGUEndermanInhibitEvent {
 
@@ -26,7 +25,7 @@ public class MGUEndermanInhibitEvent {
 	}
 
 	public boolean getIsInhibited(EntityLivingBase entity) {
-		AxisAlignedBB axisalignedbb = entity.getEntityBoundingBox().grow(8.0D, 8.0D, 8.0D);
+		AxisAlignedBB axisalignedbb = entity.getBoundingBox().grow(8.0D, 8.0D, 8.0D);
 		int n = MathHelper.floor(axisalignedbb.minX);
 		int o = MathHelper.floor(axisalignedbb.maxX);
 		int p = MathHelper.floor(axisalignedbb.minY);

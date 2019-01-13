@@ -17,11 +17,10 @@ import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class TileEntityFan extends TileEntityInventoryHelper implements ITickable {
 
@@ -35,8 +34,8 @@ public class TileEntityFan extends TileEntityInventoryHelper implements ITickabl
 	}
 
 	@Override
-	public void update() {
-		if (getWorld().getTotalWorldTime()%2==0 && getWorld().getBlockState(getPos()).getBlock() != null)
+	public void tick() {
+		if (getWorld().getGameTime()%2==0 && getWorld().getBlockState(getPos()).getBlock() != null)
 			if (getWorld().getBlockState(getPos()).getValue(BlockFan.POWERED)) {
 				activateBlock();
 		}
@@ -44,10 +43,10 @@ public class TileEntityFan extends TileEntityInventoryHelper implements ITickabl
 			setAABBWithModifiers();
 	}
 
-	@Override
-	public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState) {
-		return oldState.getBlock() != newState.getBlock();
-	}
+	//@Override
+	//public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState) {
+	//	return oldState.getBlock() != newState.getBlock();
+	//}
 
 	public int getWidthModifier() {
 		return hasWidthUpgrade() ? getItems().get(0).getCount() : 0;
@@ -127,13 +126,13 @@ public class TileEntityFan extends TileEntityInventoryHelper implements ITickabl
 		return new AxisAlignedBB(getPos().getX() - xNeg, getPos().getY() - yNeg, getPos().getZ() - zNeg, getPos().getX() + 1D + xPos, getPos().getY() + 1D + yPos, getPos().getZ() + 1D + zPos);
 	}
 
-	@SideOnly(Side.CLIENT)
+	@OnlyIn(Dist.CLIENT)
 	public AxisAlignedBB getAABBForRender() {
 		return new AxisAlignedBB(- xNeg, - yNeg, - zNeg, 1D + xPos, 1D + yPos, 1D + zPos);
 	}
 
 	@Override
-	@SideOnly(Side.CLIENT)
+	@OnlyIn(Dist.CLIENT)
 	public AxisAlignedBB getRenderBoundingBox() {
 		return new AxisAlignedBB(getPos().getX() - xNeg, getPos().getY() - yNeg, getPos().getZ() - zNeg, getPos().getX() + 1D + xPos, getPos().getY() + 1D + yPos, getPos().getZ() + 1D + zPos);
 	}
@@ -170,20 +169,20 @@ public class TileEntityFan extends TileEntityInventoryHelper implements ITickabl
 	}
 
 	private boolean hasWidthUpgrade() {
-		return !getItems().get(0).isEmpty() && getItems().get(0).getItem() == ModItems.FAN_UPGRADE && getItems().get(0).getItemDamage() == 0;
+		return !getItems().get(0).isEmpty() && getItems().get(0).getItem() == ModItems.FAN_UPGRADE && getItems().get(0).getDamage() == 0;
 	}
 
 	private boolean hasHeightUpgrade() {
-		return !getItems().get(1).isEmpty() && getItems().get(1).getItem() == ModItems.FAN_UPGRADE && getItems().get(1).getItemDamage() == 1;
+		return !getItems().get(1).isEmpty() && getItems().get(1).getItem() == ModItems.FAN_UPGRADE && getItems().get(1).getDamage() == 1;
 	}
 
 	private boolean hasSpeedUpgrade() {
-		return !getItems().get(2).isEmpty() && getItems().get(2).getItem() == ModItems.FAN_UPGRADE && getItems().get(2).getItemDamage() == 2;
+		return !getItems().get(2).isEmpty() && getItems().get(2).getItem() == ModItems.FAN_UPGRADE && getItems().get(2).getDamage() == 2;
 	}
 
 	@Override
-	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
-		super.writeToNBT(nbt);
+	public NBTTagCompound write(NBTTagCompound nbt) {
+		super.write(nbt);
 		nbt.setBoolean("showRenderBox", showRenderBox);
 		nbt.setFloat("xPos", xPos);
 		nbt.setFloat("yPos", yPos);
@@ -195,8 +194,8 @@ public class TileEntityFan extends TileEntityInventoryHelper implements ITickabl
 	}
 
 	@Override
-	public void readFromNBT(NBTTagCompound nbt) {
-		super.readFromNBT(nbt);
+	public void read(NBTTagCompound nbt) {
+		super.read(nbt);
 		showRenderBox = nbt.getBoolean("showRenderBox");
 		xPos = nbt.getFloat("xPos");
 		yPos = nbt.getFloat("yPos");
@@ -209,19 +208,19 @@ public class TileEntityFan extends TileEntityInventoryHelper implements ITickabl
 	@Override
     public NBTTagCompound getUpdateTag() {
 		NBTTagCompound nbt = new NBTTagCompound();
-        return writeToNBT(nbt);
+        return write(nbt);
     }
 
 	@Override
 	public SPacketUpdateTileEntity getUpdatePacket() {
 		NBTTagCompound nbt = new NBTTagCompound();
-		writeToNBT(nbt);
+		write(nbt);
 		return new SPacketUpdateTileEntity(getPos(), 0, nbt);
 	}
 
 	@Override
 	public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity packet) {
-		readFromNBT(packet.getNbtCompound());
+		read(packet.getNbtCompound());
 		onContentsChanged();
 	}
 
@@ -262,6 +261,11 @@ public class TileEntityFan extends TileEntityInventoryHelper implements ITickabl
 	@Override
 	public boolean canExtractItem(int index, ItemStack stack, EnumFacing direction) {
 		return false;
+	}
+
+	@Override
+	public ITextComponent getCustomName() {
+		return null;
 	}
 
 }

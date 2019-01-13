@@ -8,6 +8,7 @@ import java.util.Locale;
 
 import javax.annotation.Nullable;
 
+import javafx.geometry.Side;
 import mob_grinding_utils.blocks.BlockAbsorptionHopper;
 import mob_grinding_utils.blocks.BlockDarkOakStone;
 import mob_grinding_utils.blocks.BlockDragonMuffler;
@@ -33,10 +34,9 @@ import net.minecraft.world.World;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.registries.IForgeRegistry;
 

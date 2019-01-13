@@ -21,10 +21,10 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextComponentTranslation;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
-@SideOnly(Side.CLIENT)
+@OnlyIn(Dist.CLIENT)
 public class GuiAbsorptionHopper extends GuiContainer {
 
 	private static final ResourceLocation GUI_ABSORPTION_HOPPER = new ResourceLocation("mob_grinding_utils:textures/gui/absorption_hopper_gui.png");
@@ -40,37 +40,35 @@ public class GuiAbsorptionHopper extends GuiContainer {
 	@Override
 	public void initGui() {
 		super.initGui();
-		buttonList.clear();
+		buttons.clear();
 		int xOffSet = (width - xSize) / 2;
 		int yOffSet = (height - ySize) / 2;
-		buttonList.add(new GuiMediumButton(0, xOffSet + 7, yOffSet + 17, 0, 228, "Down"));
-		buttonList.add(new GuiMediumButton(1, xOffSet + 7, yOffSet + 34, 0, 228, "Up"));
-		buttonList.add(new GuiMediumButton(2, xOffSet + 7, yOffSet + 51, 0, 228, "North"));
-		buttonList.add(new GuiMediumButton(3, xOffSet + 82, yOffSet + 17, 0, 228, "South"));
-		buttonList.add(new GuiMediumButton(4, xOffSet + 82, yOffSet + 34, 0, 228, "West"));
-		buttonList.add(new GuiMediumButton(5, xOffSet + 82, yOffSet + 51, 0, 228, "East"));
-		buttonList.add(new GuiBigButton(6, xOffSet + 173, yOffSet + 113, 33, 228, ""));
+		buttons.add(new GuiMediumButton(0, xOffSet + 7, yOffSet + 17, 0, 228, "Down"));
+		buttons.add(new GuiMediumButton(1, xOffSet + 7, yOffSet + 34, 0, 228, "Up"));
+		buttons.add(new GuiMediumButton(2, xOffSet + 7, yOffSet + 51, 0, 228, "North"));
+		buttons.add(new GuiMediumButton(3, xOffSet + 82, yOffSet + 17, 0, 228, "South"));
+		buttons.add(new GuiMediumButton(4, xOffSet + 82, yOffSet + 34, 0, 228, "West"));
+		buttons.add(new GuiMediumButton(5, xOffSet + 82, yOffSet + 51, 0, 228, "East"));
+		buttons.add(new GuiBigButton(6, xOffSet + 173, yOffSet + 113, 33, 228, ""));
 		
-		buttonList.add(new GuiSmallButton(7, xOffSet + 173, yOffSet + 25, 103, 228, "-"));//D
-		buttonList.add(new GuiSmallButton(8, xOffSet + 225, yOffSet + 25, 103, 228, "+"));//U
+		buttons.add(new GuiSmallButton(7, xOffSet + 173, yOffSet + 25, 103, 228, "-"));//D
+		buttons.add(new GuiSmallButton(8, xOffSet + 225, yOffSet + 25, 103, 228, "+"));//U
 		
-		buttonList.add(new GuiSmallButton(9, xOffSet + 173, yOffSet + 59, 103, 228, "-"));//N
-		buttonList.add(new GuiSmallButton(10, xOffSet + 225, yOffSet + 59, 103, 228, "+"));//S
+		buttons.add(new GuiSmallButton(9, xOffSet + 173, yOffSet + 59, 103, 228, "-"));//N
+		buttons.add(new GuiSmallButton(10, xOffSet + 225, yOffSet + 59, 103, 228, "+"));//S
 		
-		buttonList.add(new GuiSmallButton(11, xOffSet + 173, yOffSet + 93, 103, 228, "-"));//W
-		buttonList.add(new GuiSmallButton(12, xOffSet + 225, yOffSet + 93, 103, 228, "+"));//E
+		buttons.add(new GuiSmallButton(11, xOffSet + 173, yOffSet + 93, 103, 228, "-"));//W
+		buttons.add(new GuiSmallButton(12, xOffSet + 225, yOffSet + 93, 103, 228, "+"));//E
 	}
 
 	@Override
-    public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-        super.drawScreen(mouseX, mouseY, partialTicks);
+    public void render(int mouseX, int mouseY, float partialTicks) {
+        super.render(mouseX, mouseY, partialTicks);
         renderHoveredToolTip(mouseX, mouseY);
     }
 
 	@Override
 	protected void drawGuiContainerForegroundLayer(int x, int y) {
-		int xOffSet = (width - xSize) / 2;
-		int yOffSet = (height - ySize) / 2;
 		fontRenderer.drawString(I18n.format(new TextComponentTranslation("tile.mob_grinding_utils.absorption_hopper.name").getFormattedText()), 8, ySize - 220, 4210752);
 		
 		fontRenderer.drawString(I18n.format(new TextComponentTranslation("tile.mob_grinding_utils.absorption_hopper_d_u.name").getFormattedText()), 174, ySize - 212, 4210752);
@@ -83,7 +81,7 @@ public class GuiAbsorptionHopper extends GuiContainer {
 
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float partialTickTime, int x, int y) {
-		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+		GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 		mc.getTextureManager().bindTexture(GUI_ABSORPTION_HOPPER);
 		int xOffSet = (width - xSize) / 2;
 		int yOffSet = (height - ySize) / 2;
@@ -110,9 +108,9 @@ public class GuiAbsorptionHopper extends GuiContainer {
 		fontRenderer.drawString(I18n.format(OFFSETX), xOffSet + 207 - fontRenderer.getStringWidth(I18n.format(OFFSETX)) / 2, yOffSet + 97, 5285857);//DU
 
 		int fluid = tile.getScaledFluid(120);
-		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+		GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 		if (fluid >= 1) {
-			TextureAtlasSprite sprite = Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(tile.tank.getFluid().getFluid().getStill().toString());
+			TextureAtlasSprite sprite = Minecraft.getInstance().getTextureMap().getAtlasSprite(tile.tank.getFluid().getFluid().getStill().toString());
 			Tessellator tessellator = Tessellator.getInstance();
 			BufferBuilder buffer = tessellator.getBuffer();
 			mc.getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);

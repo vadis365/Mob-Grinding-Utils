@@ -93,4 +93,8 @@ public class CommonProxy implements IGuiHandler {
 	public void postInit() {
 	}
 
+	public void registerSomeClientEvents() {
+		// unused on this side - see client proxy
+	}
+
 }

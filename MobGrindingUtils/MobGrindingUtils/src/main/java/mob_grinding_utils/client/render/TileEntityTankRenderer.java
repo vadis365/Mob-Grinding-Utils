@@ -9,32 +9,32 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureMap;
-import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
-@SideOnly(Side.CLIENT)
-public class TileEntityTankRenderer extends TileEntitySpecialRenderer<TileEntityTank> {
+@OnlyIn(Dist.CLIENT)
+public class TileEntityTankRenderer extends TileEntityRenderer<TileEntityTank> {
 
 	@Override
-	public void render(TileEntityTank tile, double x, double y, double z, float partialTick, int destroyStage, float alpha) {
+	public void render(TileEntityTank tile, double x, double y, double z, float partialTick, int destroyStage) {
 		float fluidLevel = tile.tank.getFluidAmount();
 		if (fluidLevel < 1)
 			return;
 		FluidStack fluidStack = new FluidStack(tile.tank.getFluid(), 100);
 		float height = (0.96875F / tile.tank.getCapacity()) * tile.tank.getFluidAmount();
 		
-		TextureAtlasSprite fluidStillSprite = Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(fluidStack.getFluid().getStill().toString());
+		TextureAtlasSprite fluidStillSprite = Minecraft.getInstance().getTextureMap().getAtlasSprite(fluidStack.getFluid().getStill().toString());
 		Tessellator tessellator = Tessellator.getInstance();
 		BufferBuilder buffer = tessellator.getBuffer();
 		int fluidColor = fluidStack.getFluid().getColor(fluidStack);
 		
 		GlStateManager.disableLighting();
         GlStateManager.pushMatrix();
-		GlStateManager.translate(x, y, z);
-		Minecraft.getMinecraft().renderEngine.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
+		GlStateManager.translated(x, y, z);
+		bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
 		setGLColorFromInt(fluidColor);
 		buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 		float xMax, zMax, xMin, zMin, yMin = 0;
@@ -55,7 +55,7 @@ public class TileEntityTankRenderer extends TileEntitySpecialRenderer<TileEntity
 		float green = (color >> 8 & 0xFF) / 255.0F;
 		float blue = (color & 0xFF) / 255.0F;
 
-		GlStateManager.color(red, green, blue, 1.0F);
+		GlStateManager.color4f(red, green, blue, 1.0F);
 	}
 
 	private void renderCuboid(BufferBuilder buffer, float xMax, float xMin, float yMin, float height, float zMin, float zMax, TextureAtlasSprite textureAtlasSprite) {

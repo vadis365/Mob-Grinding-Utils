@@ -43,17 +43,17 @@ public class ParticleFluidXP extends Particle {
 		particleBlue = (c.getBlue() / 255.0F - mb + rand.nextFloat() * mb);
 
 		particleGravity = 0.01F;
-		particleMaxAge = (int) (8.0D / (Math.random() * 0.8D + 0.2D));
+		maxAge = (int) (8.0D / (Math.random() * 0.8D + 0.2D));
 		motionX = 0.0D;
 		motionY = 0.0D;
 		motionZ = 0.0D;
 		particleScale = ((MathHelper.sin(count / 2.0F) * 0.1F + 1.0F) * scale);
 
-		setParticleTexture(Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(TEXTURE[0].toString()));
+		setParticleTexture(Minecraft.getInstance().getTextureMap().getAtlasSprite(TEXTURE[0].toString()));
 	}
 
 	@Override
-	public void onUpdate() {
+	public void tick() {
 		prevTextureIndex = textureIndex;
 		prevPosX = posX;
 		prevPosY = posY;
@@ -62,17 +62,17 @@ public class ParticleFluidXP extends Particle {
 		move(motionX, motionY, motionZ);
 		motionY *= 0.9800000190734863D;
 
-        if (this.particleAge++ >= this.particleMaxAge)
-            this.setExpired();
+	      if (age++ >= maxAge)
+	          setExpired();
 
-        textureIndex = 0 + particleAge * 8 / particleMaxAge;
+        textureIndex = 0 + age * 8 / maxAge;
 
         if (textureIndex > 8)
         	textureIndex = 8;
 
-        if(particleAge%3 == 0)
+        if(age%3 == 0)
         	if(prevTextureIndex != textureIndex)
-        		setParticleTexture(Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(TEXTURE[textureIndex].toString()));
+        		setParticleTexture(Minecraft.getInstance().getTextureMap().getAtlasSprite(TEXTURE[textureIndex].toString()));
 	}
 
 	@Override

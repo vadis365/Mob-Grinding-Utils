@@ -5,16 +5,9 @@
 	<classpathentry kind="lib" path="MobGrindingUtils/gradle/wrapper/gradle-wrapper.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="C:/Users/Dave/.gradle/caches/modules-2/files-2.1/com.google.guava/guava/18.0/cce0823396aa693798f8882e64213b1772032b09/guava-18.0.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Dave/.gradle/caches/modules-2/files-2.1/com.mojang/authlib/1.5.24/889ff5477b844800cff734babbf42c1bbda4b10/authlib-1.5.24.jar" sourcepath="C:/Users/Dave/.gradle/caches/modules-2/files-2.1/com.mojang/authlib/1.5.24/ed92f0044f5b3fd8d4b831cf0e213fefbff6e33a/authlib-1.5.24-sources.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Dave/.gradle/caches/modules-2/files-2.1/org.lwjgl.lwjgl/lwjgl_util/2.9.4-nightly-20150209/d51a7c040a721d13efdfbd34f8b257b2df882ad0/lwjgl_util-2.9.4-nightly-20150209.jar" sourcepath="C:/Users/Dave/.gradle/caches/modules-2/files-2.1/org.lwjgl.lwjgl/lwjgl_util/2.9.4-nightly-20150209/2e3787f55c68a245e994f88755795b3a7684b3/lwjgl_util-2.9.4-nightly-20150209-sources.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Dave/.gradle/caches/modules-2/files-2.1/io.netty/netty-all/4.0.23.Final/294104aaf1781d6a56a07d561e792c5d0c95f45/netty-all-4.0.23.Final.jar" sourcepath="C:/Users/Dave/.gradle/caches/modules-2/files-2.1/io.netty/netty-all/4.0.23.Final/fd8e5b2341f3a08b02fe116d6e9886654e65b219/netty-all-4.0.23.Final-sources.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Dave/.gradle/caches/modules-2/files-2.1/com.google.code.findbugs/jsr305/3.0.1/f7be08ec23c21485b9b5a1cf1654c2ec8c58168d/jsr305-3.0.1.jar" sourcepath="C:/Users/Dave/.gradle/caches/modules-2/files-2.1/com.google.code.findbugs/jsr305/3.0.1/a2926c057ca3b662b9db194c869bdbe7d3bb8aef/jsr305-3.0.1-sources.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Dave/.gradle/caches/modules-2/files-2.1/org.lwjgl.lwjgl/lwjgl/2.9.4-nightly-20150209/697517568c68e78ae0b4544145af031c81082dfe/lwjgl-2.9.4-nightly-20150209.jar" sourcepath="C:/Users/Dave/.gradle/caches/modules-2/files-2.1/org.lwjgl.lwjgl/lwjgl/2.9.4-nightly-20150209/7da2cff65127b558a66e8e38456174161723d3a7/lwjgl-2.9.4-nightly-20150209-sources.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Dave/.gradle/caches/forge_gradle/minecraft_user_repo/net/minecraftforge/test/userdev/1.13-24.0.61-1.13-pre_mapped_snapshot_20180921-1.13/userdev-1.13-24.0.61-1.13-pre_mapped_snapshot_20180921-1.13.jar" sourcepath="C:/Users/Dave/.gradle/caches/forge_gradle/minecraft_user_repo/net/minecraftforge/test/userdev/1.13-24.0.61-1.13-pre_mapped_snapshot_20180921-1.13/userdev-1.13-24.0.61-1.13-pre_mapped_snapshot_20180921-1.13-sources.jar">
-		<attributes>
-			<attribute name="gradle_used_by_scope" value="main,test"/>
-		</attributes>
-	</classpathentry>
 	<classpathentry kind="lib" path="C:/Users/Dave/.gradle/caches/modules-2/files-2.1/org.apache.logging.log4j/log4j-api/2.11.1/268f0fe4df3eefe052b57c87ec48517d64fb2a10/log4j-api-2.11.1.jar" sourcepath="C:/Users/Dave/.gradle/caches/modules-2/files-2.1/org.apache.logging.log4j/log4j-api/2.11.1/acf35297ef03716fc14e11e2978d7c749ed3f7e5/log4j-api-2.11.1-sources.jar">
 		<attributes>
 			<attribute name="gradle_used_by_scope" value="main,test"/>
@@ -25,5 +18,15 @@
 			<attribute name="gradle_used_by_scope" value="main,test"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="C:/Users/Dave/.gradle/caches/forge_gradle/minecraft_user_repo/net/minecraftforge/test/forge/1.13-24.0.64-1.13-pre_mapped_snapshot_20180921-1.13/forge-1.13-24.0.64-1.13-pre_mapped_snapshot_20180921-1.13-recomp.jar" sourcepath="C:/Users/Dave/.gradle/caches/forge_gradle/minecraft_user_repo/net/minecraftforge/test/forge/1.13-24.0.64-1.13-pre_mapped_snapshot_20180921-1.13/forge-1.13-24.0.64-1.13-pre_mapped_snapshot_20180921-1.13-sources.jar">
+		<attributes>
+			<attribute name="gradle_used_by_scope" value="main,test"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="C:/Users/Dave/.gradle/caches/modules-2/files-2.1/org.apache.logging.log4j/log4j-api/2.8.1/e801d13612e22cad62a3f4f3fe7fdbe6334a8e72/log4j-api-2.8.1.jar" sourcepath="C:/Users/Dave/.gradle/caches/modules-2/files-2.1/org.apache.logging.log4j/log4j-api/2.8.1/a5edb6b8c77843c8be98e0cb1f875699e76ee122/log4j-api-2.8.1-sources.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Dave/.gradle/caches/modules-2/files-2.1/net.minecraftforge/eventbus/0.1.0-rc.6.43+8d7ee39840dc43079498c0093337b045cbeac3b9/98c7f89cae37010ea4f6d1c23b4bb7e7bc1f4beb/eventbus-0.1.0-rc.6.43+8d7ee39840dc43079498c0093337b045cbeac3b9-service.jar" sourcepath="C:/Users/Dave/.gradle/caches/modules-2/files-2.1/net.minecraftforge/eventbus/0.1.0-rc.6.43+8d7ee39840dc43079498c0093337b045cbeac3b9/1beced91cffe1f23d151b052e49917356b914d96/eventbus-0.1.0-rc.6.43+8d7ee39840dc43079498c0093337b045cbeac3b9-sources.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Dave/.gradle/caches/modules-2/files-2.1/io.netty/netty-all/4.1.9.Final/97860965d6a0a6b98e7f569f3f966727b8db75/netty-all-4.1.9.Final.jar" sourcepath="C:/Users/Dave/.gradle/caches/modules-2/files-2.1/io.netty/netty-all/4.1.9.Final/69b921f5e296428c88c2ea4418e630443a699b06/netty-all-4.1.9.Final-sources.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Dave/.gradle/caches/modules-2/files-2.1/com.mojang/authlib/1.5.25/9834cdf236c22e84b946bba989e2f94ef5897c3c/authlib-1.5.25.jar" sourcepath="C:/Users/Dave/.gradle/caches/modules-2/files-2.1/com.mojang/authlib/1.5.25/18840707f662a3236542716fff61c659584f3e6c/authlib-1.5.25-sources.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Dave/.gradle/caches/modules-2/files-2.1/com.mojang/brigadier/0.1.27/ed2d029ff8ca1cc68533e48f1242d0314554b4a/brigadier-0.1.27.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -8,10 +8,10 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextComponentTranslation;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
-@SideOnly(Side.CLIENT)
+@OnlyIn(Dist.CLIENT)
 public class GuiSaw extends GuiContainer {
 
 	private static final ResourceLocation GUI_SAW = new ResourceLocation("mob_grinding_utils:textures/gui/saw_gui.png");
@@ -24,8 +24,8 @@ public class GuiSaw extends GuiContainer {
 	}
 
 	@Override
-    public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-        super.drawScreen(mouseX, mouseY, partialTicks);
+    public void render(int mouseX, int mouseY, float partialTicks) {
+        super.render(mouseX, mouseY, partialTicks);
         renderHoveredToolTip(mouseX, mouseY);
     }
 
@@ -36,7 +36,7 @@ public class GuiSaw extends GuiContainer {
 
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float partialTickTime, int x, int y) {
-		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+		GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 		mc.getTextureManager().bindTexture(GUI_SAW);
 		int xOffSet = (width - xSize) / 2;
 		int yOffSet = (height - ySize) / 2;

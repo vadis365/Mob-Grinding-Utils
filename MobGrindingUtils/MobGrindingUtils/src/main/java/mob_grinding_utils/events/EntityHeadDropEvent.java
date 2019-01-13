@@ -1,6 +1,6 @@
 package mob_grinding_utils.events;
 
-import java.util.List;
+import java.util.Collection;
 
 import com.mojang.authlib.GameProfile;
 
@@ -25,9 +25,8 @@ import net.minecraft.nbt.NBTUtil;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
-import net.minecraftforge.fml.common.Loader;
-import net.minecraftforge.fml.common.eventhandler.EventPriority;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.eventbus.api.EventPriority;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class EntityHeadDropEvent {
 
@@ -43,8 +42,8 @@ public class EntityHeadDropEvent {
 			if (fakePlayer.getDisplayNameString().matches(new TextComponentTranslation("fakeplayer.mob_masher").getFormattedText())) {
 				if (fakePlayer.getHeldItemMainhand().getItem() instanceof ItemImaginaryInvisibleNotReallyThereSword) {
 					ItemStack tempSword = fakePlayer.getHeldItemMainhand();
-					if (tempSword.hasTagCompound() && tempSword.getTagCompound().hasKey("beheadingValue"))
-						beheadingLevel = tempSword.getTagCompound().getInteger("beheadingValue");
+					if (tempSword.hasTag() && tempSword.getTag().hasKey("beheadingValue"))
+						beheadingLevel = tempSword.getTag().getInt("beheadingValue");
 					int dropChance = event.getEntityLiving().getEntityWorld().rand.nextInt(10);
 					if (dropChance < beheadingLevel) {
 						ItemStack stack = getHeadfromEntity(event.getEntityLiving());
@@ -116,18 +115,18 @@ public class EntityHeadDropEvent {
 
 	public static ItemStack createHeadFor(GameProfile profile) {
 		ItemStack stack = new ItemStack(Items.SKULL, 1, 3);
-		stack.setTagCompound(new NBTTagCompound());
+		stack.setTag(new NBTTagCompound());
 		NBTTagCompound profileData = new NBTTagCompound();
 		NBTUtil.writeGameProfile(profileData, profile);
-		stack.getTagCompound().setTag("SkullOwner", profileData);
+		stack.getTag().setTag("SkullOwner", profileData);
 		return stack;
 	}
 
-	private void addDrop(ItemStack stack, EntityLivingBase entity, List<EntityItem> list) {
+	private void addDrop(ItemStack stack, EntityLivingBase entity, Collection<EntityItem> collection) {
 		if (stack.getCount() <= 0)
 			return;
 		EntityItem entityItem = new EntityItem(entity.getEntityWorld(), entity.posX, entity.posY, entity.posZ, stack);
 		entityItem.setDefaultPickupDelay();
-		list.add(entityItem);
+		collection.add(entityItem);
 	}
 }

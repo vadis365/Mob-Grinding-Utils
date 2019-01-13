@@ -18,19 +18,20 @@ public class GuiSmallButton extends GuiButton {
 	}
 
 	@Override
-	public void drawButton(Minecraft mc, int mouseX, int mouseY, float partialTicks) {
-		FontRenderer fontrenderer = mc.fontRenderer;
+	public void render(int mouseX, int mouseY, float partialTicks) {
+		Minecraft minecraft = Minecraft.getInstance();
+		FontRenderer fontrenderer = minecraft.fontRenderer;
 		if (visible) {
-			mc.getTextureManager().bindTexture(TEXTURES);
-			GlStateManager.color(0.75F, 0.75F, 0.75F, 0.5F);
+			minecraft.getTextureManager().bindTexture(TEXTURES);
+			GlStateManager.color4f(0.75F, 0.75F, 0.75F, 0.5F);
 			boolean hover = mouseX >= x && mouseY >= y && mouseX < x + width && mouseY < y + height;
 			if(hover)
-				GlStateManager.color(0.75F, 1, 0.75F, 1);	
+				GlStateManager.color4f(0.75F, 1, 0.75F, 1);	
 			drawTexturedModalRect(x, y, u, v, width, height);
 			
 			int textColour = 14737632;
-			if (packedFGColour != 0)
-				textColour = packedFGColour;
+			if (packedFGColor != 0)
+				textColour = packedFGColor;
 			else if (!this.enabled)
 				textColour = 10526880;
 			else if (this.hovered)

@@ -5,6 +5,7 @@ import mob_grinding_utils.capability.bossbars.BossBarPlayerCapability;
 import mob_grinding_utils.capability.bossbars.IBossBarCapability;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
+import net.minecraft.block.Block.Builder;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyBool;
@@ -12,6 +13,9 @@ import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.state.BooleanProperty;
+import net.minecraft.state.StateContainer;
+import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
@@ -19,17 +23,16 @@ import net.minecraft.world.World;
 
 public class BlockDragonMuffler extends Block {
 
-	public static final PropertyBool MODE = PropertyBool.create("mode");
+	public static final BooleanProperty MODE = BooleanProperty.create("mode");
 
 	public BlockDragonMuffler() {
-		super(Material.CLOTH);
-		setDefaultState(this.getBlockState().getBaseState().withProperty(MODE, false));
-		setHardness(0.5F);
-		setSoundType(SoundType.CLOTH);
-		setCreativeTab(MobGrindingUtils.TAB);
+		super(Builder.create(Material.CLOTH).hardnessAndResistance(0.5F, 1.0F));
+		setDefaultState(getStateContainer().getBaseState().with(MODE, false));
+		//setSoundType(SoundType.CLOTH);
+		//setCreativeTab(MobGrindingUtils.TAB);
 	}
 
-	@Override
+	/*@Override
 	public IBlockState getStateFromMeta(int meta) {
 		return getDefaultState().withProperty(MODE, Boolean.valueOf((meta & 1) > 0));
 	}
@@ -41,10 +44,11 @@ public class BlockDragonMuffler extends Block {
 			meta = 1;
 		return meta;
 	}
+*/
 
 	@Override
-	protected BlockStateContainer createBlockState() {
-		return new BlockStateContainer(this, new IProperty[] { MODE });
+	protected void fillStateContainer(StateContainer.Builder<Block, IBlockState> builder) {
+		builder.add(MODE);
 	}
 
 	@Override

@@ -11,10 +11,12 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-@SideOnly(Side.CLIENT)
+@OnlyIn(Dist.CLIENT)
 public class GuiFan extends GuiContainer {
 
 	private static final ResourceLocation GUI_FAN = new ResourceLocation("mob_grinding_utils:textures/gui/fan_gui.png");
@@ -29,15 +31,15 @@ public class GuiFan extends GuiContainer {
 	@Override
 	public void initGui() {
 		super.initGui();
-		buttonList.clear();
+		buttons.clear();
 		int xOffSet = (width - xSize) / 2;
 		int yOffSet = (height - ySize) / 2;
-		buttonList.add(new GuiBigButton(0, xOffSet + 54, yOffSet + 42, 33, 228, ""));
+		buttons.add(new GuiBigButton(0, xOffSet + 54, yOffSet + 42, 33, 228, ""));
 	}
 
 	@Override
-    public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-        super.drawScreen(mouseX, mouseY, partialTicks);
+    public void render(int mouseX, int mouseY, float partialTicks) {
+        super.render(mouseX, mouseY, partialTicks);
         renderHoveredToolTip(mouseX, mouseY);
     }
 
@@ -49,7 +51,7 @@ public class GuiFan extends GuiContainer {
 
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float partialTickTime, int x, int y) {
-		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+		GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 		mc.getTextureManager().bindTexture(GUI_FAN);
 		int xOffSet = (width - xSize) / 2;
 		int yOffSet = (height - ySize) / 2;

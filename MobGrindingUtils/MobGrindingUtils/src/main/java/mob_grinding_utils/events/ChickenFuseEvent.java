@@ -15,8 +15,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.event.entity.living.LivingEvent;
-import net.minecraftforge.fml.common.Loader;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class ChickenFuseEvent {
 
@@ -32,7 +31,7 @@ public class ChickenFuseEvent {
 					int startTime = event.getEntity().getEntityData().getInteger("countDown");
 
 					if (startTime <= 19) {
-						nbt.setInteger("countDown", nbt.getInteger("countDown") + 1);
+						nbt.setInt("countDown", nbt.getInt("countDown") + 1);
 						MobGrindingUtils.NETWORK_WRAPPER.sendToAll(new MessageChickenSync(entity, nbt));
 					}
 
@@ -48,7 +47,7 @@ public class ChickenFuseEvent {
 							NBTTagCompound mobData = new NBTTagCompound();
 							mobData.setString("id", name);
 							eggData.setTag("EntityTag", mobData);
-							mobEgg.setTagCompound(eggData);
+							mobEgg.setTag(eggData);
 							entity.entityDropItem(mobEgg, 0.0F);
 							//System.out.println("Should drop egg here");
 						}
@@ -60,7 +59,7 @@ public class ChickenFuseEvent {
 							mobData.setString("id", type);
 							eggData.setTag("ChickenType", mobData);
 							ItemStack mobEgg = new ItemStack(Item.REGISTRY.getObject(new ResourceLocation("chickens:spawn_egg")), 1);
-							mobEgg.setTagCompound(eggData);
+							mobEgg.setTag(eggData);
 							entity.entityDropItem(mobEgg, 0.0F);
 							//System.out.println("Should drop Modded Chicken egg here " + type);
 						}

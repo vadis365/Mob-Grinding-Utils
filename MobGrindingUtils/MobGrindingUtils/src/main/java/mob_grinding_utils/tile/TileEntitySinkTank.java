@@ -23,7 +23,7 @@ public class TileEntitySinkTank extends TileEntityTank implements ITickable {
 	}
 
 	@Override
-	public void update() {
+	public void tick() {
 		if (!getWorld().isRemote)
 			if (tank.getFluid() == null || tank.getFluid().containsFluid(new FluidStack(FluidRegistry.getFluid("xpjuice"), 0)))
 				captureDroppedXP();

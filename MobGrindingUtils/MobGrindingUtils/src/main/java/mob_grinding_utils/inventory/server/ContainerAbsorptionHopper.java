@@ -19,18 +19,18 @@ public class ContainerAbsorptionHopper extends Container {
 		int j;
 		int k;
 
-		addSlotToContainer(new SlotRestriction(tile, 0, 134, 72, new ItemStack(ModItems.ABSORPTION_UPGRADE, 1, 0), 6)); // change to hopper upgrade
+		addSlot(new SlotRestriction(tile, 0, 134, 72, new ItemStack(ModItems.ABSORPTION_UPGRADE), 6)); // change to hopper upgrade
 
 		for (j = 0; j < numRows; ++j)
 			for (k = 0; k < 8; ++k)
-				addSlotToContainer(new Slot(tile, 1 + k + j * 8, 8 + k * 18, 94 + j * 18));
+				addSlot(new Slot(tile, 1 + k + j * 8, 8 + k * 18, 94 + j * 18));
 
 		for (j = 0; j < 3; ++j)
 			for (k = 0; k < 9; ++k)
-				addSlotToContainer(new Slot(playerInventory, k + j * 9 + 9, 44 + k * 18, 180 + j * 18 + i));
+				addSlot(new Slot(playerInventory, k + j * 9 + 9, 44 + k * 18, 180 + j * 18 + i));
 
 		for (j = 0; j < 9; ++j)
-			addSlotToContainer(new Slot(playerInventory, j, 44 + j * 18, 238 + i));
+			addSlot(new Slot(playerInventory, j, 44 + j * 18, 238 + i));
 	}
 
 	@Override
@@ -79,7 +79,7 @@ public class ContainerAbsorptionHopper extends Container {
 				slot = (Slot) this.inventorySlots.get(slotIndex);
 				slotstack = slot.getStack();
 
-				if (!slotstack.isEmpty() && slotstack.getItem() == stack.getItem() && stack.getItemDamage() == slotstack.getItemDamage() && ItemStack.areItemStackTagsEqual(stack, slotstack) && slotstack.getCount() < slot.getSlotStackLimit()) {
+				if (!slotstack.isEmpty() && slotstack.getItem() == stack.getItem() && stack.getDamage() == slotstack.getDamage() && ItemStack.areItemStackTagsEqual(stack, slotstack) && slotstack.getCount() < slot.getSlotStackLimit()) {
 					int mergedStackSize = stack.getCount() + getSmaller(slotstack.getCount(), slot.getSlotStackLimit());
 
 					if (mergedStackSize <= stack.getMaxStackSize() && mergedStackSize <= slot.getSlotStackLimit()) {

@@ -6,7 +6,6 @@ import javax.annotation.Nullable;
 
 import mob_grinding_utils.ModItems;
 import mob_grinding_utils.inventory.server.InventoryWrapperAH;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.item.EntityXPOrb;
 import net.minecraft.inventory.IInventory;
@@ -22,17 +21,17 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.OptionalCapabilityInstance;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
@@ -41,6 +40,7 @@ import net.minecraftforge.items.ItemHandlerHelper;
 public class TileEntityAbsorptionHopper extends TileEntityInventoryHelper implements ITickable {
     public FluidTankTile tank;
     private IItemHandler itemHandler;
+    private IFluidHandler fluidHandler;
     private static final int[] SLOTS = new int[] {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16};
 
 	public TileEntityAbsorptionHopper() {
@@ -74,9 +74,9 @@ public class TileEntityAbsorptionHopper extends TileEntityInventoryHelper implem
 	public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity packet) {
 		EnumStatus[] old = new EnumStatus[] { status[0], status[1], status[2], status[3], status[4], status[5] };
 		super.onDataPacket(net, packet);
-		readFromNBT(packet.getNbtCompound());
+		read(packet.getNbtCompound());
 		tank.onContentsChanged();
-		for (EnumFacing facing : EnumFacing.VALUES) {
+		for (EnumFacing facing : EnumFacing.values()) {
 			if (old[facing.ordinal()] != status[facing.ordinal()]) {
 				getWorld().markBlockRangeForRenderUpdate(getPos(), getPos());
 				return;
@@ -87,19 +87,19 @@ public class TileEntityAbsorptionHopper extends TileEntityInventoryHelper implem
 	@Override
 	public SPacketUpdateTileEntity getUpdatePacket() {
 		NBTTagCompound tag = new NBTTagCompound();
-		writeToNBT(tag);
+		write(tag);
 		return new SPacketUpdateTileEntity(pos, 0, tag);
 	}
 
 	@Override
     public NBTTagCompound getUpdateTag() {
 		NBTTagCompound tag = new NBTTagCompound();
-        return writeToNBT(tag);
+        return write(tag);
     }
 
 	@Override
-	public void readFromNBT(NBTTagCompound tagCompound) {
-		super.readFromNBT(tagCompound);
+	public void read(NBTTagCompound tagCompound) {
+		super.read(tagCompound);
 		status[0] = EnumStatus.values()[tagCompound.getByte("down")];
 		status[1] = EnumStatus.values()[tagCompound.getByte("up")];
 		status[2] = EnumStatus.values()[tagCompound.getByte("north")];
@@ -107,15 +107,15 @@ public class TileEntityAbsorptionHopper extends TileEntityInventoryHelper implem
 		status[4] = EnumStatus.values()[tagCompound.getByte("west")];
 		status[5] = EnumStatus.values()[tagCompound.getByte("east")];
 		showRenderBox = tagCompound.getBoolean("showRenderBox");
-		offsetX = tagCompound.getInteger("offsetX");
-		offsetY = tagCompound.getInteger("offsetY");
-		offsetZ = tagCompound.getInteger("offsetZ");
+		offsetX = tagCompound.getInt("offsetX");
+		offsetY = tagCompound.getInt("offsetY");
+		offsetZ = tagCompound.getInt("offsetZ");
 		tank.readFromNBT(tagCompound);
 	}
 
 	@Override
-	public NBTTagCompound writeToNBT(NBTTagCompound tagCompound) {
-		super.writeToNBT(tagCompound);
+	public NBTTagCompound write(NBTTagCompound tagCompound) {
+		super.write(tagCompound);
 		tagCompound.setByte("down", (byte) status[0].ordinal());
 		tagCompound.setByte("up", (byte) status[1].ordinal());
 		tagCompound.setByte("north", (byte) status[2].ordinal());
@@ -123,9 +123,9 @@ public class TileEntityAbsorptionHopper extends TileEntityInventoryHelper implem
 		tagCompound.setByte("west", (byte) status[4].ordinal());
 		tagCompound.setByte("east", (byte) status[5].ordinal());
 		tagCompound.setBoolean("showRenderBox", showRenderBox);
-		tagCompound.setInteger("offsetX", offsetX);
-		tagCompound.setInteger("offsetY", offsetY);
-		tagCompound.setInteger("offsetZ", offsetZ);
+		tagCompound.setInt("offsetX", offsetX);
+		tagCompound.setInt("offsetY", offsetY);
+		tagCompound.setInt("offsetZ", offsetZ);
 		tank.writeToNBT(tagCompound);
 		return tagCompound;
 	}
@@ -187,23 +187,23 @@ public class TileEntityAbsorptionHopper extends TileEntityInventoryHelper implem
 		markDirty();
 	}
 
-	@Override
+/*	@Override
 	public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState) {
 		return oldState.getBlock() != newState.getBlock();
 	}
-
+*/
 	@Override
-	public void update() {
+	public void tick() {
 		if (getWorld().isRemote)
 			return;
 
-		for (EnumFacing facing : EnumFacing.VALUES) {
+		for (EnumFacing facing : EnumFacing.values()) {
 			if (status[facing.ordinal()] == EnumStatus.STATUS_OUTPUT_ITEM) {
 				TileEntity tile = getWorld().getTileEntity(pos.offset(facing));
 				
-				if (tile != null && tile.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, facing.getOpposite())) {
-					IItemHandler handler = tile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, facing.getOpposite());
-					if (getWorld().getTotalWorldTime() % 8 == 0) {
+				if (tile != null && tile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, facing.getOpposite()) != null) {
+					IItemHandler handler = (IItemHandler) tile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, facing.getOpposite());
+					if (getWorld().getGameTime() % 8 == 0) {
 						for (int i = 0; i < this.getSizeInventory(); ++i) {
 							if (!getStackInSlot(i).isEmpty() && i != 0) {
 								ItemStack stack = getStackInSlot(i).copy();
@@ -221,7 +221,7 @@ public class TileEntityAbsorptionHopper extends TileEntityInventoryHelper implem
 					IInventory iinventory = (IInventory) tile;
 					if (isInventoryFull(iinventory, facing)) {
 						break;
-					} else if (getWorld().getTotalWorldTime() % 8 == 0) {
+					} else if (getWorld().getGameTime() % 8 == 0) {
 						for (int i = 0; i < this.getSizeInventory(); ++i) {
 							if (!getStackInSlot(i).isEmpty() && i != 0) {
 								ItemStack stack = getStackInSlot(i).copy();
@@ -238,8 +238,8 @@ public class TileEntityAbsorptionHopper extends TileEntityInventoryHelper implem
 
 			if (status[facing.ordinal()] == EnumStatus.STATUS_OUTPUT_FLUID) {
 				TileEntity tile = getWorld().getTileEntity(pos.offset(facing));
-				if (tile != null && tile.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, facing)) {
-					IFluidHandler recepticle = tile.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, facing);
+				if (tile != null && tile.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, facing) != null) {
+					IFluidHandler recepticle = (IFluidHandler) tile.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, facing);
 					IFluidTankProperties[] tankProperties = recepticle.getTankProperties();
 					for (IFluidTankProperties properties : tankProperties) {
 						if (properties.canFill() && properties.getCapacity() > 0) {
@@ -256,7 +256,7 @@ public class TileEntityAbsorptionHopper extends TileEntityInventoryHelper implem
 			}
 		}
 
-		if (getWorld().getTotalWorldTime() % 3 == 0) {
+		if (getWorld().getGameTime() % 3 == 0) {
 			if(!isInventoryFull(this, null))
 				captureDroppedItems();
 			if(tank.getFluid() == null || tank.getFluid().containsFluid(new FluidStack(FluidRegistry.getFluid("xpjuice"), 0)))
@@ -286,7 +286,7 @@ public class TileEntityAbsorptionHopper extends TileEntityInventoryHelper implem
 			int xpAmount = entity.getXpValue();
 			if (tank.getFluidAmount() < tank.getCapacity() - xpAmount * 20) {
 				tank.fill(new FluidStack(FluidRegistry.getFluid("xpjuice"), xpAmount * 20), true);
-				entity.setDead();
+				entity.remove();
 			}
 			return true;
 		}
@@ -304,13 +304,13 @@ public class TileEntityAbsorptionHopper extends TileEntityInventoryHelper implem
 		return new AxisAlignedBB(x - 3.5D - getModifierAmount(), y - 3.5D - getModifierAmount(), z - 3.5D - getModifierAmount(), x + 3.5D + getModifierAmount(), y + 3.5D + getModifierAmount(), z + 3.5D + getModifierAmount()).offset(getoffsetX(), getoffsetY(), getoffsetZ());
 	}
 
-	@SideOnly(Side.CLIENT)
+	@OnlyIn(Dist.CLIENT)
 	public AxisAlignedBB getAABBForRender() {
 		return new AxisAlignedBB(- 3D - getModifierAmount(), - 3D - getModifierAmount(), - 3D - getModifierAmount(), 4D + getModifierAmount(), 4D + getModifierAmount(), 4D + getModifierAmount()).offset(getoffsetX(), getoffsetY(), getoffsetZ());
 	}
 
 	@Override
-	@SideOnly(Side.CLIENT)
+	@OnlyIn(Dist.CLIENT)
 	public AxisAlignedBB getRenderBoundingBox() {
 		return getAABBWithModifiers();
 	}
@@ -415,7 +415,7 @@ public class TileEntityAbsorptionHopper extends TileEntityInventoryHelper implem
 				itemIn.setItem(itemstack1);
 			} else {
 				flag = true;
-				itemIn.setDead();
+				itemIn.remove();
 			}
 			return flag;
 		}
@@ -446,24 +446,48 @@ public class TileEntityAbsorptionHopper extends TileEntityInventoryHelper implem
     }
 
     private static boolean canCombine(ItemStack stack1, ItemStack stack2) {
-        return stack1.getItem() != stack2.getItem() ? false : (stack1.getMetadata() != stack2.getMetadata() ? false : (stack1.getCount() > stack1.getMaxStackSize() ? false : ItemStack.areItemStackTagsEqual(stack1, stack2)));
-    }
-
+        return stack1.getItem() != stack2.getItem() ? false : (stack1.getDamage() != stack2.getDamage() ? false : (stack1.getCount() > stack1.getMaxStackSize() ? false : ItemStack.areItemStackTagsEqual(stack1, stack2)));
+    } 
+    
 // FLUID & INVENTORY CAPABILITIES STUFF
 
 	protected IItemHandler createUnSidedHandler() {
 		return new InventoryWrapperAH(this);
+	}
+	
+	protected IFluidHandler createFluidHandler() {
+		return tank;
 	}
 
 	public int getScaledFluid(int scale) {
 		return tank.getFluid() != null ? (int) ((float) tank.getFluid().amount / (float) tank.getCapacity() * scale) : 0;
 	}
 
-	@Override
 	public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
-		return capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY || capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY || super.hasCapability(capability, facing);
+		return capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY || capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY;
 	}
+	
+	
+	   @SuppressWarnings("unchecked")
+	@Override
+	   public <T> OptionalCapabilityInstance<T> getCapability(Capability<T> cap, EnumFacing side) {
 
+		   if (cap == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
+			   if (fluidHandler == null) {
+				   fluidHandler = createFluidHandler();
+			   }
+				return ((OptionalCapabilityInstance<IFluidHandler>) fluidHandler).cast();
+		   }
+		   
+	       if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
+	          if (itemHandler == null) {
+	             itemHandler = createUnSidedHandler();
+	          }
+	          return ((OptionalCapabilityInstance<IItemHandler>) itemHandler).cast();
+	       }
+	       return super.getCapability(cap, side);
+	   }
+/*
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
@@ -472,6 +496,11 @@ public class TileEntityAbsorptionHopper extends TileEntityInventoryHelper implem
 		if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
 			return (T) (itemHandler == null ? (itemHandler = createUnSidedHandler()) : itemHandler);
 		return super.getCapability(capability, facing);
+	}
+*/
+	@Override
+	public ITextComponent getCustomName() {
+		return null;
 	}
 
 }

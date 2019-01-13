@@ -23,6 +23,7 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
@@ -38,13 +39,13 @@ public class TileEntitySaw extends TileEntityInventoryHelper implements ITickabl
 		super(6);
 	}
 
-	@Override
-	public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState) {
-		return oldState.getBlock() != newState.getBlock();
-	}
+	//@Override
+	//public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState) {
+	//	return oldState.getBlock() != newState.getBlock();
+	//}
 
 	@Override
-	public void update() {
+	public void tick() {
 		if (getWorld().isRemote && active) {
 			prevAnimationTicks = animationTicks;
 			if (animationTicks < 360)
@@ -58,7 +59,7 @@ public class TileEntitySaw extends TileEntityInventoryHelper implements ITickabl
 		if (getWorld().isRemote && !active)
 			prevAnimationTicks = animationTicks = 0;
 
-		if (!getWorld().isRemote && getWorld().getTotalWorldTime() % 10 == 0 && getWorld().getBlockState(pos).getBlock() != null)
+		if (!getWorld().isRemote && getWorld().getGameTime() % 10 == 0 && getWorld().getBlockState(pos).getBlock() != null)
 			if (getWorld().getBlockState(pos).getValue(BlockSaw.POWERED))
 				activateBlock();
 	}
@@ -77,10 +78,10 @@ public class TileEntitySaw extends TileEntityInventoryHelper implements ITickabl
 				if (entity instanceof EntityLivingBase) {
 					EntityPlayerMP fakePlayer = FakePlayerFactory.get((WorldServer)getWorld(), new GameProfile(UUID.nameUUIDFromBytes(new TextComponentTranslation("fakeplayer.mob_masher").getFormattedText().getBytes()), new TextComponentTranslation("fakeplayer.mob_masher").getFormattedText()));
 					fakePlayer.setPosition(this.pos.getX(), -100D, this.pos.getZ());
-					ItemStack tempSword = new ItemStack(ModItems.NULL_SWORD, 1, 0);
+					ItemStack tempSword = new ItemStack(ModItems.NULL_SWORD, 1);
 
-					if(!tempSword.hasTagCompound())
-						tempSword.setTagCompound(new NBTTagCompound());
+					if(!tempSword.hasTag())
+						tempSword.setTag(new NBTTagCompound());
 
 					if(hasSharpnessUpgrade())
 						tempSword.addEnchantment(Enchantment.getEnchantmentByLocation("sharpness"), getItems().get(0).getCount() * 10);
@@ -106,59 +107,59 @@ public class TileEntitySaw extends TileEntityInventoryHelper implements ITickabl
 	}
 
 	private boolean hasSharpnessUpgrade() {
-		return !getItems().get(0).isEmpty() && getItems().get(0).getItem() == ModItems.SAW_UPGRADE && getItems().get(0).getItemDamage() == 0;
+		return !getItems().get(0).isEmpty() && getItems().get(0).getItem() == ModItems.SAW_UPGRADE && getItems().get(0).getDamage() == 0;
 	}
 	
 	private boolean hasLootingUpgrade() {
-		return !getItems().get(1).isEmpty() && getItems().get(1).getItem() == ModItems.SAW_UPGRADE && getItems().get(1).getItemDamage() == 1;
+		return !getItems().get(1).isEmpty() && getItems().get(1).getItem() == ModItems.SAW_UPGRADE && getItems().get(1).getDamage() == 1;
 	}
 
 	private boolean hasFlameUpgrade() {
-		return !getItems().get(2).isEmpty() && getItems().get(2).getItem() == ModItems.SAW_UPGRADE && getItems().get(2).getItemDamage() == 2;
+		return !getItems().get(2).isEmpty() && getItems().get(2).getItem() == ModItems.SAW_UPGRADE && getItems().get(2).getDamage() == 2;
 	}
 	
 	private boolean hasSmiteUpgrade() {
-		return !getItems().get(3).isEmpty() && getItems().get(3).getItem() == ModItems.SAW_UPGRADE && getItems().get(3).getItemDamage() == 3;
+		return !getItems().get(3).isEmpty() && getItems().get(3).getItem() == ModItems.SAW_UPGRADE && getItems().get(3).getDamage() == 3;
 	}
 	
 	private boolean hasArthropodUpgrade() {
-		return !getItems().get(4).isEmpty() && getItems().get(4).getItem() == ModItems.SAW_UPGRADE && getItems().get(4).getItemDamage() == 4;
+		return !getItems().get(4).isEmpty() && getItems().get(4).getItem() == ModItems.SAW_UPGRADE && getItems().get(4).getDamage() == 4;
 	}
 
 	private boolean hasBeheadingUpgrade() {
-		return !getItems().get(5).isEmpty() && getItems().get(5).getItem() == ModItems.SAW_UPGRADE && getItems().get(5).getItemDamage() == 5;
+		return !getItems().get(5).isEmpty() && getItems().get(5).getItem() == ModItems.SAW_UPGRADE && getItems().get(5).getDamage() == 5;
 	}
 
 	@Override
-	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
-		super.writeToNBT(nbt);
+	public NBTTagCompound write(NBTTagCompound nbt) {
+		super.write(nbt);
 		nbt.setBoolean("active", active);
 		return nbt;
 	}
 
 	@Override
-	public void readFromNBT(NBTTagCompound nbt) {
-		super.readFromNBT(nbt);
+	public void read(NBTTagCompound nbt) {
+		super.read(nbt);
 		active = nbt.getBoolean("active");
 	}
 
 	@Override
     public NBTTagCompound getUpdateTag() {
 		NBTTagCompound tag = new NBTTagCompound();
-        return writeToNBT(tag);
+        return write(tag);
     }
 
 	@Override
 	public SPacketUpdateTileEntity getUpdatePacket() {
 		NBTTagCompound tag = new NBTTagCompound();
-		writeToNBT(tag);
+		write(tag);
 		return new SPacketUpdateTileEntity(getPos(), 0, tag);
 	}
 
 	@Override
 	public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity packet) {
 		super.onDataPacket(net, packet);
-		readFromNBT(packet.getNbtCompound());
+		read(packet.getNbtCompound());
 		if(!getWorld().isRemote)
 			getWorld().notifyBlockUpdate(pos, getWorld().getBlockState(pos), getWorld().getBlockState(pos), 3);
 		return;
@@ -166,7 +167,7 @@ public class TileEntitySaw extends TileEntityInventoryHelper implements ITickabl
 
 	@Override
 	public boolean isItemValidForSlot(int slot, ItemStack stack) {
-		return stack.getItem() instanceof ItemSawUpgrade && stack.getItemDamage() == slot;
+		return stack.getItem() instanceof ItemSawUpgrade && stack.getDamage() == slot;
 	}
 
 	@Override
@@ -192,5 +193,10 @@ public class TileEntitySaw extends TileEntityInventoryHelper implements ITickabl
 	@Override
 	public boolean canExtractItem(int slot, ItemStack stack, EnumFacing direction) {
 		return true;
+	}
+
+	@Override
+	public ITextComponent getCustomName() {
+		return null;
 	}
 }

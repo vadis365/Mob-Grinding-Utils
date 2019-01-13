@@ -16,6 +16,7 @@ public abstract class TileEntityInventoryHelper extends TileEntity implements IS
 	private NonNullList<ItemStack> inventory;
 
 	public TileEntityInventoryHelper(int invtSize) {
+		super(null);//hnnnngh TODO work that shit out too
 		inventory = NonNullList.<ItemStack>withSize(invtSize, ItemStack.EMPTY);
 	}
 
@@ -71,21 +72,20 @@ public abstract class TileEntityInventoryHelper extends TileEntity implements IS
 	}
 
 	@Override
-	public void readFromNBT(NBTTagCompound compound) {
-		super.readFromNBT(compound);
+	public void read(NBTTagCompound compound) {
+		super.read(compound);
 		this.loadFromNbt(compound);
 	}
 
 	@Override
-	public NBTTagCompound writeToNBT(NBTTagCompound compound) {
-		super.writeToNBT(compound);
+	public NBTTagCompound write(NBTTagCompound compound) {
+		super.write(compound);
 		return this.saveToNbt(compound);
 	}
 
 	public void loadFromNbt(NBTTagCompound compound) {
 		inventory = NonNullList.<ItemStack>withSize(this.getSizeInventory(), ItemStack.EMPTY);
-		if (compound.hasKey("Items", 9))
-			ItemStackHelper.loadAllItems(compound, inventory);
+		ItemStackHelper.loadAllItems(compound, inventory);
 	}
 
 	public NBTTagCompound saveToNbt(NBTTagCompound compound) {
@@ -121,8 +121,9 @@ public abstract class TileEntityInventoryHelper extends TileEntity implements IS
 	}
 
 	@Override
-	public String getName() {
+	public ITextComponent getName() {
 		return null;
+		//return (ITextComponent) (this.customName != null ? this.customName : new TextComponentTranslation("container.hopper", new Object[0]));
 	}
 
 	@Override

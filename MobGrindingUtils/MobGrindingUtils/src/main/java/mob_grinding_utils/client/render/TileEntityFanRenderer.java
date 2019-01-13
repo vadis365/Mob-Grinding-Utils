@@ -4,23 +4,23 @@ import mob_grinding_utils.tile.TileEntityFan;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderGlobal;
-import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
-@SideOnly(Side.CLIENT)
-public class TileEntityFanRenderer extends TileEntitySpecialRenderer<TileEntityFan> {
+@OnlyIn(Dist.CLIENT)
+public class TileEntityFanRenderer extends TileEntityRenderer<TileEntityFan> {
 
 	@Override
-	public void render(TileEntityFan tile, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
+	public void render(TileEntityFan tile, double x, double y, double z, float partialTicks, int destroyStage) {
 		if (tile == null || !tile.hasWorld())
 			return;
 
 		if (!tile.showRenderBox)
 			return;
 		GlStateManager.pushMatrix();
-		GlStateManager.translate(x-0.0005D, y-0.0005D, z-0.0005D);
-		GlStateManager.scale(0.999D, 0.999D, 0.999D);
+		GlStateManager.translated(x-0.0005D, y-0.0005D, z-0.0005D);
+		GlStateManager.scaled(0.999D, 0.999D, 0.999D);
 		GlStateManager.depthMask(false);
 		GlStateManager.enableBlend();
 		GlStateManager.disableTexture2D();
@@ -30,7 +30,7 @@ public class TileEntityFanRenderer extends TileEntitySpecialRenderer<TileEntityF
 		int i = 61680;
 		int j = i % 65536;
 		int k = i / 65536;
-		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, (float) j, (float) k);
+		OpenGlHelper.glMultiTexCoord2f(OpenGlHelper.GL_TEXTURE1, (float)j, (float)k);
 		RenderGlobal.renderFilledBox(tile.getAABBForRender(), 0F, 0F, 1F, 0.75F);
 		RenderGlobal.drawSelectionBoundingBox(tile.getAABBForRender(), 1F, 1F, 1F, 1F);
 		GlStateManager.enableCull();
