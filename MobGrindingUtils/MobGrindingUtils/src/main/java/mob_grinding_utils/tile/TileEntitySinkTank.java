@@ -71,12 +71,12 @@ public class TileEntitySinkTank extends TileEntityTank implements ITickable {
 
 	public static int getExperienceForLevel(int level) {
 		if (level == 0) { return 0; }
-		if (level > 0 && level < 16) {
-			return level * 17;
-		} else if (level > 15 && level < 31) {
-			return (int)(1.5 * Math.pow(level, 2) - 29.5 * level + 360);
+		if (level > 0 && level < 17) {
+			return (int)(Math.pow(level, 2) + 6 * level);
+		} else if (level > 16 && level < 32) {
+			return (int)(2.5 * Math.pow(level, 2) - 40.5 * level + 360);
 		} else {
-			return (int)(3.5 * Math.pow(level, 2) - 151.5 * level + 2220);
+			return (int)(4.5 * Math.pow(level, 2) - 162.5 * level + 2220);
 		}
 	}
 }
