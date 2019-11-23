@@ -215,13 +215,13 @@ public class ModBlocks {
 
 	public static void registerBlock(String name, Block block) {
 		BLOCKS.add(block);
-		block.setRegistryName(Reference.MOD_ID, name).setUnlocalizedName(Reference.MOD_ID + "." + name);
+		block.setRegistryName(Reference.MOD_ID, name).setTranslationKey(Reference.MOD_ID + "." + name);
 	}
 
 	public static void registerItemBlock(String name, ItemBlock item) {
 		String[] newName = name.split("_item");
 		ITEM_BLOCKS.add(item);
-		item.setRegistryName(Reference.MOD_ID, newName[0]).setUnlocalizedName(Reference.MOD_ID + "." + newName[0]);
+		item.setRegistryName(Reference.MOD_ID, newName[0]).setTranslationKey(Reference.MOD_ID + "." + newName[0]);
 	}
 
 	@Mod.EventBusSubscriber(modid = Reference.MOD_ID)

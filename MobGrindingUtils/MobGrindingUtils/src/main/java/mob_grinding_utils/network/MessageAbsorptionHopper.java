@@ -63,7 +63,7 @@ public class MessageAbsorptionHopper implements IMessage, IMessageHandler<Messag
 						TileEntityAbsorptionHopper hopper = (TileEntityAbsorptionHopper) world.getTileEntity(message.tilePos);
 						if (hopper != null) {
 							if (message.buttonID < 6)
-								hopper.toggleMode(EnumFacing.getFront(message.buttonID));
+								hopper.toggleMode(EnumFacing.byIndex(message.buttonID));
 
 							if (message.buttonID == 6)
 								hopper.toggleRenderBox();

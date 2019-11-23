@@ -36,7 +36,7 @@ public class TileEntityFan extends TileEntityInventoryHelper implements ITickabl
 
 	@Override
 	public void update() {
-		if (getWorld().getTotalWorldTime()%2==0 && getWorld().getBlockState(getPos()).getBlock() != null)
+		if (getWorld().getTotalWorldTime()%2==0 && getWorld().getBlockState(getPos()).getBlock() instanceof BlockFan)
 			if (getWorld().getBlockState(getPos()).getValue(BlockFan.POWERED)) {
 				activateBlock();
 		}

@@ -58,7 +58,7 @@ public class MobGrindingUtils {
 
 	public static CreativeTabs TAB = new CreativeTabs(Reference.MOD_NAME) {
 		@Override
-		public ItemStack getTabIconItem() {
+		public ItemStack createIcon() {
 			return new ItemStack(ModBlocks.SPIKES_ITEM);
 		}
 	};

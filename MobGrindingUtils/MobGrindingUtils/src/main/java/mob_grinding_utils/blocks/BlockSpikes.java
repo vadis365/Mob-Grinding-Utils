@@ -66,7 +66,7 @@ public class BlockSpikes extends BlockDirectional {
 
 	@Override
 	public IBlockState getStateFromMeta(int meta) {
-		return getDefaultState().withProperty(FACING, EnumFacing.getFront(meta));
+		return getDefaultState().withProperty(FACING, EnumFacing.byIndex(meta));
 	}
 
 	@Override
@@ -100,7 +100,7 @@ public class BlockSpikes extends BlockDirectional {
 	}
 
 	@Override
-	public void onEntityCollidedWithBlock(World worldIn, BlockPos pos, IBlockState state, Entity entity) {
+	public void onEntityCollision(World worldIn, BlockPos pos, IBlockState state, Entity entity) {
 		if (!worldIn.isRemote && entity instanceof EntityLivingBase)
 			entity.attackEntityFrom(MobGrindingUtils.SPIKE_DAMAGE, 5);
 	}
