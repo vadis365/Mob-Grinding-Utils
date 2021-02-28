@@ -26,27 +26,6 @@ public class ModRecipes {
 	// Chicken Feed
 	public static final IRecipe CHICKEN_FEED = new RecipeChickenFeed();
 
-	// Absorption Hopper
-	public static final IRecipe ABSORPTION_HOPPER = new ShapedOreRecipe(getResource("recipe_absorption_hopper"), new ItemStack(ModBlocks.ABSORPTION_HOPPER_ITEM), " E ", " O ", "OHO", 'E', new ItemStack(Items.ENDER_EYE), 'O', "obsidian", 'H', new ItemStack(Item.getItemFromBlock(Blocks.HOPPER)));
-
-	// Absorption Hopper Upgrade
-	public static final IRecipe ABSORPTION_UPGRADE = new ShapedOreRecipe(getResource("recipe_absorption_upgrade"), new ItemStack(ModItems.ABSORPTION_UPGRADE), " E ", "ERE", "OEO", 'E', "enderpearl", 'O', "obsidian", 'R', "dustRedstone");
-
-	// Spikes
-	public static final IRecipe SPIKES = new ShapedOreRecipe(getResource("recipe_spikes"), new ItemStack(ModBlocks.SPIKES_ITEM), "   ", " S ", "SIS", 'S', new ItemStack(Items.IRON_SWORD), 'I', "blockIron");
-
-	// Tank
-	public static final IRecipe TANK = new ShapedOreRecipe(getResource("recipe_tank"), new ItemStack(ModBlocks.TANK_ITEM), "IGI", "GGG", "IGI", 'I', "ingotIron", 'G', "blockGlass");
-
-	// Tank Sink
-	public static final IRecipe TANK_SINK = new ShapedOreRecipe(getResource("recipe_tank_sink"), new ItemStack(ModBlocks.TANK_SINK_ITEM), " I ", "EHE", " T ", 'I', new ItemStack(Blocks.IRON_BARS), 'H', new ItemStack(Item.getItemFromBlock(Blocks.HOPPER)), 'T', new ItemStack(ModBlocks.TANK_ITEM), 'E', new ItemStack(Items.ENDER_EYE));
-
-	// XP TAP
-	public static final IRecipe XP_TAP = new ShapedOreRecipe(getResource("recipe_xp_tap"), new ItemStack(ModBlocks.XP_TAP_ITEM), "O  ", "II ", "I  ", 'O', "obsidian", 'I', "ingotIron");
-
-	// Fan
-	public static final IRecipe FAN = new ShapedOreRecipe(getResource("recipe_fan"), new ItemStack(ModBlocks.FAN_ITEM), "SIS", "IRI", "SIS", 'S', new ItemStack(Blocks.STONE_SLAB), 'I', "ingotIron", 'R', "blockRedstone");
-
 	// Fan Upgrades
 	public static final IRecipe FAN_UPGRADE_1 = new ShapedOreRecipe(getResource("recipe_fan_uprade_1"), new ItemStack(ModItems.FAN_UPGRADE, 1, 0), "I I", "FFF", "I I", 'I', "ingotIron", 'F', "feather");
 	public static final IRecipe FAN_UPGRADE_2 = new ShapedOreRecipe(getResource("recipe_fan_uprade_2"), new ItemStack(ModItems.FAN_UPGRADE, 1, 1), "IFI", " F ", "IFI", 'I', "ingotIron", 'F', "feather");
