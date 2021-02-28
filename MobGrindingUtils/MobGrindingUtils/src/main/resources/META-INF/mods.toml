@@ -1,0 +1,16 @@
+modLoader="javafml" #mandatory
+loaderVersion="[35,)" #mandatory This is typically bumped every Minecraft version by Forge. See our download page for lists of versions.
+license="All rights reserved"
+[[mods]] #mandatory
+modId="mob_grinding_utils" #mandatory
+version="${file.jarVersion}" #mandatory
+displayName="Mob Grinding Utils" #mandatory
+logoFile="examplemod.png" #optional
+# A text field displayed in the mod UI
+credits="" #optional
+# A text field displayed in the mod UI
+authors="vadis365" #optional
+# The description text for the mod (multi line!) (#mandatory)
+description='''
+A mod that adds a fun ways to farm mobs'''
+
