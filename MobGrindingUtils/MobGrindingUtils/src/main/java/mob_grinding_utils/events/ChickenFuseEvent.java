@@ -33,7 +33,7 @@ public class ChickenFuseEvent {
 
 					if (startTime <= 19) {
 						nbt.setInteger("countDown", nbt.getInteger("countDown") + 1);
-						MobGrindingUtils.NETWORK_WRAPPER.sendToAll(new MessageChickenSync(entity, nbt));
+						//MobGrindingUtils.NETWORK_WRAPPER.sendToAll(new MessageChickenSync(entity, nbt)); //todo
 					}
 
 					if (startTime >= 20) {

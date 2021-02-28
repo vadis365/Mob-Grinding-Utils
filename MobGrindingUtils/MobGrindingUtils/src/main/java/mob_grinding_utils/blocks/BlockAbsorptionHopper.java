@@ -185,7 +185,7 @@ public class BlockAbsorptionHopper extends BlockContainer {
 	@SubscribeEvent
 	@SideOnly(Side.CLIENT)
 	public void onTextureStitchPre(TextureStitchEvent.Pre event) {
-		event.getMap().registerSprite(MobGrindingUtils.FLUID_XP.getStill());
-		event.getMap().registerSprite(MobGrindingUtils.FLUID_XP.getFlowing());
+		//event.getMap().registerSprite(MobGrindingUtils.FLUID_XP.getStill()); //todo
+		//event.getMap().registerSprite(MobGrindingUtils.FLUID_XP.getFlowing()); //todo
 	}
 }

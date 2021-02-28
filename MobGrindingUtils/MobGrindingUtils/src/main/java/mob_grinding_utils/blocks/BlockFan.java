@@ -6,6 +6,7 @@ import mob_grinding_utils.MobGrindingUtils;
 import mob_grinding_utils.tile.TileEntityFan;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockDirectional;
+import net.minecraft.block.DirectionalBlock;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
@@ -33,7 +34,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class BlockFan extends BlockDirectional implements ITileEntityProvider {
+public class BlockFan extends DirectionalBlock implements ITileEntityProvider {
 	public static final PropertyBool POWERED = PropertyBool.create("powered");
 
 	public BlockFan() {

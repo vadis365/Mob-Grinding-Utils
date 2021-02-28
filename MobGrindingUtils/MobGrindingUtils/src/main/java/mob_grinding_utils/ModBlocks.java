@@ -24,12 +24,16 @@ import mob_grinding_utils.blocks.BlockXPTap;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.event.RegistryEvent;
@@ -42,13 +46,13 @@ import net.minecraftforge.registries.IForgeRegistry;
 
 public class ModBlocks {
 	private static final List<Block> BLOCKS = new LinkedList<Block>();
-	public static final List<ItemBlock> ITEM_BLOCKS = new ArrayList<ItemBlock>();
+	public static final List<BlockItem> ITEM_BLOCKS = new ArrayList<BlockItem>();
 
 	public static final Block FAN = new BlockFan();
-	public static final ItemBlock FAN_ITEM = new ItemBlock(FAN) {
+	public static final BlockItem FAN_ITEM = new BlockItem(FAN) {
+			@OnlyIn(Dist.CLIENT)
 			@Override
-			@SideOnly(Side.CLIENT)
-			public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> list, ITooltipFlag flag) {
+			public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> list, ITooltipFlag flag) {
 				list.add(TextFormatting.YELLOW + new TextComponentTranslation("tooltip.fan_1").getFormattedText());
 				list.add(TextFormatting.YELLOW + new TextComponentTranslation("tooltip.fan_2").getFormattedText());
 				list.add(TextFormatting.YELLOW + new TextComponentTranslation("tooltip.fan_3").getFormattedText());
@@ -56,10 +60,10 @@ public class ModBlocks {
 		};
 
 		public static final Block SAW = new BlockSaw();
-		public static final ItemBlock SAW_ITEM = new ItemBlock(SAW) {
+		public static final BlockItem SAW_ITEM = new BlockItem(SAW) {
+			@OnlyIn(Dist.CLIENT)
 			@Override
-			@SideOnly(Side.CLIENT)
-			public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> list, ITooltipFlag flag) {
+			public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> list, ITooltipFlag flag) {
 				list.add(TextFormatting.YELLOW + new TextComponentTranslation("tooltip.saw_1").getFormattedText());
 				list.add(TextFormatting.YELLOW + new TextComponentTranslation("tooltip.saw_2").getFormattedText());
 				list.add(TextFormatting.YELLOW + new TextComponentTranslation("tooltip.saw_3").getFormattedText());
@@ -67,10 +71,10 @@ public class ModBlocks {
 		};
 
 		public static final Block ABSORPTION_HOPPER = new BlockAbsorptionHopper();
-		public static final ItemBlock ABSORPTION_HOPPER_ITEM = new ItemBlock(ABSORPTION_HOPPER) {
+		public static final BlockItem ABSORPTION_HOPPER_ITEM = new BlockItem(ABSORPTION_HOPPER) {
+			@OnlyIn(Dist.CLIENT)
 			@Override
-			@SideOnly(Side.CLIENT)
-			public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> list, ITooltipFlag flag) {
+			public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> list, ITooltipFlag flag) {
 				list.add(TextFormatting.YELLOW + new TextComponentTranslation("tooltip.hopper_1").getFormattedText());
 				list.add(TextFormatting.YELLOW + new TextComponentTranslation("tooltip.hopper_2").getFormattedText());
 				list.add(TextFormatting.YELLOW + new TextComponentTranslation("tooltip.hopper_3").getFormattedText());
@@ -81,20 +85,20 @@ public class ModBlocks {
 		};
 
 		public static final Block SPIKES = new BlockSpikes();
-		public static final ItemBlock SPIKES_ITEM = new ItemBlock(SPIKES) {
+		public static final BlockItem SPIKES_ITEM = new BlockItem(SPIKES) {
+			@OnlyIn(Dist.CLIENT)
 			@Override
-			@SideOnly(Side.CLIENT)
-			public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> list, ITooltipFlag flag) {
+			public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> list, ITooltipFlag flag) {
 				list.add(TextFormatting.YELLOW + new TextComponentTranslation("tooltip.spikes_1").getFormattedText());
 				list.add(TextFormatting.YELLOW + new TextComponentTranslation("tooltip.spikes_2").getFormattedText());
 			}
 		};
 
 		public static final Block TANK = new BlockTank();
-		public static final ItemBlock TANK_ITEM = new ItemBlock(TANK) {
+		public static final BlockItem TANK_ITEM = new BlockItem(TANK) {
+			@OnlyIn(Dist.CLIENT)
 			@Override
-			@SideOnly(Side.CLIENT)
-			public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> list, ITooltipFlag flag) {
+			public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> list, ITooltipFlag flag) {
 				if(stack.hasTagCompound() && !stack.getTagCompound().hasKey("Empty")) {
 					FluidStack fluid = FluidStack.loadFluidStackFromNBT(stack.getTagCompound());
 					if(fluid !=null) {
@@ -106,10 +110,10 @@ public class ModBlocks {
 		};
 
 		public static final Block TANK_SINK = new BlockTankSink();
-		public static final ItemBlock TANK_SINK_ITEM = new ItemBlock(TANK_SINK) {
+		public static final BlockItem TANK_SINK_ITEM = new BlockItem(TANK_SINK) {
+			@OnlyIn(Dist.CLIENT)
 			@Override
-			@SideOnly(Side.CLIENT)
-			public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> list, ITooltipFlag flag) {
+			public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> list, ITooltipFlag flag) {
 				if(stack.hasTagCompound() && !stack.getTagCompound().hasKey("Empty")) {
 					FluidStack fluid = FluidStack.loadFluidStackFromNBT(stack.getTagCompound());
 					if(fluid !=null) {
@@ -121,20 +125,20 @@ public class ModBlocks {
 		};
 
 		public static final Block XP_TAP = new BlockXPTap();
-		public static final ItemBlock XP_TAP_ITEM = new ItemBlock(XP_TAP) {
+		public static final BlockItem XP_TAP_ITEM = new BlockItem(XP_TAP) {
+			@OnlyIn(Dist.CLIENT)
 			@Override
-			@SideOnly(Side.CLIENT)
-			public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> list, ITooltipFlag flag) {
+			public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> list, ITooltipFlag flag) {
 				list.add(TextFormatting.YELLOW + new TextComponentTranslation("tooltip.xptap_1").getFormattedText());
 				list.add(TextFormatting.YELLOW + new TextComponentTranslation("tooltip.xptap_2").getFormattedText());
 			}
 		};
 
 		public static final Block WITHER_MUFFLER = new BlockWitherMuffler();
-		public static final ItemBlock WITHER_MUFFLER_ITEM = new ItemBlock(WITHER_MUFFLER) {
+		public static final BlockItem WITHER_MUFFLER_ITEM = new BlockItem(WITHER_MUFFLER) {
+			@OnlyIn(Dist.CLIENT)
 			@Override
-			@SideOnly(Side.CLIENT)
-			public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> list, ITooltipFlag flag) {
+			public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> list, ITooltipFlag flag) {
 				list.add(TextFormatting.YELLOW + new TextComponentTranslation("tooltip.withermuffler_1").getFormattedText());
 				list.add(TextFormatting.YELLOW + new TextComponentTranslation("tooltip.withermuffler_2").getFormattedText());
 				list.add(TextFormatting.YELLOW + new TextComponentTranslation("tooltip.withermuffler_3").getFormattedText());
@@ -143,9 +147,9 @@ public class ModBlocks {
 
 		public static final Block DRAGON_MUFFLER = new BlockDragonMuffler();
 		public static final ItemBlock DRAGON_MUFFLER_ITEM = new ItemBlock(DRAGON_MUFFLER) {
+			@OnlyIn(Dist.CLIENT)
 			@Override
-			@SideOnly(Side.CLIENT)
-			public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> list, ITooltipFlag flag) {
+			public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> list, ITooltipFlag flag) {
 				list.add(TextFormatting.YELLOW + new TextComponentTranslation("tooltip.dragonmuffler_1").getFormattedText());
 				list.add(TextFormatting.YELLOW + new TextComponentTranslation("tooltip.dragonmuffler_2").getFormattedText());
 				list.add(TextFormatting.YELLOW + new TextComponentTranslation("tooltip.dragonmuffler_3").getFormattedText());
@@ -153,29 +157,29 @@ public class ModBlocks {
 		};
 
 		public static final Block DARK_OAK_STONE= new BlockDarkOakStone();
-		public static final ItemBlock DARK_OAK_STONE_ITEM = new ItemBlock(DARK_OAK_STONE) {
+		public static final BlockItem DARK_OAK_STONE_ITEM = new BlockItem(DARK_OAK_STONE) {
+			@OnlyIn(Dist.CLIENT)
 			@Override
-			@SideOnly(Side.CLIENT)
-			public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> list, ITooltipFlag flag) {
+			public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> list, ITooltipFlag flag) {
 				list.add(TextFormatting.YELLOW + new TextComponentTranslation("tooltip.darkoakstone").getFormattedText());
 			}
 		};
 
 		public static final Block ENTITY_CONVEYOR = new BlockEntityConveyor();
-		public static final ItemBlock ENTITY_CONVEYOR_ITEM = new ItemBlock(ENTITY_CONVEYOR) {
+		public static final BlockItem ENTITY_CONVEYOR_ITEM = new BlockItem(ENTITY_CONVEYOR) {
+			@OnlyIn(Dist.CLIENT)
 			@Override
-			@SideOnly(Side.CLIENT)
-			public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> list, ITooltipFlag flag) {
+			public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> list, ITooltipFlag flag) {
 				list.add(TextFormatting.YELLOW + new TextComponentTranslation("tooltip.entityconveyor_1").getFormattedText());
 				list.add(TextFormatting.YELLOW + new TextComponentTranslation("tooltip.entityconveyor_2").getFormattedText());
 			}
 		};
 
 		public static final Block ENDER_INHIBITOR_ON = new BlockEnderInhibitorOn().setCreativeTab(MobGrindingUtils.TAB);
-		public static final ItemBlock ENDER_INHIBITOR_ON_ITEM = new ItemBlock(ENDER_INHIBITOR_ON) {
+		public static final BlockItem ENDER_INHIBITOR_ON_ITEM = new BlockItem(ENDER_INHIBITOR_ON) {
+			@OnlyIn(Dist.CLIENT)
 			@Override
-			@SideOnly(Side.CLIENT)
-			public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> list, ITooltipFlag flag) {
+			public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> list, ITooltipFlag flag) {
 				list.add(TextFormatting.YELLOW + new TextComponentTranslation("tooltip.enderinhibitor_1").getFormattedText());
 				list.add(TextFormatting.YELLOW + new TextComponentTranslation("tooltip.enderinhibitor_2").getFormattedText());
 				list.add(TextFormatting.YELLOW + new TextComponentTranslation("tooltip.enderinhibitor_3").getFormattedText());
@@ -183,10 +187,10 @@ public class ModBlocks {
 		};
 
 		public static final Block ENDER_INHIBITOR_OFF = new BlockEnderInhibitorOff();
-		public static final ItemBlock ENDER_INHIBITOR_OFF_ITEM = new ItemBlock(ENDER_INHIBITOR_OFF) {
+		public static final BlockItem ENDER_INHIBITOR_OFF_ITEM = new BlockItem(ENDER_INHIBITOR_OFF) {
+			@OnlyIn(Dist.CLIENT)
 			@Override
-			@SideOnly(Side.CLIENT)
-			public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> list, ITooltipFlag flag) {
+			public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> list, ITooltipFlag flag) {
 				list.add(TextFormatting.YELLOW + new TextComponentTranslation("tooltip.enderinhibitor_1").getFormattedText());
 				list.add(TextFormatting.YELLOW + new TextComponentTranslation("tooltip.enderinhibitor_2").getFormattedText());
 				list.add(TextFormatting.YELLOW + new TextComponentTranslation("tooltip.enderinhibitor_3").getFormattedText());
@@ -202,8 +206,8 @@ public class ModBlocks {
 					String name = field.getName().toLowerCase(Locale.ENGLISH);
 					registerBlock(name, block);
 				}
-				if (obj instanceof ItemBlock) {
-					ItemBlock blockItem = (ItemBlock) obj;
+				if (obj instanceof BlockItem) {
+					BlockItem blockItem = (BlockItem) obj;
 					String name = field.getName().toLowerCase(Locale.ENGLISH);
 					registerItemBlock(name, blockItem);
 				}
@@ -218,7 +222,7 @@ public class ModBlocks {
 		block.setRegistryName(Reference.MOD_ID, name).setTranslationKey(Reference.MOD_ID + "." + name);
 	}
 
-	public static void registerItemBlock(String name, ItemBlock item) {
+	public static void registerItemBlock(String name, BlockItem item) {
 		String[] newName = name.split("_item");
 		ITEM_BLOCKS.add(item);
 		item.setRegistryName(Reference.MOD_ID, newName[0]).setTranslationKey(Reference.MOD_ID + "." + newName[0]);
@@ -239,7 +243,7 @@ public class ModBlocks {
 		@SubscribeEvent
 		public static void registerItemBlocks(final RegistryEvent.Register<Item> event) {
 			final IForgeRegistry<Item> registry = event.getRegistry();
-				for (ItemBlock item : ITEM_BLOCKS) {
+				for (BlockItem item : ITEM_BLOCKS) {
 				registry.register(item);
 			}
 		}
@@ -247,7 +251,7 @@ public class ModBlocks {
 		@SideOnly(Side.CLIENT)
 		@SubscribeEvent
 		public static void registerModels(ModelRegistryEvent event) {
-			for (ItemBlock item : ITEM_BLOCKS) {
+			for (BlockItem item : ITEM_BLOCKS) {
 				ModelLoader.setCustomModelResourceLocation(item, 0, new ModelResourceLocation(item.getRegistryName().toString(), "inventory"));
 			}
 		}

@@ -31,7 +31,7 @@ public class ChickenInteractionEvent {
 									nbt.setString("mguMobName", event.getItemStack().getTagCompound().getString("mguMobName"));
 								if (event.getItemStack().hasTagCompound() && event.getItemStack().getTagCompound().hasKey("chickenType"))
 									nbt.setString("chickenType", event.getItemStack().getTagCompound().getString("chickenType"));
-								MobGrindingUtils.NETWORK_WRAPPER.sendToAll(new MessageChickenSync(entity, nbt));
+								//MobGrindingUtils.NETWORK_WRAPPER.sendToAll(new MessageChickenSync(entity, nbt)); //todo
 							}
 							entity.motionY += (0.06D * (double) (10) - entity.motionY) * 0.2D;
 							((EntityChicken) entity).setNoGravity(true);

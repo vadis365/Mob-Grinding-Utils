@@ -1,6 +1,5 @@
 package mob_grinding_utils;
 
-import mob_grinding_utils.blocks.BlockAbsorptionHopper;
 import mob_grinding_utils.blocks.BlockSpikes;
 import mob_grinding_utils.capability.base.EntityCapabilityHandler;
 import mob_grinding_utils.capability.bossbars.BossBarPlayerCapability;
@@ -17,77 +16,68 @@ import mob_grinding_utils.events.MGUEndermanInhibitEvent;
 import mob_grinding_utils.events.MGUZombieReinforcementEvent;
 import mob_grinding_utils.events.ParticleTextureStitchEvent;
 import mob_grinding_utils.events.RenderChickenSwell;
-import mob_grinding_utils.network.MessageAbsorptionHopper;
-import mob_grinding_utils.network.MessageChickenSync;
-import mob_grinding_utils.network.MessageFan;
-import mob_grinding_utils.network.MessageSyncEntityCapabilities;
-import mob_grinding_utils.network.MessageTapParticle;
-import mob_grinding_utils.proxy.CommonProxy;
+import mob_grinding_utils.network.*;
 import mob_grinding_utils.tile.TileEntitySaw;
-import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.block.Blocks;
+import net.minecraft.fluid.Fluid;
+import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidRegistry;
-import net.minecraftforge.fml.common.Loader;
+import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.Mod.EventHandler;
-import net.minecraftforge.fml.common.Mod.Instance;
-import net.minecraftforge.fml.common.SidedProxy;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.network.NetworkRegistry;
-import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
-import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.fml.network.NetworkRegistry;
+import net.minecraftforge.fml.network.simple.SimpleChannel;
+import org.spongepowered.asm.mixin.MixinEnvironment;
 
-@Mod(modid = Reference.MOD_ID, name = Reference.MOD_NAME, version = Reference.VERSION)
 
+@Mod("mob_grinding_utils")
 public class MobGrindingUtils {
-
-	@Instance(Reference.MOD_ID)
-	public static MobGrindingUtils INSTANCE;
-
-	@SidedProxy(clientSide = Reference.PROXY_CLIENT, serverSide = Reference.PROXY_COMMON)
-	public static CommonProxy PROXY;
+	//@SidedProxy(clientSide = Reference.PROXY_CLIENT, serverSide = Reference.PROXY_COMMON)
+	//public static CommonProxy PROXY;
+	public static final String MOD_ID = "mob_grinding_utils";
 	public static Fluid FLUID_XP;
-	public static SimpleNetworkWrapper NETWORK_WRAPPER;
+	public static SimpleChannel NETWORK_WRAPPER;
 	public static DamageSource SPIKE_DAMAGE;
 
-	public static CreativeTabs TAB = new CreativeTabs(Reference.MOD_NAME) {
+	public static final ItemGroup TAB = new ItemGroup(MOD_ID) {
 		@Override
 		public ItemStack createIcon() {
-			return new ItemStack(ModBlocks.SPIKES_ITEM);
+			//return new ItemStack(ModBlocks.SPIKES_ITEM);
+			return new ItemStack(Blocks.CHEST); //temporary..
 		}
 	};
-
+/*
 	static { 
 		FluidRegistry.enableUniversalBucket();
 	} 
+*/
 
-	@EventHandler
-	public void preInit(FMLPreInitializationEvent event) {
-		if (!Loader.isModLoaded("openblocks") && !Loader.isModLoaded("enderio")) {
+	public MobGrindingUtils() {
+		IEventBus modBus = FMLJavaModLoadingContext.get().getModEventBus();
+
+		modBus.addListener(this::setup);
+	}
+
+	public void setup(FMLCommonSetupEvent event) {
+		/*
+		if (!ModList.get().isLoaded("openblocks") && !ModList.get().isLoaded("enderio")) {
 			FLUID_XP = new Fluid("xpjuice", new ResourceLocation("mob_grinding_utils:fluids/fluid_xp"), new ResourceLocation("mob_grinding_utils:fluids/fluid_xp")).setLuminosity(10).setDensity(800).setViscosity(1500).setUnlocalizedName("mob_grinding_utils.fluid_xp");
 			FluidRegistry.registerFluid(FLUID_XP);
 			FluidRegistry.addBucketForFluid(FLUID_XP);
 			if (event.getSide() == Side.CLIENT)
 				MinecraftForge.EVENT_BUS.register(new BlockAbsorptionHopper());
 		}
-
+*/
 		SPIKE_DAMAGE = new DamageSource("spikes").setDamageBypassesArmor();
 
-		PROXY.registerTileEntities();
-		PROXY.registerRenderers();
-		NetworkRegistry.INSTANCE.registerGuiHandler(INSTANCE, PROXY);
-		NETWORK_WRAPPER = NetworkRegistry.INSTANCE.newSimpleChannel(Reference.MOD_NAME);
-		NETWORK_WRAPPER.registerMessage(MessageAbsorptionHopper.class, MessageAbsorptionHopper.class, 0, Side.SERVER);
-		NETWORK_WRAPPER.registerMessage(MessageChickenSync.class, MessageChickenSync.class, 1, Side.CLIENT);
-		NETWORK_WRAPPER.registerMessage(MessageTapParticle.class, MessageTapParticle.class, 2, Side.CLIENT);
-		NETWORK_WRAPPER.registerMessage(MessageSyncEntityCapabilities.class, MessageSyncEntityCapabilities.class, 3, Side.CLIENT);
-		NETWORK_WRAPPER.registerMessage(MessageFan.class, MessageFan.class, 4, Side.SERVER);
+		//PROXY.registerTileEntities();
+		//PROXY.registerRenderers();
+		//NetworkRegistry.INSTANCE.registerGuiHandler(INSTANCE, PROXY);
+		NETWORK_WRAPPER = MGUNetwork.getNetworkChannel();
 		
 		MinecraftForge.EVENT_BUS.register(new BlockSpikes());
 		MinecraftForge.EVENT_BUS.register(new ChickenInteractionEvent());
@@ -99,7 +89,7 @@ public class MobGrindingUtils {
 		MinecraftForge.EVENT_BUS.register(new MGUZombieReinforcementEvent());
 		MinecraftForge.EVENT_BUS.register(new FillXPBottleEvent());
 		MinecraftForge.EVENT_BUS.register(new MGUEndermanInhibitEvent());
-
+/*
 		if (event.getSide() == Side.CLIENT) {
 			MinecraftForge.EVENT_BUS.register(new RenderChickenSwell());
 			MinecraftForge.EVENT_BUS.register(new ParticleTextureStitchEvent());
@@ -108,18 +98,9 @@ public class MobGrindingUtils {
 			MinecraftForge.EVENT_BUS.register(new GlobalDragonSoundEvent());
 			MinecraftForge.EVENT_BUS.register(new TileEntitySaw());
 		}
-
 		EntityCapabilityHandler.registerEntityCapability(new BossBarPlayerCapability());
 		EntityCapabilityHandler.registerCapabilities();
-	}
 
-	@EventHandler
-	public void init(FMLInitializationEvent event) {
+ */ //todo
 	}
-
-	@EventHandler
-	public void postInit(FMLPostInitializationEvent event) {
-		PROXY.postInit();
-	}
-
 }

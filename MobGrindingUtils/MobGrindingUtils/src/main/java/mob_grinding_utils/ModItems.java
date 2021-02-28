@@ -14,6 +14,7 @@ import mob_grinding_utils.items.ItemSawUpgrade;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemSword;
+import net.minecraft.item.SwordItem;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.event.RegistryEvent;
@@ -32,7 +33,7 @@ public class ModItems {
 	public static final Item SAW_UPGRADE = new ItemSawUpgrade();
 	public static final Item MOB_SWAB = new ItemMobSwab();
 	public static final Item GM_CHICKEN_FEED = new ItemGMChickenFeed();
-	public static final ItemSword NULL_SWORD = new ItemImaginaryInvisibleNotReallyThereSword();
+	public static final SwordItem NULL_SWORD = new ItemImaginaryInvisibleNotReallyThereSword();
 
 	public static void init() {
 		try {

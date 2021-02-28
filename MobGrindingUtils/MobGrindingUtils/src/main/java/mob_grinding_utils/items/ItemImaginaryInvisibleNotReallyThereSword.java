@@ -10,12 +10,13 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemSword;
+import net.minecraft.item.SwordItem;
 import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class ItemImaginaryInvisibleNotReallyThereSword extends ItemSword {
+public class ItemImaginaryInvisibleNotReallyThereSword extends SwordItem {
 	public ItemImaginaryInvisibleNotReallyThereSword() {
 		super(ToolMaterial.DIAMOND);
 	}
