@@ -57,30 +57,30 @@ public class ModBlocks {
 	
 	public static Block FAN;
 	public static BlockItem FAN_ITEM;
-	public static TileEntityType<?> FAN_TILE;
+	public static TileEntityType<TileEntityFan> FAN_TILE;
 
 	public static Block SAW;
 	public static BlockItem SAW_ITEM;
-	public static TileEntityType<?> SAW_TILE;
+	public static TileEntityType<TileEntitySaw> SAW_TILE;
 
 	public static Block ABSORPTION_HOPPER;
 	public static BlockItem ABSORPTION_HOPPER_ITEM;
-	public static TileEntityType<?> ABSORPTION_HOPPER_TILE;
+	public static TileEntityType<TileEntityAbsorptionHopper> ABSORPTION_HOPPER_TILE;
 
 	public static Block SPIKES;
 	public static BlockItem SPIKES_ITEM;
 
 	public static Block TANK;
 	public static BlockItem TANK_ITEM;
-	public static TileEntityType<?> TANK_TILE;
+	public static TileEntityType<TileEntityTank> TANK_TILE;
 
 	public static Block TANK_SINK;
 	public static BlockItem TANK_SINK_ITEM;
-	public static TileEntityType<?> TANK_SINK_TILE;
+	public static TileEntityType<TileEntitySinkTank> TANK_SINK_TILE;
 
 	public static Block XP_TAP;
 	public static BlockItem XP_TAP_ITEM;
-	public static TileEntityType<?> XP_TAP_TILE;
+	public static TileEntityType<TileEntityXPTap> XP_TAP_TILE;
 
 	public static Block WITHER_MUFFLER;
 	public static BlockItem WITHER_MUFFLER_ITEM;
