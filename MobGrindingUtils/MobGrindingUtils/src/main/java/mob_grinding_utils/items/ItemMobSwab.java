@@ -21,32 +21,33 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.NonNullList;
-import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ItemMobSwab extends Item implements ISubItemsItem {
 
-	public ItemMobSwab() {
-		super();
-		setMaxStackSize(1);
-		setCreativeTab(MobGrindingUtils.TAB);
+	public ItemMobSwab(Properties properties) {
+		super(properties);
 	}
 
 	@Override
-	@SideOnly(Side.CLIENT)
-	public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> list, ITooltipFlag flag) {
-		if (!stack.hasTagCompound())
-			list.add(TextFormatting.YELLOW + new TextComponentTranslation("tooltip.mobswab_1").getFormattedText());
-		else if (stack.hasTagCompound() && stack.getTagCompound().hasKey("mguMobName")) {
-			list.add(TextFormatting.YELLOW + new TextComponentTranslation("tooltip.mobswab_2").getFormattedText());
-			if(stack.getTagCompound().hasKey("chickenType"))
-				list.add(TextFormatting.GREEN + new TextComponentTranslation("tooltip.mobswab_3").getFormattedText()  + " " + stack.getTagCompound().getTag("chickenType") + TextFormatting.GREEN + " 'DNA'.");
+	@OnlyIn(Dist.CLIENT)
+	public void addInformation(ItemStack stack, @Nullable World world, List<ITextComponent> list, ITooltipFlag flag) {
+		if (!stack.hasTag())
+			list.add(new TranslationTextComponent("tooltip.mobswab_1").mergeStyle(TextFormatting.YELLOW));
+		else if (stack.hasTag() && stack.getTag().contains("mguMobName")) {
+			list.add(new TranslationTextComponent("tooltip.mobswab_2").mergeStyle(TextFormatting.YELLOW));
+			if(stack.getTag().contains("chickenType"))
+				list.add(new TranslationTextComponent("tooltip.mobswab_3").mergeStyle(TextFormatting.GREEN).appendString(" " + stack.getTag().get("chickenType").getString() + " 'DNA'."));
 			else
-				list.add(TextFormatting.GREEN + new TextComponentTranslation("tooltip.mobswab_3").getFormattedText()  + " " + stack.getTagCompound().getTag("mguMobName") + TextFormatting.GREEN + " 'DNA'.");
+				list.add(new TranslationTextComponent("tooltip.mobswab_3").mergeStyle(TextFormatting.GREEN).appendString( " " + stack.getTag().get("mguMobName").getString() + " 'DNA'."));
 		}
 	}
 

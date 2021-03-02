@@ -14,36 +14,37 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
-import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ItemSawUpgrade extends Item implements ISubItemsItem {
 
-	public ItemSawUpgrade() {
-		super();
-		setMaxStackSize(64);
-		setHasSubtypes(true);
-		setCreativeTab(MobGrindingUtils.TAB);
+	public ItemSawUpgrade(Properties properties) {
+		super(properties);
+//		setHasSubtypes(true);
 	}
 
 	@Override
-	@SideOnly(Side.CLIENT)
-	public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> list, ITooltipFlag flag) {
-		if (stack.getItemDamage() == EnumSawUpgradeType.SHARPNESS.ordinal())
-			list.add(TextFormatting.YELLOW + new TextComponentTranslation("tooltip.sawupgrade_sharpness").getFormattedText());
-		if (stack.getItemDamage() == EnumSawUpgradeType.LOOTING.ordinal())
-			list.add(TextFormatting.YELLOW + new TextComponentTranslation("tooltip.sawupgrade_looting").getFormattedText());
-		if (stack.getItemDamage() == EnumSawUpgradeType.FIRE.ordinal())
-			list.add(TextFormatting.YELLOW + new TextComponentTranslation("tooltip.sawupgrade_fire").getFormattedText());
-		if (stack.getItemDamage() == EnumSawUpgradeType.SMITE.ordinal())
-			list.add(TextFormatting.YELLOW + new TextComponentTranslation("tooltip.sawupgrade_smite").getFormattedText());
-		if (stack.getItemDamage() == EnumSawUpgradeType.ARTHROPOD.ordinal())
-			list.add(TextFormatting.YELLOW + new TextComponentTranslation("tooltip.sawupgrade_arthropods").getFormattedText());
-		if (stack.getItemDamage() == EnumSawUpgradeType.BEHEADING.ordinal())
-			list.add(TextFormatting.YELLOW + new TextComponentTranslation("tooltip.sawupgrade_beheading").getFormattedText());
+	@OnlyIn(Dist.CLIENT)
+	public void addInformation(ItemStack stack, @Nullable World world, List<ITextComponent> list, ITooltipFlag flag) {
+		if (stack.getDamage() == EnumSawUpgradeType.SHARPNESS.ordinal())
+			list.add(new TranslationTextComponent("tooltip.sawupgrade_sharpness").mergeStyle(TextFormatting.YELLOW));
+		if (stack.getDamage() == EnumSawUpgradeType.LOOTING.ordinal())
+			list.add(new TranslationTextComponent("tooltip.sawupgrade_looting").mergeStyle(TextFormatting.YELLOW));
+		if (stack.getDamage() == EnumSawUpgradeType.FIRE.ordinal())
+			list.add(new TranslationTextComponent("tooltip.sawupgrade_fire").mergeStyle(TextFormatting.YELLOW));
+		if (stack.getDamage() == EnumSawUpgradeType.SMITE.ordinal())
+			list.add(new TranslationTextComponent("tooltip.sawupgrade_smite").mergeStyle(TextFormatting.YELLOW));
+		if (stack.getDamage() == EnumSawUpgradeType.ARTHROPOD.ordinal())
+			list.add(new TranslationTextComponent("tooltip.sawupgrade_arthropods").mergeStyle(TextFormatting.YELLOW));
+		if (stack.getDamage() == EnumSawUpgradeType.BEHEADING.ordinal())
+			list.add(new TranslationTextComponent("tooltip.sawupgrade_beheading").mergeStyle(TextFormatting.YELLOW));
 	}
 
 	@Override

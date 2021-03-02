@@ -1,19 +1,21 @@
 package mob_grinding_utils.datagen;
 
-import com.google.gson.JsonObject;
-import mob_grinding_utils.MobGrindingUtils;
-import mob_grinding_utils.ModBlocks;
-import mob_grinding_utils.ModItems;
-import net.minecraft.data.*;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.item.crafting.IRecipe;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.common.Tags;
-
 import java.nio.file.Path;
 import java.util.function.Consumer;
+
+import com.google.gson.JsonObject;
+
+import mob_grinding_utils.ModBlocks;
+import mob_grinding_utils.ModItems;
+import mob_grinding_utils.Reference;
+import net.minecraft.data.DataGenerator;
+import net.minecraft.data.DirectoryCache;
+import net.minecraft.data.IFinishedRecipe;
+import net.minecraft.data.RecipeProvider;
+import net.minecraft.data.ShapedRecipeBuilder;
+import net.minecraft.item.Items;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.common.Tags;
 
 public class Recipes extends RecipeProvider {
     public Recipes(DataGenerator generatorIn) {
@@ -31,7 +33,7 @@ public class Recipes extends RecipeProvider {
                 .key('', )
                 .key('', )
                 .addCriterion("", hasItem(Items.AIR))
-                .build(consumer, new ResourceLocation(MobGrindingUtils.MOD_ID, "recipe_"));
+                .build(consumer, new ResourceLocation(Reference.MOD_ID, "recipe_"));
         */
 
 
@@ -44,7 +46,7 @@ public class Recipes extends RecipeProvider {
                 .key('O', Tags.Items.OBSIDIAN)
                 .key('H', Items.HOPPER)
                 .addCriterion("", hasItem(Items.AIR))
-                .build(consumer, new ResourceLocation(MobGrindingUtils.MOD_ID, "recipe_absorbtion_hopper"));
+                .build(consumer, new ResourceLocation(Reference.MOD_ID, "recipe_absorption_hopper"));
 
         // Absorption Hopper Upgrade
         ShapedRecipeBuilder.shapedRecipe(ModItems.ABSORPTION_UPGRADE)
@@ -55,7 +57,7 @@ public class Recipes extends RecipeProvider {
                 .key('O', Tags.Items.OBSIDIAN)
                 .key('R', Tags.Items.DUSTS_REDSTONE)
                 .addCriterion("", hasItem(Items.AIR))
-                .build(consumer, new ResourceLocation(MobGrindingUtils.MOD_ID, "recipe_absorbtion_upgrade"));
+                .build(consumer, new ResourceLocation(Reference.MOD_ID, "recipe_absorption_upgrade"));
 
         // Spikes
         ShapedRecipeBuilder.shapedRecipe(ModBlocks.SPIKES_ITEM)
@@ -64,7 +66,7 @@ public class Recipes extends RecipeProvider {
                 .key('S', Items.IRON_SWORD)
                 .key('I', Tags.Items.STORAGE_BLOCKS_IRON)
                 .addCriterion("", hasItem(Items.AIR))
-                .build(consumer, new ResourceLocation(MobGrindingUtils.MOD_ID, "recipe_spikes"));
+                .build(consumer, new ResourceLocation(Reference.MOD_ID, "recipe_spikes"));
 
         // Tank
         ShapedRecipeBuilder.shapedRecipe(ModBlocks.TANK_ITEM)
@@ -74,7 +76,7 @@ public class Recipes extends RecipeProvider {
                 .key('I', Tags.Items.INGOTS_IRON)
                 .key('G', Tags.Items.GLASS)
                 .addCriterion("", hasItem(Items.AIR))
-                .build(consumer, new ResourceLocation(MobGrindingUtils.MOD_ID, "recipe_tank"));
+                .build(consumer, new ResourceLocation(Reference.MOD_ID, "recipe_tank"));
 
         // Tank Sink
         ShapedRecipeBuilder.shapedRecipe(ModBlocks.TANK_SINK_ITEM)
@@ -86,7 +88,7 @@ public class Recipes extends RecipeProvider {
                 .key('H', Items.HOPPER)
                 .key('T', ModBlocks.TANK_ITEM)
                 .addCriterion("", hasItem(Items.AIR))
-                .build(consumer, new ResourceLocation(MobGrindingUtils.MOD_ID, "recipe_tank_sink"));
+                .build(consumer, new ResourceLocation(Reference.MOD_ID, "recipe_tank_sink"));
 
         // XP TAP
         ShapedRecipeBuilder.shapedRecipe(ModBlocks.XP_TAP_ITEM)
@@ -96,7 +98,7 @@ public class Recipes extends RecipeProvider {
                 .key('O', Tags.Items.OBSIDIAN)
                 .key('I', Tags.Items.INGOTS_IRON)
                 .addCriterion("", hasItem(Items.AIR))
-                .build(consumer, new ResourceLocation(MobGrindingUtils.MOD_ID, "recipe_xp_tap"));
+                .build(consumer, new ResourceLocation(Reference.MOD_ID, "recipe_xp_tap"));
 
         // Fan
         ShapedRecipeBuilder.shapedRecipe(ModBlocks.FAN_ITEM)
@@ -107,7 +109,7 @@ public class Recipes extends RecipeProvider {
                 .key('I', Tags.Items.INGOTS_IRON)
                 .key('R', Tags.Items.STORAGE_BLOCKS_REDSTONE)
                 .addCriterion("", hasItem(Items.AIR))
-                .build(consumer, new ResourceLocation(MobGrindingUtils.MOD_ID, "recipe_fan"));
+                .build(consumer, new ResourceLocation(Reference.MOD_ID, "recipe_fan"));
     }
 
     @Override

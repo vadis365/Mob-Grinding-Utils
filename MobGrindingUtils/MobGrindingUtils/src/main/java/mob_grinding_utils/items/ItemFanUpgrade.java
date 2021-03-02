@@ -14,34 +14,33 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
-import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class ItemFanUpgrade extends Item implements ISubItemsItem {
 
-	public ItemFanUpgrade() {
-		super();
-		setMaxStackSize(64);
-		setHasSubtypes(true);
-		setCreativeTab(MobGrindingUtils.TAB);
+	public ItemFanUpgrade(Properties properties) {
+		super(properties);
+		//setHasSubtypes(true);
 	}
 
 	@Override
-	@SideOnly(Side.CLIENT)
-	public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> list, ITooltipFlag flag) {
-		if (stack.getItemDamage() == EnumFanUpgradeType.WIDTH.ordinal())
-			list.add(TextFormatting.YELLOW + new TextComponentTranslation("tooltip.fanupgrade_width").getFormattedText());
-		if (stack.getItemDamage() == EnumFanUpgradeType.HEIGHT.ordinal())
-			list.add(TextFormatting.YELLOW + new TextComponentTranslation("tooltip.fanupgrade_height").getFormattedText());
-		if (stack.getItemDamage() == EnumFanUpgradeType.SPEED.ordinal())
-			list.add(TextFormatting.YELLOW + new TextComponentTranslation("tooltip.fanupgrade_distance").getFormattedText());
+	@OnlyIn(Dist.CLIENT)
+	public void addInformation(ItemStack stack, @Nullable World world, List<ITextComponent> list, ITooltipFlag flag) {
+		if (stack.getDamage() == EnumFanUpgradeType.WIDTH.ordinal())
+			list.add(new TranslationTextComponent("tooltip.fanupgrade_width").mergeStyle(TextFormatting.YELLOW));
+		if (stack.getDamage() == EnumFanUpgradeType.HEIGHT.ordinal())
+			list.add(new TranslationTextComponent("tooltip.fanupgrade_height").mergeStyle(TextFormatting.YELLOW));
+		if (stack.getDamage() == EnumFanUpgradeType.SPEED.ordinal())
+			list.add(new TranslationTextComponent("tooltip.fanupgrade_distance").mergeStyle(TextFormatting.YELLOW));
 	}
 
 	@Override
-	@SideOnly(Side.CLIENT)
+	@OnlyIn(Dist.CLIENT)
 	public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> list) {
 		if (tab == MobGrindingUtils.TAB)
 			for (EnumFanUpgradeType type : EnumFanUpgradeType.values())
@@ -62,13 +61,13 @@ public class ItemFanUpgrade extends Item implements ISubItemsItem {
 		SPEED;
 
 		@Override
-		public String getName() {
-			return name().toLowerCase(Locale.ENGLISH);
+		public ItemStack createStack(int size) {
+			return new ItemStack(ModItems.FAN_UPGRADE, size, ordinal());
 		}
 
 		@Override
-		public ItemStack createStack(int size) {
-			return new ItemStack(ModItems.FAN_UPGRADE, size, ordinal());
+		public String getString() {
+			 return name().toLowerCase(Locale.ENGLISH);
 		}
 	}
 }

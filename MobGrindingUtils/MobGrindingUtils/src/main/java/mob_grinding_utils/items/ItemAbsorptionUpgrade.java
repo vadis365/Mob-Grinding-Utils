@@ -4,28 +4,25 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
-import mob_grinding_utils.MobGrindingUtils;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class ItemAbsorptionUpgrade extends Item {
 
-	public ItemAbsorptionUpgrade() {
-		super();
-		setMaxStackSize(64);
-		setHasSubtypes(true);
-		setCreativeTab(MobGrindingUtils.TAB);
+	public ItemAbsorptionUpgrade(Properties properties) {
+		super(properties);
 	}
 
 	@Override
-	@SideOnly(Side.CLIENT)
-	public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> list, ITooltipFlag flag) {
-		list.add(TextFormatting.YELLOW + new TextComponentTranslation("tooltip.hopperupgrade").getFormattedText());
+	@OnlyIn(Dist.CLIENT)
+	public void addInformation(ItemStack stack, @Nullable World world, List<ITextComponent> list, ITooltipFlag flag) {
+		list.add(new TranslationTextComponent("tooltip.hopperupgrade").mergeStyle(TextFormatting.YELLOW));
 	}
 }
