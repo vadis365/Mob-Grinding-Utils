@@ -2,6 +2,10 @@ package mob_grinding_utils;
 
 import mob_grinding_utils.blocks.BlockSpikes;
 import mob_grinding_utils.capability.base.EntityCapabilityHandler;
+import mob_grinding_utils.client.render.TileEntityAbsorptionRenderer;
+import mob_grinding_utils.client.render.TileEntityFanRenderer;
+import mob_grinding_utils.client.render.TileEntitySawRenderer;
+import mob_grinding_utils.client.render.TileEntityTankRenderer;
 import mob_grinding_utils.events.ChickenFuseEvent;
 import mob_grinding_utils.events.ChickenInteractionEvent;
 import mob_grinding_utils.events.EntityHeadDropEvent;
@@ -11,6 +15,11 @@ import mob_grinding_utils.events.LocalWitherSoundEvent;
 import mob_grinding_utils.events.MGUEndermanInhibitEvent;
 import mob_grinding_utils.events.MGUZombieReinforcementEvent;
 import mob_grinding_utils.network.MGUNetwork;
+import mob_grinding_utils.tile.TileEntityAbsorptionHopper;
+import mob_grinding_utils.tile.TileEntityFan;
+import mob_grinding_utils.tile.TileEntitySaw;
+import mob_grinding_utils.tile.TileEntitySinkTank;
+import mob_grinding_utils.tile.TileEntityTank;
 import net.minecraft.block.Blocks;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.item.ItemGroup;
@@ -18,7 +27,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.network.simple.SimpleChannel;
@@ -50,6 +61,7 @@ public class MobGrindingUtils {
 		IEventBus modBus = FMLJavaModLoadingContext.get().getModEventBus();
 
 		modBus.addListener(this::setup);
+		modBus.addListener(this::doClientStuff);
 	}
 
 	public void setup(FMLCommonSetupEvent event) {
@@ -64,7 +76,6 @@ public class MobGrindingUtils {
 */
 		SPIKE_DAMAGE = new DamageSource("spikes").setDamageBypassesArmor();
 
-		//PROXY.registerTileEntities();
 		//PROXY.registerRenderers();
 		//NetworkRegistry.INSTANCE.registerGuiHandler(INSTANCE, PROXY);
 		NETWORK_WRAPPER = MGUNetwork.getNetworkChannel();
@@ -92,5 +103,15 @@ public class MobGrindingUtils {
 		EntityCapabilityHandler.registerCapabilities();
 
  */ //todo
+	}
+	
+	private void doClientStuff(final FMLClientSetupEvent event) {
+	/*	ClientRegistry.bindTileEntityRenderer(ModBlocks.TANK_TILE, TileEntityTankRenderer::new);
+		ClientRegistry.bindTileEntityRenderer(ModBlocks.TANK_SINK_TILE, TileEntityTankRenderer::new);
+		ClientRegistry.bindTileEntityRenderer(ModBlocks.SAW_TILE, TileEntitySawRenderer::new);
+		ClientRegistry.bindTileEntityRenderer(ModBlocks.ABSORPTION_HOPPER_TILE, TileEntityAbsorptionRenderer::new);
+	
+		ClientRegistry.bindTileEntityRenderer(ModBlocks.FAN_TILE, TileEntityFanRenderer::new);
+		*/
 	}
 }

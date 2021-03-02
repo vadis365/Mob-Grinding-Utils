@@ -24,18 +24,6 @@ public class CommonProxy implements IGuiHandler {
 
 	public void registerRenderers() {}
 
-	public void registerTileEntities() {
-		registerTileEntity(TileEntityFan.class, "fan");
-		registerTileEntity(TileEntityAbsorptionHopper.class, "absorption_hopper");
-		registerTileEntity(TileEntityTank.class, "tank");
-		registerTileEntity(TileEntitySinkTank.class, "tank_sink");
-		registerTileEntity(TileEntityXPTap.class, "xp_tap");
-		registerTileEntity(TileEntitySaw.class, "saw");
-	}
-
-	private void registerTileEntity(Class<? extends TileEntity> cls, String baseName) {
-		GameRegistry.registerTileEntity(cls, "tile.mob_grinding_utils." + baseName);
-	}
 
 	@Override
 	public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
