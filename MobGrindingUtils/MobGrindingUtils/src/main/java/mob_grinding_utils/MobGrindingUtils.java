@@ -6,6 +6,7 @@ import mob_grinding_utils.client.render.TileEntityAbsorptionRenderer;
 import mob_grinding_utils.client.render.TileEntityFanRenderer;
 import mob_grinding_utils.client.render.TileEntitySawRenderer;
 import mob_grinding_utils.client.render.TileEntityTankRenderer;
+import mob_grinding_utils.datagen.Generator;
 import mob_grinding_utils.events.ChickenFuseEvent;
 import mob_grinding_utils.events.ChickenInteractionEvent;
 import mob_grinding_utils.events.EntityHeadDropEvent;
@@ -47,8 +48,7 @@ public class MobGrindingUtils {
 	public static final ItemGroup TAB = new ItemGroup(Reference.MOD_ID) {
 		@Override
 		public ItemStack createIcon() {
-			//return new ItemStack(ModBlocks.SPIKES_ITEM);
-			return new ItemStack(Blocks.CHEST); //temporary..
+			return new ItemStack(ModBlocks.SPIKES_ITEM);
 		}
 	};
 /*
@@ -62,6 +62,9 @@ public class MobGrindingUtils {
 
 		modBus.addListener(this::setup);
 		modBus.addListener(this::doClientStuff);
+
+		//Central Data generator, called on runData
+		modBus.addListener(Generator::gatherData);
 	}
 
 	public void setup(FMLCommonSetupEvent event) {
