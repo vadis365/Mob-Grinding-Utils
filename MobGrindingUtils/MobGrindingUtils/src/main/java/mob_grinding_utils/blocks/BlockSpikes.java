@@ -2,10 +2,10 @@ package mob_grinding_utils.blocks;
 
 import java.lang.reflect.Method;
 
+import javafx.geometry.Side;
 import mob_grinding_utils.MobGrindingUtils;
-import net.minecraft.block.BlockDirectional;
-import net.minecraft.block.SoundType;
-import net.minecraft.block.material.Material;
+import net.minecraft.block.Block;
+import net.minecraft.block.DirectionalBlock;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
@@ -27,20 +27,15 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.util.FakePlayerFactory;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class BlockSpikes extends BlockDirectional {
+public class BlockSpikes extends DirectionalBlock {
 
 	public static final AxisAlignedBB SPIKES_AABB = new AxisAlignedBB(0.0625D, 0.0625D, 0.0625D, 0.9375D, 0.9375D, 0.9375D);
 
-	public BlockSpikes() {
-		super(Material.IRON);
-		setHardness(5.0F);
-		setResistance(2000.0F);
-		setSoundType(SoundType.METAL);
-		setCreativeTab(MobGrindingUtils.TAB);
+	public BlockSpikes(Block.Properties properties) {
+		super(properties);
 	}
 
 	@Override

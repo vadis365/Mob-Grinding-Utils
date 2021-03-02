@@ -2,48 +2,38 @@ package mob_grinding_utils;
 
 import mob_grinding_utils.blocks.BlockSpikes;
 import mob_grinding_utils.capability.base.EntityCapabilityHandler;
-import mob_grinding_utils.capability.bossbars.BossBarPlayerCapability;
-import mob_grinding_utils.events.BossBarHidingEvent;
 import mob_grinding_utils.events.ChickenFuseEvent;
 import mob_grinding_utils.events.ChickenInteractionEvent;
 import mob_grinding_utils.events.EntityHeadDropEvent;
 import mob_grinding_utils.events.FillXPBottleEvent;
-import mob_grinding_utils.events.GlobalDragonSoundEvent;
-import mob_grinding_utils.events.GlobalWitherSoundEvent;
 import mob_grinding_utils.events.LocalDragonSoundEvent;
 import mob_grinding_utils.events.LocalWitherSoundEvent;
 import mob_grinding_utils.events.MGUEndermanInhibitEvent;
 import mob_grinding_utils.events.MGUZombieReinforcementEvent;
-import mob_grinding_utils.events.ParticleTextureStitchEvent;
-import mob_grinding_utils.events.RenderChickenSwell;
-import mob_grinding_utils.network.*;
-import mob_grinding_utils.tile.TileEntitySaw;
+import mob_grinding_utils.network.MGUNetwork;
 import net.minecraft.block.Blocks;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.fml.network.NetworkRegistry;
 import net.minecraftforge.fml.network.simple.SimpleChannel;
-import org.spongepowered.asm.mixin.MixinEnvironment;
 
 
-@Mod("mob_grinding_utils")
+@Mod(Reference.MOD_ID)
 public class MobGrindingUtils {
 	//@SidedProxy(clientSide = Reference.PROXY_CLIENT, serverSide = Reference.PROXY_COMMON)
 	//public static CommonProxy PROXY;
-	public static final String MOD_ID = "mob_grinding_utils";
+
 	public static Fluid FLUID_XP;
 	public static SimpleChannel NETWORK_WRAPPER;
 	public static DamageSource SPIKE_DAMAGE;
 
-	public static final ItemGroup TAB = new ItemGroup(MOD_ID) {
+	public static final ItemGroup TAB = new ItemGroup(Reference.MOD_ID) {
 		@Override
 		public ItemStack createIcon() {
 			//return new ItemStack(ModBlocks.SPIKES_ITEM);
@@ -79,7 +69,7 @@ public class MobGrindingUtils {
 		//NetworkRegistry.INSTANCE.registerGuiHandler(INSTANCE, PROXY);
 		NETWORK_WRAPPER = MGUNetwork.getNetworkChannel();
 		
-		MinecraftForge.EVENT_BUS.register(new BlockSpikes());
+		MinecraftForge.EVENT_BUS.register(new BlockSpikes(null));
 		MinecraftForge.EVENT_BUS.register(new ChickenInteractionEvent());
 		MinecraftForge.EVENT_BUS.register(new ChickenFuseEvent());
 		MinecraftForge.EVENT_BUS.register(new LocalWitherSoundEvent());

@@ -2,72 +2,64 @@ package mob_grinding_utils.blocks;
 
 import java.util.Random;
 
-import mob_grinding_utils.MobGrindingUtils;
+import javax.annotation.Nullable;
+
 import mob_grinding_utils.tile.TileEntitySaw;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockDirectional;
+import net.minecraft.block.BlockRenderType;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.DirectionalBlock;
 import net.minecraft.block.ITileEntityProvider;
-import net.minecraft.block.SoundType;
-import net.minecraft.block.material.Material;
-import net.minecraft.block.properties.IProperty;
-import net.minecraft.block.properties.PropertyBool;
-import net.minecraft.block.state.BlockStateContainer;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.boss.EntityDragon;
-import net.minecraft.entity.boss.EntityWither;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.InventoryHelper;
+import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
+import net.minecraft.state.BooleanProperty;
+import net.minecraft.state.StateContainer;
+import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockRenderLayer;
-import net.minecraft.util.EnumBlockRenderType;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.Mirror;
-import net.minecraft.util.Rotation;
-import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.ActionResultType;
+import net.minecraft.util.Direction;
+import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockAccess;
+import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.math.shapes.ISelectionContext;
+import net.minecraft.util.math.shapes.VoxelShape;
+import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.world.server.ServerWorld;
 
-public class BlockSaw extends BlockDirectional implements ITileEntityProvider {
-	public static final PropertyBool POWERED = PropertyBool.create("powered");
-	public static final AxisAlignedBB SAW_AABB = new AxisAlignedBB(0.0625D, 0.0625D, 0.0625D, 0.9375D, 0.9375D, 0.9375D);
-
-	public BlockSaw() {
-		super(Material.IRON);
-		setDefaultState(this.getBlockState().getBaseState().withProperty(POWERED, false));
-		setHardness(10.0F);
-		setResistance(2000.0F);
-		setSoundType(SoundType.METAL);
-		setCreativeTab(MobGrindingUtils.TAB);
+public class BlockSaw extends DirectionalBlock implements ITileEntityProvider {
+	public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
+	public static final VoxelShape SAW_AABB = Block.makeCuboidShape(0.0625D, 0.0625D, 0.0625D, 0.9375D, 0.9375D, 0.9375D);
+	public static final VoxelShape SAW_AABB_SELECT = Block.makeCuboidShape(0D, 0D, 0D, 1D, 1D, 1D);
+	
+	public BlockSaw(Block.Properties properties) {
+		super(properties);
+		setDefaultState(this.stateContainer.getBaseState().with(POWERED, false));
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(World worldIn, int meta) {
+	public TileEntity createNewTileEntity(IBlockReader world) {
 		return new TileEntitySaw();
 	}
-
+	
 	@Override
-	public AxisAlignedBB getCollisionBoundingBox(IBlockState blockState, IBlockAccess worldIn, BlockPos pos) {
+	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
 		return SAW_AABB;
 	}
 
 	@Override
-	@SideOnly(Side.CLIENT)
-	public AxisAlignedBB getSelectedBoundingBox(IBlockState state, World worldIn, BlockPos pos) {
-		return FULL_BLOCK_AABB;
+	public VoxelShape getRaytraceShape(BlockState state, IBlockReader worldIn, BlockPos pos) {
+		return SAW_AABB_SELECT;
 	}
 
 	@Override
-	public EnumBlockRenderType getRenderType(IBlockState state) {
-		return EnumBlockRenderType.INVISIBLE;
+	public BlockRenderType getRenderType(BlockState state) {
+		return BlockRenderType.INVISIBLE;
 	}
-
+/*
 	@Override
 	@SideOnly(Side.CLIENT)
 	public BlockRenderLayer getRenderLayer() {
@@ -94,86 +86,73 @@ public class BlockSaw extends BlockDirectional implements ITileEntityProvider {
 
 		return meta;
 	}
-
+*/
 	@Override
-	 public IBlockState getStateForPlacement(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer) {
-		return this.getDefaultState().withProperty(FACING, facing).withProperty(POWERED, world.isBlockPowered(pos));
+	public BlockState getStateForPlacement(BlockItemUseContext context) {
+		Direction direction = context.getFace().getOpposite();
+		return this.getDefaultState().with(FACING, direction).with(POWERED, false);
 	}
 
 	@Override
-	public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {
-		if (state.getValue(POWERED)) {
+	  public void onBlockPlacedBy(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
+		if (state.get(POWERED)) {
 			TileEntitySaw tile = (TileEntitySaw) world.getTileEntity(pos);
 			tile.setActive(true);
 		}
 	}
 
 	@Override
-	public IBlockState withRotation(IBlockState state, Rotation rot) {
-		return state.withProperty(FACING, rot.rotate((EnumFacing) state.getValue(FACING)));
+	protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
+		builder.add(FACING, POWERED);
 	}
 
 	@Override
-	public IBlockState withMirror(IBlockState state, Mirror mirrorIn) {
-		return state.withRotation(mirrorIn.toRotation((EnumFacing) state.getValue(FACING)));
-	}
-
-	@Override
-	protected BlockStateContainer createBlockState() {
-		return new BlockStateContainer(this, new IProperty[] { FACING, POWERED });
-	}
-
-	@Override
-	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
+	public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
 		if (world.isRemote)
-			return true;
+			return ActionResultType.SUCCESS;
 		if (world.getTileEntity(pos) instanceof TileEntitySaw)
-			player.openGui(MobGrindingUtils.INSTANCE, MobGrindingUtils.PROXY.GUI_ID_SAW, world, pos.getX(), pos.getY(), pos.getZ());
-		return true;
+			System.out.println("Masher Gui Opens Here");
+			//player.openGui(MobGrindingUtils.INSTANCE, MobGrindingUtils.PROXY.GUI_ID_SAW, world, pos.getX(), pos.getY(), pos.getZ());
+		return ActionResultType.SUCCESS;
 	}
 
+
 	@Override
-	public void breakBlock(World world, BlockPos pos, IBlockState state) {
+	public void onReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving) {
 		TileEntitySaw tile = (TileEntitySaw) world.getTileEntity(pos);
 		if (tile != null) {
 			InventoryHelper.dropInventoryItems(world, pos, tile);
 			world.updateComparatorOutputLevel(pos, this);
 		}
-		super.breakBlock(world, pos, state);
+		super.onReplaced(state, world, pos, newState, isMoving);
 	}
-
+/*
 	@Override
 	public boolean canEntityDestroy(IBlockState state, IBlockAccess world, BlockPos pos, Entity entity) {
       return !(entity instanceof EntityWither) && !(entity instanceof EntityDragon);
 	}
-
+*/
 	@Override
-	public void neighborChanged(IBlockState state, World world, BlockPos pos, Block blockIn, BlockPos fromPos) {
+	public void neighborChanged(BlockState state, World world, BlockPos pos, Block block, BlockPos fromPos, boolean isMoving) {
 		if (!world.isRemote) {
 			TileEntitySaw tile = (TileEntitySaw) world.getTileEntity(pos);
-			if (state.getValue(POWERED) && !world.isBlockPowered(pos)) {
-				world.scheduleUpdate(pos, this, 4);
-			}
-			else if (!state.getValue(POWERED) && world.isBlockPowered(pos)) {
-				state = state.cycleProperty(POWERED);
-				world.setBlockState(pos, state, 3);
-				if (tile != null)
-					tile.setActive(state.getValue(POWERED));
-			}
-
+			boolean flag = !world.isBlockPowered(pos);
+			if (flag != state.get(POWERED))
+				world.setBlockState(pos, state.with(POWERED, flag), 4);
+			if (tile != null)
+				tile.setActive(state.get(POWERED));
 		}
 	}
 
 	@Override
-	public void updateTick(World world, BlockPos pos, IBlockState state, Random rand) {
+	public void tick(BlockState state, ServerWorld world, BlockPos pos, Random rand) {
 		if (!world.isRemote) {
 			TileEntitySaw tile = (TileEntitySaw) world.getTileEntity(pos);
-			if (state.getValue(POWERED) && !world.isBlockPowered(pos)) {
-				state = state.cycleProperty(POWERED);
-				world.setBlockState(pos, state, 3);
-				if (tile != null)
-					tile.setActive(state.getValue(POWERED));
-			}
+			boolean flag = !world.isBlockPowered(pos);
+			if (flag != state.get(POWERED))
+				world.setBlockState(pos, state.with(POWERED, flag), 4);
+			if (tile != null)
+				tile.setActive(state.get(POWERED));
 		}
 	}
 }

@@ -21,7 +21,7 @@ public class BlockDragonMuffler extends Block {
 
 	public static final PropertyBool MODE = PropertyBool.create("mode");
 
-	public BlockDragonMuffler() {
+	public BlockDragonMuffler(Block.Properties properties) {
 		super(Material.CLOTH);
 		setDefaultState(this.getBlockState().getBaseState().withProperty(MODE, false));
 		setHardness(0.5F);

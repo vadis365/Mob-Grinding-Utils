@@ -1,11 +1,8 @@
 package mob_grinding_utils.blocks;
 
-import mob_grinding_utils.MobGrindingUtils;
 import mob_grinding_utils.capability.bossbars.BossBarPlayerCapability;
 import mob_grinding_utils.capability.bossbars.IBossBarCapability;
 import net.minecraft.block.Block;
-import net.minecraft.block.SoundType;
-import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.state.BlockStateContainer;
@@ -21,12 +18,9 @@ public class BlockWitherMuffler extends Block {
 
 	public static final PropertyBool MODE = PropertyBool.create("mode");
 
-	public BlockWitherMuffler() {
-		super(Material.CLOTH);
+	public BlockWitherMuffler(Block.Properties properties) {
+		super(properties);
 		setDefaultState(this.getBlockState().getBaseState().withProperty(MODE, false));
-		setHardness(0.5F);
-		setSoundType(SoundType.CLOTH);
-		setCreativeTab(MobGrindingUtils.TAB);
 	}
 
 	@Override

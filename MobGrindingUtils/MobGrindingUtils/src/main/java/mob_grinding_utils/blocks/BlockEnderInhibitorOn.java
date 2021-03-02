@@ -3,9 +3,9 @@ package mob_grinding_utils.blocks;
 import java.util.Locale;
 import java.util.Random;
 
+import javafx.geometry.Side;
 import mob_grinding_utils.MobGrindingUtils;
 import net.minecraft.block.Block;
-import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockFaceShape;
@@ -17,7 +17,6 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.boss.EntityDragon;
 import net.minecraft.entity.boss.EntityWither;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
@@ -26,22 +25,20 @@ import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class BlockEnderInhibitorOn extends Block {
 
 	public static final PropertyEnum<EnumGemDirection> TYPE = PropertyEnum.create("type", EnumGemDirection.class);
 
-	public BlockEnderInhibitorOn() {
-		super(Material.CIRCUITS);
-		setHardness(0.2F);
-		setResistance(2000.0F);
+	public BlockEnderInhibitorOn(Block.Properties properties) {
+		super(properties);
 		setDefaultState(blockState.getBaseState().withProperty(TYPE, EnumGemDirection.DOWN_NORTH));
 	}
 

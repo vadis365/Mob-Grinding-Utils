@@ -4,11 +4,10 @@ import java.util.Random;
 
 import javax.annotation.Nullable;
 
-import mob_grinding_utils.MobGrindingUtils;
+import javafx.geometry.Side;
 import mob_grinding_utils.tile.TileEntityTank;
-import net.minecraft.block.BlockContainer;
-import net.minecraft.block.SoundType;
-import net.minecraft.block.material.Material;
+import net.minecraft.block.Block;
+import net.minecraft.block.ContainerBlock;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -31,16 +30,11 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class BlockTank extends BlockContainer {
-	public BlockTank() {
-		super(Material.GLASS);
-		setHardness(1.0F);
-		setResistance(2000.0F);
-		setSoundType(SoundType.GLASS);
-		setCreativeTab(MobGrindingUtils.TAB);
+public class BlockTank extends ContainerBlock {
+	public BlockTank(Block.Properties properties) {
+		super(properties);
 	}
 
 	@Override

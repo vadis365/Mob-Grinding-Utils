@@ -1,10 +1,8 @@
 package mob_grinding_utils.blocks;
 
-import mob_grinding_utils.MobGrindingUtils;
+import javafx.geometry.Side;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockHorizontal;
-import net.minecraft.block.SoundType;
-import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.block.state.BlockStateContainer;
@@ -20,19 +18,14 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class BlockEntityConveyor extends Block {
 	public static final PropertyDirection FACING = BlockHorizontal.FACING;
 	public static final AxisAlignedBB CONVEYOR_AABB = new AxisAlignedBB(0D, 0D, 0D, 1D, 0.875D, 1D);
 
-	public BlockEntityConveyor() {
-		super(Material.ROCK);
-		setHardness(0.5F);
-		setResistance(2000.0F);
-		setSoundType(SoundType.STONE);
-		setCreativeTab(MobGrindingUtils.TAB);
+	public BlockEntityConveyor(Block.Properties properties) {
+		super(properties);
 	}
 
 	@Override

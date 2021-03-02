@@ -4,13 +4,12 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
-import mob_grinding_utils.MobGrindingUtils;
+import javafx.geometry.Side;
 import mob_grinding_utils.ModSounds;
 import mob_grinding_utils.tile.TileEntityXPTap;
-import net.minecraft.block.BlockDirectional;
+import net.minecraft.block.Block;
+import net.minecraft.block.DirectionalBlock;
 import net.minecraft.block.ITileEntityProvider;
-import net.minecraft.block.SoundType;
-import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.state.BlockStateContainer;
@@ -31,10 +30,9 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class BlockXPTap extends BlockDirectional implements ITileEntityProvider {
+public class BlockXPTap extends DirectionalBlock implements ITileEntityProvider {
 
 	protected static final AxisAlignedBB XP_TAP_WEST_AABB = new AxisAlignedBB(0.4375D, 0.5D, 0.25D, 1, 1D, 0.75);
 	protected static final AxisAlignedBB XP_TAP_EAST_AABB = new AxisAlignedBB(0D, 0.5D, 0.25D, 0.5625D, 1D, 0.75D);
@@ -42,13 +40,9 @@ public class BlockXPTap extends BlockDirectional implements ITileEntityProvider 
 	protected static final AxisAlignedBB XP_TAP_NORTH_AABB = new AxisAlignedBB(0.25D, 0.5D, 0.4375D, 0.75D, 1D, 1D);
 	public static final PropertyBool POWERED = PropertyBool.create("powered");
 
-	public BlockXPTap() {
-		super(Material.CIRCUITS);
+	public BlockXPTap(Block.Properties properties) {
+		super(properties);
 		setDefaultState(this.getBlockState().getBaseState().withProperty(POWERED, false));
-		setHardness(1.0F);
-		setResistance(2000.0F);
-		setSoundType(SoundType.METAL);
-		setCreativeTab(MobGrindingUtils.TAB);
 	}
 
 	@Override

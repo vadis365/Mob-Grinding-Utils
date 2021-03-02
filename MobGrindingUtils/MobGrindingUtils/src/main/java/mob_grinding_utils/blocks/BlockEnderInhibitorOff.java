@@ -3,6 +3,7 @@ package mob_grinding_utils.blocks;
 import java.util.Random;
 
 import mob_grinding_utils.ModBlocks;
+import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
@@ -17,7 +18,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class BlockEnderInhibitorOff extends BlockEnderInhibitorOn {
 
-	public BlockEnderInhibitorOff() {
+	public BlockEnderInhibitorOff(Block.Properties properties) {
 		super();
 		setDefaultState(blockState.getBaseState().withProperty(TYPE, EnumGemDirection.DOWN_NORTH));
 	}

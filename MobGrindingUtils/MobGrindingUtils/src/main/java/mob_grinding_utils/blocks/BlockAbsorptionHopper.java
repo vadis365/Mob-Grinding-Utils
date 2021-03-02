@@ -5,12 +5,11 @@ import java.util.Random;
 
 import javax.annotation.Nullable;
 
+import javafx.geometry.Side;
 import mob_grinding_utils.MobGrindingUtils;
 import mob_grinding_utils.tile.TileEntityAbsorptionHopper;
-import net.minecraft.block.BlockContainer;
-import net.minecraft.block.SoundType;
-import net.minecraft.block.material.Material;
-import net.minecraft.block.properties.PropertyEnum;
+import net.minecraft.block.Block;
+import net.minecraft.block.ContainerBlock;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
@@ -19,6 +18,7 @@ import net.minecraft.entity.boss.EntityWither;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.Item;
+import net.minecraft.state.EnumProperty;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumBlockRenderType;
@@ -29,27 +29,21 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.TextureStitchEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class BlockAbsorptionHopper extends BlockContainer {
+public class BlockAbsorptionHopper extends ContainerBlock {
 
-	public static final PropertyEnum<TileEntityAbsorptionHopper.EnumStatus> NORTH = PropertyEnum.create("north", TileEntityAbsorptionHopper.EnumStatus.class);
-	public static final PropertyEnum<TileEntityAbsorptionHopper.EnumStatus> SOUTH = PropertyEnum.create("south", TileEntityAbsorptionHopper.EnumStatus.class);
-	public static final PropertyEnum<TileEntityAbsorptionHopper.EnumStatus> WEST = PropertyEnum.create("west", TileEntityAbsorptionHopper.EnumStatus.class);
-	public static final PropertyEnum<TileEntityAbsorptionHopper.EnumStatus> EAST = PropertyEnum.create("east", TileEntityAbsorptionHopper.EnumStatus.class);
-	public static final PropertyEnum<TileEntityAbsorptionHopper.EnumStatus> UP = PropertyEnum.create("up", TileEntityAbsorptionHopper.EnumStatus.class);
-	public static final PropertyEnum<TileEntityAbsorptionHopper.EnumStatus> DOWN = PropertyEnum.create("down", TileEntityAbsorptionHopper.EnumStatus.class);
+	public static final EnumProperty<TileEntityAbsorptionHopper.EnumStatus> NORTH = EnumProperty.create("north", TileEntityAbsorptionHopper.EnumStatus.class);
+	public static final EnumProperty<TileEntityAbsorptionHopper.EnumStatus> SOUTH = EnumProperty.create("south", TileEntityAbsorptionHopper.EnumStatus.class);
+	public static final EnumProperty<TileEntityAbsorptionHopper.EnumStatus> WEST = EnumProperty.create("west", TileEntityAbsorptionHopper.EnumStatus.class);
+	public static final EnumProperty<TileEntityAbsorptionHopper.EnumStatus> EAST = EnumProperty.create("east", TileEntityAbsorptionHopper.EnumStatus.class);
+	public static final EnumProperty<TileEntityAbsorptionHopper.EnumStatus> UP = EnumProperty.create("up", TileEntityAbsorptionHopper.EnumStatus.class);
+	public static final EnumProperty<TileEntityAbsorptionHopper.EnumStatus> DOWN = EnumProperty.create("down", TileEntityAbsorptionHopper.EnumStatus.class);
 	protected static final AxisAlignedBB HOPPER_AABB = new AxisAlignedBB(0.25D, 0.25D, 0.25D, 0.75D, 0.75D, 0.75D);
 
-	public BlockAbsorptionHopper() {
-		super(Material.IRON);
-		setHardness(10.0F);
-		setResistance(2000.0F);
-		setHarvestLevel("pickaxe", 0);
-		setSoundType(SoundType.METAL);
-		setCreativeTab(MobGrindingUtils.TAB);
+	public BlockAbsorptionHopper(Block.Properties properties) {
+		super(properties);
 	}
 
 	@Override
