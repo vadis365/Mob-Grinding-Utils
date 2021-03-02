@@ -8,23 +8,31 @@ import java.util.Locale;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.registries.IForgeRegistry;
 
 public class ModSounds {
 	public static final List<SoundEvent> SOUNDS = new ArrayList<SoundEvent>();
-	public static final SoundEvent TAP_SQUEAK = registerSoundResource("tap_squeak");
-	public static final SoundEvent ENTITY_WITHER_SPAWN_LOCAL = registerSoundResource("entity_wither_spawn_local");
-	public static final SoundEvent ENTITY_WITHER_DEATH_LOCAL = registerSoundResource("entity_wither_death_local");
-	public static final SoundEvent ENTITY_DRAGON_DEATH_LOCAL = registerSoundResource("entity_dragon_death_local");
-	public static final SoundEvent CHICKEN_RISE = registerSoundResource("chicken_rise");
+	public static SoundEvent TAP_SQUEAK;
+	public static SoundEvent ENTITY_WITHER_SPAWN_LOCAL;
+	public static SoundEvent ENTITY_WITHER_DEATH_LOCAL;
+	public static SoundEvent ENTITY_DRAGON_DEATH_LOCAL;
+	public static SoundEvent CHICKEN_RISE;
 
 	public static SoundEvent registerSoundResource(String name) {
 		return new SoundEvent(new ResourceLocation(Reference.MOD_ID, name));
 	}
-
+	
 	public static void init() {
+		TAP_SQUEAK = registerSoundResource("tap_squeak");
+		ENTITY_WITHER_SPAWN_LOCAL = registerSoundResource("entity_wither_spawn_local");
+		ENTITY_WITHER_DEATH_LOCAL = registerSoundResource("entity_wither_death_local");
+		ENTITY_DRAGON_DEATH_LOCAL = registerSoundResource("entity_dragon_death_local");
+		CHICKEN_RISE = registerSoundResource("chicken_rise");
+	}
+
+	public static void initReg() {
 		try {
 			for (Field field : ModSounds.class.getDeclaredFields()) {
 				Object obj = field.get(null);
@@ -49,6 +57,7 @@ public class ModSounds {
 		@SubscribeEvent
 		public static void registerSoundEvents(final RegistryEvent.Register<SoundEvent> event) {
 			init();
+			initReg();
 			final IForgeRegistry<SoundEvent> registry = event.getRegistry();
 			for (SoundEvent sounds : SOUNDS)
 				registry.register(sounds);

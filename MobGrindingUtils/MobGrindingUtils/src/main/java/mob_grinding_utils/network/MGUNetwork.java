@@ -1,15 +1,13 @@
 package mob_grinding_utils.network;
 
-import mob_grinding_utils.MobGrindingUtils;
+import mob_grinding_utils.Reference;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.network.NetworkDirection;
 import net.minecraftforge.fml.network.NetworkRegistry;
 import net.minecraftforge.fml.network.simple.SimpleChannel;
-import org.spongepowered.asm.mixin.MixinEnvironment;
 
 public class MGUNetwork {
-    public static final ResourceLocation channelName = new ResourceLocation(MobGrindingUtils.MOD_ID, "network");
-    public static final String networkVersion = new ResourceLocation(MobGrindingUtils.MOD_ID, "1").toString();
+    public static final ResourceLocation channelName = new ResourceLocation(Reference.MOD_ID, "network");
+    public static final String networkVersion = new ResourceLocation(Reference.MOD_ID, "1").toString();
 
 
     public static SimpleChannel getNetworkChannel() {

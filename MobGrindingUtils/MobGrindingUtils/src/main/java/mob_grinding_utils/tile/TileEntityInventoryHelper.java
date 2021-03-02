@@ -2,20 +2,22 @@ package mob_grinding_utils.tile;
 
 import javax.annotation.Nullable;
 
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.block.BlockState;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.NonNullList;
-import net.minecraft.util.text.ITextComponent;
 
 public abstract class TileEntityInventoryHelper extends TileEntity implements ISidedInventory {
 
 	private NonNullList<ItemStack> inventory;
 
-	public TileEntityInventoryHelper(int invtSize) {
+	public TileEntityInventoryHelper(TileEntityType<?> tileEntityTypeIn, int invtSize) {
+		super(tileEntityTypeIn);
 		inventory = NonNullList.<ItemStack>withSize(invtSize, ItemStack.EMPTY);
 	}
 
@@ -55,7 +57,7 @@ public abstract class TileEntityInventoryHelper extends TileEntity implements IS
 	}
 
 	@Override
-	public boolean isUsableByPlayer(EntityPlayer player) {
+	public boolean isUsableByPlayer(PlayerEntity player) {
 		return true;
 	}
 
@@ -71,68 +73,39 @@ public abstract class TileEntityInventoryHelper extends TileEntity implements IS
 	}
 
 	@Override
-	public void readFromNBT(NBTTagCompound compound) {
-		super.readFromNBT(compound);
+	public void read(BlockState state,CompoundNBT compound) {
+		super.read(state, compound);
 		this.loadFromNbt(compound);
 	}
 
 	@Override
-	public NBTTagCompound writeToNBT(NBTTagCompound compound) {
-		super.writeToNBT(compound);
+	public CompoundNBT write(CompoundNBT compound) {
+		super.write(compound);
 		return this.saveToNbt(compound);
 	}
 
-	public void loadFromNbt(NBTTagCompound compound) {
+	public void loadFromNbt(CompoundNBT compound) {
 		inventory = NonNullList.<ItemStack>withSize(this.getSizeInventory(), ItemStack.EMPTY);
-		if (compound.hasKey("Items", 9))
+		if (compound.contains("Items", 9))
 			ItemStackHelper.loadAllItems(compound, inventory);
 	}
 
-	public NBTTagCompound saveToNbt(NBTTagCompound compound) {
+	public CompoundNBT saveToNbt(CompoundNBT compound) {
 		ItemStackHelper.saveAllItems(compound, inventory, false);
 		return compound;
 	}
 
 	@Override
-	public void openInventory(EntityPlayer playerIn) {
+	public void openInventory(PlayerEntity playerIn) {
 	}
 
 	@Override
-	public void closeInventory(EntityPlayer playerIn) {
-	}
-
-	@Override
-	public int getField(int id) {
-		return 0;
-	}
-
-	@Override
-	public void setField(int id, int value) {
-	}
-
-	@Override
-	public int getFieldCount() {
-		return 0;
+	public void closeInventory(PlayerEntity playerIn) {
 	}
 
 	@Override
 	public void clear() {
 		inventory.clear();
-	}
-
-	@Override
-	public String getName() {
-		return null;
-	}
-
-	@Override
-	public boolean hasCustomName() {
-		return false;
-	}
-
-	@Override
-	public ITextComponent getDisplayName() {
-		return null;
 	}
 
 	public boolean canInsertItem() {

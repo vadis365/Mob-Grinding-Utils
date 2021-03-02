@@ -21,6 +21,12 @@ import mob_grinding_utils.blocks.BlockTank;
 import mob_grinding_utils.blocks.BlockTankSink;
 import mob_grinding_utils.blocks.BlockWitherMuffler;
 import mob_grinding_utils.blocks.BlockXPTap;
+import mob_grinding_utils.tile.TileEntityAbsorptionHopper;
+import mob_grinding_utils.tile.TileEntityFan;
+import mob_grinding_utils.tile.TileEntitySaw;
+import mob_grinding_utils.tile.TileEntitySinkTank;
+import mob_grinding_utils.tile.TileEntityTank;
+import mob_grinding_utils.tile.TileEntityXPTap;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
@@ -29,6 +35,7 @@ import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
@@ -46,27 +53,34 @@ public class ModBlocks {
 	
 	public static List<Block> BLOCKS = new LinkedList<Block>();
 	public static List<BlockItem> ITEM_BLOCKS = new ArrayList<BlockItem>();
-
+	public static List<TileEntityType<?>> TILE_ENTITIES = new LinkedList<TileEntityType<?>>();
+	
 	public static Block FAN;
 	public static BlockItem FAN_ITEM;
+	public static TileEntityType<?> FAN_TILE;
 
 	public static Block SAW;
 	public static BlockItem SAW_ITEM;
+	public static TileEntityType<?> SAW_TILE;
 
 	public static Block ABSORPTION_HOPPER;
 	public static BlockItem ABSORPTION_HOPPER_ITEM;
+	public static TileEntityType<?> ABSORPTION_HOPPER_TILE;
 
 	public static Block SPIKES;
 	public static BlockItem SPIKES_ITEM;
 
 	public static Block TANK;
 	public static BlockItem TANK_ITEM;
+	public static TileEntityType<?> TANK_TILE;
 
 	public static Block TANK_SINK;
 	public static BlockItem TANK_SINK_ITEM;
+	public static TileEntityType<?> TANK_SINK_TILE;
 
 	public static Block XP_TAP;
 	public static BlockItem XP_TAP_ITEM;
+	public static TileEntityType<?> XP_TAP_TILE;
 
 	public static Block WITHER_MUFFLER;
 	public static BlockItem WITHER_MUFFLER_ITEM;
@@ -97,6 +111,7 @@ public class ModBlocks {
 					list.add(new TranslationTextComponent("tooltip.fan_3").mergeStyle(TextFormatting.YELLOW));
 				}
 			};
+			FAN_TILE = TileEntityType.Builder.create(TileEntityFan::new, FAN).build(null);
 
 			SAW = new BlockSaw(Block.Properties.create(Material.IRON, MaterialColor.STONE).hardnessAndResistance(10.0F, 2000.0F).sound(SoundType.METAL));
 			SAW_ITEM = new BlockItem(SAW, new Item.Properties().group(MobGrindingUtils.TAB)) {
@@ -108,6 +123,7 @@ public class ModBlocks {
 					list.add(new TranslationTextComponent("tooltip.saw_3").mergeStyle(TextFormatting.YELLOW));
 				}
 			};
+			SAW_TILE = TileEntityType.Builder.create(TileEntitySaw::new, SAW).build(null);
 
 			ABSORPTION_HOPPER = new BlockAbsorptionHopper(Block.Properties.create(Material.IRON, MaterialColor.STONE).hardnessAndResistance(10.0F, 2000.0F).sound(SoundType.METAL).harvestLevel(0).harvestTool(ToolType.PICKAXE));
 			ABSORPTION_HOPPER_ITEM = new BlockItem(ABSORPTION_HOPPER, new Item.Properties().group(MobGrindingUtils.TAB)) {
@@ -122,6 +138,7 @@ public class ModBlocks {
 					list.add(new TranslationTextComponent("tooltip.hopper_6").mergeStyle(TextFormatting.YELLOW));
 				}
 			};
+			ABSORPTION_HOPPER_TILE = TileEntityType.Builder.create(TileEntityAbsorptionHopper::new, ABSORPTION_HOPPER).build(null);
 			
 			SPIKES = new BlockSpikes(Block.Properties.create(Material.IRON, MaterialColor.STONE).hardnessAndResistance(5.0F, 2000.0F).sound(SoundType.METAL));
 			SPIKES_ITEM = new BlockItem(SPIKES, new Item.Properties().group(MobGrindingUtils.TAB)) {
@@ -147,6 +164,7 @@ public class ModBlocks {
 					}
 				}
 			};
+			TANK_TILE = TileEntityType.Builder.create(TileEntityTank::new, TANK).build(null);
 
 			TANK_SINK = new BlockTankSink(Block.Properties.create(Material.GLASS, MaterialColor.QUARTZ).hardnessAndResistance(1.0F, 2000.0F).sound(SoundType.GLASS));
 			TANK_SINK_ITEM = new BlockItem(TANK_SINK, new Item.Properties().group(MobGrindingUtils.TAB)) {
@@ -162,6 +180,7 @@ public class ModBlocks {
 					}
 				}
 			};
+			TANK_SINK_TILE = TileEntityType.Builder.create(TileEntitySinkTank::new, TANK_SINK).build(null);
 
 			XP_TAP = new BlockXPTap(Block.Properties.create(Material.REDSTONE_LIGHT, MaterialColor.STONE).hardnessAndResistance(1.0F, 2000.0F).sound(SoundType.METAL));
 			XP_TAP_ITEM = new BlockItem(XP_TAP, new Item.Properties().group(MobGrindingUtils.TAB)) {
@@ -172,6 +191,7 @@ public class ModBlocks {
 					list.add(new TranslationTextComponent("tooltip.xptap_2").mergeStyle(TextFormatting.YELLOW));
 				}
 			};
+			XP_TAP_TILE = TileEntityType.Builder.create(TileEntityXPTap::new, XP_TAP).build(null);
 
 			WITHER_MUFFLER = new BlockWitherMuffler(Block.Properties.create(Material.WOOL, MaterialColor.STONE).hardnessAndResistance(0.5F, 2000F).sound(SoundType.CLOTH));
 			WITHER_MUFFLER_ITEM = new BlockItem(WITHER_MUFFLER, new Item.Properties().group(MobGrindingUtils.TAB)) {
@@ -251,6 +271,11 @@ public class ModBlocks {
 					String name = field.getName().toLowerCase(Locale.ENGLISH);
 					registerBlockItem(name, blockItem);
 				}
+				if (obj instanceof TileEntityType) {
+					TileEntityType<?> tileEntity = (TileEntityType<?>) obj;
+					String name = field.getName().toLowerCase(Locale.ENGLISH);
+					registerTileEntity(name, tileEntity);
+				}
 			}
 		} catch (IllegalAccessException e) {
 			throw new RuntimeException(e);
@@ -266,6 +291,12 @@ public class ModBlocks {
 		String[] newName = name.split("_item");
 		ITEM_BLOCKS.add(item);
 		item.setRegistryName(Reference.MOD_ID, newName[0]);
+	}
+	
+	public static void registerTileEntity(String name, TileEntityType<?> tileEntity) {
+		String[] newName = name.split("_tile");
+		TILE_ENTITIES.add(tileEntity);
+		tileEntity.setRegistryName(Reference.MOD_ID, newName[0]);
 	}
 
 	@Mod.EventBusSubscriber(modid = Reference.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
@@ -286,6 +317,14 @@ public class ModBlocks {
 			final IForgeRegistry<Item> registry = event.getRegistry();
 				for (BlockItem item : ITEM_BLOCKS) {
 				registry.register(item);
+			}
+		}
+
+		@SubscribeEvent
+		  public static void registerTileEntities(RegistryEvent.Register<TileEntityType<?> > event) {
+			IForgeRegistry<TileEntityType<?>> registry = event.getRegistry();
+				for (TileEntityType<?> tileEntity : TILE_ENTITIES) {
+				registry.register(tileEntity);
 			}
 		}
 /*

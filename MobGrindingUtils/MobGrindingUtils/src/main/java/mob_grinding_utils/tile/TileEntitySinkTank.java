@@ -4,8 +4,9 @@ import java.util.List;
 
 import mob_grinding_utils.MobGrindingUtils;
 import mob_grinding_utils.network.MessageTapParticle;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.init.SoundEvents;
+import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.util.EntitySelectors;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.SoundCategory;
@@ -15,7 +16,7 @@ import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 
-public class TileEntitySinkTank extends TileEntityTank implements ITickable {
+public class TileEntitySinkTank extends TileEntityTank implements ITickableTileEntity {
 
 	public TileEntitySinkTank() {
         this.tank = new FluidTankTile(null, Fluid.BUCKET_VOLUME * 32);
@@ -23,21 +24,21 @@ public class TileEntitySinkTank extends TileEntityTank implements ITickable {
 	}
 
 	@Override
-	public void update() {
+	public void tick() {
 		if (!getWorld().isRemote)
 			if (tank.getFluid() == null || tank.getFluid().containsFluid(new FluidStack(FluidRegistry.getFluid("xpjuice"), 0)))
 				captureDroppedXP();
 	}
 
 	public boolean captureDroppedXP() {
-		for (EntityPlayer player : getCaptureXP(getWorld(), getPos().getX() + 0.5D, getPos().getY() + 0.5D, getPos().getZ() + 0.5D)) {
+		for (PlayerEntity player : getCaptureXP(getWorld(), getPos().getX() + 0.5D, getPos().getY() + 0.5D, getPos().getZ() + 0.5D)) {
 			int xpAmount = getPlayerXP(player);
 			if (xpAmount <= 0)
 				return false;
 			if (tank.getFluidAmount() < tank.getCapacity()) {
 				tank.fill(new FluidStack(FluidRegistry.getFluid("xpjuice"), 20), true);
 				addPlayerXP(player, -1);
-				getWorld().playSound((EntityPlayer) null, player.posX, player.posY, player.posZ, SoundEvents.ITEM_BOTTLE_FILL, SoundCategory.NEUTRAL , 0.1F, 0.5F * ((getWorld().rand.nextFloat() - getWorld().rand.nextFloat()) * 0.7F + 1.8F));
+				getWorld().playSound((PlayerEntity) null, player.posX, player.posY, player.posZ, SoundEvents.ITEM_BOTTLE_FILL, SoundCategory.NEUTRAL , 0.1F, 0.5F * ((getWorld().rand.nextFloat() - getWorld().rand.nextFloat()) * 0.7F + 1.8F));
 				// MobGrindingUtils.NETWORK_WRAPPER.sendToAll(new MessageTapParticle(getPos().up())); //todo
 			}
 			return true;
@@ -45,11 +46,11 @@ public class TileEntitySinkTank extends TileEntityTank implements ITickable {
 		return false;
 	}
 
-	public List<EntityPlayer> getCaptureXP(World world, double x, double y, double z) {
-        return world.<EntityPlayer>getEntitiesWithinAABB(EntityPlayer.class, new AxisAlignedBB(x - 0.45D, y - 0.5D, z - 0.45D, x + 0.45D, y + 1.03D, z + 0.45D), EntitySelectors.IS_ALIVE);
+	public List<PlayerEntity> getCaptureXP(World world, double x, double y, double z) {
+        return world.<PlayerEntity>getEntitiesWithinAABB(PlayerEntity.class, new AxisAlignedBB(x - 0.45D, y - 0.5D, z - 0.45D, x + 0.45D, y + 1.03D, z + 0.45D), EntitySelectors.IS_ALIVE);
     }
 
-	public static void addPlayerXP(EntityPlayer player, int amount) {
+	public static void addPlayerXP(PlayerEntity player, int amount) {
 		int experience = getPlayerXP(player) + amount;
 		player.experienceTotal = experience;
 		player.experienceLevel = getLevelForExperience(experience);
@@ -57,7 +58,7 @@ public class TileEntitySinkTank extends TileEntityTank implements ITickable {
 		player.experience = (float)(experience - expForLevel) / (float)player.xpBarCap();
 	}
 
-	public static int getPlayerXP(EntityPlayer player) {
+	public static int getPlayerXP(PlayerEntity player) {
 		return (int)(getExperienceForLevel(player.experienceLevel) + (player.experience * player.xpBarCap()));
 	}
 

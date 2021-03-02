@@ -1,9 +1,9 @@
 package mob_grinding_utils.tile;
 
 import net.minecraft.block.state.IBlockState;
-import net.minecraftforge.fluids.Fluid;
+import net.minecraft.fluid.Fluid;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidTank;
+import net.minecraftforge.fluids.capability.templates.FluidTank;
 
 public class FluidTankTile extends FluidTank {
 
