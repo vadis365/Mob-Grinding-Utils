@@ -3,6 +3,7 @@ package mob_grinding_utils.capability.base;
 import com.google.common.base.Preconditions;
 
 import net.minecraft.entity.Entity;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.capabilities.Capability;
@@ -87,7 +88,7 @@ public abstract class EntityCapability<F extends EntityCapability<F, T, E>, T, E
 	 * Writes the tracked data to the nbt
 	 * @param nbt
 	 */
-	public void writeTrackingDataToNBT(NBTTagCompound nbt) {
+	public void writeTrackingDataToNBT(CompoundNBT nbt) {
 
 	}
 
@@ -95,7 +96,7 @@ public abstract class EntityCapability<F extends EntityCapability<F, T, E>, T, E
 	 * Reads the tracked data from the nbt
 	 * @param nbt
 	 */
-	public void readTrackingDataFromNBT(NBTTagCompound nbt) {
+	public void readTrackingDataFromNBT(CompoundNBT nbt) {
 
 	}
 

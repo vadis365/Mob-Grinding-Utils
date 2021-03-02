@@ -2,13 +2,13 @@ package mob_grinding_utils.capability.bossbars;
 
 import mob_grinding_utils.capability.base.EntityCapability;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
 
-public class BossBarPlayerCapability extends EntityCapability<BossBarPlayerCapability, IBossBarCapability, EntityPlayer> implements IBossBarCapability {
+public class BossBarPlayerCapability extends EntityCapability<BossBarPlayerCapability, IBossBarCapability, PlayerEntity> implements IBossBarCapability {
 	@CapabilityInject(IBossBarCapability.class)
 	public static final Capability<IBossBarCapability> CAPABILITY_PLAYER_BOSS_BAR = null;
 
@@ -35,7 +35,7 @@ public class BossBarPlayerCapability extends EntityCapability<BossBarPlayerCapab
 
 	@Override
 	public boolean isApplicable(Entity entity) {
-		return entity instanceof EntityPlayer;
+		return entity instanceof PlayerEntity;
 	}
 
 	@Override
@@ -74,23 +74,23 @@ public class BossBarPlayerCapability extends EntityCapability<BossBarPlayerCapab
 	}
 
 	@Override
-	public void writeTrackingDataToNBT(NBTTagCompound nbt) {
+	public void writeTrackingDataToNBT(CompoundNBT nbt) {
 		this.writeToNBT(nbt);
 	}
 
 	@Override
-	public void readTrackingDataFromNBT(NBTTagCompound nbt) {
+	public void readTrackingDataFromNBT(CompoundNBT nbt) {
 		this.readFromNBT(nbt);
 	}
 
 	@Override
-	public void writeToNBT(NBTTagCompound nbt) {
-		nbt.setBoolean("witherBar", this.showWitherBar);
-		nbt.setBoolean("enderDragonBar", this.showEnderDragonBar);
+	public void writeToNBT(CompoundNBT nbt) {
+		nbt.putBoolean("witherBar", this.showWitherBar);
+		nbt.putBoolean("enderDragonBar", this.showEnderDragonBar);
 	}
 
 	@Override
-	public void readFromNBT(NBTTagCompound nbt) {
+	public void readFromNBT(CompoundNBT nbt) {
 		this.showWitherBar = nbt.getBoolean("witherBar");
 		this.showEnderDragonBar = nbt.getBoolean("enderDragonBar");
 		this.setDirty(true);

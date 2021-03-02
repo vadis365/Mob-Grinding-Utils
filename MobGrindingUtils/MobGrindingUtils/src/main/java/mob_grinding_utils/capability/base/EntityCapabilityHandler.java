@@ -13,6 +13,9 @@ import com.google.common.base.Preconditions;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
@@ -38,7 +41,7 @@ public class EntityCapabilityHandler {
 	private static final List<EntityCapability<?, ?, ? extends Entity>> REGISTERED_CAPABILITIES = new ArrayList<EntityCapability<?, ?, ? extends Entity>>();
 	private static final Map<ResourceLocation, EntityCapability<?, ?, ? extends Entity>> ID_CAPABILITY_MAP = new HashMap<ResourceLocation, EntityCapability<?, ?, ? extends Entity>>();
 
-	private static final Map<EntityPlayerMP, List<EntityCapabilityTracker>> TRACKER_MAP = new HashMap<EntityPlayerMP, List<EntityCapabilityTracker>>();
+	private static final Map<ServerPlayerEntity, List<EntityCapabilityTracker>> TRACKER_MAP = new HashMap<ServerPlayerEntity, List<EntityCapabilityTracker>>();
 
 	private static int updateTimer = 0;
 
@@ -80,7 +83,7 @@ public class EntityCapabilityHandler {
 			@Override
 			public final NBTBase writeNBT(Capability<T> capability, T instance, EnumFacing side) {
 				if(instance instanceof ISerializableCapability) {
-					NBTTagCompound nbt = new NBTTagCompound();
+					CompoundNBT nbt = new CompoundNBT();
 					((ISerializableCapability)instance).writeToNBT(nbt);
 					return nbt;
 				}
@@ -89,8 +92,8 @@ public class EntityCapabilityHandler {
 
 			@Override
 			public final void readNBT(Capability<T> capability, T instance, EnumFacing side, NBTBase nbt) {
-				if(instance instanceof ISerializableCapability && nbt instanceof NBTTagCompound) {
-					((ISerializableCapability)instance).readFromNBT((NBTTagCompound)nbt);
+				if(instance instanceof ISerializableCapability && nbt instanceof CompoundNBT) {
+					((ISerializableCapability)instance).readFromNBT((CompoundNBT)nbt);
 				}
 			}
 		}, new Callable<T>() {
@@ -109,7 +112,7 @@ public class EntityCapabilityHandler {
 			if(entityCapability.isApplicable(event.getObject())) {
 				final Capability<?> capabilityInstance = entityCapability.getCapability();
 
-				event.addCapability(entityCapability.getID(), new ICapabilitySerializable<NBTTagCompound>() {
+				event.addCapability(entityCapability.getID(), new ICapabilitySerializable<CompoundNBT>() {
 					private Object entityCapability = this.getNewInstance();
 
 					private EntityCapability<?, ?, ?> getNewInstance() {
@@ -131,22 +134,22 @@ public class EntityCapabilityHandler {
 					}
 
 					@Override
-					public NBTTagCompound serializeNBT() {
+					public CompoundNBT serializeNBT() {
 						return this.serialize(capabilityInstance, this.entityCapability);
 					}
 
 					@SuppressWarnings("unchecked")
-					private <T> NBTTagCompound serialize(Capability<T> capability, Object instance) {
-						return (NBTTagCompound) capability.getStorage().writeNBT(capability, (T)instance, null);
+					private <T> CompoundNBT serialize(Capability<T> capability, Object instance) {
+						return (CompoundNBT) capability.getStorage().writeNBT(capability, (T)instance, null);
 					}
 
 					@Override
-					public void deserializeNBT(NBTTagCompound nbt) {
+					public void deserializeNBT(CompoundNBT nbt) {
 						this.deserialize(capabilityInstance, this.entityCapability, nbt);
 					}
 
 					@SuppressWarnings("unchecked")
-					private <T> void deserialize(Capability<T> capability, Object instance, NBTTagCompound nbt) {
+					private <T> void deserialize(Capability<T> capability, Object instance, CompoundNBT nbt) {
 						capability.getStorage().readNBT(capability, (T)instance, null, nbt);
 					}
 				});
@@ -156,30 +159,30 @@ public class EntityCapabilityHandler {
 
 	@SubscribeEvent
 	public static void onPlayerJoin(EntityJoinWorldEvent event) {
-		if (!event.getWorld().isRemote && event.getEntity() instanceof EntityPlayerMP) {
-			EntityPlayerMP player = (EntityPlayerMP) event.getEntity();
+		if (!event.getWorld().isRemote && event.getEntity() instanceof ServerPlayerEntity) {
+			ServerPlayerEntity player = (ServerPlayerEntity) event.getEntity();
 			addTrackers(player, player);
 		}
 	}
 
 	@SubscribeEvent
 	public static void onEntityStartTracking(StartTracking event) {
-		if(event.getEntityPlayer() instanceof EntityPlayerMP) {
-			addTrackers((EntityPlayerMP)event.getEntityPlayer(), event.getTarget());
+		if(event.getPlayer() instanceof ServerPlayerEntity) {
+			addTrackers((ServerPlayerEntity)event.getPlayer(), event.getTarget());
 		}
 	}
 
 	@SubscribeEvent
 	public static void onEntityStopTracking(StopTracking event) {
-		if(event.getEntityPlayer() instanceof EntityPlayerMP) {
-			removeTrackers((EntityPlayerMP)event.getEntityPlayer(), event.getTarget());
+		if(event.getPlayer() instanceof ServerPlayerEntity) {
+			removeTrackers((ServerPlayerEntity)event.getPlayer(), event.getTarget());
 		}
 	}
 
 	@SubscribeEvent
 	public static void onEntityUpdate(LivingUpdateEvent event) {
-		if(!event.getEntity().getEntityWorld().isRemote && event.getEntity() instanceof EntityPlayerMP)  {
-			EntityPlayerMP player = (EntityPlayerMP) event.getEntity();
+		if(!event.getEntity().getEntityWorld().isRemote && event.getEntity() instanceof ServerPlayerEntity)  {
+			ServerPlayerEntity player = (ServerPlayerEntity) event.getEntity();
 			List<EntityCapabilityTracker> trackers = TRACKER_MAP.get(player);
 			if(trackers != null) {
 				for(EntityCapabilityTracker tracker : trackers) {
@@ -191,8 +194,8 @@ public class EntityCapabilityHandler {
 
 	@SubscribeEvent
 	public static void onEntityChangeDimension(PlayerChangedDimensionEvent event) {
-		if(!event.player.getEntityWorld().isRemote && event.player instanceof EntityPlayerMP)  {
-			EntityPlayerMP player = (EntityPlayerMP) event.player;
+		if(!event.player.getEntityWorld().isRemote && event.player instanceof ServerPlayerEntity)  {
+			ServerPlayerEntity player = (ServerPlayerEntity) event.player;
 			List<EntityCapabilityTracker> trackers = TRACKER_MAP.get(player);
 			if(trackers != null) {
 				for(EntityCapabilityTracker tracker : trackers) {
@@ -208,11 +211,11 @@ public class EntityCapabilityHandler {
 			updateTimer++;
 			if(updateTimer > 20) {
 				updateTimer = 0;
-				Iterator<Entry<EntityPlayerMP, List<EntityCapabilityTracker>>> it = TRACKER_MAP.entrySet().iterator();
+				Iterator<Entry<ServerPlayerEntity, List<EntityCapabilityTracker>>> it = TRACKER_MAP.entrySet().iterator();
 				while(it.hasNext()) {
-					Entry<EntityPlayerMP, List<EntityCapabilityTracker>> entry = it.next();
-					EntityPlayerMP player = entry.getKey();
-					if(!player.getServerWorld().getMinecraftServer().getPlayerList().getPlayers().contains(player))
+					Entry<ServerPlayerEntity, List<EntityCapabilityTracker>> entry = it.next();
+					ServerPlayerEntity player = entry.getKey();
+					if(!player.getServerWorld().getServer().getPlayerList().getPlayers().contains(player))
 						it.remove();
 				}
 			}
@@ -222,14 +225,14 @@ public class EntityCapabilityHandler {
 	@SubscribeEvent
 	public static void onPlayerClone(PlayerEvent.Clone event) {
 		//Clone persistent capability properties
-		EntityPlayer oldPlayer = event.getOriginal();
-		EntityPlayer newPlayer = event.getEntityPlayer();
-		List<EntityCapability<?, ?, EntityPlayer>> capabilities = getEntityCapabilities(oldPlayer);
-		for(EntityCapability<?, ?, EntityPlayer> capability : capabilities) {
+		PlayerEntity oldPlayer = event.getOriginal();
+		PlayerEntity newPlayer = event.getPlayer();
+		List<EntityCapability<?, ?, PlayerEntity>> capabilities = getEntityCapabilities(oldPlayer);
+		for(EntityCapability<?, ?, PlayerEntity> capability : capabilities) {
 			if(capability.isPersistent() && capability instanceof ISerializableCapability) {
-				NBTTagCompound nbt = new NBTTagCompound();
+				CompoundNBT nbt = new CompoundNBT();
 				((ISerializableCapability)capability).writeToNBT(nbt);
-				EntityCapability<?, ?, EntityPlayer> newCapability = capability.getEntityCapability(newPlayer);
+				EntityCapability<?, ?, PlayerEntity> newCapability = capability.getEntityCapability(newPlayer);
 				if(newCapability != null && newCapability instanceof ISerializableCapability)
 					((ISerializableCapability)newCapability).readFromNBT(nbt);
 			}
@@ -258,7 +261,7 @@ public class EntityCapabilityHandler {
 	 * @param watcher
 	 * @param target
 	 */
-	private static void addTrackers(EntityPlayerMP watcher, Entity target) {
+	private static void addTrackers(ServerPlayerEntity watcher, Entity target) {
 		List<EntityCapability<?, ?, Entity>> entityCapabilities = getEntityCapabilities(target);
 		for(EntityCapability<?, ?, Entity> capability : entityCapabilities) {
 			if(capability.getTrackingTime() >= 0) {
@@ -275,7 +278,7 @@ public class EntityCapabilityHandler {
 	 * @param watcher
 	 * @param target
 	 */
-	private static void removeTrackers(EntityPlayerMP watcher, Entity target) {
+	private static void removeTrackers(ServerPlayerEntity watcher, Entity target) {
 		List<EntityCapability<?, ?, Entity>> entityCapabilities = getEntityCapabilities(target);
 		for(EntityCapability<?, ?, Entity> capability : entityCapabilities) {
 			if(capability.getTrackingTime() >= 0) {

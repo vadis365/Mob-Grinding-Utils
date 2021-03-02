@@ -3,15 +3,16 @@ package mob_grinding_utils.capability.base;
 import mob_grinding_utils.MobGrindingUtils;
 import mob_grinding_utils.network.MessageSyncEntityCapabilities;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.entity.player.ServerPlayerEntity;
 
 public class EntityCapabilityTracker {
 	private final EntityCapability<?, ?, ?> entityCapability;
-	private final EntityPlayerMP watcher;
+	private final ServerPlayerEntity watcher;
 
 	private boolean trackerReady = true;
 	private int lastUpdate = 0;
 
-	public EntityCapabilityTracker(EntityCapability<?, ?, ?> entityCapability, EntityPlayerMP watcher) {
+	public EntityCapabilityTracker(EntityCapability<?, ?, ?> entityCapability, ServerPlayerEntity watcher) {
 		this.entityCapability = entityCapability;
 		this.watcher = watcher;
 	}
@@ -20,7 +21,7 @@ public class EntityCapabilityTracker {
 	 * Returns the watcher
 	 * @return
 	 */
-	public EntityPlayerMP getWatcher() {
+	public ServerPlayerEntity getWatcher() {
 		return this.watcher;
 	}
 
