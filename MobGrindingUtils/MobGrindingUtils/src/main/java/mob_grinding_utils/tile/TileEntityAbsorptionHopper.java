@@ -6,6 +6,7 @@ import javax.annotation.Nullable;
 
 import mob_grinding_utils.ModItems;
 import mob_grinding_utils.inventory.server.InventoryWrapperAH;
+import net.minecraft.block.BlockState;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.item.EntityXPOrb;
@@ -17,6 +18,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.Direction;
 import net.minecraft.util.EntitySelectors;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.IStringSerializable;
@@ -130,11 +132,11 @@ public class TileEntityAbsorptionHopper extends TileEntityInventoryHelper implem
 		return tagCompound;
 	}
 
-	public EnumStatus getSideStatus(EnumFacing side) {
+	public EnumStatus getSideStatus(Direction side) {
 		return status[side.ordinal()];
 	}
 
-	public void toggleMode(EnumFacing side) {
+	public void toggleMode(Direction side) {
 		switch (status[side.ordinal()]) {
 		case STATUS_NONE:
 			status[side.ordinal()] = EnumStatus.STATUS_OUTPUT_ITEM;
@@ -188,7 +190,7 @@ public class TileEntityAbsorptionHopper extends TileEntityInventoryHelper implem
 	}
 
 	@Override
-	public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState) {
+	public boolean shouldRefresh(World world, BlockPos pos, BlockState oldState, BlockState newState) {
 		return oldState.getBlock() != newState.getBlock();
 	}
 
@@ -197,7 +199,7 @@ public class TileEntityAbsorptionHopper extends TileEntityInventoryHelper implem
 		if (getWorld().isRemote)
 			return;
 
-		for (EnumFacing facing : EnumFacing.VALUES) {
+		for (Direction facing : Direction.values()) {
 			if (status[facing.ordinal()] == EnumStatus.STATUS_OUTPUT_ITEM) {
 				TileEntity tile = getWorld().getTileEntity(pos.offset(facing));
 				

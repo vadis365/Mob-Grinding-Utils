@@ -2,6 +2,7 @@ package mob_grinding_utils.network;
 
 import mob_grinding_utils.Reference;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.network.NetworkDirection;
 import net.minecraftforge.fml.network.NetworkRegistry;
 import net.minecraftforge.fml.network.simple.SimpleChannel;
 
@@ -16,14 +17,14 @@ public class MGUNetwork {
                 .serverAcceptedVersions(version -> true)
                 .networkProtocolVersion(() -> networkVersion)
                 .simpleChannel();
-/*
+
         channel.messageBuilder(MessageAbsorptionHopper.class, 0, NetworkDirection.PLAY_TO_SERVER)
-                .decoder(MessageAbsorptionHopper::fromBytes)
-                .encoder(MessageAbsorptionHopper::toBytes)
-                .consumer(MessageAbsorptionHopper::onMessage)
+                .decoder(MessageAbsorptionHopper::decode)
+                .encoder(MessageAbsorptionHopper::encode)
+                .consumer(MessageAbsorptionHopper::handle)
                 .add();
 
-
+/*
         NETWORK_WRAPPER.registerMessage(MessageAbsorptionHopper.class, MessageAbsorptionHopper.class, 0, Side.SERVER);
         NETWORK_WRAPPER.registerMessage(MessageChickenSync.class, MessageChickenSync.class, 1, Side.CLIENT);
         NETWORK_WRAPPER.registerMessage(MessageTapParticle.class, MessageTapParticle.class, 2, MixinEnvironment.Side.CLIENT);

@@ -1,5 +1,6 @@
 package mob_grinding_utils.inventory.client;
 
+import net.minecraft.client.gui.widget.button.Button;
 import org.lwjgl.opengl.GL11;
 
 import mob_grinding_utils.MobGrindingUtils;
@@ -140,11 +141,11 @@ public class GuiAbsorptionHopper extends GuiContainer {
 			return 16776960;
 		}
 	}
-
+/*
 	@Override
-	protected void actionPerformed(GuiButton guibutton) {
-		if (guibutton instanceof GuiButton)
-			MobGrindingUtils.NETWORK_WRAPPER.sendToServer(new MessageAbsorptionHopper(mc.player, guibutton.id, tile.getPos()));
+	protected void actionPerformed(Button guibutton) {
+		if (guibutton instanceof Button)
+			MobGrindingUtils.NETWORK_WRAPPER.sendToServer(new MessageAbsorptionHopper(Minecraft.getInstance().player, guibutton.id, tile.getPos()));
 	}
-
+*/
 }
