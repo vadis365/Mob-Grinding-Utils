@@ -22,18 +22,26 @@ import net.minecraftforge.registries.IForgeRegistry;
 public class ModItems {
 	private static final List<Item> ITEMS = new LinkedList<Item>();
 
-	public static Item FAN_UPGRADE;
+	public static Item FAN_UPGRADE_WIDTH, FAN_UPGRADE_HEIGHT, FAN_UPGRADE_SPEED;
 	public static Item ABSORPTION_UPGRADE;
-	public static Item SAW_UPGRADE;
-	public static Item MOB_SWAB;
+	public static Item SAW_UPGRADE_ARTHROPOD, SAW_UPGRADE_BEHEADING, SAW_UPGRADE_FIRE, SAW_UPGRADE_LOOTING, SAW_UPGRADE_SHARPNESS, SAW_UPGRADE_SMITE;
+	public static Item MOB_SWAB, MOB_SWAB_USED;
 	public static Item GM_CHICKEN_FEED;
 	public static SwordItem NULL_SWORD;
 	
 	public static void init() {
-		FAN_UPGRADE = new ItemFanUpgrade(new Item.Properties().group(MobGrindingUtils.TAB).maxStackSize(64));
+		FAN_UPGRADE_WIDTH = new ItemFanUpgrade(new Item.Properties().group(MobGrindingUtils.TAB).maxStackSize(64), "width");
+		FAN_UPGRADE_HEIGHT = new ItemFanUpgrade(new Item.Properties().group(MobGrindingUtils.TAB).maxStackSize(64), "height");
+		FAN_UPGRADE_SPEED = new ItemFanUpgrade(new Item.Properties().group(MobGrindingUtils.TAB).maxStackSize(64), "speed");
 		ABSORPTION_UPGRADE = new ItemAbsorptionUpgrade(new Item.Properties().group(MobGrindingUtils.TAB).maxStackSize(64));
-		SAW_UPGRADE = new ItemSawUpgrade(new Item.Properties().group(MobGrindingUtils.TAB).maxStackSize(64));
-		MOB_SWAB = new ItemMobSwab(new Item.Properties().group(MobGrindingUtils.TAB).maxStackSize(1));
+		SAW_UPGRADE_ARTHROPOD = new ItemSawUpgrade(new Item.Properties().group(MobGrindingUtils.TAB).maxStackSize(64), "arthropod");
+		SAW_UPGRADE_BEHEADING = new ItemSawUpgrade(new Item.Properties().group(MobGrindingUtils.TAB).maxStackSize(64), "beheading");
+		SAW_UPGRADE_FIRE = new ItemSawUpgrade(new Item.Properties().group(MobGrindingUtils.TAB).maxStackSize(64), "fire");
+		SAW_UPGRADE_LOOTING = new ItemSawUpgrade(new Item.Properties().group(MobGrindingUtils.TAB).maxStackSize(64), "looting");
+		SAW_UPGRADE_SHARPNESS = new ItemSawUpgrade(new Item.Properties().group(MobGrindingUtils.TAB).maxStackSize(64), "sharpness");
+		SAW_UPGRADE_SMITE = new ItemSawUpgrade(new Item.Properties().group(MobGrindingUtils.TAB).maxStackSize(64), "smite");
+		MOB_SWAB = new ItemMobSwab(new Item.Properties().group(MobGrindingUtils.TAB).maxStackSize(1), false);
+		MOB_SWAB_USED = new ItemMobSwab(new Item.Properties().group(MobGrindingUtils.TAB).maxStackSize(1), true);
 		GM_CHICKEN_FEED = new ItemGMChickenFeed(new Item.Properties().group(MobGrindingUtils.TAB).maxStackSize(1));
 		NULL_SWORD = new ItemImaginaryInvisibleNotReallyThereSword(new Item.Properties().group(MobGrindingUtils.TAB));
 	}
