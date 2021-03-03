@@ -26,7 +26,7 @@ public class GuiFan extends ContainerScreen<ContainerFan> {
 	public GuiFan(ContainerFan container, PlayerInventory inventory, ITextComponent title) {
 		super(container, inventory, title);
 		this.container = container;
-		this.tile = tile;
+		this.tile = this.container.fan;
 		ySize = 224;
 	}
 
