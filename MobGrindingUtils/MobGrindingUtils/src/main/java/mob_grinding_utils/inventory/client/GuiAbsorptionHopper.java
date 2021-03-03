@@ -1,38 +1,27 @@
 package mob_grinding_utils.inventory.client;
 
-import net.minecraft.client.gui.widget.button.Button;
+import net.minecraft.client.gui.screen.inventory.ContainerScreen;
+import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.util.text.ITextComponent;
 import org.lwjgl.opengl.GL11;
-
-import mob_grinding_utils.MobGrindingUtils;
 import mob_grinding_utils.inventory.server.ContainerAbsorptionHopper;
-import mob_grinding_utils.network.MessageAbsorptionHopper;
 import mob_grinding_utils.tile.TileEntityAbsorptionHopper;
 import mob_grinding_utils.tile.TileEntityAbsorptionHopper.EnumStatus;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.TextComponentTranslation;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
-@SideOnly(Side.CLIENT)
-public class GuiAbsorptionHopper extends GuiContainer {
+public class GuiAbsorptionHopper extends ContainerScreen<ContainerAbsorptionHopper> {
 
 	private static final ResourceLocation GUI_ABSORPTION_HOPPER = new ResourceLocation("mob_grinding_utils:textures/gui/absorption_hopper_gui.png");
 	private final TileEntityAbsorptionHopper tile;
 
-	public GuiAbsorptionHopper(EntityPlayer player, TileEntityAbsorptionHopper tile) {
-		super(new ContainerAbsorptionHopper(player, tile));
+	public GuiAbsorptionHopper(ContainerAbsorptionHopper container, PlayerInventory playerInventory, ITextComponent name) {
+		super(container, playerInventory, name);
 		this.tile = tile;
 		ySize = 226;
 		xSize = 248;

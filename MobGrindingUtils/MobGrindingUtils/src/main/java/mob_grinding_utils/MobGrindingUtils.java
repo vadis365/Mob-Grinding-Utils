@@ -15,6 +15,8 @@ import mob_grinding_utils.events.LocalDragonSoundEvent;
 import mob_grinding_utils.events.LocalWitherSoundEvent;
 import mob_grinding_utils.events.MGUEndermanInhibitEvent;
 import mob_grinding_utils.events.MGUZombieReinforcementEvent;
+import mob_grinding_utils.inventory.client.GuiAbsorptionHopper;
+import mob_grinding_utils.inventory.client.GuiFan;
 import mob_grinding_utils.inventory.server.ContainerAbsorptionHopper;
 import mob_grinding_utils.network.MGUNetwork;
 import mob_grinding_utils.tile.TileEntityAbsorptionHopper;
@@ -23,6 +25,7 @@ import mob_grinding_utils.tile.TileEntitySaw;
 import mob_grinding_utils.tile.TileEntitySinkTank;
 import mob_grinding_utils.tile.TileEntityTank;
 import net.minecraft.block.Blocks;
+import net.minecraft.client.gui.ScreenManager;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.ContainerType;
@@ -122,5 +125,8 @@ public class MobGrindingUtils {
 		ClientRegistry.bindTileEntityRenderer(ModBlocks.ABSORPTION_HOPPER_TILE, TileEntityAbsorptionRenderer::new);
 	*/
 		ClientRegistry.bindTileEntityRenderer(ModBlocks.FAN_TILE, TileEntityFanRenderer::new);
+
+		ScreenManager.registerFactory(ModContainers.ABSORBTION_HOPPER.get(), GuiAbsorptionHopper::new);
+		ScreenManager.registerFactory(ModContainers.FAN.get(), GuiFan::new);
 	}
 }

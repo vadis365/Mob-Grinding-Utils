@@ -23,7 +23,7 @@ public class GuiFan extends ContainerScreen<ContainerFan> {
 	protected final ContainerFan container;
 	private final TileEntityFan tile;
 
-	public GuiFan(ContainerFan container, PlayerInventory inventory, ITextComponent title, TileEntityFan tile) {
+	public GuiFan(ContainerFan container, PlayerInventory inventory, ITextComponent title) {
 		super(container, inventory, title);
 		this.container = container;
 		this.tile = tile;
