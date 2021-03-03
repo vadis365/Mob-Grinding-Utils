@@ -1,41 +1,47 @@
 package mob_grinding_utils.inventory.client;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.systems.RenderSystem;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
 
-public class GuiBigButton extends GuiButton {
+public class GuiBigButton extends Button {
 	private static final ResourceLocation TEXTURES = new ResourceLocation("mob_grinding_utils:textures/gui/absorption_hopper_gui.png");
 	private int u;
 	private int v;
 
-	public GuiBigButton(int id, int x, int y, int u, int v, String name) {
-		super(id, x, y, 68, 16, name);
+	public GuiBigButton(int x, int y, int u, int v, ITextComponent title, Button.IPressable pressedAction) {
+		super(x, y, 68, 16, StringTextComponent.EMPTY, pressedAction);
 		this.u = u;
 		this.v = v;
 	}
 
 	@Override
-	public void drawButton(Minecraft mc, int mouseX, int mouseY, float partialTicks) {
+	 public void renderButton(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+		 Minecraft mc = Minecraft.getInstance();
 		FontRenderer fontrenderer = mc.fontRenderer;
+		
 		if (visible) {
 			mc.getTextureManager().bindTexture(TEXTURES);
-			GlStateManager.color(0.75F, 0.75F, 0.75F, 0.5F);
+			RenderSystem.color4f(0.75F, 0.75F, 0.75F, 0.5F);
 			boolean hover = mouseX >= x && mouseY >= y && mouseX < x + width && mouseY < y + height;
 			if(hover)
-				GlStateManager.color(0.75F, 1, 0.75F, 1);	
-			drawTexturedModalRect(x, y, u, v, width, height);
+				RenderSystem.color4f(0.75F, 1, 0.75F, 1);	
+			blit(matrixStack, x, y, u, v, width, height);
 			
 			int textColour = 14737632;
-			if (packedFGColour != 0)
-				textColour = packedFGColour;
-			else if (!this.enabled)
+			if (getFGColor() != 0)
+				textColour = getFGColor();
+			else if (!this.active)
 				textColour = 10526880;
-			else if (this.hovered)
+			else if (this.isHovered())
 				textColour = 16777120;
-			drawCenteredString(fontrenderer, this.displayString, this.x + this.width / 2, this.y + (this.height - 8) / 2, textColour);
+			drawCenteredString(matrixStack, fontrenderer, getMessage(), this.x + this.width / 2, this.y + (this.height - 8) / 2, textColour);
 		}
 	}
 }

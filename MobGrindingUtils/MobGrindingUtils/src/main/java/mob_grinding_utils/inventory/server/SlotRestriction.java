@@ -1,7 +1,7 @@
 package mob_grinding_utils.inventory.server;
 
 import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.Slot;
+import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 
 public class SlotRestriction extends Slot {
@@ -16,7 +16,7 @@ public class SlotRestriction extends Slot {
 
 	@Override
 	public boolean isItemValid(ItemStack stack) {
-		if (stack.getItem() == item.getItem() && stack.getItemDamage() == item.getItemDamage())
+		if (stack.getItem() == item.getItem() && stack.getDamage() == item.getDamage())
 			return true;
 		return false;
 	}
