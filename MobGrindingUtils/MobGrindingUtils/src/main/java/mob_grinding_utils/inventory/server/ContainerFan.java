@@ -1,24 +1,34 @@
 package mob_grinding_utils.inventory.server;
 
+import mob_grinding_utils.ModContainers;
 import mob_grinding_utils.ModItems;
 import mob_grinding_utils.tile.TileEntityFan;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
+import net.minecraft.network.PacketBuffer;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.math.BlockPos;
 
 public class ContainerFan extends Container {
 	private final int numRows = 2;
 	TileEntityFan fan;
-    //TODO fix this to work ;)
-	public ContainerFan(int windowId, PlayerEntity player, TileEntityFan tile) {
-		PlayerInventory playerInventory = player.inventory;
-		fan = tile;
+
+	public ContainerFan(final int windowId, final PlayerInventory playerInventory, PacketBuffer extra) {
+		super(ModContainers.FAN.get(), windowId);
+		BlockPos tilePos = extra.readBlockPos();
+		TileEntity tile = playerInventory.player.getEntityWorld().getTileEntity(tilePos);
+		if (!(tile instanceof TileEntityFan))
+			return;
+		fan = (TileEntityFan) tile;
+
 		int i = (numRows - 4) * 18;
-		addSlot(new SlotRestriction(tile, 0, 44, 18, new ItemStack(ModItems.FAN_UPGRADE_WIDTH, 1), 3));
-		addSlot(new SlotRestriction(tile, 1, 80, 18, new ItemStack(ModItems.FAN_UPGRADE_HEIGHT, 1), 3));
-		addSlot(new SlotRestriction(tile, 2, 116, 18, new ItemStack(ModItems.FAN_UPGRADE_SPEED, 1), 10));
+		addSlot(new SlotRestriction((IInventory) tile, 0, 44, 18, new ItemStack(ModItems.FAN_UPGRADE_WIDTH, 1), 3));
+		addSlot(new SlotRestriction((IInventory) tile, 1, 80, 18, new ItemStack(ModItems.FAN_UPGRADE_HEIGHT, 1), 3));
+		addSlot(new SlotRestriction((IInventory) tile, 2, 116, 18, new ItemStack(ModItems.FAN_UPGRADE_SPEED, 1), 10));
 
 		for (int j = 0; j < 3; j++)
 			for (int k = 0; k < 9; k++)

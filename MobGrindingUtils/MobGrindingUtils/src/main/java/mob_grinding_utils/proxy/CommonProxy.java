@@ -24,7 +24,7 @@ public class CommonProxy implements IGuiHandler {
 
 	public void registerRenderers() {}
 
-
+/*
 	@Override
 	public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
 		if (ID == GUI_ID_ABSORPTION_HOPPER) {
@@ -73,8 +73,7 @@ public class CommonProxy implements IGuiHandler {
 				return new GuiSaw(player, (TileEntitySaw) tileentity);
 		}
 		return null;
-	}
-
+	}*/
 	public void postInit() {
 	}
 
