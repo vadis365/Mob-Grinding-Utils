@@ -24,7 +24,7 @@ public class MGUNetwork {
                 .consumer(MessageAbsorptionHopper::handle)
                 .add();
 
-        channel.messageBuilder(MessageChickenSync.class, 1, NetworkDirection.PLAY_TO_SERVER)
+        channel.messageBuilder(MessageChickenSync.class, 1, NetworkDirection.PLAY_TO_CLIENT)
                 .decoder(MessageChickenSync::decode)
                 .encoder(MessageChickenSync::encode)
                 .consumer(MessageChickenSync::handle)

@@ -8,6 +8,7 @@ import net.minecraft.network.PacketBuffer;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.network.NetworkEvent;
+import org.apache.logging.log4j.LogManager;
 
 import java.util.function.Supplier;
 
@@ -60,7 +61,7 @@ public class MessageChickenSync {
 						}
 					}
 				} else {
-					System.out.println("WHY THE FUCK IS THE CHICKEN NULL!!!!?");
+					LogManager.getLogger().info("WHY THE FUCK IS THE CHICKEN NULL!!!!?");
 				}
 			}
 		});
