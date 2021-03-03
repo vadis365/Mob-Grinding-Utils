@@ -2,50 +2,51 @@ package mob_grinding_utils.inventory.server;
 
 import mob_grinding_utils.ModItems;
 import mob_grinding_utils.tile.TileEntityFan;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.Container;
-import net.minecraft.inventory.Slot;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.container.Container;
+import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 
 public class ContainerFan extends Container {
 	private final int numRows = 2;
 	TileEntityFan fan;
-	public ContainerFan(EntityPlayer player, TileEntityFan tile) {
-		InventoryPlayer playerInventory = player.inventory;
+    //TODO fix this to work ;)
+	public ContainerFan(int windowId, PlayerEntity player, TileEntityFan tile) {
+		PlayerInventory playerInventory = player.inventory;
 		fan = tile;
 		int i = (numRows - 4) * 18;
-		addSlotToContainer(new SlotRestriction(tile, 0, 44, 18, new ItemStack(ModItems.FAN_UPGRADE, 1, 0), 3));
-		addSlotToContainer(new SlotRestriction(tile, 1, 80, 18, new ItemStack(ModItems.FAN_UPGRADE, 1, 1), 3));
-		addSlotToContainer(new SlotRestriction(tile, 2, 116, 18, new ItemStack(ModItems.FAN_UPGRADE, 1, 2), 10));
+		addSlot(new SlotRestriction(tile, 0, 44, 18, new ItemStack(ModItems.FAN_UPGRADE_WIDTH, 1), 3));
+		addSlot(new SlotRestriction(tile, 1, 80, 18, new ItemStack(ModItems.FAN_UPGRADE_HEIGHT, 1), 3));
+		addSlot(new SlotRestriction(tile, 2, 116, 18, new ItemStack(ModItems.FAN_UPGRADE_SPEED, 1), 10));
 
 		for (int j = 0; j < 3; j++)
 			for (int k = 0; k < 9; k++)
-				addSlotToContainer(new Slot(playerInventory, k + j * 9 + 9, 8 + k * 18, 104 + j * 18 + i));
+				addSlot(new Slot(playerInventory, k + j * 9 + 9, 8 + k * 18, 104 + j * 18 + i));
 		for (int j = 0; j < 9; j++)
-			addSlotToContainer(new Slot(playerInventory, j, 8 + j * 18, 162 + i));
+			addSlot(new Slot(playerInventory, j, 8 + j * 18, 162 + i));
 	}
 	
 	@Override
-	public boolean canInteractWith(EntityPlayer player) {
+	public boolean canInteractWith(PlayerEntity player) {
 		return true;
 	}
 	
 	@Override
-	public ItemStack transferStackInSlot(EntityPlayer player, int slotIndex) {
+	public ItemStack transferStackInSlot(PlayerEntity player, int slotIndex) {
 		ItemStack stack = ItemStack.EMPTY;
 		Slot slot = (Slot) inventorySlots.get(slotIndex);
 		if (slot != null && slot.getHasStack()) {
 			ItemStack stack1 = slot.getStack();
 			stack = stack1.copy();
 			if (slotIndex > 2) {
-				if (stack1.getItem() == ModItems.FAN_UPGRADE && stack1.getItemDamage() == 0)
+				if (stack1.getItem() == ModItems.FAN_UPGRADE_WIDTH)
 					if (!mergeItemStack(stack1, 0, 1, false))
 						return ItemStack.EMPTY;
-				if (stack1.getItem() == ModItems.FAN_UPGRADE && stack1.getItemDamage() == 1)
+				if (stack1.getItem() == ModItems.FAN_UPGRADE_HEIGHT)
 					if (!mergeItemStack(stack1, 1, 2, false))
 						return ItemStack.EMPTY;
-				if (stack1.getItem() == ModItems.FAN_UPGRADE && stack1.getItemDamage() == 2)
+				if (stack1.getItem() == ModItems.FAN_UPGRADE_SPEED)
 					if (!mergeItemStack(stack1, 2, 3, false))
 						return ItemStack.EMPTY;
 			} else if (!mergeItemStack(stack1, 3, inventorySlots.size(), false))
@@ -78,7 +79,7 @@ public class ContainerFan extends Container {
 				slot = (Slot) this.inventorySlots.get(slotIndex);
 				slotstack = slot.getStack();
 
-				if (!slotstack.isEmpty() && slotstack.getItem() == stack.getItem() && stack.getItemDamage() == slotstack.getItemDamage() && ItemStack.areItemStackTagsEqual(stack, slotstack) && slotstack.getCount() < slot.getSlotStackLimit()) {
+				if (!slotstack.isEmpty() && slotstack.getItem() == stack.getItem() && stack.getDamage() == slotstack.getDamage() && ItemStack.areItemStackTagsEqual(stack, slotstack) && slotstack.getCount() < slot.getSlotStackLimit()) {
 					int mergedStackSize = stack.getCount() + getSmaller(slotstack.getCount(), slot.getSlotStackLimit());
 
 					if (mergedStackSize <= stack.getMaxStackSize() && mergedStackSize <= slot.getSlotStackLimit()) {
