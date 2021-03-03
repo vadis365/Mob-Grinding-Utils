@@ -1,45 +1,53 @@
 package mob_grinding_utils.inventory.server;
 
+import mob_grinding_utils.ModContainers;
 import mob_grinding_utils.ModItems;
 import mob_grinding_utils.tile.TileEntityAbsorptionHopper;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.Container;
-import net.minecraft.inventory.Slot;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.container.Container;
+import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
+import net.minecraft.network.PacketBuffer;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.math.BlockPos;
 
 public class ContainerAbsorptionHopper extends Container {
 
 	public int numRows = 2;
 
-	public ContainerAbsorptionHopper(EntityPlayer player, TileEntityAbsorptionHopper tile) {
-		InventoryPlayer playerInventory = player.inventory;
+	public ContainerAbsorptionHopper(final int windowId, final PlayerInventory playerInventory, PacketBuffer extra) {
+		super(ModContainers.ABSORBTION_HOPPER.get(), windowId);
+		BlockPos tilePos = extra.readBlockPos();
+		TileEntity tile = playerInventory.player.getEntityWorld().getTileEntity(tilePos);
+		if (!(tile instanceof TileEntityAbsorptionHopper))
+			return;
 
 		int i = (numRows - 4) * 18;
 		int j;
 		int k;
-
-		addSlotToContainer(new SlotRestriction(tile, 0, 134, 72, new ItemStack(ModItems.ABSORPTION_UPGRADE, 1, 0), 6)); // change to hopper upgrade
+		addSlot(new SlotRestriction(tile, 0, 134, 72, new ItemStack(ModItems.ABSORPTION_UPGRADE, 1, 0), 6)); // change to hopper upgrade
 
 		for (j = 0; j < numRows; ++j)
 			for (k = 0; k < 8; ++k)
-				addSlotToContainer(new Slot(tile, 1 + k + j * 8, 8 + k * 18, 94 + j * 18));
+				addSlot(new Slot((IInventory) tile, 1 + k + j * 8, 8 + k * 18, 94 + j * 18));
 
 		for (j = 0; j < 3; ++j)
 			for (k = 0; k < 9; ++k)
-				addSlotToContainer(new Slot(playerInventory, k + j * 9 + 9, 44 + k * 18, 180 + j * 18 + i));
+				addSlot(new Slot(playerInventory, k + j * 9 + 9, 44 + k * 18, 180 + j * 18 + i));
 
 		for (j = 0; j < 9; ++j)
-			addSlotToContainer(new Slot(playerInventory, j, 44 + j * 18, 238 + i));
+			addSlot(new Slot(playerInventory, j, 44 + j * 18, 238 + i));
 	}
 
 	@Override
-	public boolean canInteractWith(EntityPlayer player) {
+	public boolean canInteractWith(PlayerEntity player) {
 		return true;
 	}
 
 	@Override
-	public ItemStack transferStackInSlot(EntityPlayer player, int slotIndex) {
+	public ItemStack transferStackInSlot(PlayerEntity player, int slotIndex) {
 		ItemStack stack = ItemStack.EMPTY;
 		Slot slot = (Slot) inventorySlots.get(slotIndex);
 		if (slot != null && slot.getHasStack()) {
