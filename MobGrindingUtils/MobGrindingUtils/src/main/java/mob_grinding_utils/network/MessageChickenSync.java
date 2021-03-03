@@ -1,73 +1,69 @@
 package mob_grinding_utils.network;
 
-import io.netty.buffer.ByteBuf;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.passive.EntityChicken;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumParticleTypes;
+import net.minecraft.client.Minecraft;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.passive.ChickenEntity;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.network.PacketBuffer;
+import net.minecraft.particles.ParticleTypes;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.client.FMLClientHandler;
-import net.minecraftforge.fml.common.network.ByteBufUtils;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
-import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.fml.network.NetworkEvent;
 
-public class MessageChickenSync implements IMessage, IMessageHandler<MessageChickenSync, MessageChickenSync> {
+import java.util.function.Supplier;
+
+public class MessageChickenSync {
 
 	public int chickenID;
-	public NBTTagCompound nbt;
+	public CompoundNBT nbt;
 
-	public MessageChickenSync() {
-	}
-
-	public MessageChickenSync(EntityLivingBase chicken, NBTTagCompound chickenNBT) {
+	public MessageChickenSync(LivingEntity chicken, CompoundNBT chickenNBT) {
 		chickenID = chicken.getEntityId();
 		nbt = chickenNBT;
 	}
 
-	@Override
-	public void toBytes(ByteBuf buf) {
-		buf.writeInt(chickenID);
-		ByteBufUtils.writeTag(buf, nbt);
+	public MessageChickenSync(int chickenID, CompoundNBT nbt) {
+		this.chickenID = chickenID;
+		this.nbt = nbt;
 	}
 
-	@Override
-	public void fromBytes(ByteBuf buf) {
-		chickenID = buf.readInt();
-		nbt = ByteBufUtils.readTag(buf);
+	public static void encode(final MessageChickenSync message, PacketBuffer buf) {
+		buf.writeInt(message.chickenID);
+		buf.writeCompoundTag(message.nbt);
 	}
 
-	@Override
-	@SideOnly(Side.CLIENT)
-	public MessageChickenSync onMessage(MessageChickenSync message, MessageContext ctx) {
+	public static MessageChickenSync decode(final PacketBuffer buf) {
+		return new MessageChickenSync(buf.readInt(), buf.readCompoundTag());
+	}
 
-		World world = FMLClientHandler.instance().getWorldClient();
+	public static void handle(MessageChickenSync message, final Supplier<NetworkEvent.Context> ctx) {
+		ctx.get().enqueueWork(() -> {
 
-		if (world == null)
-			return null;
+			World world = Minecraft.getInstance().world;
 
-		else if (world.isRemote) {
-			EntityLivingBase chicken = (EntityChicken) world.getEntityByID(message.chickenID);
-			if (chicken instanceof EntityChicken) {
-				NBTTagCompound nbt = new NBTTagCompound();
-				nbt = chicken.getEntityData();
-				nbt.setBoolean("shouldExplode", message.nbt.getBoolean("shouldExplode"));
-				nbt.setInteger("countDown", message.nbt.getInteger("countDown"));
-				if (message.nbt.getInteger("countDown") >= 20) {
-					for (int k = 0; k < 20; ++k) {
-						double xSpeed = world.rand.nextGaussian() * 0.02D;
-						double ySpeed = world.rand.nextGaussian() * 0.02D;
-						double zSpeed = world.rand.nextGaussian() * 0.02D;
-						world.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, chicken.posX + (double) (world.rand.nextFloat() * chicken.width * 2.0F) - (double) chicken.width, chicken.posY + (double) (world.rand.nextFloat() * chicken.height), chicken.posZ + (double) (world.rand.nextFloat() * chicken.width * 2.0F) - (double) chicken.width, xSpeed, ySpeed, zSpeed, new int[0]);
-						world.spawnParticle(EnumParticleTypes.LAVA, chicken.posX + (double) (world.rand.nextFloat() * chicken.width * 2.0F) - (double) chicken.width, chicken.posY + (double) (world.rand.nextFloat() * chicken.height), chicken.posZ + (double) (world.rand.nextFloat() * chicken.width * 2.0F) - (double) chicken.width, xSpeed, ySpeed, zSpeed, new int[0]);
+			if (world == null)
+				return;
+
+			else if (world.isRemote) {
+				LivingEntity chicken = (ChickenEntity) world.getEntityByID(message.chickenID);
+				if (chicken != null) {
+					CompoundNBT nbt = new CompoundNBT();
+					nbt = chicken.getPersistentData();
+					nbt.putBoolean("shouldExplode", message.nbt.getBoolean("shouldExplode"));
+					nbt.putInt("countDown", message.nbt.getInt("countDown"));
+					if (message.nbt.getInt("countDown") >= 20) {
+						for (int k = 0; k < 20; ++k) {
+							double xSpeed = world.rand.nextGaussian() * 0.02D;
+							double ySpeed = world.rand.nextGaussian() * 0.02D;
+							double zSpeed = world.rand.nextGaussian() * 0.02D;
+							world.addParticle(ParticleTypes.EXPLOSION, chicken.getPosX() + (double) (world.rand.nextFloat() * chicken.getWidth() * 2.0F) - (double) chicken.getWidth(), chicken.getPosY() + (double) (world.rand.nextFloat() * chicken.getHeight()), chicken.getPosZ() + (double) (world.rand.nextFloat() * chicken.getWidth() * 2.0F) - (double) chicken.getWidth(), xSpeed, ySpeed, zSpeed);
+							world.addParticle(ParticleTypes.LAVA, chicken.getPosX() + (double) (world.rand.nextFloat() * chicken.getWidth() * 2.0F) - (double) chicken.getWidth(), chicken.getPosY() + (double) (world.rand.nextFloat() * chicken.getHeight()), chicken.getPosZ() + (double) (world.rand.nextFloat() * chicken.getWidth() * 2.0F) - (double) chicken.getWidth(), xSpeed, ySpeed, zSpeed);
+						}
 					}
+				} else {
+					System.out.println("WHY THE FUCK IS THE CHICKEN NULL!!!!?");
 				}
-			} else {
-				System.out.println("WHY THE FUCK IS THE CHICKEN NULL!!!!?");
 			}
-		}
-		return null;
+		});
+		ctx.get().setPacketHandled(true);
 	}
 }

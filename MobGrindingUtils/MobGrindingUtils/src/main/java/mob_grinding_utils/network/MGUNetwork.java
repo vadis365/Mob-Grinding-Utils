@@ -24,8 +24,13 @@ public class MGUNetwork {
                 .consumer(MessageAbsorptionHopper::handle)
                 .add();
 
+        channel.messageBuilder(MessageChickenSync.class, 1, NetworkDirection.PLAY_TO_SERVER)
+                .decoder(MessageChickenSync::decode)
+                .encoder(MessageChickenSync::encode)
+                .consumer(MessageChickenSync::handle)
+                .add();
+
 /*
-        NETWORK_WRAPPER.registerMessage(MessageAbsorptionHopper.class, MessageAbsorptionHopper.class, 0, Side.SERVER);
         NETWORK_WRAPPER.registerMessage(MessageChickenSync.class, MessageChickenSync.class, 1, Side.CLIENT);
         NETWORK_WRAPPER.registerMessage(MessageTapParticle.class, MessageTapParticle.class, 2, MixinEnvironment.Side.CLIENT);
         NETWORK_WRAPPER.registerMessage(MessageSyncEntityCapabilities.class, MessageSyncEntityCapabilities.class, 3, Side.CLIENT);
