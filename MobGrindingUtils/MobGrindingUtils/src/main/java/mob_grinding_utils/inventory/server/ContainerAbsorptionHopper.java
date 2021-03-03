@@ -27,7 +27,7 @@ public class ContainerAbsorptionHopper extends Container {
 		int i = (numRows - 4) * 18;
 		int j;
 		int k;
-		addSlot(new SlotRestriction(tile, 0, 134, 72, new ItemStack(ModItems.ABSORPTION_UPGRADE, 1, 0), 6)); // change to hopper upgrade
+		addSlot(new SlotRestriction((IInventory)tile, 0, 134, 72, new ItemStack(ModItems.ABSORPTION_UPGRADE, 1), 6)); // change to hopper upgrade
 
 		for (j = 0; j < numRows; ++j)
 			for (k = 0; k < 8; ++k)
@@ -49,7 +49,7 @@ public class ContainerAbsorptionHopper extends Container {
 	@Override
 	public ItemStack transferStackInSlot(PlayerEntity player, int slotIndex) {
 		ItemStack stack = ItemStack.EMPTY;
-		Slot slot = (Slot) inventorySlots.get(slotIndex);
+		Slot slot = inventorySlots.get(slotIndex);
 		if (slot != null && slot.getHasStack()) {
 			ItemStack stack1 = slot.getStack();
 			stack = stack1.copy();
@@ -84,10 +84,10 @@ public class ContainerAbsorptionHopper extends Container {
 
 		if (stack.isStackable()) {
 			while (stack.getCount() > 0 && (!reverseDirection && slotIndex < endIndex || reverseDirection && slotIndex >= startIndex)) {
-				slot = (Slot) this.inventorySlots.get(slotIndex);
+				slot = this.inventorySlots.get(slotIndex);
 				slotstack = slot.getStack();
 
-				if (!slotstack.isEmpty() && slotstack.getItem() == stack.getItem() && stack.getItemDamage() == slotstack.getItemDamage() && ItemStack.areItemStackTagsEqual(stack, slotstack) && slotstack.getCount() < slot.getSlotStackLimit()) {
+				if (!slotstack.isEmpty() && slotstack.getItem() == stack.getItem() && stack.getDamage() == slotstack.getDamage() && ItemStack.areItemStackTagsEqual(stack, slotstack) && slotstack.getCount() < slot.getSlotStackLimit()) {
 					int mergedStackSize = stack.getCount() + getSmaller(slotstack.getCount(), slot.getSlotStackLimit());
 
 					if (mergedStackSize <= stack.getMaxStackSize() && mergedStackSize <= slot.getSlotStackLimit()) {
@@ -125,7 +125,7 @@ public class ContainerAbsorptionHopper extends Container {
 				slotIndex = startIndex;
 
 			while (!reverseDirection && slotIndex < endIndex || reverseDirection && slotIndex >= startIndex) {
-				slot = (Slot) this.inventorySlots.get(slotIndex);
+				slot = this.inventorySlots.get(slotIndex);
 				slotstack = slot.getStack();
 				if (slotstack.isEmpty() && slot.isItemValid(stack) && slot.getSlotStackLimit() < stack.getCount()) {
 					ItemStack copy = stack.copy();
@@ -154,10 +154,7 @@ public class ContainerAbsorptionHopper extends Container {
 	}
 
 	protected int getSmaller(int stackSize1, int stackSize2) {
-		if (stackSize1 < stackSize2)
-			return stackSize1;
-		else
-			return stackSize2;
+		return Math.min(stackSize1, stackSize2);
 	}
 
 }
