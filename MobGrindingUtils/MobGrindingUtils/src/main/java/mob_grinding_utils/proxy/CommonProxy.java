@@ -75,9 +75,6 @@ public class CommonProxy implements IGuiHandler {
 		return null;
 	}
 
-	public void spawnGlitterParticles(World worldObj, double x, double y, double z, double velocityX, double velocityY, double velocityZ, int count, int color, float scale) {
-	}
-
 	public void postInit() {
 	}
 

@@ -1,22 +1,18 @@
 package mob_grinding_utils.network;
 
-import io.netty.buffer.ByteBuf;
-import mob_grinding_utils.MobGrindingUtils;
+
+import mob_grinding_utils.client.particles.ParticleFluidXP;
+import net.minecraft.client.Minecraft;
+import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.client.FMLClientHandler;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
-import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.fml.network.NetworkEvent;
 
-public class MessageTapParticle implements IMessage, IMessageHandler<MessageTapParticle, MessageTapParticle> {
+import java.util.function.Supplier;
+
+public class MessageTapParticle {
 
 	public BlockPos tilePos;
-
-	public MessageTapParticle() {
-	}
 
 	public MessageTapParticle(BlockPos pos) {
 		tilePos = pos;
@@ -26,28 +22,26 @@ public class MessageTapParticle implements IMessage, IMessageHandler<MessageTapP
 		tilePos = new BlockPos(x, y, z);
 	}
 
-	@Override
-	public void toBytes(ByteBuf buf) {
-		PacketUtils.writeBlockPos(buf, tilePos);
+	public static void encode(final MessageTapParticle message, PacketBuffer buf) {
+		buf.writeBlockPos(message.tilePos);
 	}
 
-	@Override
-	public void fromBytes(ByteBuf buf) {
-		tilePos = PacketUtils.readBlockPos(buf);
+	public static MessageTapParticle decode(PacketBuffer buf) {
+		return new MessageTapParticle(buf.readBlockPos());
 	}
 
-	@Override
-	@SideOnly(Side.CLIENT)
-	public MessageTapParticle onMessage(MessageTapParticle message, MessageContext ctx) {
+	public static void handle(MessageTapParticle message, final Supplier<NetworkEvent.Context> ctx) {
+		ctx.get().enqueueWork(() -> {
+			World world = Minecraft.getInstance().world;
 
-		World world = FMLClientHandler.instance().getWorldClient();
+			if (world == null)
+				return;
 
-		if (world == null)
-			return null;
+			if (world.isRemote) {
+				Minecraft.getInstance().particles.addEffect(new ParticleFluidXP(world,message.tilePos.getX() + world.rand.nextDouble() - 0.5 * 0.05, message.tilePos.getY() + 0.125D, message.tilePos.getZ() + world.rand.nextDouble() - 0.5 * 0.05, 0D, 0D, 0D, 10, 16776960, 1.5F));
+			}
 
-		else if (world.isRemote)
-			MobGrindingUtils.PROXY.spawnGlitterParticles(world, message.tilePos.getX() + world.rand.nextDouble() - 0.5 * 0.05, message.tilePos.getY() + 0.125D, message.tilePos.getZ() + world.rand.nextDouble() - 0.5 * 0.05, 0D, 0D, 0D, 10, 16776960, 1.5F);
-
-		return null;
+		});
+		ctx.get().setPacketHandled(true);
 	}
 }

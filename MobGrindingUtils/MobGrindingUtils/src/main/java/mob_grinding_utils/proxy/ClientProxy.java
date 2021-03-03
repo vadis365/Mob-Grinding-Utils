@@ -33,13 +33,4 @@ public class ClientProxy extends CommonProxy {
 		ForgeHooksClient.registerTESRItemStack(ModBlocks.SAW_ITEM, 0, TileEntitySaw.class);
 	}
 
-	private static void spawnParticle(Particle spray) {
-		Minecraft.getMinecraft().effectRenderer.addEffect(spray);
-	}
-
-	@Override
-	public void spawnGlitterParticles(World worldObj, double x, double y, double z, double velocityX, double velocityY, double velocityZ, int count, int color, float scale) {
-		spawnParticle(new ParticleFluidXP(worldObj, x, y, z, velocityX, velocityY, velocityZ, count, color, scale));
-	}
-
 }
