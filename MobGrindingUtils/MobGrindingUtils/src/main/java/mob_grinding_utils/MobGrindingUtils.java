@@ -44,9 +44,6 @@ import net.minecraftforge.registries.ForgeRegistries;
 
 @Mod(Reference.MOD_ID)
 public class MobGrindingUtils {
-	//@SidedProxy(clientSide = Reference.PROXY_CLIENT, serverSide = Reference.PROXY_COMMON)
-	//public static CommonProxy PROXY;
-
 	public static Fluid FLUID_XP;
 	public static SimpleChannel NETWORK_WRAPPER;
 	public static DamageSource SPIKE_DAMAGE;
