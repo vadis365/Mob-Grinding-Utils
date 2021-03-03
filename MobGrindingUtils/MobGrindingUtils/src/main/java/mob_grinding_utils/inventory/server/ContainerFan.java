@@ -17,8 +17,10 @@ public class ContainerFan extends Container {
 	private final int numRows = 2;
 	public TileEntityFan fan;
 
-	public ContainerFan(final int windowId, final PlayerInventory playerInventory, TileEntityFan tile) {
+	public ContainerFan(final int windowId, final PlayerInventory playerInventory, PacketBuffer extra) {
 		super(ModContainers.FAN.get(), windowId);
+		BlockPos tilePos = extra.readBlockPos();
+		TileEntity tile = playerInventory.player.getEntityWorld().getTileEntity(tilePos);
 		if (!(tile instanceof TileEntityFan))
 			return;
 		fan = (TileEntityFan) tile;

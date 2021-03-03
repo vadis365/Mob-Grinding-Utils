@@ -5,17 +5,12 @@ import java.util.List;
 import mob_grinding_utils.ModBlocks;
 import mob_grinding_utils.ModItems;
 import mob_grinding_utils.blocks.BlockFan;
-import mob_grinding_utils.inventory.server.ContainerFan;
 import mob_grinding_utils.items.ItemFanUpgrade;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.ItemStackHelper;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
@@ -25,11 +20,10 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-public class TileEntityFan extends TileEntityInventoryHelper implements ITickableTileEntity, INamedContainerProvider {
+public class TileEntityFan extends TileEntityInventoryHelper implements ITickableTileEntity {
 
 	private static final int[] SLOTS = new int[] {0, 1, 2};
 	public boolean showRenderBox;
@@ -270,17 +264,6 @@ public class TileEntityFan extends TileEntityInventoryHelper implements ITickabl
 	@Override
 	public boolean canExtractItem(int index, ItemStack stack, Direction direction) {
 		return false;
-	}
-
-	@Override
-	public Container createMenu(int winId, PlayerInventory playerInventory, PlayerEntity player) {
-		return new ContainerFan(winId, playerInventory, this);
-	}
-
-	@Override
-	public ITextComponent getDisplayName() {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 }
