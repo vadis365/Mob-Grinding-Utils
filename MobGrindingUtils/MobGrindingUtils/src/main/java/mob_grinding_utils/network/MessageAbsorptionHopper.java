@@ -36,15 +36,15 @@ public class MessageAbsorptionHopper {
 		tilePos = new BlockPos(x, y, z);
 	}
 
-	public MessageAbsorptionHopper(String dimensionKey, int entityID, int buttonID, BlockPos tilePos) {
-		this.dimension = RegistryKey.getOrCreateKey(Registry.WORLD_KEY, new ResourceLocation(dimensionKey));
+	public MessageAbsorptionHopper(ResourceLocation dimensionKey, int entityID, int buttonID, BlockPos tilePos) {
+		this.dimension = RegistryKey.getOrCreateKey(Registry.WORLD_KEY, dimensionKey);
 		this.entityID = entityID;
 		this.buttonID = buttonID;
 		this.tilePos = tilePos;
 	}
 
 	public static void encode(final MessageAbsorptionHopper message, PacketBuffer buf) {
-		buf.writeString(message.dimension.getLocation().toString());
+		buf.writeResourceLocation(message.dimension.getLocation());
 		buf.writeInt(message.entityID);
 		buf.writeInt(message.buttonID);
 		buf.writeBlockPos(message.tilePos);
@@ -52,7 +52,7 @@ public class MessageAbsorptionHopper {
 
 
 	public static MessageAbsorptionHopper decode(final PacketBuffer buf) {
-		return new MessageAbsorptionHopper(buf.readString(), buf.readInt(), buf.readInt(), buf.readBlockPos());
+		return new MessageAbsorptionHopper(buf.readResourceLocation(), buf.readInt(), buf.readInt(), buf.readBlockPos());
 	}
 
 	public static void handle(final MessageAbsorptionHopper message, final Supplier<NetworkEvent.Context> ctx) {

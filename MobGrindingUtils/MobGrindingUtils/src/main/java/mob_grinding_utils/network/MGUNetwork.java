@@ -36,10 +36,17 @@ public class MGUNetwork {
                 .consumer(MessageTapParticle::handle)
                 .add();
 
-/*
-        NETWORK_WRAPPER.registerMessage(MessageSyncEntityCapabilities.class, MessageSyncEntityCapabilities.class, 3, Side.CLIENT);
-        NETWORK_WRAPPER.registerMessage(MessageFan.class, MessageFan.class, 4, Side.SERVER);
-*/
+        channel.messageBuilder(MessageSyncEntityCapabilities.class, 3, NetworkDirection.PLAY_TO_CLIENT)
+                .decoder(MessageSyncEntityCapabilities::decode)
+                .encoder(MessageSyncEntityCapabilities::encode)
+                .consumer(MessageSyncEntityCapabilities::handle)
+                .add();
+
+        channel.messageBuilder(MessageFan.class, 4, NetworkDirection.PLAY_TO_SERVER)
+                .decoder(MessageFan::decode)
+                .encoder(MessageFan::encode)
+                .consumer(MessageFan::handle)
+                .add();
 
         return channel;
     }
