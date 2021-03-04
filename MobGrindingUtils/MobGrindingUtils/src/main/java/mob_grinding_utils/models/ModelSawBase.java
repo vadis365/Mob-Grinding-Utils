@@ -1,12 +1,17 @@
 package mob_grinding_utils.models;
 
-import net.minecraft.client.model.ModelBase;
-import net.minecraft.client.model.ModelRenderer;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import com.google.common.collect.ImmutableList;
+import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.IVertexBuilder;
 
-@SideOnly(Side.CLIENT)
-public class ModelSawBase extends ModelBase {
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.model.Model;
+import net.minecraft.client.renderer.model.ModelRenderer;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+
+@OnlyIn(Dist.CLIENT)
+public class ModelSawBase extends Model {
     ModelRenderer axle;
     ModelRenderer axle2;
     ModelRenderer axleTop;
@@ -20,6 +25,7 @@ public class ModelSawBase extends ModelBase {
     ModelRenderer mace4;
 
 	public ModelSawBase() {
+		super(RenderType::getEntitySolid);
 	    textureWidth = 64;
 	    textureHeight = 32;
 	    
@@ -69,24 +75,25 @@ public class ModelSawBase extends ModelBase {
 	      setRotation(mace4, 0F, 0F, 0F);
 	}
 
-	public void render() {
-		base.render(0.0625F);
-		plinth.render(0.0625F);
+	public void render(MatrixStack matrixStackIn, IVertexBuilder bufferIn, int packedLightIn, int packedOverlayIn, float red, float green, float blue, float alpha) {
+		ImmutableList.of(base, plinth)
+		.forEach((p_228279_8_) -> {
+			p_228279_8_.render(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn, red, green, blue, alpha);
+		});
 	}
 
-	public void renderAxle() {
-		axle.render(0.0625F);
-		axle2.render(0.0625F);
-		axleTop.render(0.0625F);
+	public void renderAxle(MatrixStack matrixStackIn, IVertexBuilder bufferIn, int packedLightIn, int packedOverlayIn, float red, float green, float blue, float alpha) {
+		ImmutableList.of(axle, axle2, axleTop)
+		.forEach((p_228279_8_) -> {
+			p_228279_8_.render(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn, red, green, blue, alpha);
+		});
 	}
 	
-	public void renderMace() {
-		maceBase.render(0.0625F);
-		maceArm.render(0.0625F);
-		mace1.render(0.0625F);
-		mace2.render(0.0625F);
-		mace3.render(0.0625F);
-		mace4.render(0.0625F);
+	public void renderMace(MatrixStack matrixStackIn, IVertexBuilder bufferIn, int packedLightIn, int packedOverlayIn, float red, float green, float blue, float alpha) {
+		ImmutableList.of(maceBase, maceArm, mace1, mace2, mace3, mace4)
+		.forEach((p_228279_8_) -> {
+			p_228279_8_.render(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn, red, green, blue, alpha);
+		});
 	}
 
 	private void setRotation(ModelRenderer model, float x, float y, float z) {

@@ -1,12 +1,17 @@
 package mob_grinding_utils.models;
 
-import net.minecraft.client.model.ModelBase;
-import net.minecraft.client.model.ModelRenderer;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import com.google.common.collect.ImmutableList;
+import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.IVertexBuilder;
 
-@SideOnly(Side.CLIENT)
-public class ModelSawBlade extends ModelBase {
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.model.Model;
+import net.minecraft.client.renderer.model.ModelRenderer;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+
+@OnlyIn(Dist.CLIENT)
+public class ModelSawBlade extends Model {
 	ModelRenderer main;
 	ModelRenderer back;
 	ModelRenderer front;
@@ -46,6 +51,7 @@ public class ModelSawBlade extends ModelBase {
 	ModelRenderer tooth16End;
 
 	public ModelSawBlade() {
+		super(RenderType::getEntitySolid);
 		textureWidth = 64;
 		textureHeight = 32;
 
@@ -198,45 +204,14 @@ public class ModelSawBlade extends ModelBase {
 		tooth16End.setRotationPoint(0F, 16F, 0F);
 		setRotation(tooth16End, 0F, -1.963495F, 0F);
 	}
-
-	public void render() {
-		main.render(0.0625F);
-		back.render(0.0625F);
-		front.render(0.0625F);
-		left.render(0.0625F);
-		right.render(0.0625F);
-		tooth1Main.render(0.0625F);
-		tooth2Main.render(0.0625F);
-		tooth3Main.render(0.0625F);
-		tooth4Main.render(0.0625F);
-		tooth5Main.render(0.0625F);
-		tooth6Main.render(0.0625F);
-		tooth7Main.render(0.0625F);
-		tooth8Main.render(0.0625F);
-		tooth9Main.render(0.0625F);
-		tooth10Main.render(0.0625F);
-		tooth11Main.render(0.0625F);
-		tooth12Main.render(0.0625F);
-		tooth13Main.render(0.0625F);
-		tooth14Main.render(0.0625F);
-		tooth15Main.render(0.0625F);
-		tooth16Main.render(0.0625F);
-		tooth1End.render(0.0625F);
-		tooth2End.render(0.0625F);
-		tooth3End.render(0.0625F);
-		tooth4End.render(0.0625F);
-		tooth5End.render(0.0625F);
-		tooth6End.render(0.0625F);
-		tooth7End.render(0.0625F);
-		tooth8End.render(0.0625F);
-		tooth9End.render(0.0625F);
-		tooth10End.render(0.0625F);
-		tooth11End.render(0.0625F);
-		tooth12End.render(0.0625F);
-		tooth13End.render(0.0625F);
-		tooth14End.render(0.0625F);
-		tooth15End.render(0.0625F);
-		tooth16End.render(0.0625F);
+	
+	public void render(MatrixStack matrixStackIn, IVertexBuilder bufferIn, int packedLightIn, int packedOverlayIn, float red, float green, float blue, float alpha) {
+		ImmutableList.of(main, back, front, left, right, tooth1Main, tooth2Main, tooth3Main, tooth4Main, tooth5Main,
+				tooth6Main, tooth7Main, tooth8Main, tooth9Main, tooth10Main, tooth11Main, tooth12Main, tooth13Main,
+				tooth14Main, tooth15Main, tooth16Main, tooth1End, tooth2End, tooth3End, tooth4End, tooth5End, tooth6End,
+				tooth7End, tooth8End, tooth9End, tooth10End, tooth11End, tooth12End, tooth13End, tooth14End, tooth15End,
+				tooth16End).forEach((p_228279_8_) -> { p_228279_8_.render(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn, red, green, blue, alpha);
+				});
 	}
 
 	private void setRotation(ModelRenderer model, float x, float y, float z) {
