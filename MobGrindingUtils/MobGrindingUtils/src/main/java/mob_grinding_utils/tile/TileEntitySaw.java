@@ -5,46 +5,45 @@ import java.util.UUID;
 
 import com.mojang.authlib.GameProfile;
 
+import mob_grinding_utils.ModBlocks;
 import mob_grinding_utils.ModItems;
 import mob_grinding_utils.blocks.BlockSaw;
 import mob_grinding_utils.items.ItemSawUpgrade;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.enchantment.Enchantment;
+import net.minecraft.block.BlockState;
+import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
-import net.minecraft.network.play.server.SPacketUpdateTileEntity;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.ITickable;
+import net.minecraft.network.play.server.SUpdateTileEntityPacket;
+import net.minecraft.tileentity.ITickableTileEntity;
+import net.minecraft.util.Direction;
+import net.minecraft.util.Hand;
 import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TextComponentTranslation;
-import net.minecraft.world.World;
-import net.minecraft.world.WorldServer;
+import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.util.FakePlayerFactory;
 
-public class TileEntitySaw extends TileEntityInventoryHelper implements ITickable {
+public class TileEntitySaw extends TileEntityInventoryHelper implements ITickableTileEntity {
 
 	public boolean active;
 	public int animationTicks, prevAnimationTicks;
     private static final int[] SLOTS = new int[] {0, 1, 2, 3, 4, 5};
 
 	public TileEntitySaw() {
-		super(6);
+		super(ModBlocks.SAW_TILE, 6);
 	}
-
+/*
 	@Override
 	public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState) {
 		return oldState.getBlock() != newState.getBlock();
 	}
-
+*/
 	@Override
-	public void update() {
+	public void tick() {
 		if (getWorld().isRemote && active) {
 			prevAnimationTicks = animationTicks;
 			if (animationTicks < 360)
@@ -58,8 +57,8 @@ public class TileEntitySaw extends TileEntityInventoryHelper implements ITickabl
 		if (getWorld().isRemote && !active)
 			prevAnimationTicks = animationTicks = 0;
 
-		if (!getWorld().isRemote && getWorld().getTotalWorldTime() % 10 == 0 && getWorld().getBlockState(pos).getBlock() instanceof BlockSaw)
-			if (getWorld().getBlockState(pos).getValue(BlockSaw.POWERED))
+		if (!getWorld().isRemote && getWorld().getGameTime() % 10 == 0 && getWorld().getBlockState(pos).getBlock() instanceof BlockSaw)
+			if (getWorld().getBlockState(pos).get(BlockSaw.POWERED))
 				activateBlock();
 	}
 
@@ -68,37 +67,36 @@ public class TileEntitySaw extends TileEntityInventoryHelper implements ITickabl
 		getWorld().notifyBlockUpdate(pos, getWorld().getBlockState(pos), getWorld().getBlockState(pos), 3);
 	}
 
-	@SuppressWarnings("unchecked")
 	protected Entity activateBlock() {
-		List<EntityLivingBase> list = getWorld().getEntitiesWithinAABB(EntityLivingBase.class, new AxisAlignedBB(pos.getX(), pos.getY(), pos.getZ(), pos.getX() + 1D, pos.getY() + 1D, pos.getZ() + 1D).grow(0.0625D, 0.0625D, 0.0625D));
+		List<LivingEntity> list = getWorld().getEntitiesWithinAABB(LivingEntity.class, new AxisAlignedBB(pos.getX(), pos.getY(), pos.getZ(), pos.getX() + 1D, pos.getY() + 1D, pos.getZ() + 1D).grow(0.0625D, 0.0625D, 0.0625D));
 		for (int i = 0; i < list.size(); i++) {
 			Entity entity = list.get(i);
 			if (entity != null) {
-				if (entity instanceof EntityLivingBase) {
-					EntityPlayerMP fakePlayer = FakePlayerFactory.get((WorldServer)getWorld(), new GameProfile(UUID.nameUUIDFromBytes(new TextComponentTranslation("fakeplayer.mob_masher").getFormattedText().getBytes()), new TextComponentTranslation("fakeplayer.mob_masher").getFormattedText()));
+				if (entity instanceof LivingEntity) {
+					ServerPlayerEntity fakePlayer = FakePlayerFactory.get((ServerWorld)getWorld(), new GameProfile(UUID.nameUUIDFromBytes(new TranslationTextComponent("fakeplayer.mob_masher").getString().getBytes()), new TranslationTextComponent("fakeplayer.mob_masher").getString()));
 					fakePlayer.setPosition(this.pos.getX(), -100D, this.pos.getZ());
-					ItemStack tempSword = new ItemStack(ModItems.NULL_SWORD, 1, 0);
+					ItemStack tempSword = new ItemStack(ModItems.NULL_SWORD, 1);
 
-					if(!tempSword.hasTagCompound())
-						tempSword.setTagCompound(new NBTTagCompound());
+					if(!tempSword.hasTag())
+						tempSword.setTag(new CompoundNBT());
 
 					if(hasSharpnessUpgrade())
-						tempSword.addEnchantment(Enchantment.getEnchantmentByLocation("sharpness"), getItems().get(0).getCount() * 10);
+						tempSword.addEnchantment(Enchantments.SHARPNESS, getItems().get(0).getCount() * 10);
 					if(hasLootingUpgrade())
-						tempSword.addEnchantment(Enchantment.getEnchantmentByLocation("looting"), getItems().get(1).getCount());
+						tempSword.addEnchantment(Enchantments.LOOTING, getItems().get(1).getCount());
 					if(hasFlameUpgrade())
-						tempSword.addEnchantment(Enchantment.getEnchantmentByLocation("fire_aspect"), getItems().get(2).getCount());
+						tempSword.addEnchantment(Enchantments.FIRE_ASPECT, getItems().get(2).getCount());
 					if(hasSmiteUpgrade())
-						tempSword.addEnchantment(Enchantment.getEnchantmentByLocation("smite"), getItems().get(3).getCount() * 10);
+						tempSword.addEnchantment(Enchantments.SMITE, getItems().get(3).getCount() * 10);
 					if(hasArthropodUpgrade())
-						tempSword.addEnchantment(Enchantment.getEnchantmentByLocation("bane_of_arthropods"), getItems().get(4).getCount() * 10);
+						tempSword.addEnchantment(Enchantments.BANE_OF_ARTHROPODS, getItems().get(4).getCount() * 10);
 					if(hasBeheadingUpgrade())
-						tempSword.getTagCompound().setInteger("beheadingValue", getItems().get(5).getCount());
+						tempSword.getTag().putInt("beheadingValue", getItems().get(5).getCount());
 
-					fakePlayer.setHeldItem(EnumHand.MAIN_HAND, tempSword);
+					fakePlayer.setHeldItem(Hand.MAIN_HAND, tempSword);
 					fakePlayer.attackTargetEntityWithCurrentItem(entity);
 					fakePlayer.resetCooldown();
-					fakePlayer.setHeldItem(EnumHand.MAIN_HAND, ItemStack.EMPTY);
+					fakePlayer.setHeldItem(Hand.MAIN_HAND, ItemStack.EMPTY);
 				}
 			}
 		}
@@ -106,59 +104,59 @@ public class TileEntitySaw extends TileEntityInventoryHelper implements ITickabl
 	}
 
 	private boolean hasSharpnessUpgrade() {
-		return !getItems().get(0).isEmpty() && getItems().get(0).getItem() == ModItems.SAW_UPGRADE && getItems().get(0).getItemDamage() == 0;
+		return !getItems().get(0).isEmpty() && getItems().get(0).getItem() == ModItems.SAW_UPGRADE_SHARPNESS;
 	}
 	
 	private boolean hasLootingUpgrade() {
-		return !getItems().get(1).isEmpty() && getItems().get(1).getItem() == ModItems.SAW_UPGRADE && getItems().get(1).getItemDamage() == 1;
+		return !getItems().get(1).isEmpty() && getItems().get(1).getItem() == ModItems.SAW_UPGRADE_LOOTING;
 	}
 
 	private boolean hasFlameUpgrade() {
-		return !getItems().get(2).isEmpty() && getItems().get(2).getItem() == ModItems.SAW_UPGRADE && getItems().get(2).getItemDamage() == 2;
+		return !getItems().get(2).isEmpty() && getItems().get(2).getItem() == ModItems.SAW_UPGRADE_FIRE;
 	}
 	
 	private boolean hasSmiteUpgrade() {
-		return !getItems().get(3).isEmpty() && getItems().get(3).getItem() == ModItems.SAW_UPGRADE && getItems().get(3).getItemDamage() == 3;
+		return !getItems().get(3).isEmpty() && getItems().get(3).getItem() == ModItems.SAW_UPGRADE_SMITE;
 	}
 	
 	private boolean hasArthropodUpgrade() {
-		return !getItems().get(4).isEmpty() && getItems().get(4).getItem() == ModItems.SAW_UPGRADE && getItems().get(4).getItemDamage() == 4;
+		return !getItems().get(4).isEmpty() && getItems().get(4).getItem() == ModItems.SAW_UPGRADE_ARTHROPOD;
 	}
 
 	private boolean hasBeheadingUpgrade() {
-		return !getItems().get(5).isEmpty() && getItems().get(5).getItem() == ModItems.SAW_UPGRADE && getItems().get(5).getItemDamage() == 5;
+		return !getItems().get(5).isEmpty() && getItems().get(5).getItem() == ModItems.SAW_UPGRADE_BEHEADING;
 	}
 
 	@Override
-	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
-		super.writeToNBT(nbt);
-		nbt.setBoolean("active", active);
+	public CompoundNBT write(CompoundNBT nbt) {
+		super.write(nbt);
+		nbt.putBoolean("active", active);
 		return nbt;
 	}
 
 	@Override
-	public void readFromNBT(NBTTagCompound nbt) {
-		super.readFromNBT(nbt);
+	public void read(BlockState state, CompoundNBT nbt) {
+		super.read(state, nbt);
 		active = nbt.getBoolean("active");
 	}
 
 	@Override
-    public NBTTagCompound getUpdateTag() {
-		NBTTagCompound tag = new NBTTagCompound();
-        return writeToNBT(tag);
+    public CompoundNBT getUpdateTag() {
+		CompoundNBT tag = new CompoundNBT();
+        return write(tag);
     }
 
 	@Override
-	public SPacketUpdateTileEntity getUpdatePacket() {
-		NBTTagCompound tag = new NBTTagCompound();
-		writeToNBT(tag);
-		return new SPacketUpdateTileEntity(getPos(), 0, tag);
+	public SUpdateTileEntityPacket getUpdatePacket() {
+		CompoundNBT tag = new CompoundNBT();
+		write(tag);
+		return new SUpdateTileEntityPacket(getPos(), 0, tag);
 	}
 
 	@Override
-	public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity packet) {
+	public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket packet) {
 		super.onDataPacket(net, packet);
-		readFromNBT(packet.getNbtCompound());
+		read(null, packet.getNbtCompound());
 		if(!getWorld().isRemote)
 			getWorld().notifyBlockUpdate(pos, getWorld().getBlockState(pos), getWorld().getBlockState(pos), 3);
 		return;
@@ -166,7 +164,29 @@ public class TileEntitySaw extends TileEntityInventoryHelper implements ITickabl
 
 	@Override
 	public boolean isItemValidForSlot(int slot, ItemStack stack) {
-		return stack.getItem() instanceof ItemSawUpgrade && stack.getItemDamage() == slot;
+		if (stack.getItem() instanceof ItemSawUpgrade) {
+			switch (slot) {
+			case 0:
+				if (stack.getItem() == ModItems.SAW_UPGRADE_SHARPNESS)
+					return true;
+			case 1:
+				if (stack.getItem() == ModItems.SAW_UPGRADE_LOOTING)
+					return true;
+			case 2:
+				if (stack.getItem() == ModItems.SAW_UPGRADE_FIRE)
+					return true;
+			case 3:
+				if (stack.getItem() == ModItems.SAW_UPGRADE_SMITE)
+					return true;
+			case 4:
+				if (stack.getItem() == ModItems.SAW_UPGRADE_ARTHROPOD)
+					return true;
+			case 5:
+				if (stack.getItem() == ModItems.SAW_UPGRADE_BEHEADING)
+					return true;
+			}
+		}
+		return false;
 	}
 
 	@Override
@@ -180,17 +200,17 @@ public class TileEntitySaw extends TileEntityInventoryHelper implements ITickabl
 	}
 
 	@Override
-	public int[] getSlotsForFace(EnumFacing side) {
+	public int[] getSlotsForFace(Direction side) {
 		return SLOTS;
 	}
 
 	@Override
-	public boolean canInsertItem(int slot, ItemStack stack, EnumFacing direction) {
+	public boolean canInsertItem(int slot, ItemStack stack, Direction direction) {
 		return isItemValidForSlot(slot, stack);
 	}
 
 	@Override
-	public boolean canExtractItem(int slot, ItemStack stack, EnumFacing direction) {
+	public boolean canExtractItem(int index, ItemStack stack, Direction direction) {
 		return true;
 	}
 }
