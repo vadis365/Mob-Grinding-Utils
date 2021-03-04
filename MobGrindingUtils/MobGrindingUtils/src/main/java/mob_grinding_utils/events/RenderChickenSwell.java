@@ -1,33 +1,35 @@
 package mob_grinding_utils.events;
 
-import net.minecraft.client.model.ModelChicken;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.entity.passive.EntityChicken;
+import com.mojang.blaze3d.platform.GlStateManager;
+
+import net.minecraft.client.renderer.entity.model.ChickenModel;
+import net.minecraft.entity.passive.ChickenEntity;
+import net.minecraft.util.math.vector.Vector3f;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.RenderLivingEvent;
-import net.minecraftforge.fml.common.eventhandler.EventPriority;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class RenderChickenSwell {
 
-	@SubscribeEvent(priority = EventPriority.LOWEST)
-	@SideOnly(Side.CLIENT)
+	@SuppressWarnings("rawtypes")
+	@SubscribeEvent(priority = net.minecraftforge.eventbus.api.EventPriority.LOWEST)
+	@OnlyIn(Dist.CLIENT)
 	public void renderChickenSwell(RenderLivingEvent.Post event) {
-		if (event.getEntity() != null && event.getEntity() instanceof EntityChicken) {
-			if (event.getEntity().getEntityData().hasKey("shouldExplode")) {
-				if (event.getRenderer().getMainModel() instanceof ModelChicken) {
-					ModelChicken model = (ModelChicken) event.getRenderer().getMainModel();
-					int count = event.getEntity().getEntityData().getInteger("countDown");
+		if (event.getEntity() != null && event.getEntity() instanceof ChickenEntity) {
+			if (event.getEntity().getPersistentData().contains("shouldExplode")) {
+				if (event.getRenderer().getEntityModel() instanceof ChickenModel) {
+					ChickenModel model = (ChickenModel) event.getRenderer().getEntityModel();
+					int count = event.getEntity().getPersistentData().getInt("countDown");
 					float scale = count * 0.04F;
 					if (scale >= 0.75F)
 						scale = 0.75F;
-					GlStateManager.pushMatrix();
-					GlStateManager.translate(event.getX(), event.getY() - 0.5D - scale, event.getZ());
-					GlStateManager.rotate(event.getEntity().renderYawOffset, 0F, -1F, 0F);
-					GlStateManager.scale(1F + scale, 1F + scale, 1F + scale * 0.75F);
-					model.body.render(0.0625F);
-					GlStateManager.popMatrix();
+					event.getMatrixStack().push();
+					event.getMatrixStack().translate(event.getEntity().getPosX(), event.getEntity().getPosY() - 0.5D - scale, event.getEntity().getPosZ());
+					event.getMatrixStack().rotate(Vector3f.YN.rotationDegrees(event.getEntity().renderYawOffset));
+					event.getMatrixStack().scale(1F + scale, 1F + scale, 1F + scale * 0.75F);
+					///model.body.render(0.0625F); hhhhhhhhnnnnnnnhhhhnnnnggggghhhhnn / will sort out later
+					event.getMatrixStack().pop();
 				}
 			}
 		}
