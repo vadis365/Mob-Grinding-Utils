@@ -4,45 +4,47 @@ import java.util.Random;
 
 import mob_grinding_utils.ModBlocks;
 import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.SoundEvents;
-import net.minecraft.item.Item;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
+import net.minecraft.block.BlockState;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.util.ActionResultType;
+import net.minecraft.util.Hand;
 import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class BlockEnderInhibitorOff extends BlockEnderInhibitorOn {
 
 	public BlockEnderInhibitorOff(Block.Properties properties) {
-		super();
-		setDefaultState(blockState.getBaseState().withProperty(TYPE, EnumGemDirection.DOWN_NORTH));
+		super(properties);
+		setDefaultState(this.stateContainer.getBaseState().with(TYPE, EnumGemDirection.DOWN_NORTH));
 	}
 	
 	@Override
-	@SideOnly(Side.CLIENT)
-	public void randomDisplayTick(IBlockState stateIn, World world, BlockPos pos, Random rand) {
+	@OnlyIn(Dist.CLIENT)
+	public void animateTick(BlockState stateIn, World world, BlockPos pos, Random rand) {
 	}
 
 	@Override
-	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
+	public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
 		if (world.isRemote) {
-			return true;
+			return ActionResultType.SUCCESS;
 		} else {
-			IBlockState activeState = ModBlocks.ENDER_INHIBITOR_ON.getDefaultState().withProperty(BlockEnderInhibitorOn.TYPE, state.getValue(TYPE));
+			BlockState activeState = ModBlocks.ENDER_INHIBITOR_ON.getDefaultState().with(BlockEnderInhibitorOn.TYPE, state.get(TYPE));
 			world.setBlockState(pos, activeState, 3);
-			world.playSound((EntityPlayer) null, pos, SoundEvents.BLOCK_LEVER_CLICK, SoundCategory.BLOCKS, 0.3F, 0.6F);
-			return true;
+			world.playSound(null, pos, SoundEvents.BLOCK_LEVER_CLICK, SoundCategory.BLOCKS, 0.3F, 0.6F);
+			return ActionResultType.SUCCESS;
 		}
 	}
 
+	//TODO Block drops
+	/*
 	@Override
-	public Item getItemDropped(IBlockState state, Random rand, int fortune) {
-		return Item.getItemFromBlock(ModBlocks.ENDER_INHIBITOR_ON.getDefaultState().withProperty(BlockEnderInhibitorOn.TYPE, BlockEnderInhibitorOn.EnumGemDirection.DOWN_NORTH).getBlock());
+	public Item getItemDropped(BlockState state, Random rand, int fortune) {
+		return Item.getItemFromBlock(ModBlocks.ENDER_INHIBITOR_ON.getDefaultState().with(BlockEnderInhibitorOn.TYPE, BlockEnderInhibitorOn.EnumGemDirection.DOWN_NORTH).getBlock());
 	}
-
+	*/
 }
