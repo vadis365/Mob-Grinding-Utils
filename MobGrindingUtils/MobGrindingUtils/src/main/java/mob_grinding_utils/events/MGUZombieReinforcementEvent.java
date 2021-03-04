@@ -1,11 +1,11 @@
 package mob_grinding_utils.events;
 
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.event.entity.living.ZombieEvent.SummonAidEvent;
-import net.minecraftforge.fml.common.eventhandler.Event.Result;
-import net.minecraftforge.fml.common.eventhandler.EventPriority;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.eventbus.api.Event.Result;
+import net.minecraftforge.eventbus.api.EventPriority;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class MGUZombieReinforcementEvent {
 
@@ -13,9 +13,9 @@ public class MGUZombieReinforcementEvent {
 	public void zombieEvent(SummonAidEvent event) {
 		if (event.getWorld().isRemote)
 			return;
-		if (event.getAttacker() instanceof EntityPlayer) {
-			EntityPlayer fakePlayer = (EntityPlayer) event.getAttacker();
-			if (fakePlayer.getDisplayNameString().matches(new TextComponentTranslation("fakeplayer.mob_masher").getFormattedText()))
+		if (event.getAttacker() instanceof PlayerEntity) {
+			PlayerEntity fakePlayer = (PlayerEntity) event.getAttacker();
+			if (fakePlayer.getDisplayName().toString().matches(new TranslationTextComponent("fakeplayer.mob_masher").toString()))
 				event.setResult(Result.DENY);
 		}
 	}
