@@ -2,101 +2,77 @@ package mob_grinding_utils.blocks;
 
 import java.lang.reflect.Method;
 
-import javafx.geometry.Side;
 import mob_grinding_utils.MobGrindingUtils;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockRenderType;
+import net.minecraft.block.BlockState;
 import net.minecraft.block.DirectionalBlock;
-import net.minecraft.block.properties.IProperty;
-import net.minecraft.block.state.BlockStateContainer;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLiving;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.boss.EntityDragon;
-import net.minecraft.entity.boss.EntityWither;
-import net.minecraft.entity.item.EntityXPOrb;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.EnumBlockRenderType;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.Mirror;
-import net.minecraft.util.Rotation;
-import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.item.ExperienceOrbEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.BlockItemUseContext;
+import net.minecraft.state.StateContainer;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockAccess;
+import net.minecraft.util.math.shapes.ISelectionContext;
+import net.minecraft.util.math.shapes.VoxelShape;
+import net.minecraft.util.math.shapes.VoxelShapes;
+import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldServer;
+import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.util.FakePlayerFactory;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class BlockSpikes extends DirectionalBlock {
 
-	public static final AxisAlignedBB SPIKES_AABB = new AxisAlignedBB(0.0625D, 0.0625D, 0.0625D, 0.9375D, 0.9375D, 0.9375D);
+	public static final VoxelShape SPIKES_AABB = Block.makeCuboidShape(0.0625D, 0.0625D, 0.0625D, 0.9375D, 0.9375D, 0.9375D);
 
 	public BlockSpikes(Block.Properties properties) {
 		super(properties);
 	}
-
+	
 	@Override
-	public AxisAlignedBB getCollisionBoundingBox(IBlockState blockState, IBlockAccess worldIn, BlockPos pos) {
+	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
 		return SPIKES_AABB;
 	}
 
 	@Override
-	@SideOnly(Side.CLIENT)
-	public AxisAlignedBB getSelectedBoundingBox(IBlockState state, World worldIn, BlockPos pos) {
-		return FULL_BLOCK_AABB;
+	public VoxelShape getRaytraceShape(BlockState state, IBlockReader worldIn, BlockPos pos) {
+		return VoxelShapes.fullCube();
 	}
-
+/*
 	@Override
 	public boolean isOpaqueCube(IBlockState state) {
 		return false;
 	}
-
+*/
 	@Override
-	public EnumBlockRenderType getRenderType(IBlockState state) {
-		return EnumBlockRenderType.MODEL;
+	public BlockRenderType getRenderType(BlockState state) {
+		return BlockRenderType.MODEL;
 	}
 
 	@Override
-	public IBlockState getStateFromMeta(int meta) {
-		return getDefaultState().withProperty(FACING, EnumFacing.byIndex(meta));
+	public BlockState getStateForPlacement(BlockItemUseContext context) {
+		Direction direction = context.getFace().getOpposite();
+		return this.getDefaultState().with(FACING, direction);
 	}
 
 	@Override
-	public int getMetaFromState(IBlockState state) {
-		return ((EnumFacing) state.getValue(FACING)).getIndex();
+	protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
+		builder.add(FACING);
 	}
-
-	@Override
-	 public IBlockState getStateForPlacement(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer) {
-		return this.getDefaultState().withProperty(FACING, facing);
-	}
-
-	@Override
-	public IBlockState withRotation(IBlockState state, Rotation rot) {
-		return state.withProperty(FACING, rot.rotate((EnumFacing) state.getValue(FACING)));
-	}
-
-	@Override
-	public IBlockState withMirror(IBlockState state, Mirror mirrorIn) {
-		return state.withRotation(mirrorIn.toRotation((EnumFacing) state.getValue(FACING)));
-	}
-
-	@Override
-	protected BlockStateContainer createBlockState() {
-		return new BlockStateContainer(this, new IProperty[] { FACING });
-	}
-
+	//TODO add dragon and wither tags
+/*
 	@Override
 	public boolean canEntityDestroy(IBlockState state, IBlockAccess world, BlockPos pos, Entity entity) {
       return !(entity instanceof EntityWither) && !(entity instanceof EntityDragon);
 	}
-
+*/
 	@Override
-	public void onEntityCollision(World worldIn, BlockPos pos, IBlockState state, Entity entity) {
-		if (!worldIn.isRemote && entity instanceof EntityLivingBase)
+	public void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity) {
+		if (!world.isRemote && entity instanceof LivingEntity)
 			entity.attackEntityFrom(MobGrindingUtils.SPIKE_DAMAGE, 5);
 	}
 
@@ -104,19 +80,19 @@ public class BlockSpikes extends DirectionalBlock {
 
 	@SubscribeEvent
 	public void dropXP(LivingDropsEvent event) {
-		EntityLivingBase entity = event.getEntityLiving();
+		LivingEntity entity = event.getEntityLiving();
 		World world = entity.getEntityWorld();
 		if (entity != null) {
 			if (!world.isRemote && !event.isRecentlyHit() && event.getSource() == MobGrindingUtils.SPIKE_DAMAGE) {
 				int xp = 0;
 				try {
-					xp = (Integer) xpPoints.invoke(entity, FakePlayerFactory.getMinecraft((WorldServer) world));
+					xp = (Integer) xpPoints.invoke(entity, FakePlayerFactory.getMinecraft((ServerWorld) world));
 				} catch (Exception e) {
 				}
 				while (xp > 0) {
-					int cap = EntityXPOrb.getXPSplit(xp);
+					int cap = ExperienceOrbEntity.getXPSplit(xp);
 					xp -= cap;
-					entity.getEntityWorld().spawnEntity(new EntityXPOrb(entity.getEntityWorld(), entity.posX, entity.posY, entity.posZ, cap));
+					entity.getEntityWorld().addEntity(new ExperienceOrbEntity(entity.getEntityWorld(), entity.getPosX(), entity.getPosY(), entity.getPosZ(), cap));
 				}
 			}
 		}
@@ -125,12 +101,12 @@ public class BlockSpikes extends DirectionalBlock {
 	public static Method getExperiencePoints() {
 		Method method = null;
 		try {
-			method = EntityLiving.class.getDeclaredMethod("getExperiencePoints", EntityPlayer.class);
+			method = LivingEntity.class.getDeclaredMethod("getExperiencePoints", PlayerEntity.class);
 			method.setAccessible(true);
 		} catch (Exception e) {
 		}
 		try {
-			method = EntityLiving.class.getDeclaredMethod("func_70693_a", EntityPlayer.class);
+			method = LivingEntity.class.getDeclaredMethod("func_70693_a", PlayerEntity.class);
 			method.setAccessible(true);
 		} catch (Exception e) {
 		}
