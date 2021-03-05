@@ -1,55 +1,45 @@
 package mob_grinding_utils.blocks;
 
-import java.util.List;
-
-import javax.annotation.Nullable;
-
-import javafx.geometry.Side;
 import mob_grinding_utils.ModSounds;
 import mob_grinding_utils.tile.TileEntityXPTap;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockRenderType;
+import net.minecraft.block.BlockState;
 import net.minecraft.block.DirectionalBlock;
 import net.minecraft.block.ITileEntityProvider;
-import net.minecraft.block.properties.IProperty;
-import net.minecraft.block.properties.PropertyBool;
-import net.minecraft.block.state.BlockStateContainer;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.boss.EntityDragon;
-import net.minecraft.entity.boss.EntityWither;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.BlockItemUseContext;
+import net.minecraft.state.BooleanProperty;
+import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumBlockRenderType;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.Mirror;
-import net.minecraft.util.Rotation;
+import net.minecraft.util.ActionResultType;
+import net.minecraft.util.Direction;
+import net.minecraft.util.Hand;
 import net.minecraft.util.SoundCategory;
-import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockAccess;
+import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.math.shapes.ISelectionContext;
+import net.minecraft.util.math.shapes.VoxelShape;
+import net.minecraft.world.IBlockReader;
+import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class BlockXPTap extends DirectionalBlock implements ITileEntityProvider {
 
-	protected static final AxisAlignedBB XP_TAP_WEST_AABB = new AxisAlignedBB(0.4375D, 0.5D, 0.25D, 1, 1D, 0.75);
-	protected static final AxisAlignedBB XP_TAP_EAST_AABB = new AxisAlignedBB(0D, 0.5D, 0.25D, 0.5625D, 1D, 0.75D);
-	protected static final AxisAlignedBB XP_TAP_SOUTH_AABB = new AxisAlignedBB(0.25D, 0.5D, 0D, 0.75D, 1D, 0.5625D);
-	protected static final AxisAlignedBB XP_TAP_NORTH_AABB = new AxisAlignedBB(0.25D, 0.5D, 0.4375D, 0.75D, 1D, 1D);
-	public static final PropertyBool POWERED = PropertyBool.create("powered");
+	public static final VoxelShape XP_TAP_WEST_AABB = Block.makeCuboidShape(0.4375D, 0.5D, 0.25D, 1, 1D, 0.75);
+	public static final VoxelShape XP_TAP_EAST_AABB = Block.makeCuboidShape(0D, 0.5D, 0.25D, 0.5625D, 1D, 0.75D);
+	public static final VoxelShape XP_TAP_SOUTH_AABB = Block.makeCuboidShape(0.25D, 0.5D, 0D, 0.75D, 1D, 0.5625D);
+	public static final VoxelShape XP_TAP_NORTH_AABB = Block.makeCuboidShape(0.25D, 0.5D, 0.4375D, 0.75D, 1D, 1D);
+	public static final BooleanProperty POWERED = BooleanProperty.create("powered");
 
 	public BlockXPTap(Block.Properties properties) {
 		super(properties);
-		setDefaultState(this.getBlockState().getBaseState().withProperty(POWERED, false));
+		setDefaultState(this.stateContainer.getBaseState().with(POWERED, false));
 	}
 
 	@Override
-	@SideOnly(Side.CLIENT)
-	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {
-		state = state.getActualState(source, pos);
-		switch ((EnumFacing) state.getValue(FACING)) {
+	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
+		switch (state.get(FACING)) {
 		default:
 		case EAST:
 			return XP_TAP_EAST_AABB;
@@ -58,48 +48,10 @@ public class BlockXPTap extends DirectionalBlock implements ITileEntityProvider 
 		case SOUTH:
 			return XP_TAP_SOUTH_AABB;
 		case NORTH:
-			return XP_TAP_NORTH_AABB;
-		}
-		
-	}
-
-	@Override
-	@SideOnly(Side.CLIENT)
-	public AxisAlignedBB getSelectedBoundingBox(IBlockState state, World world, BlockPos pos) {
-		state = state.getActualState(world, pos);
-		switch ((EnumFacing) state.getValue(FACING)) {
-		default:
-		case EAST:
-			return XP_TAP_EAST_AABB;
-		case WEST:
-			return XP_TAP_WEST_AABB;
-		case SOUTH:
-			return XP_TAP_SOUTH_AABB;
-		case NORTH:
-			return XP_TAP_NORTH_AABB;
+			return  XP_TAP_NORTH_AABB;
 		}
 	}
-
-	@Override
-	public void addCollisionBoxToList(IBlockState state, World worldIn, BlockPos pos, AxisAlignedBB entityBox, List<AxisAlignedBB> collidingBoxes, @Nullable Entity entityIn, boolean whatIsThis) {
-		state = state.getActualState(worldIn, pos);
-		switch ((EnumFacing) state.getValue(FACING)) {
-		default:
-		case EAST:
-			addCollisionBoxToList(pos, entityBox, collidingBoxes, XP_TAP_EAST_AABB);
-			break;
-		case WEST:
-			addCollisionBoxToList(pos, entityBox, collidingBoxes, XP_TAP_WEST_AABB);
-			break;
-		case SOUTH:
-			addCollisionBoxToList(pos, entityBox, collidingBoxes, XP_TAP_SOUTH_AABB);
-			break;
-		case NORTH:
-			addCollisionBoxToList(pos, entityBox, collidingBoxes, XP_TAP_NORTH_AABB);
-			break;
-		}
-	}
-
+/*
 	@Override
 	public boolean isOpaqueCube(IBlockState state) {
 		return false;
@@ -114,98 +66,72 @@ public class BlockXPTap extends DirectionalBlock implements ITileEntityProvider 
 	public boolean isFullCube(IBlockState state) {
 		return false;
 	}
-
+*/
 	@Override
-	public EnumBlockRenderType getRenderType(IBlockState state) {
-		return EnumBlockRenderType.MODEL;
+	public BlockRenderType getRenderType(BlockState state) {
+		return BlockRenderType.MODEL;
 	}
 
 	@Override
-	 public IBlockState getStateForPlacement(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer) {
-		if (canPlaceAt(world, pos, facing))
-			return this.getDefaultState().withProperty(FACING, facing).withProperty(POWERED, false);
-		return this.getDefaultState();
+	public BlockState getStateForPlacement(BlockItemUseContext context) {
+		Direction direction = context.getFace().getOpposite();
+		return this.getDefaultState().with(FACING, direction).with(POWERED, false);
 	}
 
+	/* TODO tags
 	@Override
 	public boolean canEntityDestroy(IBlockState state, IBlockAccess world, BlockPos pos, Entity entity) {
       return !(entity instanceof EntityWither) && !(entity instanceof EntityDragon);
 	}
-
+	*/
+	
 	@Override
-	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
-		if (world.isRemote) {
-			return true;
-		} else {
-			state = state.cycleProperty(POWERED);
-			world.setBlockState(pos, state, 3);
-			float f = ((Boolean) state.getValue(POWERED)).booleanValue() ? 0.6F : 0.5F;
-			world.playSound((EntityPlayer) null, pos, ModSounds.TAP_SQUEAK, SoundCategory.BLOCKS, 0.3F, f);
+	public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
+		if (world.isRemote)
+			return ActionResultType.SUCCESS;
+		 else {
+			boolean swap = state.get(POWERED) ? false : true;
+			world.setBlockState(pos, state.with(POWERED, swap), 3);
+			float f = state.get(POWERED) ? 0.6F : 0.5F;
+			world.playSound(null, pos, ModSounds.TAP_SQUEAK, SoundCategory.BLOCKS, 0.3F, f);
 			TileEntityXPTap tileentity = (TileEntityXPTap) world.getTileEntity(pos);
-			tileentity.setActive(((Boolean) state.getValue(POWERED)).booleanValue());
-			return true;
+			tileentity.setActive(((Boolean) state.get(POWERED)).booleanValue());
+			return ActionResultType.SUCCESS;
 		}
 	}
 
 	@Override
-	public boolean canPlaceBlockAt(World world, BlockPos pos) {
-		for (EnumFacing enumfacing : FACING.getAllowedValues()) {
+	public boolean isValidPosition(BlockState state, IWorldReader world, BlockPos pos) {
+		for (Direction enumfacing : FACING.getAllowedValues()) {
 			if (canPlaceAt(world, pos, enumfacing))
 				return true;
 		}
 		return false;
 	}
 
-	private boolean canPlaceAt(World world, BlockPos pos, EnumFacing facing) {
+	private boolean canPlaceAt(IWorldReader world, BlockPos pos, Direction facing) {
 		BlockPos blockpos = pos.offset(facing.getOpposite());
 		boolean isSide = facing.getAxis().isHorizontal();
 		return isSide && world.getBlockState(blockpos).getBlock() instanceof BlockTank;
 	}
-
+/*
 	@Override
-    public void onNeighborChange(IBlockAccess world, BlockPos pos, BlockPos neighbor) {
-		EnumFacing facing = world.getBlockState(pos).getValue(FACING);
+    public void onNeighborChange(BlockAccess world, BlockPos pos, BlockPos neighbor) {
+		Direction facing = world.getBlockState(pos).getValue(FACING);
     	if(!canPlaceAt((World) world, pos, facing)) {
             this.dropBlockAsItem((World) world, pos, world.getBlockState(pos), 0);
             ((World) world).setBlockToAir(pos);
         }
     }
+*/
 
 	@Override
-	public IBlockState getStateFromMeta(int meta) {
-		EnumFacing facing = EnumFacing.byIndex(meta);
-		if (facing.getAxis() == EnumFacing.Axis.Y)
-			facing = EnumFacing.NORTH;
-		return getDefaultState().withProperty(FACING, facing).withProperty(POWERED, Boolean.valueOf((meta & 8) > 0));
-	}
-
-	public int getMetaFromState(IBlockState state) {
-		int meta = 0;
-		meta = meta | ((EnumFacing) state.getValue(FACING)).getIndex();
-
-		if (((Boolean) state.getValue(POWERED)).booleanValue())
-			meta |= 8;
-
-		return meta;
+	protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
+		builder.add(FACING, POWERED);
 	}
 
 	@Override
-	public IBlockState withRotation(IBlockState state, Rotation rot) {
-		return state.withProperty(FACING, rot.rotate((EnumFacing) state.getValue(FACING)));
-	}
-
-	@Override
-	public IBlockState withMirror(IBlockState state, Mirror mirrorIn) {
-		return state.withRotation(mirrorIn.toRotation((EnumFacing) state.getValue(FACING)));
-	}
-
-	@Override
-	protected BlockStateContainer createBlockState() {
-		return new BlockStateContainer(this, new IProperty[] { FACING, POWERED });
-	}
-
-	@Override
-	public TileEntity createNewTileEntity(World world, int meta) {
+	public TileEntity createNewTileEntity(IBlockReader world) {
 		return new TileEntityXPTap();
 	}
 }

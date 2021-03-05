@@ -1,67 +1,48 @@
 package mob_grinding_utils.blocks;
 
-import mob_grinding_utils.MobGrindingUtils;
-import mob_grinding_utils.capability.bossbars.BossBarPlayerCapability;
-import mob_grinding_utils.capability.bossbars.IBossBarCapability;
 import net.minecraft.block.Block;
-import net.minecraft.block.SoundType;
-import net.minecraft.block.material.Material;
-import net.minecraft.block.properties.IProperty;
-import net.minecraft.block.properties.PropertyBool;
-import net.minecraft.block.state.BlockStateContainer;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
+import net.minecraft.block.BlockState;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.BlockItemUseContext;
+import net.minecraft.state.BooleanProperty;
+import net.minecraft.state.StateContainer;
+import net.minecraft.util.ActionResultType;
+import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.World;
 
 public class BlockDragonMuffler extends Block {
 
-	public static final PropertyBool MODE = PropertyBool.create("mode");
+	public static final BooleanProperty MODE = BooleanProperty.create("mode");
 
 	public BlockDragonMuffler(Block.Properties properties) {
-		super(Material.CLOTH);
-		setDefaultState(this.getBlockState().getBaseState().withProperty(MODE, false));
-		setHardness(0.5F);
-		setSoundType(SoundType.CLOTH);
-		setCreativeTab(MobGrindingUtils.TAB);
+		super(properties);
+		setDefaultState(this.stateContainer.getBaseState().with(MODE, false));
 	}
 
 	@Override
-	public IBlockState getStateFromMeta(int meta) {
-		return getDefaultState().withProperty(MODE, Boolean.valueOf((meta & 1) > 0));
+	protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
+		builder.add(MODE);
 	}
 
 	@Override
-	public int getMetaFromState(IBlockState state) {
-		int meta = 0;
-		if ((Boolean) state.getValue(MODE).booleanValue())
-			meta = 1;
-		return meta;
+	public BlockState getStateForPlacement(BlockItemUseContext context) {
+		return this.getDefaultState().with(MODE, false);
 	}
 
 	@Override
-	protected BlockStateContainer createBlockState() {
-		return new BlockStateContainer(this, new IProperty[] { MODE });
-	}
-
-	@Override
-	 public IBlockState getStateForPlacement(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer) {
-		return this.getDefaultState().withProperty(MODE, false);
-	}
-
-	@Override
-	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
+	public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
 		if (world.isRemote)
-			return true;
+			return ActionResultType.SUCCESS;
 		else {
-			state = state.cycleProperty(MODE);
-			world.setBlockState(pos, state, 3);
-			IBossBarCapability cap = player.getCapability(BossBarPlayerCapability.CAPABILITY_PLAYER_BOSS_BAR, null);
-			cap.setRenderEnderDragonBar(!state.getValue(MODE).booleanValue());
-			return true;
+			boolean swap = state.get(MODE) ? false : true;
+			world.setBlockState(pos, state.with(MODE, swap), 3);
+			System.out.println("Dragon Muffler block caps here");
+			//TODO Fix caps
+			//IBossBarCapability cap = player.getCapability(BossBarPlayerCapability.CAPABILITY_PLAYER_BOSS_BAR, null);
+			//cap.setRenderEnderDragonBar(!state.get(MODE).booleanValue());
+			return ActionResultType.SUCCESS;
 		}
 	}
 }

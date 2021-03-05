@@ -1,35 +1,40 @@
 package mob_grinding_utils.tile;
 
-import mob_grinding_utils.MobGrindingUtils;
+import mob_grinding_utils.ModBlocks;
 import mob_grinding_utils.blocks.BlockXPTap;
 import mob_grinding_utils.entity.EntityXPOrbFalling;
-import mob_grinding_utils.network.MessageTapParticle;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.block.BlockState;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
-import net.minecraft.network.play.server.SPacketUpdateTileEntity;
+import net.minecraft.network.play.server.SUpdateTileEntityPacket;
+import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ITickable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 
-public class TileEntityXPTap extends TileEntity implements ITickable{
+public class TileEntityXPTap extends TileEntity implements ITickableTileEntity {
+	
+	public TileEntityXPTap() {
+		super(ModBlocks.XP_TAP_TILE);
+	}
+
 	public boolean active;
-
+/*
 	@Override
 	public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState) {
 		return oldState.getBlock() != newState.getBlock();
 	}
-
+*/
 	@Override
-	public void update() {
+	public void tick() {
 		if (!getWorld().isRemote && active) {
-			TileEntity tileentity = getWorld().getTileEntity(pos.offset(getWorld().getBlockState(pos).getValue(BlockXPTap.FACING).getOpposite()));
+			TileEntity tileentity = getWorld().getTileEntity(pos.offset(getWorld().getBlockState(pos).get(BlockXPTap.FACING).getOpposite()));
 			if (tileentity instanceof TileEntityTank) {
-				if (((TileEntityTank) tileentity).tank.getFluidAmount() > 0 && ((TileEntityTank) tileentity).tank.getFluid().getFluid().equals(FluidRegistry.getFluid("xpjuice")) && getWorld().getTotalWorldTime() % 3 == 0) {
+				if (((TileEntityTank) tileentity).tank.getFluidAmount() > 0 && ((TileEntityTank) tileentity).tank.getFluid().getFluid().equals(FluidRegistry.getFluid("xpjuice")) && getWorld().getGameTime() % 3 == 0) {
 					int xpAmount = EntityXPOrbFalling.getXPSplit(Math.min(20, ((TileEntityTank) tileentity).tank.getFluidAmount() / 20));
-					((TileEntityTank) tileentity).tank.drain(xpAmount * 20, true);
+					((TileEntityTank) tileentity).tank.drain(xpAmount * 20, FluidAction.EXECUTE);
 					spawnXP(getWorld(), pos, xpAmount, (TileEntityTank) tileentity);
 					//MobGrindingUtils.NETWORK_WRAPPER.sendToAll(new MessageTapParticle(getPos())); //todo
 				}
@@ -40,7 +45,7 @@ public class TileEntityXPTap extends TileEntity implements ITickable{
 	public void spawnXP(World world, BlockPos pos, int xp, TileEntityTank tankTile) {
 		tankTile.markDirty();
 		EntityXPOrbFalling orb = new EntityXPOrbFalling(world, pos.getX() + 0.5D, pos.getY() - 0.125D, pos.getZ() + 0.5D, xp);
-		world.spawnEntity(orb);
+		world.addEntity(orb);
 	}
 
 	public void setActive(boolean isActive) {
@@ -49,33 +54,33 @@ public class TileEntityXPTap extends TileEntity implements ITickable{
 	}
 
 	@Override
-	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
-		super.writeToNBT(nbt);
-		nbt.setBoolean("active", active);
+	public CompoundNBT write(CompoundNBT nbt) {
+		super.write(nbt);
+		nbt.putBoolean("active", active);
 		return nbt;
 	}
 
 	@Override
-	public void readFromNBT(NBTTagCompound nbt) {
-		super.readFromNBT(nbt);
+	public void read(BlockState state, CompoundNBT nbt) {
+		super.read(state, nbt);
 		active = nbt.getBoolean("active");
 	}
 
 	@Override
-    public NBTTagCompound getUpdateTag() {
-		NBTTagCompound nbt = new NBTTagCompound();
-        return writeToNBT(nbt);
+    public CompoundNBT getUpdateTag() {
+		CompoundNBT nbt = new CompoundNBT();
+        return write(nbt);
     }
 
 	@Override
-	public SPacketUpdateTileEntity getUpdatePacket() {
-		NBTTagCompound nbt = new NBTTagCompound();
-		writeToNBT(nbt);
-		return new SPacketUpdateTileEntity(pos, 0, nbt);
+	public SUpdateTileEntityPacket getUpdatePacket() {
+		CompoundNBT nbt = new CompoundNBT();
+		write(nbt);
+		return new SUpdateTileEntityPacket(getPos(), 0, nbt);
 	}
 
 	@Override
-	public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity packet) {
-		readFromNBT(packet.getNbtCompound());
+	public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket packet) {
+		read(null, packet.getNbtCompound());
 	}
 }

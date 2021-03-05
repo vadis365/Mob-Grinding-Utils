@@ -1,76 +1,81 @@
 package mob_grinding_utils.tile;
 
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.nbt.NBTTagCompound;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+import mob_grinding_utils.ModBlocks;
+import net.minecraft.block.BlockState;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
-import net.minecraft.network.play.server.SPacketUpdateTileEntity;
+import net.minecraft.network.play.server.SUpdateTileEntityPacket;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.fluids.capability.templates.FluidTank;
 
 public class TileEntityTank extends TileEntity {
-    public FluidTankTile tank;
-
+    public FluidTank tank = new FluidTank(FluidAttributes.BUCKET_VOLUME * 32);
+    private final LazyOptional<IFluidHandler> holder = LazyOptional.of(() -> tank);
+    
 	public TileEntityTank() {
-        this.tank = new FluidTankTile(null, Fluid.BUCKET_VOLUME * 32);
-        this.tank.setTileEntity(this);
-	}
+		super(ModBlocks.TANK_TILE);
 
+	}
+/*
 	@Override
 	public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState) {
 		return oldState.getBlock() != newState.getBlock();
 	}
-
+*/
 	@Override
-	public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity packet) {
+	public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket packet) {
 		super.onDataPacket(net, packet);
-		readFromNBT(packet.getNbtCompound());
-		tank.onContentsChanged();
+		read(null, packet.getNbtCompound());
 		return;
 	}
 
 	@Override
-	public SPacketUpdateTileEntity getUpdatePacket() {
-		NBTTagCompound tag = new NBTTagCompound();
-		writeToNBT(tag);
-		return new SPacketUpdateTileEntity(getPos(), 0, tag);
+	public SUpdateTileEntityPacket getUpdatePacket() {
+		CompoundNBT nbt = new CompoundNBT();
+		write(nbt);
+		return new SUpdateTileEntityPacket(getPos(), 0, nbt);
 	}
 
 	@Override
-    public NBTTagCompound getUpdateTag() {
-		NBTTagCompound tag = new NBTTagCompound();
-        return writeToNBT(tag);
+    public CompoundNBT getUpdateTag() {
+		CompoundNBT nbt = new CompoundNBT();
+        return write(nbt);
     }
 
 	@Override
-	public void readFromNBT(NBTTagCompound tagCompound) {
-		super.readFromNBT(tagCompound);
+	public void read(BlockState state, CompoundNBT tagCompound) {
+		super.read(state, tagCompound);
 		tank.readFromNBT(tagCompound);
 	}
 
 	@Override
-	public NBTTagCompound writeToNBT(NBTTagCompound tagCompound) {
-		super.writeToNBT(tagCompound);
+	public CompoundNBT write(CompoundNBT tagCompound) {
+		super.write(tagCompound);
 		tank.writeToNBT(tagCompound);
 		return tagCompound;
 	}
 
-	@Override
-	public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
-		return capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY || super.hasCapability(capability, facing);
-	}
+    @Override
+    @Nonnull
+    public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> capability, @Nullable Direction facing)
+    {
+        if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)
+            return holder.cast();
+        return super.getCapability(capability, facing);
+    }
 
-	@SuppressWarnings("unchecked")
-	@Override
-	public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
-		if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)
-			return (T) tank;
-		return super.getCapability(capability, facing);
-	}
+    public FluidTank getTank(){
+        return this.tank;
+    }
 
 	public int getScaledFluid(int scale) {
 		return tank.getFluid() != null ? (int) ((float) tank.getFluidAmount() / (float) tank.getCapacity() * scale) : 0;
