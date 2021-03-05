@@ -2,39 +2,49 @@ package mob_grinding_utils.client.render;
 
 import org.lwjgl.opengl.GL11;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.platform.GlStateManager;
+import com.sun.prism.TextureMap;
+
 import mob_grinding_utils.tile.TileEntityTank;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.renderer.texture.TextureMap;
-import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
+import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.inventory.container.PlayerContainer;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
-@SideOnly(Side.CLIENT)
-public class TileEntityTankRenderer extends TileEntitySpecialRenderer<TileEntityTank> {
+@OnlyIn(Dist.CLIENT)
+public class TileEntityTankRenderer extends TileEntityRenderer<TileEntityTank> {
+
+	public TileEntityTankRenderer(TileEntityRendererDispatcher rendererDispatcherIn) {
+		super(rendererDispatcherIn);
+	}
 
 	@Override
-	public void render(TileEntityTank tile, double x, double y, double z, float partialTick, int destroyStage, float alpha) {
+	public void render(TileEntityTank tile, float partialTicks, MatrixStack matrixStack, IRenderTypeBuffer bufferIn, int combinedLight, int combinedOverlay) {
 		float fluidLevel = tile.tank.getFluidAmount();
 		if (fluidLevel < 1)
 			return;
 		FluidStack fluidStack = new FluidStack(tile.tank.getFluid(), 100);
 		float height = (0.96875F / tile.tank.getCapacity()) * tile.tank.getFluidAmount();
 		
-		TextureAtlasSprite fluidStillSprite = Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(fluidStack.getFluid().getStill().toString());
+		TextureAtlasSprite fluidStillSprite = Minecraft.getMinecraftGame().getTextureMapBlocks().getAtlasSprite(fluidStack.getFluid().getStill().toString());
 		Tessellator tessellator = Tessellator.getInstance();
 		BufferBuilder buffer = tessellator.getBuffer();
 		int fluidColor = fluidStack.getFluid().getColor(fluidStack);
 		
 		GlStateManager.disableLighting();
-        GlStateManager.pushMatrix();
-		GlStateManager.translate(x, y, z);
-		Minecraft.getMinecraft().renderEngine.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
+		matrixStack.push();
+		matrixStack.translate(tile.getPos().getX() + 0.5D, tile.getPos().getY() + 0.5D, tile.getPos().getZ() + 0.5D);
+		Minecraft.getInstance().textureManager.bindTexture(PlayerContainer.LOCATION_BLOCKS_TEXTURE); // dunno if needed now
+
 		setGLColorFromInt(fluidColor);
 		buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 		float xMax, zMax, xMin, zMin, yMin = 0;
@@ -46,7 +56,7 @@ public class TileEntityTankRenderer extends TileEntitySpecialRenderer<TileEntity
 
 		renderCuboid(buffer, xMax, xMin, yMin, height, zMin, zMax, fluidStillSprite);
 		tessellator.draw();
-		GlStateManager.popMatrix();
+		matrixStack.pop();
 		GlStateManager.enableLighting();
 	}
 
@@ -55,17 +65,17 @@ public class TileEntityTankRenderer extends TileEntitySpecialRenderer<TileEntity
 		float green = (color >> 8 & 0xFF) / 255.0F;
 		float blue = (color & 0xFF) / 255.0F;
 
-		GlStateManager.color(red, green, blue, 1.0F);
+		GlStateManager.color4f(red, green, blue, 1.0F);
 	}
 
 	private void renderCuboid(BufferBuilder buffer, float xMax, float xMin, float yMin, float height, float zMin, float zMax, TextureAtlasSprite textureAtlasSprite) {
 
-		double uMin = (double) textureAtlasSprite.getMinU();
-		double uMax = (double) textureAtlasSprite.getMaxU();
-		double vMin = (double) textureAtlasSprite.getMinV();
-		double vMax = (double) textureAtlasSprite.getMaxV();
+		float uMin = textureAtlasSprite.getMinU();
+		float uMax = textureAtlasSprite.getMaxU();
+		float vMin = textureAtlasSprite.getMinV();
+		float vMax = textureAtlasSprite.getMaxV();
 
-		final double vHeight = vMax - vMin;
+		float vHeight = vMax - vMin;
 
 		// top
 		addVertexWithUV(buffer, xMax, height, zMax, uMax, vMin);
@@ -105,7 +115,7 @@ public class TileEntityTankRenderer extends TileEntitySpecialRenderer<TileEntity
 
 	}
 
-	private void addVertexWithUV(BufferBuilder buffer, float x, float y, float z, double u, double v) {
+	private void addVertexWithUV(BufferBuilder buffer, float x, float y, float z, float u, float v) {
 		buffer.pos(x / 2f, y, z / 2f).tex(u, v).endVertex();
 	}
 

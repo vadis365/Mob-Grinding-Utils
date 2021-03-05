@@ -4,6 +4,7 @@ import java.util.List;
 
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.tileentity.ITickableTileEntity;
+import net.minecraft.util.EntityPredicates;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -42,7 +43,7 @@ public class TileEntitySinkTank extends TileEntityTank implements ITickableTileE
 	}
 
 	public List<PlayerEntity> getCaptureXP(World world, double x, double y, double z) {
-        return world.<PlayerEntity>getEntitiesWithinAABB(PlayerEntity.class, new AxisAlignedBB(x - 0.45D, y - 0.5D, z - 0.45D, x + 0.45D, y + 1.03D, z + 0.45D), EntitySelectors.IS_ALIVE);
+        return world.<PlayerEntity>getEntitiesWithinAABB(PlayerEntity.class, new AxisAlignedBB(x - 0.45D, y - 0.5D, z - 0.45D, x + 0.45D, y + 1.03D, z + 0.45D), EntityPredicates.IS_ALIVE);
     }
 
 	public static void addPlayerXP(PlayerEntity player, int amount) {

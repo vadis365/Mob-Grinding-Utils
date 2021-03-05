@@ -1,6 +1,7 @@
 package mob_grinding_utils.client.render;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 
 import mob_grinding_utils.tile.TileEntityFan;
@@ -31,12 +32,12 @@ public class TileEntityFanRenderer extends TileEntityRenderer<TileEntityFan> {
 		matrixStack.push();
 		matrixStack.translate(tile.getPos().getX() + 0.5D -0.0005D, tile.getPos().getY() + 0.5D-0.0005D, tile.getPos().getZ() + 0.5D -0.0005D);
 		matrixStack.scale(0.999F, 0.999F, 0.999F);
-/*	matrixStack.depthMask(false);
-		matrixStack.enableBlend();
-		matrixStack.disableTexture2D();
-		matrixStack.disableLighting();
-		matrixStack.blendFunc(matrixStack.SourceFactor.SRC_ALPHA, matrixStack.DestFactor.ONE);
-		matrixStack.disableCull();
+/*		GlStateManager.depthMask(false);
+		GlStateManager.enableBlend();
+		GlStateManager.disableTexture2D();
+		GlStateManager.disableLighting();
+		GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE);
+		GlStateManager.disableCull();
 		int i = 61680;
 		int j = i % 65536;
 		int k = i / 65536;
@@ -46,11 +47,11 @@ public class TileEntityFanRenderer extends TileEntityRenderer<TileEntityFan> {
 */
 		WorldRenderer.drawBoundingBox(matrixStack, ivertexbuilder, tile.getAABBForRender(), 1F, 1F, 1F, 1F);
 /*
-		matrixStack.enableCull();
-		matrixStack.enableLighting();
-		matrixStack.enableTexture2D();
-		matrixStack.disableBlend();
-		matrixStack.depthMask(true);
+		GlStateManager.enableCull();
+		GlStateManager.enableLighting();
+		GlStateManager.enableTexture2D();
+		GlStateManager.disableBlend();
+		GlStateManager.depthMask(true);
 */
 		matrixStack.pop();
 		

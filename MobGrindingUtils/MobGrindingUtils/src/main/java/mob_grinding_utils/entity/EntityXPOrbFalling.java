@@ -1,44 +1,47 @@
 package mob_grinding_utils.entity;
 
+import java.util.Map.Entry;
+
 import mob_grinding_utils.tile.TileEntitySinkTank;
 import net.minecraft.enchantment.EnchantmentHelper;
+import net.minecraft.enchantment.Enchantments;
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.MoverType;
-import net.minecraft.entity.item.EntityXPOrb;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Enchantments;
+import net.minecraft.entity.item.ExperienceOrbEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 
-public class EntityXPOrbFalling extends EntityXPOrb {
+public class EntityXPOrbFalling extends ExperienceOrbEntity {
 
 	public EntityXPOrbFalling(World worldIn, double x, double y, double z, int expValue) {
-		super(worldIn);
-		setSize(0.125F, 0.125F);
+		super(EntityType.EXPERIENCE_ORB, worldIn);
 		setPosition(x, y, z);
 		rotationYaw = (float) (Math.random() * 360.0D);
-		motionX = 0;
-		motionY = 0;
-		motionZ = 0;
+		setMotion(0D ,0D ,0D);
 		xpValue = expValue;
 	}
 
 	@Override
-	public void onUpdate() {
-		super.onEntityUpdate();
+	   public void tick() {
+		super.tick();
 
 		if (delayBeforeCanPickup > 0)
 			--delayBeforeCanPickup;
 
-		prevPosX = posX;
-		prevPosY = posY;
-		prevPosZ = posZ;
-		motionY -= 0.029999999329447746D;
+		prevPosX = getPosX();
+		prevPosY = getPosY();
+		prevPosZ = getPosZ();
+		setMotion(this.getMotion().add(0.0D, -0.03D, 0.0D));
 
-		pushOutOfBlocks(posX, (getEntityBoundingBox().minY + getEntityBoundingBox().maxY) / 2.0D, posZ);
-		move(MoverType.SELF, motionX, motionY, motionZ);
+	      if (!this.world.hasNoCollisions(this.getBoundingBox()))
+	          this.pushOutOfBlocks(this.getPosX(), (this.getBoundingBox().minY + this.getBoundingBox().maxY) / 2.0D, this.getPosZ());
 
-		if (onGround)
-			motionY *= -0.8999999761581421D;
+		this.move(MoverType.SELF, this.getMotion());
+
+	     if (this.onGround)
+	         this.setMotion(this.getMotion().mul(1.0D, -0.9D, 1.0D));
 
 		++xpColor;
 		++xpOrbAge;
@@ -48,25 +51,28 @@ public class EntityXPOrbFalling extends EntityXPOrb {
 	}
 
 	@Override
-	public void onCollideWithPlayer(EntityPlayer player) {
+	public void onCollideWithPlayer(PlayerEntity player) {
 		if (!world.isRemote) {
 			if (delayBeforeCanPickup == 0 && player.xpCooldown == 0) {
-				if (net.minecraftforge.common.MinecraftForge.EVENT_BUS.post(new net.minecraftforge.event.entity.player.PlayerPickupXpEvent(player, this)))
+				if (net.minecraftforge.common.MinecraftForge.EVENT_BUS.post(new net.minecraftforge.event.entity.player.PlayerXpEvent.PickupXp(player, this)))
 					return;
 				player.xpCooldown = 2;
 				player.onItemPickup(this, 1);
-				ItemStack itemstack = EnchantmentHelper.getEnchantedItem(Enchantments.MENDING, player);
+				 Entry<EquipmentSlotType, ItemStack> entry = EnchantmentHelper.getRandomEquippedWithEnchantment(Enchantments.MENDING, player, ItemStack::isDamaged);
 
-				if (!itemstack.isEmpty() && itemstack.isItemDamaged()) {
-					int i = Math.min(xpToDurability(xpValue), itemstack.getItemDamage());
-					xpValue -= durabilityToXp(i);
-					itemstack.setItemDamage(itemstack.getItemDamage() - i);
-				}
+		            if (entry != null) {
+		                ItemStack itemstack = entry.getValue();
+		                if (!itemstack.isEmpty() && itemstack.isDamaged()) {
+		                   int i = Math.min((int)(this.xpValue * itemstack.getXpRepairRatio()), itemstack.getDamage());
+		                   this.xpValue -= durabilityToXp(i);
+		                   itemstack.setDamage(itemstack.getDamage() - i);
+		                }
+		             }
 
 				if (xpValue > 0)
 					TileEntitySinkTank.addPlayerXP(player, xpValue);
 
-				setDead();
+				remove();
 			}
 		}
 	}
