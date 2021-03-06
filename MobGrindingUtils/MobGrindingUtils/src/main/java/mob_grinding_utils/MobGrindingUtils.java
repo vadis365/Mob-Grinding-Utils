@@ -22,7 +22,6 @@ import mob_grinding_utils.inventory.client.GuiAbsorptionHopper;
 import mob_grinding_utils.inventory.client.GuiFan;
 import mob_grinding_utils.network.MGUNetwork;
 import net.minecraft.client.gui.ScreenManager;
-import net.minecraft.fluid.Fluid;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
@@ -41,7 +40,6 @@ import net.minecraftforge.registries.ForgeRegistries;
 
 @Mod(Reference.MOD_ID)
 public class MobGrindingUtils {
-	public static Fluid FLUID_XP;
 	public static SimpleChannel NETWORK_WRAPPER;
 	public static DamageSource SPIKE_DAMAGE;
 

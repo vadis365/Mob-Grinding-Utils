@@ -32,10 +32,13 @@ import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.material.MaterialColor;
 import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.fluid.Fluid;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntityType;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundEvents;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
@@ -45,7 +48,9 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.ToolType;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.ForgeFlowingFluid;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.IForgeRegistry;
 
@@ -99,6 +104,8 @@ public class ModBlocks {
 
 	public static Block ENDER_INHIBITOR_OFF;
 	public static BlockItem ENDER_INHIBITOR_OFF_ITEM;
+	
+	public static Fluid FLUID_XP;
 
 	public static void init() {
 		FAN = new BlockFan(Block.Properties.create(Material.IRON, MaterialColor.STONE).hardnessAndResistance(10.0F, 2000.0F).sound(SoundType.METAL));
@@ -255,6 +262,16 @@ public class ModBlocks {
 					list.add(new TranslationTextComponent("tooltip.enderinhibitor_3").mergeStyle(TextFormatting.YELLOW));
 				}
 			};
+			
+			FLUID_XP = new ForgeFlowingFluid.Source(
+					new ForgeFlowingFluid.Properties(() -> FLUID_XP, () -> FLUID_XP,
+							FluidAttributes.builder(new ResourceLocation(Reference.MOD_ID, "fluids/fluid_xp"), new ResourceLocation(Reference.MOD_ID, "fluids/fluid_xp"))
+									.luminosity(10)
+									.density(800)
+									.viscosity(1500)
+									.translationKey("mob_grinding_utils.fluid_xp")
+									.sound(SoundEvents.ENTITY_PLAYER_LEVELUP, SoundEvents.ENTITY_EXPERIENCE_ORB_PICKUP)
+					)).setRegistryName(Reference.MOD_ID, "fluid_xp");
 	}
 
 	public static void initReg() {
@@ -326,6 +343,12 @@ public class ModBlocks {
 				for (TileEntityType<?> tileEntity : TILE_ENTITIES) {
 				registry.register(tileEntity);
 			}
+		}
+		
+		@SubscribeEvent
+		public static void registerFluids(final RegistryEvent.Register<Fluid> evt) {
+			final IForgeRegistry<Fluid> registry = evt.getRegistry();
+			registry.register(FLUID_XP);
 		}
 /*
 		@SideOnly(Side.CLIENT)
