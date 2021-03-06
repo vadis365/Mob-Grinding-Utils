@@ -1,6 +1,5 @@
 package mob_grinding_utils.inventory.server;
 
-import mob_grinding_utils.ModContainers;
 import mob_grinding_utils.ModItems;
 import mob_grinding_utils.tile.TileEntitySaw;
 import net.minecraft.entity.player.PlayerEntity;
@@ -13,18 +12,19 @@ public class ContainerSaw extends Container {
 	private final int numRows = 2;
 	TileEntitySaw fan;
 	public ContainerSaw(PlayerEntity player, TileEntitySaw tile) {
+		//TODO :P
 		super(); //todo
 		PlayerInventory playerInventory = player.inventory;
 		fan = tile;
 		int i = (numRows - 4) * 18;
-		/*
-		addSlot(new SlotRestriction(tile, 0, 18, 18, new ItemStack(ModItems.SAW_UPGRADE, 1, 0), 10));
-		addSlot(new SlotRestriction(tile, 1, 43, 18, new ItemStack(ModItems.SAW_UPGRADE, 1, 1), 10));
-		addSlot(new SlotRestriction(tile, 2, 68, 18, new ItemStack(ModItems.SAW_UPGRADE, 1, 2), 10));
-		addSlot(new SlotRestriction(tile, 3, 93, 18, new ItemStack(ModItems.SAW_UPGRADE, 1, 3), 10));
-		addSlot(new SlotRestriction(tile, 4, 118, 18, new ItemStack(ModItems.SAW_UPGRADE, 1, 4), 10));
-		addSlot(new SlotRestriction(tile, 5, 143, 18, new ItemStack(ModItems.SAW_UPGRADE, 1, 5), 10));
-*/ //todo Meta needs to be translated...
+
+		addSlot(new SlotRestriction(tile, 0, 18, 18, new ItemStack(ModItems.SAW_UPGRADE_SHARPNESS, 1), 10));
+		addSlot(new SlotRestriction(tile, 1, 43, 18, new ItemStack(ModItems.SAW_UPGRADE_LOOTING, 1), 10));
+		addSlot(new SlotRestriction(tile, 2, 68, 18, new ItemStack(ModItems.SAW_UPGRADE_FIRE, 1), 10));
+		addSlot(new SlotRestriction(tile, 3, 93, 18, new ItemStack(ModItems.SAW_UPGRADE_SMITE, 1), 10));
+		addSlot(new SlotRestriction(tile, 4, 118, 18, new ItemStack(ModItems.SAW_UPGRADE_ARTHROPOD, 1), 10));
+		addSlot(new SlotRestriction(tile, 5, 143, 18, new ItemStack(ModItems.SAW_UPGRADE_BEHEADING, 1), 10));
+
 		for (int j = 0; j < 3; j++)
 			for (int k = 0; k < 9; k++)
 				addSlot(new Slot(playerInventory, k + j * 9 + 9, 8 + k * 18, 86 + j * 18 + i));
@@ -39,29 +39,29 @@ public class ContainerSaw extends Container {
 	
 	@Override
 	public ItemStack transferStackInSlot(PlayerEntity player, int slotIndex) {
-		/*
+
 		ItemStack stack = ItemStack.EMPTY;
 		Slot slot = (Slot) inventorySlots.get(slotIndex);
 		if (slot != null && slot.getHasStack()) {
 			ItemStack stack1 = slot.getStack();
 			stack = stack1.copy();
 			if (slotIndex > 5) {
-				if (stack1.getItem() == ModItems.SAW_UPGRADE && stack1.getItemDamage() == 0)
+				if (stack1.getItem() == ModItems.SAW_UPGRADE_SHARPNESS)
 					if (!mergeItemStack(stack1, 0, 1, false))
 						return ItemStack.EMPTY;
-				if (stack1.getItem() == ModItems.SAW_UPGRADE && stack1.getItemDamage() == 1)
+				if (stack1.getItem() == ModItems.SAW_UPGRADE_LOOTING)
 					if (!mergeItemStack(stack1, 1, 2, false))
 						return ItemStack.EMPTY;
-				if (stack1.getItem() == ModItems.SAW_UPGRADE && stack1.getItemDamage() == 2)
+				if (stack1.getItem() == ModItems.SAW_UPGRADE_FIRE)
 					if (!mergeItemStack(stack1, 2, 3, false))
 						return ItemStack.EMPTY;
-				if (stack1.getItem() == ModItems.SAW_UPGRADE && stack1.getItemDamage() == 3)
+				if (stack1.getItem() == ModItems.SAW_UPGRADE_SMITE)
 					if (!mergeItemStack(stack1, 3, 4, false))
 						return ItemStack.EMPTY;
-				if (stack1.getItem() == ModItems.SAW_UPGRADE && stack1.getItemDamage() == 4)
+				if (stack1.getItem() == ModItems.SAW_UPGRADE_ARTHROPOD)
 					if (!mergeItemStack(stack1, 4, 5, false))
 						return ItemStack.EMPTY;
-				if (stack1.getItem() == ModItems.SAW_UPGRADE && stack1.getItemDamage() == 5)
+				if (stack1.getItem() == ModItems.SAW_UPGRADE_BEHEADING)
 					if (!mergeItemStack(stack1, 5, 6, false))
 						return ItemStack.EMPTY;
 			} else if (!mergeItemStack(stack1, 6, inventorySlots.size(), false))
@@ -75,9 +75,8 @@ public class ContainerSaw extends Container {
 			else
 				return ItemStack.EMPTY;
 		}
-		*/ //todo dear lord this one is gonna be interesting...
-		//return stack;
-		return ItemStack.EMPTY; //temporary
+
+		return stack;
 	}
 
 	@Override
