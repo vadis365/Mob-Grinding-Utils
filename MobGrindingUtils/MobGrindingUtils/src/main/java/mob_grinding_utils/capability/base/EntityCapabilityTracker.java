@@ -2,7 +2,6 @@ package mob_grinding_utils.capability.base;
 
 import mob_grinding_utils.MobGrindingUtils;
 import mob_grinding_utils.network.MessageSyncEntityCapabilities;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.player.ServerPlayerEntity;
 
 public class EntityCapabilityTracker {

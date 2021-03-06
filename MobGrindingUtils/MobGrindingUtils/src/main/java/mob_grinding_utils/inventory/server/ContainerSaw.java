@@ -2,11 +2,7 @@ package mob_grinding_utils.inventory.server;
 
 import mob_grinding_utils.ModItems;
 import mob_grinding_utils.tile.TileEntitySaw;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.Container;
-import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
 public class ContainerSaw extends Container {
