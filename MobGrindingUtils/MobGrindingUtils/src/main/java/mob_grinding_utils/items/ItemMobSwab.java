@@ -32,7 +32,7 @@ public class ItemMobSwab extends Item {
 	public void addInformation(ItemStack stack, @Nullable World world, List<ITextComponent> list, ITooltipFlag flag) {
 		if (!used)
 			list.add(new TranslationTextComponent("tooltip.mobswab_1").mergeStyle(TextFormatting.YELLOW));
-		else if (used && stack.getTag().contains("mguMobName")) {
+		else if (used && stack.hasTag() && stack.getTag().contains("mguMobName")) {
 			list.add(new TranslationTextComponent("tooltip.mobswab_2").mergeStyle(TextFormatting.YELLOW));
 			list.add(new TranslationTextComponent("tooltip.mobswab_3").mergeStyle(TextFormatting.GREEN).appendString( " " + stack.getTag().get("mguMobName").getString() + " 'DNA'."));
 		}

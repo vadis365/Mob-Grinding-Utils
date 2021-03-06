@@ -85,7 +85,7 @@ public class MobGrindingUtils {
 		//NetworkRegistry.INSTANCE.registerGuiHandler(INSTANCE, PROXY);
 		NETWORK_WRAPPER = MGUNetwork.getNetworkChannel();
 		
-		MinecraftForge.EVENT_BUS.register(new BlockSpikes(null));
+		MinecraftForge.EVENT_BUS.addListener(BlockSpikes::dropXP);
 		MinecraftForge.EVENT_BUS.register(new ChickenInteractionEvent());
 		MinecraftForge.EVENT_BUS.register(new ChickenFuseEvent());
 		MinecraftForge.EVENT_BUS.register(new LocalWitherSoundEvent());

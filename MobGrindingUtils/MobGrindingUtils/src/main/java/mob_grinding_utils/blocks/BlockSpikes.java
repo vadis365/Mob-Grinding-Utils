@@ -78,8 +78,7 @@ public class BlockSpikes extends DirectionalBlock {
 
 	public static final Method xpPoints = getExperiencePoints();
 
-	@SubscribeEvent
-	public void dropXP(LivingDropsEvent event) {
+	public static void dropXP(LivingDropsEvent event) {
 		LivingEntity entity = event.getEntityLiving();
 		World world = entity.getEntityWorld();
 		if (entity != null) {
