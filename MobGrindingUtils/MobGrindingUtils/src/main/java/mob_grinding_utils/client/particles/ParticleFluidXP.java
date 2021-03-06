@@ -2,8 +2,12 @@ package mob_grinding_utils.client.particles;
 
 import java.awt.Color;
 
+import com.mojang.blaze3d.vertex.IVertexBuilder;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.particle.IParticleRenderType;
 import net.minecraft.client.particle.Particle;
+import net.minecraft.client.renderer.ActiveRenderInfo;
+import net.minecraft.client.world.ClientWorld;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
@@ -27,7 +31,7 @@ public class ParticleFluidXP extends Particle {
 			new ResourceLocation("mob_grinding_utils:particles/fluid_xp_particles7"),
 			new ResourceLocation("mob_grinding_utils:particles/fluid_xp_particles8")};
 
-	public ParticleFluidXP(World world, double x, double y, double z, double tx, double ty, double tz, int count, int color, float scale) {
+	public ParticleFluidXP(ClientWorld world, double x, double y, double z, double tx, double ty, double tz, int count, int color, float scale) {
 		super(world, x, y, z, 0.0D, 0.0D, 0.0D);
 
 		motionX = 0.0D;
@@ -43,15 +47,15 @@ public class ParticleFluidXP extends Particle {
 		particleBlue = (c.getBlue() / 255.0F - mb + rand.nextFloat() * mb);
 
 		particleGravity = 0.01F;
-		particleMaxAge = (int) (8.0D / (Math.random() * 0.8D + 0.2D));
+		//particleMaxAge = (int) (8.0D / (Math.random() * 0.8D + 0.2D));
 		motionX = 0.0D;
 		motionY = 0.0D;
 		motionZ = 0.0D;
-		particleScale = ((MathHelper.sin(count / 2.0F) * 0.1F + 1.0F) * scale);
+		//particleScale = ((MathHelper.sin(count / 2.0F) * 0.1F + 1.0F) * scale);
 
-		setParticleTexture(Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(TEXTURE[0].toString()));
+		//setParticleTexture(Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(TEXTURE[0].toString()));
 	}
-
+/* //todo dunno
 	@Override
 	public void onUpdate() {
 		prevTextureIndex = textureIndex;
@@ -74,10 +78,21 @@ public class ParticleFluidXP extends Particle {
         	if(prevTextureIndex != textureIndex)
         		setParticleTexture(Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(TEXTURE[textureIndex].toString()));
 	}
-
+ */
+/* //todo not sure what 1 means...
 	@Override
 	public int getFXLayer() {
 		return 1;
+	}
+*/
+	@Override
+	public void renderParticle(IVertexBuilder buffer, ActiveRenderInfo renderInfo, float partialTicks) {
+
+	}
+
+	@Override
+	public IParticleRenderType getRenderType() {
+		return IParticleRenderType.NO_RENDER; //todo temp
 	}
 
 	@Override

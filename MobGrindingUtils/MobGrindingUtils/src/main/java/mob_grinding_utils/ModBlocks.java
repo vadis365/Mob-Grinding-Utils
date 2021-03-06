@@ -222,7 +222,7 @@ public class ModBlocks {
 				}
 			};
 
-			DARK_OAK_STONE= new BlockDarkOakStone(Block.Properties.create(Material.ROCK, MaterialColor.STONE).hardnessAndResistance(1.5F, 10F).sound(SoundType.STONE).setLightLevel(null));
+			DARK_OAK_STONE= new BlockDarkOakStone(Block.Properties.create(Material.ROCK, MaterialColor.STONE).hardnessAndResistance(1.5F, 10F).sound(SoundType.STONE).setLightLevel(bState -> 7));
 			DARK_OAK_STONE_ITEM = new BlockItem(DARK_OAK_STONE, new Item.Properties().group(MobGrindingUtils.TAB)) {
 				@Override
 				@OnlyIn(Dist.CLIENT)
@@ -348,7 +348,7 @@ public class ModBlocks {
 		@SubscribeEvent
 		public static void registerFluids(final RegistryEvent.Register<Fluid> evt) {
 			final IForgeRegistry<Fluid> registry = evt.getRegistry();
-			registry.register(FLUID_XP);
+			//registry.register(FLUID_XP); //todo ohhh lawd he blowin up...
 		}
 /*
 		@SideOnly(Side.CLIENT)

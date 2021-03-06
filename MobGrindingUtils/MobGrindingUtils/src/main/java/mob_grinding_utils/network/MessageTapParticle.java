@@ -3,6 +3,7 @@ package mob_grinding_utils.network;
 
 import mob_grinding_utils.client.particles.ParticleFluidXP;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.world.ClientWorld;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -38,7 +39,7 @@ public class MessageTapParticle {
 				return;
 
 			if (world.isRemote) {
-				Minecraft.getInstance().particles.addEffect(new ParticleFluidXP(world,message.tilePos.getX() + world.rand.nextDouble() - 0.5 * 0.05, message.tilePos.getY() + 0.125D, message.tilePos.getZ() + world.rand.nextDouble() - 0.5 * 0.05, 0D, 0D, 0D, 10, 16776960, 1.5F));
+				Minecraft.getInstance().particles.addEffect(new ParticleFluidXP((ClientWorld) world,message.tilePos.getX() + world.rand.nextDouble() - 0.5 * 0.05, message.tilePos.getY() + 0.125D, message.tilePos.getZ() + world.rand.nextDouble() - 0.5 * 0.05, 0D, 0D, 0D, 10, 16776960, 1.5F));
 			}
 
 		});

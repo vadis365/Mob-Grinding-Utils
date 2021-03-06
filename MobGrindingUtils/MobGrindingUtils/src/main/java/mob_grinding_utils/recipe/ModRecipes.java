@@ -11,7 +11,7 @@ public class ModRecipes {
 	public static final List<IRecipe> RECIPES = new ArrayList<IRecipe>();
 
 	// Chicken Feed
-	public static final IRecipe CHICKEN_FEED = new RecipeChickenFeed();
+	//public static final IRecipe CHICKEN_FEED = new RecipeChickenFeed();
 	/*
 	private static ResourceLocation getResource(String inName) {
 		return new ResourceLocation(Reference.MOD_ID, inName);

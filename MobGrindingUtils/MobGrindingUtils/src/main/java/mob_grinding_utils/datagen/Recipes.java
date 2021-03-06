@@ -56,6 +56,7 @@ public class Recipes extends RecipeProvider {
                 .key('E', Tags.Items.ENDER_PEARLS)
                 .key('O', Tags.Items.OBSIDIAN)
                 .key('R', Tags.Items.DUSTS_REDSTONE)
+                .key('H', Items.HOPPER)
                 .addCriterion("", hasItem(Items.AIR))
                 .build(consumer, new ResourceLocation(Reference.MOD_ID, "recipe_absorbtion_upgrade"));
 
