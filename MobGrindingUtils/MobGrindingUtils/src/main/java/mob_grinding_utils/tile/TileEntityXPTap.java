@@ -11,6 +11,7 @@ import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 
 public class TileEntityXPTap extends TileEntity implements ITickableTileEntity {

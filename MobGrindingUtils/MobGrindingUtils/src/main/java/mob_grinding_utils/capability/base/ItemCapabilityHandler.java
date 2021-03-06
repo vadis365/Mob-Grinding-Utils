@@ -7,10 +7,17 @@ import java.util.concurrent.Callable;
 import com.google.common.base.Preconditions;
 
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTBase;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.Capability.IStorage;
 import net.minecraftforge.common.capabilities.CapabilityManager;
+import net.minecraftforge.common.capabilities.ICapabilitySerializable;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
+import net.minecraftforge.fml.common.Loader;
+import net.minecraftforge.fml.common.LoaderState;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class ItemCapabilityHandler {
 	private static final List<ItemCapability<?, ?>> REGISTERED_CAPABILITIES = new ArrayList<ItemCapability<?, ?>>();

@@ -2,8 +2,14 @@ package mob_grinding_utils.inventory.client;
 
 import mob_grinding_utils.inventory.server.ContainerSaw;
 import mob_grinding_utils.tile.TileEntitySaw;
+import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class GuiSaw extends GuiContainer {
