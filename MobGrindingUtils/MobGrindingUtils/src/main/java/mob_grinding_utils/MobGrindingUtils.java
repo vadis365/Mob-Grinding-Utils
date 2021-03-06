@@ -1,11 +1,11 @@
 package mob_grinding_utils;
 
 import mob_grinding_utils.blocks.BlockSpikes;
-import mob_grinding_utils.capability.base.EntityCapabilityHandler;
 import mob_grinding_utils.client.render.TileEntityAbsorptionRenderer;
 import mob_grinding_utils.client.render.TileEntityFanRenderer;
 import mob_grinding_utils.client.render.TileEntitySawRenderer;
 import mob_grinding_utils.datagen.Generator;
+import mob_grinding_utils.events.BossBarHidingEvent;
 import mob_grinding_utils.events.ChickenFuseEvent;
 import mob_grinding_utils.events.ChickenInteractionEvent;
 import mob_grinding_utils.events.EntityHeadDropEvent;
