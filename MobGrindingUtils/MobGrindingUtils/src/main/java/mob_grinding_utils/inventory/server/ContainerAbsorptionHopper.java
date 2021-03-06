@@ -19,7 +19,7 @@ public class ContainerAbsorptionHopper extends Container {
 	public int numRows = 2;
 	public TileEntityAbsorptionHopper hopper;
 	public ContainerAbsorptionHopper(final int windowId, final PlayerInventory playerInventory, PacketBuffer extra) {
-		super(ModContainers.ABSORBTION_HOPPER.get(), windowId);
+		super(ModContainers.ABSORPTION_HOPPER.get(), windowId);
 		BlockPos tilePos = extra.readBlockPos();
 		TileEntity tile = playerInventory.player.getEntityWorld().getTileEntity(tilePos);
 		if (!(tile instanceof TileEntityAbsorptionHopper))

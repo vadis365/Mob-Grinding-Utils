@@ -58,12 +58,13 @@ public class MobGrindingUtils {
 */
 
 	public MobGrindingUtils() {
+		ModContainers modContainers = new ModContainers();
+
 		IEventBus modBus = FMLJavaModLoadingContext.get().getModEventBus();
+		CONTAINERS.register(modBus);
 
 		modBus.addListener(this::setup);
 		modBus.addListener(this::doClientStuff);
-
-		CONTAINERS.register(modBus);
 
 		//Central Data generator, called on runData
 		modBus.addListener(Generator::gatherData);
@@ -110,7 +111,7 @@ public class MobGrindingUtils {
 		ClientRegistry.bindTileEntityRenderer(ModBlocks.SAW_TILE, TileEntitySawRenderer::new);
 		ClientRegistry.bindTileEntityRenderer(ModBlocks.ABSORPTION_HOPPER_TILE, TileEntityAbsorptionRenderer::new);
 		
-		ScreenManager.registerFactory(ModContainers.ABSORBTION_HOPPER.get(), GuiAbsorptionHopper::new);
+		ScreenManager.registerFactory(ModContainers.ABSORPTION_HOPPER.get(), GuiAbsorptionHopper::new);
 		ScreenManager.registerFactory(ModContainers.FAN.get(), GuiFan::new);
 	}
 }
