@@ -1,33 +1,25 @@
 package mob_grinding_utils.events;
 
-import java.util.List;
+import java.util.Collection;
 
 import com.mojang.authlib.GameProfile;
 
 import mob_grinding_utils.items.ItemImaginaryInvisibleNotReallyThereSword;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityList;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.item.EntityItem;
-import net.minecraft.entity.monster.EntityCreeper;
-import net.minecraft.entity.monster.EntityEnderman;
-import net.minecraft.entity.monster.EntityMob;
-import net.minecraft.entity.monster.EntityPigZombie;
-import net.minecraft.entity.monster.EntitySkeleton;
-import net.minecraft.entity.monster.EntityWitherSkeleton;
-import net.minecraft.entity.monster.EntityZombie;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Items;
-import net.minecraft.item.Item;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.item.ItemEntity;
+import net.minecraft.entity.monster.CreeperEntity;
+import net.minecraft.entity.monster.SkeletonEntity;
+import net.minecraft.entity.monster.WitherSkeletonEntity;
+import net.minecraft.entity.monster.ZombieEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.item.Items;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.NBTUtil;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
-import net.minecraftforge.fml.common.Loader;
-import net.minecraftforge.fml.common.eventhandler.EventPriority;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.eventbus.api.EventPriority;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class EntityHeadDropEvent {
 
@@ -38,13 +30,13 @@ public class EntityHeadDropEvent {
 		if (event.getEntityLiving().getHealth() > 0.0F)
 			return;
 		int beheadingLevel = 0;
-		if (event.getSource().getTrueSource() instanceof EntityPlayer) {
-			EntityPlayer fakePlayer = (EntityPlayer) event.getSource().getTrueSource();
-			if (fakePlayer.getDisplayNameString().matches(new TextComponentTranslation("fakeplayer.mob_masher").getFormattedText())) {
+		if (event.getSource().getTrueSource() instanceof PlayerEntity) {
+			PlayerEntity fakePlayer = (PlayerEntity) event.getSource().getTrueSource();
+			if (fakePlayer.getDisplayName().toString().matches(new TranslationTextComponent("fakeplayer.mob_masher").toString())) {
 				if (fakePlayer.getHeldItemMainhand().getItem() instanceof ItemImaginaryInvisibleNotReallyThereSword) {
 					ItemStack tempSword = fakePlayer.getHeldItemMainhand();
-					if (tempSword.hasTagCompound() && tempSword.getTagCompound().hasKey("beheadingValue"))
-						beheadingLevel = tempSword.getTagCompound().getInteger("beheadingValue");
+					if (tempSword.hasTag() && tempSword.getTag().contains("beheadingValue"))
+						beheadingLevel = tempSword.getTag().getInt("beheadingValue");
 					int dropChance = event.getEntityLiving().getEntityWorld().rand.nextInt(10);
 					if (dropChance < beheadingLevel) {
 						ItemStack stack = getHeadfromEntity(event.getEntityLiving());
@@ -56,14 +48,19 @@ public class EntityHeadDropEvent {
 		}
 	}
 
-	public static ItemStack getHeadfromEntity(EntityLivingBase target) {
+	public static ItemStack getHeadfromEntity(LivingEntity target) {
 		if (target.isChild())
 			return ItemStack.EMPTY;
-
-		if (target instanceof EntityEnderman)
+		
+		/*TODO enable this and fix EndeIO compat 
+		if (target instanceof EndermanEntity)
 			if (Loader.isModLoaded("enderio"))
 				return new ItemStack(Item.REGISTRY.getObject(new ResourceLocation("enderio:block_enderman_skull")), 1, 0);
-		if (target instanceof EntityMob) {
+ 		*/		
+		
+		
+		/* TODO remove hardcoded mod compat with raiders and WitherCrumbs/HeadCrumbs
+		if (target instanceof MobEntity) {
 			if (Loader.isModLoaded("headcrumbs"))
 				if (isHeadCrumb(target))
 				return createHeadFor(getPlayerByUsername(target.getName()));
@@ -71,19 +68,23 @@ public class EntityHeadDropEvent {
 				if (isPlayerRaider(target))
 				return createHeadFor(getPlayerByUsername(target.getName()));
 		}
-		if (target instanceof EntityCreeper)
-			return new ItemStack(Items.SKULL, 1, 4);
-		if (target instanceof EntitySkeleton)
-			return new ItemStack(Items.SKULL, 1, 0);
-		if (target instanceof EntityWitherSkeleton)
-			return new ItemStack(Items.SKULL, 1, 1);
-		if (target instanceof EntityZombie && !(target instanceof EntityPigZombie))
-			return new ItemStack(Items.SKULL, 1, 2);
-		if (target instanceof EntityPlayer)
-			return createHeadFor((EntityPlayer) target);
+		*/
+		
+		if (target instanceof CreeperEntity)
+			return new ItemStack(Items.CREEPER_HEAD, 1);
+		if (target instanceof SkeletonEntity)
+			return new ItemStack(Items.SKELETON_SKULL, 1);
+		if (target instanceof WitherSkeletonEntity)
+			return new ItemStack(Items.WITHER_SKELETON_SKULL, 1);
+		if (target instanceof ZombieEntity)// && !(target instanceof PigZombieEntity)) whatever these are now
+			return new ItemStack(Items.ZOMBIE_HEAD, 1);
+		if (target instanceof PlayerEntity)
+			return createHeadFor((PlayerEntity) target);
 		return ItemStack.EMPTY;
 	}
-
+	
+	// TODO remove hardcoded mod compat with raiders and WitherCrumbs/HeadCrumbs
+/*
 	public static boolean isHeadCrumb(Entity entity) {
 		ResourceLocation resourcelocation = EntityList.getKey(entity);
 		return resourcelocation.toString().equals("headcrumbs:human");
@@ -105,29 +106,29 @@ public class EntityHeadDropEvent {
 			return true;
 		return false;
 	}
-
+*/
 	public static GameProfile getPlayerByUsername(String name) {
 		return new GameProfile(null, name);
 	}
 
-	public static ItemStack createHeadFor(EntityPlayer player) {
+	public static ItemStack createHeadFor(PlayerEntity player) {
 		return createHeadFor(player.getGameProfile());
 	}
 
 	public static ItemStack createHeadFor(GameProfile profile) {
-		ItemStack stack = new ItemStack(Items.SKULL, 1, 3);
-		stack.setTagCompound(new NBTTagCompound());
-		NBTTagCompound profileData = new NBTTagCompound();
+		ItemStack stack = new ItemStack(Items.PLAYER_HEAD, 1);
+		stack.setTag(new CompoundNBT());
+		CompoundNBT profileData = new CompoundNBT();
 		NBTUtil.writeGameProfile(profileData, profile);
-		stack.getTagCompound().setTag("SkullOwner", profileData);
+		stack.getTag().put("SkullOwner", profileData);
 		return stack;
 	}
 
-	private void addDrop(ItemStack stack, EntityLivingBase entity, List<EntityItem> list) {
+	private void addDrop(ItemStack stack, LivingEntity entity, Collection<ItemEntity> collection) {
 		if (stack.getCount() <= 0)
 			return;
-		EntityItem entityItem = new EntityItem(entity.getEntityWorld(), entity.posX, entity.posY, entity.posZ, stack);
+		ItemEntity entityItem = new ItemEntity(entity.getEntityWorld(), entity.getPosX(), entity.getPosY(), entity.getPosZ(), stack);
 		entityItem.setDefaultPickupDelay();
-		list.add(entityItem);
+		collection.add(entityItem);
 	}
 }

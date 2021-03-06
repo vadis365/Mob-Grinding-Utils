@@ -3,50 +3,44 @@ package mob_grinding_utils.blocks;
 import java.util.Locale;
 import java.util.Random;
 
-import javafx.geometry.Side;
-import mob_grinding_utils.MobGrindingUtils;
+import mob_grinding_utils.ModBlocks;
 import net.minecraft.block.Block;
-import net.minecraft.block.properties.IProperty;
-import net.minecraft.block.properties.PropertyEnum;
-import net.minecraft.block.state.BlockFaceShape;
-import net.minecraft.block.state.BlockStateContainer;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.boss.EntityDragon;
-import net.minecraft.entity.boss.EntityWither;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumBlockRenderType;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.EnumParticleTypes;
+import net.minecraft.block.BlockRenderType;
+import net.minecraft.block.BlockState;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.BlockItemUseContext;
+import net.minecraft.particles.ParticleTypes;
+import net.minecraft.state.EnumProperty;
+import net.minecraft.state.StateContainer;
+import net.minecraft.util.ActionResultType;
+import net.minecraft.util.BlockVoxelShape;
+import net.minecraft.util.Direction;
+import net.minecraft.util.Hand;
 import net.minecraft.util.IStringSerializable;
-import net.minecraft.util.NonNullList;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
-import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.IBlockAccess;
+import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class BlockEnderInhibitorOn extends Block {
 
-	public static final PropertyEnum<EnumGemDirection> TYPE = PropertyEnum.create("type", EnumGemDirection.class);
+	public static final EnumProperty<EnumGemDirection> TYPE = EnumProperty.create("type", EnumGemDirection.class);
 
 	public BlockEnderInhibitorOn(Block.Properties properties) {
 		super(properties);
-		setDefaultState(blockState.getBaseState().withProperty(TYPE, EnumGemDirection.DOWN_NORTH));
+		setDefaultState(this.stateContainer.getBaseState().with(TYPE, EnumGemDirection.DOWN_NORTH));
 	}
-
+//TODO this needs fixing in most blocks to use dragon and wither tags
+	/*
 	@Override
 	public boolean canEntityDestroy(IBlockState state, IBlockAccess world, BlockPos pos, Entity entity) {
       return !(entity instanceof EntityWither) && !(entity instanceof EntityDragon);
     }
-
+//
 	@Override
 	public boolean isOpaqueCube(IBlockState state) {
 		return false;
@@ -61,15 +55,15 @@ public class BlockEnderInhibitorOn extends Block {
 	public boolean isFullCube(IBlockState state) {
 		return false;
 	}
-
+*/
 	@Override
-	public EnumBlockRenderType getRenderType(IBlockState state) {
-		return EnumBlockRenderType.MODEL;
+	public BlockRenderType getRenderType(BlockState state) {
+		return BlockRenderType.MODEL;
 	}
 
 	@Override
-	@SideOnly(Side.CLIENT)
-	public void randomDisplayTick(IBlockState stateIn, World world, BlockPos pos, Random rand) {
+	@OnlyIn(Dist.CLIENT)
+	public void animateTick(BlockState stateIn, World world, BlockPos pos, Random rand) {
 
 		for (int i = 0; i < 4; ++i) {
 			double d0 = (double) ((float) pos.getX() + rand.nextFloat());
@@ -88,16 +82,16 @@ public class BlockEnderInhibitorOn extends Block {
 				d5 = (double) (rand.nextFloat() * 2.0F * (float) j);
 			}
 
-			world.spawnParticle(EnumParticleTypes.PORTAL, d0, d1, d2, d3, d4, d5);
+			world.addParticle(ParticleTypes.PORTAL, d0, d1, d2, d3, d4, d5);
 		}
 	}
-
+/* TODO Voxel shapes (easy to do but can be sorted later)
 	@Override
 	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess world, BlockPos pos) {
 
 		float widthMin = 0, heightMin = 0, depthMin = 0;
 		float widthMax = 0, heightMax = 0, depthMax = 0;
-		switch (state.getValue(TYPE)) {
+		switch (state.get(TYPE)) {
 
 			case SOUTH:
 				widthMin = 0.125F;
@@ -203,109 +197,96 @@ public class BlockEnderInhibitorOn extends Block {
 	public AxisAlignedBB getCollisionBoundingBox(IBlockState state, IBlockAccess world, BlockPos pos) {
 		return NULL_AABB;
 	}
-
+*/
 	@Override
-	public void neighborChanged(IBlockState state, World world, BlockPos pos, Block block, BlockPos fromPos) {
-		EnumGemDirection newFacing = state.getValue(TYPE);
+	public void neighborChanged(BlockState state, World world, BlockPos pos, Block block, BlockPos fromPos, boolean isMoving) {
+		EnumGemDirection newFacing = state.get(TYPE);
 		boolean flag = false;
 
 		if (newFacing == EnumGemDirection.UP_NORTH || newFacing == EnumGemDirection.UP_EAST || newFacing == EnumGemDirection.UP_SOUTH || newFacing == EnumGemDirection.UP_WEST)
-			if (world.isSideSolid(pos.up(), EnumFacing.DOWN))
+			if (world.getBlockState(pos.up()).func_242698_a(world, pos.up(), Direction.DOWN, BlockVoxelShape.RIGID))
 				flag = true;
 
 		if (newFacing == EnumGemDirection.DOWN_NORTH || newFacing == EnumGemDirection.DOWN_EAST || newFacing == EnumGemDirection.DOWN_SOUTH || newFacing == EnumGemDirection.DOWN_WEST)
-			if (world.isSideSolid(pos.down(), EnumFacing.UP))
+			if (world.getBlockState(pos.down()).func_242698_a(world, pos.down(), Direction.UP, BlockVoxelShape.RIGID))
 				flag = true;
 
-		if (newFacing == EnumGemDirection.NORTH && world.isSideSolid(pos.offset(EnumFacing.NORTH), EnumFacing.NORTH))
+		if (newFacing == EnumGemDirection.NORTH && world.getBlockState(pos.offset(Direction.NORTH)).func_242698_a(world, pos.offset(Direction.NORTH), Direction.NORTH, BlockVoxelShape.RIGID))
 			flag = true;
 
-		if (newFacing == EnumGemDirection.SOUTH && world.isSideSolid(pos.offset(EnumFacing.SOUTH), EnumFacing.SOUTH))
+		if (newFacing == EnumGemDirection.SOUTH && world.getBlockState(pos.offset(Direction.SOUTH)).func_242698_a(world, pos.offset(Direction.SOUTH), Direction.SOUTH, BlockVoxelShape.RIGID))
 			flag = true;
 
-		if (newFacing == EnumGemDirection.WEST && world.isSideSolid(pos.offset(EnumFacing.WEST), EnumFacing.WEST))
+		if (newFacing == EnumGemDirection.WEST && world.getBlockState(pos.offset(Direction.WEST)).func_242698_a(world, pos.offset(Direction.WEST), Direction.WEST, BlockVoxelShape.RIGID))
 			flag = true;
 
-		if (newFacing == EnumGemDirection.EAST && world.isSideSolid(pos.offset(EnumFacing.EAST), EnumFacing.EAST))
+		if (newFacing == EnumGemDirection.EAST && world.getBlockState(pos.offset(Direction.EAST)).func_242698_a(world, pos.offset(Direction.EAST), Direction.EAST, BlockVoxelShape.RIGID))
 			flag = true;
 
 		if (!flag) {
-			dropBlockAsItem(world, pos, state, 0);
-			world.setBlockToAir(pos);
+			//TODO DROP THE BLOCK LOGIC
+			//dropBlockAsItem(world, pos, state, 0);
+			//world.setBlockToAir(pos);
 		}
 
-		super.neighborChanged(state, world, pos, block, fromPos);
+		super.neighborChanged(state, world, pos, block, fromPos, isMoving);
 	}
 
 	@Override
-	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
+	public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
 		if (world.isRemote) {
-			return true;
+			return ActionResultType.SUCCESS;
 		} else {
-			IBlockState activeState = mob_grinding_utils.ModBlocks.ENDER_INHIBITOR_OFF.getDefaultState().withProperty(BlockEnderInhibitorOff.TYPE, state.getValue(TYPE));
+			BlockState activeState = ModBlocks.ENDER_INHIBITOR_OFF.getDefaultState().with(BlockEnderInhibitorOff.TYPE, state.get(TYPE));
 			world.setBlockState(pos, activeState, 3);
-			world.playSound((EntityPlayer) null, pos, SoundEvents.BLOCK_LEVER_CLICK, SoundCategory.BLOCKS, 0.3F, 0.6F);
-			return true;
+			world.playSound(null, pos, SoundEvents.BLOCK_LEVER_CLICK, SoundCategory.BLOCKS, 0.3F, 0.6F);
+			return ActionResultType.SUCCESS;
 		}
 	}
 
 	@Override
-    public boolean canPlaceBlockOnSide(World world, BlockPos pos, EnumFacing side) {
-        return canPlaceBlock(world, pos, side);
-    }
+	public boolean isValidPosition(BlockState state, IWorldReader world, BlockPos pos) {
+		for (Direction enumfacing : Direction.values())
+			if (hasEnoughSolidSide(world, pos.offset(enumfacing.getOpposite()), enumfacing))
+				return true;
+		return false;
+	}
 
-	@Override
-    public boolean canPlaceBlockAt(World world, BlockPos pos) {
-        for (EnumFacing enumfacing : EnumFacing.values())
-            if (canPlaceBlock(world, pos, enumfacing))
-                return true;
-        return false;
-    }
-
-    protected static boolean canPlaceBlock(World world, BlockPos pos, EnumFacing direction) {
-        BlockPos blockpos = pos.offset(direction.getOpposite());
-        IBlockState iblockstate = world.getBlockState(blockpos);
-        boolean flag = iblockstate.getBlockFaceShape(world, blockpos, direction) == BlockFaceShape.SOLID;
-        Block block = iblockstate.getBlock();
-
-        return world.isBlockNormalCube(blockpos, true) && block.isOpaqueCube(iblockstate) && flag;
-    }
 
 	@SuppressWarnings("incomplete-switch")
 	@Override
-    public IBlockState getStateForPlacement(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer) {
-
-		int direction = MathHelper.floor(placer.rotationYaw * 4F / 360F + 0.5D) & 3;
-
+	public BlockState getStateForPlacement(BlockItemUseContext context) {
+		Direction facing = context.getFace().getOpposite();
+		Direction direction = context.getPlayer().getHorizontalFacing().getOpposite();
 		EnumGemDirection newFacing = EnumGemDirection.DOWN_NORTH;
-		if (facing == EnumFacing.UP) {
+		if (facing == Direction.UP) {
 			switch (direction) {
-				case 0:
+				case SOUTH:
 					newFacing = EnumGemDirection.DOWN_SOUTH;
 					break;
-				case 1:
+				case EAST:
 					newFacing = EnumGemDirection.DOWN_EAST;
 					break;
-				case 2:
+				case NORTH:
 					newFacing = EnumGemDirection.DOWN_NORTH;
 					break;
-				case 3:
+				case WEST:
 					newFacing = EnumGemDirection.DOWN_WEST;
 					break;
 			}
 		}
-		else if (facing == EnumFacing.DOWN) {
+		else if (facing == Direction.DOWN) {
 			switch (direction) {
-			case 0:
+			case SOUTH:
 				newFacing = EnumGemDirection.UP_SOUTH;
 				break;
-			case 1:
+			case EAST:
 				newFacing = EnumGemDirection.UP_EAST;
 				break;
-			case 2:
+			case NORTH:
 				newFacing = EnumGemDirection.UP_NORTH;
 				break;
-			case 3:
+			case WEST:
 				newFacing = EnumGemDirection.UP_WEST;
 				break;
 			}
@@ -313,54 +294,26 @@ public class BlockEnderInhibitorOn extends Block {
 		else {
 			switch (facing) {
 			case SOUTH:
-				newFacing = EnumGemDirection.NORTH;
-				break;
-			case EAST:
-				newFacing = EnumGemDirection.WEST;
-				break;
-			case NORTH:
 				newFacing = EnumGemDirection.SOUTH;
 				break;
-			case WEST:
+			case EAST:
 				newFacing = EnumGemDirection.EAST;
+				break;
+			case NORTH:
+				newFacing = EnumGemDirection.NORTH;
+				break;
+			case WEST:
+				newFacing = EnumGemDirection.WEST;
 				break;
 			}
 		}
 
-		return getDefaultState().withProperty(TYPE, newFacing);
+		return getDefaultState().with(TYPE, newFacing);
     }
 
 	@Override
-	public int damageDropped(IBlockState state) {
-		return EnumGemDirection.DOWN_NORTH.ordinal();
-	}
-
-	@Override
-	public int quantityDropped(Random rand) {
-		return 1;
-	}
-
-	@Override
-	protected BlockStateContainer createBlockState() {
-		return new BlockStateContainer(this, new IProperty[] { TYPE });
-	}
-
-	@Override
-	@SideOnly(Side.CLIENT)
-	public void getSubBlocks(CreativeTabs tab, NonNullList<ItemStack> list) {
-		if (tab == MobGrindingUtils.TAB)
-			list.add(new ItemStack(this, 1, EnumGemDirection.DOWN_NORTH.ordinal()));
-	}
-
-	@Override
-	public IBlockState getStateFromMeta(int meta) {
-		return getDefaultState().withProperty(TYPE, EnumGemDirection.values()[meta]);
-	}
-
-	@Override
-	public int getMetaFromState(IBlockState state) {
-		EnumGemDirection type = state.getValue(TYPE);
-		return type.ordinal();
+	protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
+		builder.add(TYPE);
 	}
 
 	public enum EnumGemDirection implements IStringSerializable {
@@ -378,7 +331,7 @@ public class BlockEnderInhibitorOn extends Block {
 		EAST;
 
 		@Override
-		public String getName() {
+		public String getString() {
 			return name().toLowerCase(Locale.ENGLISH);
 		}
 	}

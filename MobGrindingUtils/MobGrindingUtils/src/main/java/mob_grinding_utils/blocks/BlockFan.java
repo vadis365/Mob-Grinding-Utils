@@ -67,17 +67,12 @@ public class BlockFan extends DirectionalBlock implements ITileEntityProvider {
 
 	@Override
 	public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
-		if (world.isRemote) {
+		if (world.isRemote)
 			return ActionResultType.SUCCESS;
-	} else {
-		TileEntity tileentity = world.getTileEntity(pos);
-		if (tileentity instanceof TileEntityFan) {
-			player.openContainer((TileEntityFan) tileentity);
+		if (world.getTileEntity(pos) instanceof TileEntityFan)
 			System.out.println("Fan Gui Opens Here");
 			//player.openGui(MobGrindingUtils.INSTANCE, MobGrindingUtils.PROXY.GUI_ID_FAN, world, pos.getX(), pos.getY(), pos.getZ());
-		}
 		return ActionResultType.SUCCESS;
-	}
 	}
 /*
 	@Override
@@ -111,5 +106,4 @@ public class BlockFan extends DirectionalBlock implements ITileEntityProvider {
 				world.setBlockState(pos, state.with(POWERED, flag), 4);
 		}
 	}
-
 }

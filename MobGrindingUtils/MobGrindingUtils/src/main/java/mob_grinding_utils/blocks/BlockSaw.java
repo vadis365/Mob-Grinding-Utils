@@ -26,6 +26,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
+import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
@@ -33,7 +34,6 @@ import net.minecraft.world.server.ServerWorld;
 public class BlockSaw extends DirectionalBlock implements ITileEntityProvider {
 	public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
 	public static final VoxelShape SAW_AABB = Block.makeCuboidShape(0.0625D, 0.0625D, 0.0625D, 0.9375D, 0.9375D, 0.9375D);
-	public static final VoxelShape SAW_AABB_SELECT = Block.makeCuboidShape(0D, 0D, 0D, 1D, 1D, 1D);
 	
 	public BlockSaw(Block.Properties properties) {
 		super(properties);
@@ -52,7 +52,7 @@ public class BlockSaw extends DirectionalBlock implements ITileEntityProvider {
 
 	@Override
 	public VoxelShape getRaytraceShape(BlockState state, IBlockReader worldIn, BlockPos pos) {
-		return SAW_AABB_SELECT;
+		return VoxelShapes.fullCube();
 	}
 
 	@Override
@@ -66,26 +66,6 @@ public class BlockSaw extends DirectionalBlock implements ITileEntityProvider {
 		return BlockRenderLayer.CUTOUT;
 	}
 
-	@Override
-	public boolean isOpaqueCube(IBlockState state) {
-		return false;
-	}
-
-	@Override
-	public IBlockState getStateFromMeta(int meta) {
-		return getDefaultState().withProperty(FACING, EnumFacing.byIndex(meta)).withProperty(POWERED, Boolean.valueOf((meta & 8) > 0));
-	}
-
-	@Override
-	public int getMetaFromState(IBlockState state) {
-		int meta = 0;
-		meta = meta | ((EnumFacing) state.getValue(FACING)).getIndex();
-
-		if (((Boolean) state.getValue(POWERED)).booleanValue())
-			meta |= 8;
-
-		return meta;
-	}
 */
 	@Override
 	public BlockState getStateForPlacement(BlockItemUseContext context) {

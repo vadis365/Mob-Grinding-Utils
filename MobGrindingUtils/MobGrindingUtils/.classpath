@@ -18,5 +18,8 @@
 	<classpathentry kind="lib" path="C:/Users/Dave/.gradle/caches/modules-2/files-2.1/com.mojang/datafixerupper/4.0.26/ebd6690f33871ccee9b6132c6480668ee2e35020/datafixerupper-4.0.26.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Dave/.gradle/caches/modules-2/files-2.1/org.apache.logging.log4j/log4j-api/2.11.2/f5e9a2ffca496057d6891a3de65128efc636e26e/log4j-api-2.11.2.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Dave/.gradle/caches/modules-2/files-2.1/com.google.code.gson/gson/2.8.0/c4ba5371a29ac9b2ad6129b1d39ea38750043eff/gson-2.8.0.jar" sourcepath="C:/Users/Dave/.gradle/caches/modules-2/files-2.1/com.google.code.gson/gson/2.8.0/baf95d8519fc1a11d388f8543cb40cd2bb9d66dc/gson-2.8.0-sources.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Dave/.gradle/caches/modules-2/files-2.1/it.unimi.dsi/fastutil/8.2.1/5ad88f325e424f8dbc2be5459e21ea5cab3864e9/fastutil-8.2.1.jar" sourcepath="C:/Users/Dave/.gradle/caches/modules-2/files-2.1/it.unimi.dsi/fastutil/8.2.1/47e3859e2123a05a82e75b34af52719f2c18860c/fastutil-8.2.1-sources.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Dave/.gradle/caches/modules-2/files-2.1/com.mojang/brigadier/1.0.17/c6b7dc51dd44379cc751b7504816006e9be4b1e6/brigadier-1.0.17.jar" sourcepath="C:/Users/Dave/.gradle/caches/modules-2/files-2.1/com.mojang/brigadier/1.0.17/36e6dccfa011566fb0c9314d50ecc5a1c0bb2d51/brigadier-1.0.17-sources.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Dave/.gradle/caches/modules-2/files-2.1/com.mojang/javabridge/1.0.22/6aa6453aa99a52a5cd91749da1af6ab70e082ab3/javabridge-1.0.22.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

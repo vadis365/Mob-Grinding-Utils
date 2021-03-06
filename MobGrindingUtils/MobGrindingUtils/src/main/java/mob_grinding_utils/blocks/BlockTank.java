@@ -1,36 +1,29 @@
 package mob_grinding_utils.blocks;
 
-import java.util.Random;
-
-import javax.annotation.Nullable;
-
-import javafx.geometry.Side;
 import mob_grinding_utils.tile.TileEntityTank;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockRenderType;
+import net.minecraft.block.BlockState;
 import net.minecraft.block.ContainerBlock;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.boss.EntityDragon;
-import net.minecraft.entity.boss.EntityWither;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockRenderLayer;
-import net.minecraft.util.EnumBlockRenderType;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
+import net.minecraft.util.ActionResultType;
+import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockAccess;
+import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 
 public class BlockTank extends ContainerBlock {
 	public BlockTank(Block.Properties properties) {
@@ -38,15 +31,15 @@ public class BlockTank extends ContainerBlock {
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(World worldIn, int meta) {
+	public TileEntity createNewTileEntity(IBlockReader world) {
 		return new TileEntityTank();
 	}
 
 	@Override
-	public EnumBlockRenderType getRenderType(IBlockState state) {
-		return EnumBlockRenderType.MODEL;
+	public BlockRenderType getRenderType(BlockState state) {
+		return BlockRenderType.MODEL;
 	}
-
+/*
 	@Override
 	@SideOnly(Side.CLIENT)
 	public BlockRenderLayer getRenderLayer() {
@@ -55,7 +48,7 @@ public class BlockTank extends ContainerBlock {
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public boolean shouldSideBeRendered(IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side) {
+	public boolean shouldSideBeRendered(BlockState blockState, BlockAccess blockAccess, BlockPos pos, Direction side) {
 		return true;
 	}
 
@@ -71,20 +64,20 @@ public class BlockTank extends ContainerBlock {
 
 	@Nullable
 	@Override
-	public Item getItemDropped(IBlockState state, Random rand, int fortune) {
+	public Item getItemDropped(BlockState state, Random rand, int fortune) {
 		return null;
 	}
-
+*/
 	@Override
-	public void onBlockHarvested(World world, BlockPos pos, IBlockState state, EntityPlayer player) {
-		if (!world.isRemote && !player.capabilities.isCreativeMode) {
+	public void onBlockHarvested(World world, BlockPos pos, BlockState state, PlayerEntity player) {
+		if (!world.isRemote && !player.abilities.isCreativeMode) {
 			TileEntity tileentity = world.getTileEntity(pos);
 			if (tileentity instanceof TileEntityTank) {
-				NBTTagCompound nbt = new NBTTagCompound();
-				tileentity.writeToNBT(nbt);
-				ItemStack stack = new ItemStack(Item.getItemFromBlock(this), 1, 0);
+				CompoundNBT nbt = new CompoundNBT();
+				tileentity.write(nbt);
+				ItemStack stack = new ItemStack(Item.getItemFromBlock(this), 1);
 				if (((TileEntityTank) tileentity).tank.getFluidAmount() > 0)
-					stack.setTagCompound(nbt);
+					stack.setTag(nbt);
 				InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), stack);
 				world.removeTileEntity(pos);
 			}
@@ -92,33 +85,31 @@ public class BlockTank extends ContainerBlock {
 	}
 
 	@Override
-	public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {
+	public void onBlockPlacedBy(World world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
 		super.onBlockPlacedBy(world, pos, state, placer, stack);
-		if (!world.isRemote && stack.hasTagCompound()) {
+		if (!world.isRemote && stack.hasTag()) {
 			TileEntity tileentity = world.getTileEntity(pos);
 			if (tileentity instanceof TileEntityTank) {
-				if (!stack.getTagCompound().hasKey("Empty")) {
-					FluidStack fluid = FluidStack.loadFluidStackFromNBT(stack.getTagCompound());
-					((TileEntityTank) tileentity).tank.fillInternal(fluid, true);
+				if (!stack.getTag().contains("Empty")) {
+					FluidStack fluid = FluidStack.loadFluidStackFromNBT(stack.getTag());
+					((TileEntityTank) tileentity).tank.fill(fluid, FluidAction.EXECUTE);
 				}
 			}
 		}
 	}
 
 	@Override
-	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
-		final IFluidHandler fluidHandler = getFluidHandler(world, pos);
-		if (fluidHandler != null) {
-			FluidUtil.interactWithFluidHandler(player, hand, world, pos, side);//(heldItem, fluidHandler, player);
-			return FluidUtil.getFluidHandler(player.getHeldItem(hand)) != null;
+	public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
+		TileEntity tileentity = world.getTileEntity(pos);
+		if (tileentity instanceof TileEntityTank) {
+			LazyOptional<IFluidHandler> fluidHandler = tileentity.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, hit.getFace());
+
+			if (fluidHandler != null) {
+				FluidUtil.interactWithFluidHandler(player, hand, world, pos, hit.getFace());
+				if (FluidUtil.getFluidHandler(player.getHeldItem(hand)) != null)
+					return ActionResultType.SUCCESS;
+			}
 		}
-		return false;
+			return ActionResultType.PASS;
 	}
-
-	@Nullable
-	private IFluidHandler getFluidHandler(IBlockAccess world, BlockPos pos) {
-		TileEntityTank tileentity = (TileEntityTank) world.getTileEntity(pos);
-		return tileentity.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null);
-	}
-
 }

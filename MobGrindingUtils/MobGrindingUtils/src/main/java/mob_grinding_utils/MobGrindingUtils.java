@@ -5,36 +5,30 @@ import mob_grinding_utils.capability.base.EntityCapabilityHandler;
 import mob_grinding_utils.client.render.TileEntityAbsorptionRenderer;
 import mob_grinding_utils.client.render.TileEntityFanRenderer;
 import mob_grinding_utils.client.render.TileEntitySawRenderer;
-import mob_grinding_utils.client.render.TileEntityTankRenderer;
 import mob_grinding_utils.datagen.Generator;
 import mob_grinding_utils.events.ChickenFuseEvent;
 import mob_grinding_utils.events.ChickenInteractionEvent;
 import mob_grinding_utils.events.EntityHeadDropEvent;
 import mob_grinding_utils.events.FillXPBottleEvent;
+import mob_grinding_utils.events.GlobalDragonSoundEvent;
+import mob_grinding_utils.events.GlobalWitherSoundEvent;
 import mob_grinding_utils.events.LocalDragonSoundEvent;
 import mob_grinding_utils.events.LocalWitherSoundEvent;
 import mob_grinding_utils.events.MGUEndermanInhibitEvent;
 import mob_grinding_utils.events.MGUZombieReinforcementEvent;
+import mob_grinding_utils.events.ParticleTextureStitchEvent;
+import mob_grinding_utils.events.RenderChickenSwell;
 import mob_grinding_utils.inventory.client.GuiAbsorptionHopper;
 import mob_grinding_utils.inventory.client.GuiFan;
-import mob_grinding_utils.inventory.server.ContainerAbsorptionHopper;
 import mob_grinding_utils.network.MGUNetwork;
-import mob_grinding_utils.tile.TileEntityAbsorptionHopper;
-import mob_grinding_utils.tile.TileEntityFan;
-import mob_grinding_utils.tile.TileEntitySaw;
-import mob_grinding_utils.tile.TileEntitySinkTank;
-import mob_grinding_utils.tile.TileEntityTank;
-import net.minecraft.block.Blocks;
 import net.minecraft.client.gui.ScreenManager;
 import net.minecraft.fluid.Fluid;
-import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
@@ -105,11 +99,8 @@ public class MobGrindingUtils {
 		MinecraftForge.EVENT_BUS.register(new MGUEndermanInhibitEvent());
 /*
 		if (event.getSide() == Side.CLIENT) {
-			MinecraftForge.EVENT_BUS.register(new RenderChickenSwell());
-			MinecraftForge.EVENT_BUS.register(new ParticleTextureStitchEvent());
+
 			MinecraftForge.EVENT_BUS.register(new BossBarHidingEvent());
-			MinecraftForge.EVENT_BUS.register(new GlobalWitherSoundEvent());
-			MinecraftForge.EVENT_BUS.register(new GlobalDragonSoundEvent());
 			MinecraftForge.EVENT_BUS.register(new TileEntitySaw());
 		}
 		EntityCapabilityHandler.registerEntityCapability(new BossBarPlayerCapability());
@@ -119,13 +110,18 @@ public class MobGrindingUtils {
 	}
 	
 	private void doClientStuff(final FMLClientSetupEvent event) {
+		MinecraftForge.EVENT_BUS.register(new RenderChickenSwell());
+		MinecraftForge.EVENT_BUS.register(new GlobalWitherSoundEvent());
+		MinecraftForge.EVENT_BUS.register(new GlobalDragonSoundEvent());
+		MinecraftForge.EVENT_BUS.register(new ParticleTextureStitchEvent());
+
 	/*	ClientRegistry.bindTileEntityRenderer(ModBlocks.TANK_TILE, TileEntityTankRenderer::new);
 		ClientRegistry.bindTileEntityRenderer(ModBlocks.TANK_SINK_TILE, TileEntityTankRenderer::new);
-		ClientRegistry.bindTileEntityRenderer(ModBlocks.SAW_TILE, TileEntitySawRenderer::new);
-		ClientRegistry.bindTileEntityRenderer(ModBlocks.ABSORPTION_HOPPER_TILE, TileEntityAbsorptionRenderer::new);
 	*/
 		ClientRegistry.bindTileEntityRenderer(ModBlocks.FAN_TILE, TileEntityFanRenderer::new);
-
+		ClientRegistry.bindTileEntityRenderer(ModBlocks.SAW_TILE, TileEntitySawRenderer::new);
+		ClientRegistry.bindTileEntityRenderer(ModBlocks.ABSORPTION_HOPPER_TILE, TileEntityAbsorptionRenderer::new);
+		
 		ScreenManager.registerFactory(ModContainers.ABSORBTION_HOPPER.get(), GuiAbsorptionHopper::new);
 		ScreenManager.registerFactory(ModContainers.FAN.get(), GuiFan::new);
 	}

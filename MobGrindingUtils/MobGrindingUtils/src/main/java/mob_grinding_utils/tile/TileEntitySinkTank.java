@@ -2,25 +2,21 @@ package mob_grinding_utils.tile;
 
 import java.util.List;
 
-import mob_grinding_utils.MobGrindingUtils;
-import mob_grinding_utils.network.MessageTapParticle;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.init.SoundEvents;
 import net.minecraft.tileentity.ITickableTileEntity;
-import net.minecraft.util.EntitySelectors;
-import net.minecraft.util.ITickable;
+import net.minecraft.util.EntityPredicates;
 import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.World;
-import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 
 public class TileEntitySinkTank extends TileEntityTank implements ITickableTileEntity {
 
 	public TileEntitySinkTank() {
-        this.tank = new FluidTankTile(null, Fluid.BUCKET_VOLUME * 32);
-        this.tank.setTileEntity(this);
+		super();
 	}
 
 	@Override
@@ -36,9 +32,9 @@ public class TileEntitySinkTank extends TileEntityTank implements ITickableTileE
 			if (xpAmount <= 0)
 				return false;
 			if (tank.getFluidAmount() < tank.getCapacity()) {
-				tank.fill(new FluidStack(FluidRegistry.getFluid("xpjuice"), 20), true);
+				tank.fill(new FluidStack(FluidRegistry.getFluid("xpjuice"), 20), FluidAction.EXECUTE);
 				addPlayerXP(player, -1);
-				getWorld().playSound((PlayerEntity) null, player.posX, player.posY, player.posZ, SoundEvents.ITEM_BOTTLE_FILL, SoundCategory.NEUTRAL , 0.1F, 0.5F * ((getWorld().rand.nextFloat() - getWorld().rand.nextFloat()) * 0.7F + 1.8F));
+				getWorld().playSound(null, player.getPosX(), player.getPosY(), player.getPosZ(), SoundEvents.ITEM_BOTTLE_FILL, SoundCategory.NEUTRAL , 0.1F, 0.5F * ((getWorld().rand.nextFloat() - getWorld().rand.nextFloat()) * 0.7F + 1.8F));
 				// MobGrindingUtils.NETWORK_WRAPPER.sendToAll(new MessageTapParticle(getPos().up())); //todo
 			}
 			return true;
@@ -47,7 +43,7 @@ public class TileEntitySinkTank extends TileEntityTank implements ITickableTileE
 	}
 
 	public List<PlayerEntity> getCaptureXP(World world, double x, double y, double z) {
-        return world.<PlayerEntity>getEntitiesWithinAABB(PlayerEntity.class, new AxisAlignedBB(x - 0.45D, y - 0.5D, z - 0.45D, x + 0.45D, y + 1.03D, z + 0.45D), EntitySelectors.IS_ALIVE);
+        return world.<PlayerEntity>getEntitiesWithinAABB(PlayerEntity.class, new AxisAlignedBB(x - 0.45D, y - 0.5D, z - 0.45D, x + 0.45D, y + 1.03D, z + 0.45D), EntityPredicates.IS_ALIVE);
     }
 
 	public static void addPlayerXP(PlayerEntity player, int amount) {

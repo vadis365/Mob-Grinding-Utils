@@ -1,26 +1,23 @@
 package mob_grinding_utils.blocks;
 
-import java.util.List;
-import java.util.Random;
-
-import javax.annotation.Nullable;
-
-import javafx.geometry.Side;
-import mob_grinding_utils.MobGrindingUtils;
 import mob_grinding_utils.tile.TileEntityAbsorptionHopper;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ContainerBlock;
-import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.InventoryHelper;
-import net.minecraft.item.Item;
 import net.minecraft.state.EnumProperty;
+import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
-import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.math.shapes.ISelectionContext;
+import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.IBlockReader;
-import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -35,46 +32,52 @@ public class BlockAbsorptionHopper extends ContainerBlock {
 	public static final EnumProperty<TileEntityAbsorptionHopper.EnumStatus> EAST = EnumProperty.create("east", TileEntityAbsorptionHopper.EnumStatus.class);
 	public static final EnumProperty<TileEntityAbsorptionHopper.EnumStatus> UP = EnumProperty.create("up", TileEntityAbsorptionHopper.EnumStatus.class);
 	public static final EnumProperty<TileEntityAbsorptionHopper.EnumStatus> DOWN = EnumProperty.create("down", TileEntityAbsorptionHopper.EnumStatus.class);
-	protected static final AxisAlignedBB HOPPER_AABB = new AxisAlignedBB(0.25D, 0.25D, 0.25D, 0.75D, 0.75D, 0.75D);
+	public static final VoxelShape HOPPER_AABB = Block.makeCuboidShape(0.25D, 0.25D, 0.25D, 0.75D, 0.75D, 0.75D);
 
 	public BlockAbsorptionHopper(Block.Properties properties) {
 		super(properties);
+		
+		// this probably won't work at all - will fix later
+		setDefaultState(this.stateContainer.getBaseState().with(NORTH, TileEntityAbsorptionHopper.EnumStatus.STATUS_NONE)
+		.with(SOUTH, TileEntityAbsorptionHopper.EnumStatus.STATUS_NONE)
+		.with(WEST, TileEntityAbsorptionHopper.EnumStatus.STATUS_NONE)
+		.with(EAST, TileEntityAbsorptionHopper.EnumStatus.STATUS_NONE)
+		.with(UP, TileEntityAbsorptionHopper.EnumStatus.STATUS_NONE)
+		.with(DOWN, TileEntityAbsorptionHopper.EnumStatus.STATUS_NONE));
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(IBlockReader worldIn) {
+	public TileEntity createNewTileEntity(IBlockReader world) {
 		return new TileEntityAbsorptionHopper();
 	}
-
+/*
 	@Override
-	@OnlyIn(Dist.CLIENT)
-	public static boolean shouldSideBeRendered(BlockState adjacentState, IBlockReader blockState, BlockPos blockAccess, Direction pos) {
+	@SideOnly(Side.CLIENT)
+	public boolean shouldSideBeRendered(IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, Direction side) {
 		return true;
 	}
-
+*/
 	@Override
-	public EnumBlockRenderType getRenderType(IBlockState state) {
-		return EnumBlockRenderType.MODEL;
+	public BlockRenderType getRenderType(BlockState state) {
+		return BlockRenderType.MODEL;
 	}
 
 	@Override
-	@OnlyIn(Dist.CLIENT)
-	public AxisAlignedBB getSelectedBoundingBox(IBlockState state, World world, BlockPos pos) {
+	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
 		return HOPPER_AABB;
 	}
 
 	@Override
-	public void addCollisionBoxToList(IBlockState state, World worldIn, BlockPos pos, AxisAlignedBB entityBox, List<AxisAlignedBB> collidingBoxes, @Nullable Entity entityIn, boolean whatIsThis) {
-		addCollisionBoxToList(pos, entityBox, collidingBoxes, HOPPER_AABB);
+	public VoxelShape getRaytraceShape(BlockState state, IBlockReader worldIn, BlockPos pos) {
+		return HOPPER_AABB;
 	}
-/* this is defined in the clientsetup event i think... see: RenderTypeLookup.setRenderLayer
+/*
 	@Override
-	@OnlyIn(Dist.CLIENT)
+	@SideOnly(Side.CLIENT)
     public BlockRenderLayer getRenderLayer() {
 		return BlockRenderLayer.SOLID;
 	}
-*/
-	/* these should be in properties
+
 	@Override
 	public boolean isOpaqueCube(IBlockState state) {
 		return false;
@@ -91,10 +94,9 @@ public class BlockAbsorptionHopper extends ContainerBlock {
 	}
 */
 	@Override
-	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
+	public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
 		if (world.isRemote)
-			return true;
-
+			return ActionResultType.SUCCESS;
 		if (!world.isRemote) {
 			TileEntity tile = world.getTileEntity(pos);
 
@@ -103,38 +105,28 @@ public class BlockAbsorptionHopper extends ContainerBlock {
 
 				if (!player.isSneaking()) {
 					world.notifyBlockUpdate(pos, state, state, 3);
-					player.openGui(MobGrindingUtils.INSTANCE, MobGrindingUtils.PROXY.GUI_ID_ABSORPTION_HOPPER, world, pos.getX(), pos.getY(), pos.getZ());
+					//player.openGui(MobGrindingUtils.INSTANCE, MobGrindingUtils.PROXY.GUI_ID_ABSORPTION_HOPPER, world, pos.getX(), pos.getY(), pos.getZ());
 				} else
-					vacuum.toggleMode(side);
-
-				world.notifyBlockUpdate(pos, state, state, 3);
+					vacuum.toggleMode(hit.getFace());
+				BlockState newState = getActualState(vacuum, state, world, pos);
+				world.setBlockState(pos, newState, 3);
 			}
 		}
-		return true;
+		return ActionResultType.SUCCESS;
 	}
 
-	@Override
-	public IBlockState getActualState(IBlockState state, IBlockAccess world, BlockPos pos) {
-		TileEntity tileEntity = world.getTileEntity(pos);
-		if (tileEntity instanceof TileEntityAbsorptionHopper) {
-			TileEntityAbsorptionHopper tile = (TileEntityAbsorptionHopper) tileEntity;
-			TileEntityAbsorptionHopper.EnumStatus north = tile.getSideStatus(EnumFacing.NORTH);
-			TileEntityAbsorptionHopper.EnumStatus south = tile.getSideStatus(EnumFacing.SOUTH);
-			TileEntityAbsorptionHopper.EnumStatus west = tile.getSideStatus(EnumFacing.WEST);
-			TileEntityAbsorptionHopper.EnumStatus east = tile.getSideStatus(EnumFacing.EAST);
-			TileEntityAbsorptionHopper.EnumStatus up = tile.getSideStatus(EnumFacing.UP);
-			TileEntityAbsorptionHopper.EnumStatus down = tile.getSideStatus(EnumFacing.DOWN);
-			return state.withProperty(NORTH, north).withProperty(SOUTH, south).withProperty(WEST, west)
-					.withProperty(EAST, east).withProperty(UP, up).withProperty(DOWN, down);
-		}
-		return state.withProperty(NORTH, TileEntityAbsorptionHopper.EnumStatus.STATUS_NONE)
-				.withProperty(SOUTH, TileEntityAbsorptionHopper.EnumStatus.STATUS_NONE)
-				.withProperty(WEST, TileEntityAbsorptionHopper.EnumStatus.STATUS_NONE)
-				.withProperty(EAST, TileEntityAbsorptionHopper.EnumStatus.STATUS_NONE)
-				.withProperty(UP, TileEntityAbsorptionHopper.EnumStatus.STATUS_NONE)
-				.withProperty(DOWN, TileEntityAbsorptionHopper.EnumStatus.STATUS_NONE);
+	public BlockState getActualState(TileEntityAbsorptionHopper tile, BlockState state, World world, BlockPos pos) { //// TODO HHHNNNGGGGNNNNGGGGHHHHHNNN!
+			TileEntityAbsorptionHopper.EnumStatus north = tile.getSideStatus(Direction.NORTH);
+			TileEntityAbsorptionHopper.EnumStatus south = tile.getSideStatus(Direction.SOUTH);
+			TileEntityAbsorptionHopper.EnumStatus west = tile.getSideStatus(Direction.WEST);
+			TileEntityAbsorptionHopper.EnumStatus east = tile.getSideStatus(Direction.EAST);
+			TileEntityAbsorptionHopper.EnumStatus up = tile.getSideStatus(Direction.UP);
+			TileEntityAbsorptionHopper.EnumStatus down = tile.getSideStatus(Direction.DOWN);
+			return state.with(NORTH, north).with(SOUTH, south).with(WEST, west)
+					.with(EAST, east).with(UP, up).with(DOWN, down);
 	}
 
+/* TODO Tags
 	@Override
 	public boolean canEntityDestroy(IBlockState state, IBlockAccess world, BlockPos pos, Entity entity) {
       return !(entity instanceof EntityWither) && !(entity instanceof EntityDragon);
@@ -145,9 +137,10 @@ public class BlockAbsorptionHopper extends ContainerBlock {
 	public Item getItemDropped(IBlockState state, Random rand, int fortune) {
 		return Item.getItemFromBlock(this);
 	}
+*/
 
 	@Override
-	public void onBlockHarvested(World world, BlockPos pos, IBlockState state, EntityPlayer player) {
+	public void onBlockHarvested(World world, BlockPos pos, BlockState state, PlayerEntity player) {
 		if (!world.isRemote) {
 			TileEntityAbsorptionHopper tile = (TileEntityAbsorptionHopper) world.getTileEntity(pos);
 			if (tile != null) {
@@ -158,8 +151,8 @@ public class BlockAbsorptionHopper extends ContainerBlock {
 	}
 
 	@Override
-	protected BlockStateContainer createBlockState() {
-		return new BlockStateContainer(this, NORTH, SOUTH, WEST, EAST, UP, DOWN);
+	protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
+		builder.add(NORTH, SOUTH, WEST, EAST, UP, DOWN);
 	}
 
 	@SubscribeEvent
