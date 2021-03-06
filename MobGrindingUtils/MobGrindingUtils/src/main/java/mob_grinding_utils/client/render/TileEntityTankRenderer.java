@@ -16,6 +16,7 @@ import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.inventory.container.PlayerContainer;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fluids.FluidStack;
@@ -35,10 +36,10 @@ public class TileEntityTankRenderer extends TileEntityRenderer<TileEntityTank> {
 		FluidStack fluidStack = new FluidStack(tile.tank.getFluid(), 100);
 		float height = (0.96875F / tile.tank.getCapacity()) * tile.tank.getFluidAmount();
 		
-		TextureAtlasSprite fluidStillSprite = Minecraft.getMinecraftGame().getTextureMapBlocks().getAtlasSprite(fluidStack.getFluid().getStill().toString());
+		TextureAtlasSprite fluidStillSprite = (TextureAtlasSprite) Minecraft.getInstance().getAtlasSpriteGetter(fluidStack.getFluid().getAttributes().getFlowingTexture());
 		Tessellator tessellator = Tessellator.getInstance();
 		BufferBuilder buffer = tessellator.getBuffer();
-		int fluidColor = fluidStack.getFluid().getColor(fluidStack);
+		int fluidColor = fluidStack.getFluid().getAttributes().getColor();
 		
 		GlStateManager.disableLighting();
 		matrixStack.push();

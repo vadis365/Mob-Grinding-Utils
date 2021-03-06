@@ -3,6 +3,7 @@ package mob_grinding_utils.inventory.server;
 import mob_grinding_utils.ModContainers;
 import mob_grinding_utils.ModItems;
 import mob_grinding_utils.tile.TileEntityAbsorptionHopper;
+import mob_grinding_utils.tile.TileEntitySaw;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.IInventory;
@@ -16,14 +17,14 @@ import net.minecraft.util.math.BlockPos;
 public class ContainerAbsorptionHopper extends Container {
 
 	public int numRows = 2;
-
+	public TileEntityAbsorptionHopper hopper;
 	public ContainerAbsorptionHopper(final int windowId, final PlayerInventory playerInventory, PacketBuffer extra) {
 		super(ModContainers.ABSORBTION_HOPPER.get(), windowId);
 		BlockPos tilePos = extra.readBlockPos();
 		TileEntity tile = playerInventory.player.getEntityWorld().getTileEntity(tilePos);
 		if (!(tile instanceof TileEntityAbsorptionHopper))
 			return;
-
+		hopper = (TileEntityAbsorptionHopper) tile;
 		int i = (numRows - 4) * 18;
 		int j;
 		int k;

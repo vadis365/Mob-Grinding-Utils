@@ -8,7 +8,6 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
 
 public class GuiBigButton extends Button {
 	private static final ResourceLocation TEXTURES = new ResourceLocation("mob_grinding_utils:textures/gui/absorption_hopper_gui.png");
@@ -16,11 +15,12 @@ public class GuiBigButton extends Button {
 	private int v;
 
 	public GuiBigButton(int x, int y, int u, int v, ITextComponent title, Button.IPressable pressedAction) {
-		super(x, y, 68, 16, StringTextComponent.EMPTY, pressedAction);
+		super(x, y, 68, 16, title, pressedAction);
 		this.u = u;
 		this.v = v;
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	 public void renderButton(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
 		 Minecraft mc = Minecraft.getInstance();

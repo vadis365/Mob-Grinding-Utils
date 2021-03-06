@@ -1,111 +1,124 @@
 package mob_grinding_utils.inventory.client;
 
-import net.minecraft.client.gui.screen.inventory.ContainerScreen;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.util.text.ITextComponent;
 import org.lwjgl.opengl.GL11;
+
+import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.systems.RenderSystem;
+
 import mob_grinding_utils.inventory.server.ContainerAbsorptionHopper;
 import mob_grinding_utils.tile.TileEntityAbsorptionHopper;
 import mob_grinding_utils.tile.TileEntityAbsorptionHopper.EnumStatus;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.container.PlayerContainer;
+import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 
 public class GuiAbsorptionHopper extends ContainerScreen<ContainerAbsorptionHopper> {
 
 	private static final ResourceLocation GUI_ABSORPTION_HOPPER = new ResourceLocation("mob_grinding_utils:textures/gui/absorption_hopper_gui.png");
+	protected final ContainerAbsorptionHopper container;
 	private final TileEntityAbsorptionHopper tile;
+	FontRenderer fontRenderer = Minecraft.getInstance().fontRenderer;
 
 	public GuiAbsorptionHopper(ContainerAbsorptionHopper container, PlayerInventory playerInventory, ITextComponent name) {
 		super(container, playerInventory, name);
-		this.tile = tile;
+		this.container = container;
+		this.tile = this.container.hopper;
 		ySize = 226;
 		xSize = 248;
 	}
 
 	@Override
-	public void initGui() {
-		super.initGui();
-		buttonList.clear();
+	public void init() {
+		super.init();
+		buttons.clear();
 		int xOffSet = (width - xSize) / 2;
 		int yOffSet = (height - ySize) / 2;
-		buttonList.add(new GuiMediumButton(0, xOffSet + 7, yOffSet + 17, 0, 228, "Down"));
-		buttonList.add(new GuiMediumButton(1, xOffSet + 7, yOffSet + 34, 0, 228, "Up"));
-		buttonList.add(new GuiMediumButton(2, xOffSet + 7, yOffSet + 51, 0, 228, "North"));
-		buttonList.add(new GuiMediumButton(3, xOffSet + 82, yOffSet + 17, 0, 228, "South"));
-		buttonList.add(new GuiMediumButton(4, xOffSet + 82, yOffSet + 34, 0, 228, "West"));
-		buttonList.add(new GuiMediumButton(5, xOffSet + 82, yOffSet + 51, 0, 228, "East"));
-		buttonList.add(new GuiBigButton(6, xOffSet + 173, yOffSet + 113, 33, 228, ""));
+		buttons.add(new GuiMediumButton(xOffSet + 7, yOffSet + 17, 0, 228, new StringTextComponent("Down"), null));
+		buttons.add(new GuiMediumButton(xOffSet + 7, yOffSet + 34, 0, 228, new StringTextComponent("Up"), null));// 
+		buttons.add(new GuiMediumButton(xOffSet + 7, yOffSet + 51, 0, 228, new StringTextComponent("North"), null)); 
+		buttons.add(new GuiMediumButton(xOffSet + 82, yOffSet + 17, 0, 228, new StringTextComponent("South"), null));
+		buttons.add(new GuiMediumButton(xOffSet + 82, yOffSet + 34, 0, 228, new StringTextComponent("West"), null));
+		buttons.add(new GuiMediumButton(xOffSet + 82, yOffSet + 51, 0, 228, new StringTextComponent("East"), null));
+		buttons.add(new GuiBigButton(xOffSet + 173, yOffSet + 113, 33, 228, StringTextComponent.EMPTY, null));
 		
-		buttonList.add(new GuiSmallButton(7, xOffSet + 173, yOffSet + 25, 103, 228, "-"));//D
-		buttonList.add(new GuiSmallButton(8, xOffSet + 225, yOffSet + 25, 103, 228, "+"));//U
+		buttons.add(new GuiSmallButton(xOffSet + 173, yOffSet + 25, 103, 228, new StringTextComponent("-"), null));//D
+		buttons.add(new GuiSmallButton(xOffSet + 225, yOffSet + 25, 103, 228, new StringTextComponent("+"), null));//U
 		
-		buttonList.add(new GuiSmallButton(9, xOffSet + 173, yOffSet + 59, 103, 228, "-"));//N
-		buttonList.add(new GuiSmallButton(10, xOffSet + 225, yOffSet + 59, 103, 228, "+"));//S
+		buttons.add(new GuiSmallButton(xOffSet + 173, yOffSet + 59, 103, 228, new StringTextComponent("-"), null));//N
+		buttons.add(new GuiSmallButton(xOffSet + 225, yOffSet + 59, 103, 228, new StringTextComponent("+"), null));//S
 		
-		buttonList.add(new GuiSmallButton(11, xOffSet + 173, yOffSet + 93, 103, 228, "-"));//W
-		buttonList.add(new GuiSmallButton(12, xOffSet + 225, yOffSet + 93, 103, 228, "+"));//E
+		buttons.add(new GuiSmallButton(xOffSet + 173, yOffSet + 93, 103, 228, new StringTextComponent("-"), null));//W
+		buttons.add(new GuiSmallButton(xOffSet + 225, yOffSet + 93, 103, 228, new StringTextComponent("+"), null));//E
 	}
 
 	@Override
-    public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-        super.drawScreen(mouseX, mouseY, partialTicks);
-        renderHoveredToolTip(mouseX, mouseY);
-    }
+	public void render(MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
+		super.render(stack, mouseX, mouseY, partialTicks);
+		this.renderBackground(stack);
+		renderHoveredTooltip(stack, mouseX, mouseY);
+	}
 
 	@Override
-	protected void drawGuiContainerForegroundLayer(int x, int y) {
-		int xOffSet = (width - xSize) / 2;
-		int yOffSet = (height - ySize) / 2;
-		fontRenderer.drawString(I18n.format(new TextComponentTranslation("tile.mob_grinding_utils.absorption_hopper.name").getFormattedText()), 8, ySize - 220, 4210752);
+	protected void drawGuiContainerForegroundLayer(MatrixStack stack, int mouseX, int mouseY) {
+		fontRenderer.drawString(stack, I18n.format(new TranslationTextComponent("tile.mob_grinding_utils.absorption_hopper.name").getString()), 8, ySize - 220, 4210752);
 		
-		fontRenderer.drawString(I18n.format(new TextComponentTranslation("tile.mob_grinding_utils.absorption_hopper_d_u.name").getFormattedText()), 174, ySize - 212, 4210752);
+		fontRenderer.drawString(stack, I18n.format(new TranslationTextComponent("tile.mob_grinding_utils.absorption_hopper_d_u.name").getString()), 174, ySize - 212, 4210752);
 		
-		fontRenderer.drawString(I18n.format(new TextComponentTranslation("tile.mob_grinding_utils.absorption_hopper_n_s.name").getFormattedText()), 174, ySize - 178, 4210752);
-		fontRenderer.drawString(I18n.format(new TextComponentTranslation("tile.mob_grinding_utils.absorption_hopper_w_e.name").getFormattedText()), 174, ySize - 144, 4210752);
+		fontRenderer.drawString(stack, I18n.format(new TranslationTextComponent("tile.mob_grinding_utils.absorption_hopper_n_s.name").getString()), 174, ySize - 178, 4210752);
+		fontRenderer.drawString(stack, I18n.format(new TranslationTextComponent("tile.mob_grinding_utils.absorption_hopper_w_e.name").getString()), 174, ySize - 144, 4210752);
 	
-		fontRenderer.drawStringWithShadow(I18n.format(!tile.showRenderBox ? "Show Area" : "Hide Area"), xSize - 41 - fontRenderer.getStringWidth(I18n.format(!tile.showRenderBox ? "Show Area" : "Hide Area")) / 2, ySize - 109, 14737632);
+		fontRenderer.drawStringWithShadow(stack, I18n.format(!tile.showRenderBox ? "Show Area" : "Hide Area"), xSize - 41 - fontRenderer.getStringWidth(I18n.format(!tile.showRenderBox ? "Show Area" : "Hide Area")) / 2, ySize - 109, 14737632);
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
-	protected void drawGuiContainerBackgroundLayer(float partialTickTime, int x, int y) {
-		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-		mc.getTextureManager().bindTexture(GUI_ABSORPTION_HOPPER);
+	protected void drawGuiContainerBackgroundLayer(MatrixStack stack, float partialTicks, int mouseX, int mouseY) {
+		RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+		getMinecraft().getTextureManager().bindTexture(GUI_ABSORPTION_HOPPER);
 		int xOffSet = (width - xSize) / 2;
 		int yOffSet = (height - ySize) / 2;
-		drawTexturedModalRect(xOffSet, yOffSet, 0, 0, xSize, ySize);
+		int zLevel = 0; /// this may need increasing depending on layers
+		this.blit(stack, xOffSet, yOffSet, 0, 0, xSize, ySize);
 
-		EnumStatus DOWN = tile.getSideStatus(EnumFacing.DOWN);
-		EnumStatus UP = tile.getSideStatus(EnumFacing.UP);
-		EnumStatus NORTH = tile.getSideStatus(EnumFacing.NORTH);
-		EnumStatus SOUTH = tile.getSideStatus(EnumFacing.SOUTH);
-		EnumStatus WEST = tile.getSideStatus(EnumFacing.WEST);
-		EnumStatus EAST = tile.getSideStatus(EnumFacing.EAST);
+		EnumStatus DOWN = tile.getSideStatus(Direction.DOWN);
+		EnumStatus UP = tile.getSideStatus(Direction.UP);
+		EnumStatus NORTH = tile.getSideStatus(Direction.NORTH);
+		EnumStatus SOUTH = tile.getSideStatus(Direction.SOUTH);
+		EnumStatus WEST = tile.getSideStatus(Direction.WEST);
+		EnumStatus EAST = tile.getSideStatus(Direction.EAST);
 		String OFFSETX = String.valueOf(tile.getoffsetX());
 		String OFFSETY = String.valueOf(tile.getoffsetY());
 		String OFFSETZ = String.valueOf(tile.getoffsetZ());
 
-		fontRenderer.drawString(I18n.format(DOWN.getName()), xOffSet + 58 - fontRenderer.getStringWidth(I18n.format(DOWN.getName())) / 2, yOffSet + 21, getModeColour(DOWN.ordinal()));
-		fontRenderer.drawString(I18n.format(UP.getName()), xOffSet + 58 - fontRenderer.getStringWidth(I18n.format(UP.getName())) / 2, yOffSet + 38, getModeColour(UP.ordinal()));
-		fontRenderer.drawString(I18n.format(NORTH.getName()), xOffSet + 58 - fontRenderer.getStringWidth(I18n.format(NORTH.getName())) / 2, yOffSet + 55, getModeColour(NORTH.ordinal()));
-		fontRenderer.drawString(I18n.format(SOUTH.getName()), xOffSet + 133 - fontRenderer.getStringWidth(I18n.format(SOUTH.getName())) / 2, yOffSet + 21, getModeColour(SOUTH.ordinal()));
-		fontRenderer.drawString(I18n.format(WEST.getName()), xOffSet + 133 - fontRenderer.getStringWidth(I18n.format(WEST.getName())) / 2, yOffSet + 38, getModeColour(WEST.ordinal()));
-		fontRenderer.drawString(I18n.format(EAST.getName()), xOffSet + 133 - fontRenderer.getStringWidth(I18n.format(EAST.getName())) / 2, yOffSet + 55, getModeColour(EAST.ordinal()));
-		fontRenderer.drawString(I18n.format(OFFSETY), xOffSet + 207 - fontRenderer.getStringWidth(I18n.format(OFFSETY)) / 2, yOffSet + 29, 5285857);//NS
-		fontRenderer.drawString(I18n.format(OFFSETZ), xOffSet + 207 - fontRenderer.getStringWidth(I18n.format(OFFSETZ)) / 2, yOffSet + 63, 5285857);//WE
-		fontRenderer.drawString(I18n.format(OFFSETX), xOffSet + 207 - fontRenderer.getStringWidth(I18n.format(OFFSETX)) / 2, yOffSet + 97, 5285857);//DU
+		fontRenderer.drawString(stack, I18n.format(DOWN.getString()), xOffSet + 58 - fontRenderer.getStringWidth(I18n.format(DOWN.getString())) / 2, yOffSet + 21, getModeColour(DOWN.ordinal()));
+		fontRenderer.drawString(stack, I18n.format(UP.getString()), xOffSet + 58 - fontRenderer.getStringWidth(I18n.format(UP.getString())) / 2, yOffSet + 38, getModeColour(UP.ordinal()));
+		fontRenderer.drawString(stack, I18n.format(NORTH.getString()), xOffSet + 58 - fontRenderer.getStringWidth(I18n.format(NORTH.getString())) / 2, yOffSet + 55, getModeColour(NORTH.ordinal()));
+		fontRenderer.drawString(stack, I18n.format(SOUTH.getString()), xOffSet + 133 - fontRenderer.getStringWidth(I18n.format(SOUTH.getString())) / 2, yOffSet + 21, getModeColour(SOUTH.ordinal()));
+		fontRenderer.drawString(stack, I18n.format(WEST.getString()), xOffSet + 133 - fontRenderer.getStringWidth(I18n.format(WEST.getString())) / 2, yOffSet + 38, getModeColour(WEST.ordinal()));
+		fontRenderer.drawString(stack, I18n.format(EAST.getString()), xOffSet + 133 - fontRenderer.getStringWidth(I18n.format(EAST.getString())) / 2, yOffSet + 55, getModeColour(EAST.ordinal()));
+		fontRenderer.drawString(stack, I18n.format(OFFSETY), xOffSet + 207 - fontRenderer.getStringWidth(I18n.format(OFFSETY)) / 2, yOffSet + 29, 5285857);//NS
+		fontRenderer.drawString(stack, I18n.format(OFFSETZ), xOffSet + 207 - fontRenderer.getStringWidth(I18n.format(OFFSETZ)) / 2, yOffSet + 63, 5285857);//WE
+		fontRenderer.drawString(stack, I18n.format(OFFSETX), xOffSet + 207 - fontRenderer.getStringWidth(I18n.format(OFFSETX)) / 2, yOffSet + 97, 5285857);//DU
 
 		int fluid = tile.getScaledFluid(120);
-		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+		RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 		if (fluid >= 1) {
-			TextureAtlasSprite sprite = Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(tile.tank.getFluid().getFluid().getStill().toString());
+			TextureAtlasSprite sprite = (TextureAtlasSprite) Minecraft.getInstance().getAtlasSpriteGetter(tile.tank.getFluid().getFluid().getAttributes().getStillTexture());
 			Tessellator tessellator = Tessellator.getInstance();
 			BufferBuilder buffer = tessellator.getBuffer();
-			mc.getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
+			Minecraft.getInstance().textureManager.bindTexture(PlayerContainer.LOCATION_BLOCKS_TEXTURE); // dunno if needed now
 			buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 			buffer.pos(xOffSet + 156, yOffSet + 128, zLevel).tex(sprite.getMinU(), sprite.getMinV()).endVertex();
 			buffer.pos(xOffSet + 168, yOffSet + 128, zLevel).tex(sprite.getMaxU(), sprite.getMinV()).endVertex();
@@ -114,8 +127,8 @@ public class GuiAbsorptionHopper extends ContainerScreen<ContainerAbsorptionHopp
 			tessellator.draw();
 		}
 
-		mc.getTextureManager().bindTexture(GUI_ABSORPTION_HOPPER);
-		drawTexturedModalRect(xOffSet + 153, yOffSet + 8 , 248, 0, 6, 120);
+		getMinecraft().getTextureManager().bindTexture(GUI_ABSORPTION_HOPPER);
+		this.blit(stack, xOffSet + 153, yOffSet + 8 , 248, 0, 6, 120);
 	}
 
 	public int getModeColour(int index) {
