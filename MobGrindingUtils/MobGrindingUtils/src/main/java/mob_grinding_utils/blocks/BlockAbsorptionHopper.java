@@ -9,28 +9,23 @@ import javafx.geometry.Side;
 import mob_grinding_utils.MobGrindingUtils;
 import mob_grinding_utils.tile.TileEntityAbsorptionHopper;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
 import net.minecraft.block.ContainerBlock;
-import net.minecraft.block.state.BlockStateContainer;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.boss.EntityDragon;
-import net.minecraft.entity.boss.EntityWither;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.Item;
 import net.minecraft.state.EnumProperty;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockRenderLayer;
-import net.minecraft.util.EnumBlockRenderType;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockAccess;
+import net.minecraft.world.IBlockReader;
+import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class BlockAbsorptionHopper extends ContainerBlock {
 
@@ -47,13 +42,13 @@ public class BlockAbsorptionHopper extends ContainerBlock {
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(World worldIn, int meta) {
+	public TileEntity createNewTileEntity(IBlockReader worldIn) {
 		return new TileEntityAbsorptionHopper();
 	}
 
 	@Override
-	@SideOnly(Side.CLIENT)
-	public boolean shouldSideBeRendered(IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side) {
+	@OnlyIn(Dist.CLIENT)
+	public static boolean shouldSideBeRendered(BlockState adjacentState, IBlockReader blockState, BlockPos blockAccess, Direction pos) {
 		return true;
 	}
 
@@ -63,7 +58,7 @@ public class BlockAbsorptionHopper extends ContainerBlock {
 	}
 
 	@Override
-	@SideOnly(Side.CLIENT)
+	@OnlyIn(Dist.CLIENT)
 	public AxisAlignedBB getSelectedBoundingBox(IBlockState state, World world, BlockPos pos) {
 		return HOPPER_AABB;
 	}
@@ -72,13 +67,14 @@ public class BlockAbsorptionHopper extends ContainerBlock {
 	public void addCollisionBoxToList(IBlockState state, World worldIn, BlockPos pos, AxisAlignedBB entityBox, List<AxisAlignedBB> collidingBoxes, @Nullable Entity entityIn, boolean whatIsThis) {
 		addCollisionBoxToList(pos, entityBox, collidingBoxes, HOPPER_AABB);
 	}
-
+/* this is defined in the clientsetup event i think... see: RenderTypeLookup.setRenderLayer
 	@Override
-	@SideOnly(Side.CLIENT)
+	@OnlyIn(Dist.CLIENT)
     public BlockRenderLayer getRenderLayer() {
 		return BlockRenderLayer.SOLID;
 	}
-
+*/
+	/* these should be in properties
 	@Override
 	public boolean isOpaqueCube(IBlockState state) {
 		return false;
@@ -93,7 +89,7 @@ public class BlockAbsorptionHopper extends ContainerBlock {
 	public boolean isFullCube(IBlockState state) {
 		return false;
 	}
-
+*/
 	@Override
 	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
 		if (world.isRemote)
@@ -166,18 +162,8 @@ public class BlockAbsorptionHopper extends ContainerBlock {
 		return new BlockStateContainer(this, NORTH, SOUTH, WEST, EAST, UP, DOWN);
 	}
 
-	@Override
-	public IBlockState getStateFromMeta(int meta) {
-		return getDefaultState();
-	}
-
-	@Override
-	public int getMetaFromState(IBlockState state) {
-		return 0;
-	}
-
 	@SubscribeEvent
-	@SideOnly(Side.CLIENT)
+	@OnlyIn(Dist.CLIENT)
 	public void onTextureStitchPre(TextureStitchEvent.Pre event) {
 		//event.getMap().registerSprite(MobGrindingUtils.FLUID_XP.getStill()); //todo
 		//event.getMap().registerSprite(MobGrindingUtils.FLUID_XP.getFlowing()); //todo
