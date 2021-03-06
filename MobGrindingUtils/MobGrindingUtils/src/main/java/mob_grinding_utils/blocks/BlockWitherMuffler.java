@@ -4,6 +4,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItemUseContext;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.util.ActionResultType;
@@ -38,10 +39,8 @@ public class BlockWitherMuffler extends Block {
 		else {
 			boolean swap = state.get(MODE) ? false : true;
 			world.setBlockState(pos, state.with(MODE, swap), 3);
-			System.out.println("Wither Muffler block caps here");
-			//TODO Fix caps
-			//IBossBarCapability cap = player.getCapability(BossBarPlayerCapability.CAPABILITY_PLAYER_BOSS_BAR, null);
-			//cap.setRenderWitherBar(!state.getValue(MODE).booleanValue());
+			CompoundNBT nbt = player.getPersistentData();
+			nbt.putBoolean("MGU_WitherMuffle" ,!state.get(MODE));
 			return ActionResultType.SUCCESS;
 		}
 	}
