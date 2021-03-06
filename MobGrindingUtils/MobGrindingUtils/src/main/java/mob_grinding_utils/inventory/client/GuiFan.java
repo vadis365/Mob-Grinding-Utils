@@ -43,7 +43,7 @@ public class GuiFan extends ContainerScreen<ContainerFan> {
 	public void render(MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
 		super.render(stack, mouseX, mouseY, partialTicks);
 		this.renderBackground(stack);
-		//renderHoveredToolTip(mouseX, mouseY);
+		renderHoveredTooltip(stack, mouseX, mouseY);
 	}
 
 	@Override

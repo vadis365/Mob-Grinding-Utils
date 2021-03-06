@@ -12,17 +12,21 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.INBT;
+import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.Capability.IStorage;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.common.capabilities.ICapabilitySerializable;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
+import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent.StartTracking;
 import net.minecraftforge.event.entity.player.PlayerEvent.StopTracking;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class EntityCapabilityHandler {
 	private static final List<EntityCapability<?, ?, ? extends Entity>> REGISTERED_CAPABILITIES = new ArrayList<EntityCapability<?, ?, ? extends Entity>>();
@@ -46,7 +50,7 @@ public class EntityCapabilityHandler {
 	 * Registers all capabilities to the {@link CapabilityManager}. Must be called during pre init.
 	 */
 	public static void registerCapabilities() {
-		Preconditions.checkState(Loader.instance().isInState(LoaderState.PREINITIALIZATION));
+		//Preconditions.checkState(Loader.instance().isInState(LoaderState.PREINITIALIZATION)); //todo dunno where this goes now...
 		for(EntityCapability<?, ?, ?> capability : REGISTERED_CAPABILITIES) {
 			registerCapability(capability);
 		}
@@ -59,16 +63,18 @@ public class EntityCapabilityHandler {
 	@SuppressWarnings("unchecked")
 	public static <E extends Entity> EntityCapability<?, ?, E> getCapability(ResourceLocation id, E entity) {
 		EntityCapability<?, ?, ?> entityCapability = ID_CAPABILITY_MAP.get(id);
+		/* //todo change to optional check...
 		if(entityCapability != null && entity.hasCapability(entityCapability.getCapability(), null)) {
 			return (EntityCapability<?, ?, E>) entity.getCapability(entityCapability.getCapability(), null);
 		}
+		 */
 		return null;
 	}
 
 	private static <T, E extends Entity> void registerCapability(final EntityCapability<?, T, E> capability) {
 		CapabilityManager.INSTANCE.register(capability.getCapabilityClass(), new IStorage<T>() {
 			@Override
-			public final NBTBase writeNBT(Capability<T> capability, T instance, EnumFacing side) {
+			public final INBT writeNBT(Capability<T> capability, T instance, Direction side) {
 				if(instance instanceof ISerializableCapability) {
 					CompoundNBT nbt = new CompoundNBT();
 					((ISerializableCapability)instance).writeToNBT(nbt);
@@ -78,7 +84,7 @@ public class EntityCapabilityHandler {
 			}
 
 			@Override
-			public final void readNBT(Capability<T> capability, T instance, EnumFacing side, NBTBase nbt) {
+			public final void readNBT(Capability<T> capability, T instance, Direction side, INBT nbt) {
 				if(instance instanceof ISerializableCapability && nbt instanceof CompoundNBT) {
 					((ISerializableCapability)instance).readFromNBT((CompoundNBT)nbt);
 				}
@@ -98,8 +104,8 @@ public class EntityCapabilityHandler {
 		for(EntityCapability<?, ?, ?> entityCapability : REGISTERED_CAPABILITIES) {
 			if(entityCapability.isApplicable(event.getObject())) {
 				final Capability<?> capabilityInstance = entityCapability.getCapability();
-
-				event.addCapability(entityCapability.getID(), new ICapabilitySerializable<CompoundNBT>() {
+/*
+				event.addCapability(entityCapability.getID(), new ICapabilitySerializable<CompoundNBT>() { //todo
 					private Object entityCapability = this.getNewInstance();
 
 					private EntityCapability<?, ?, ?> getNewInstance() {
@@ -108,15 +114,9 @@ public class EntityCapabilityHandler {
 						entityCapability.init();
 						return entityCapability;
 					}
-
-					@Override
-					public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
-						return capability == capabilityInstance;
-					}
-
 					@SuppressWarnings("unchecked")
-					@Override
-					public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
+					@Override //todo this has entirely changed, removed hascapability too
+					public <T> T getCapability(Capability<T> capability, Direction facing) {
 						return capability == capabilityInstance ? (T)this.entityCapability : null;
 					}
 
@@ -140,6 +140,7 @@ public class EntityCapabilityHandler {
 						capability.getStorage().readNBT(capability, (T)instance, null, nbt);
 					}
 				});
+*/
 			}
 		}
 	}
@@ -180,9 +181,9 @@ public class EntityCapabilityHandler {
 	}
 
 	@SubscribeEvent
-	public static void onEntityChangeDimension(PlayerChangedDimensionEvent event) {
-		if(!event.player.getEntityWorld().isRemote && event.player instanceof ServerPlayerEntity)  {
-			ServerPlayerEntity player = (ServerPlayerEntity) event.player;
+	public static void onEntityChangeDimension(PlayerEvent.PlayerChangedDimensionEvent event) {
+		if(!event.getPlayer().getEntityWorld().isRemote && event.getPlayer() instanceof ServerPlayerEntity)  {
+			ServerPlayerEntity player = (ServerPlayerEntity) event.getPlayer();
 			List<EntityCapabilityTracker> trackers = TRACKER_MAP.get(player);
 			if(trackers != null) {
 				for(EntityCapabilityTracker tracker : trackers) {
@@ -193,8 +194,8 @@ public class EntityCapabilityHandler {
 	}
 
 	@SubscribeEvent
-	public static void onServerTickEvent(ServerTickEvent event) {
-		if(event.phase == Phase.END) {
+	public static void onServerTickEvent(TickEvent.ServerTickEvent event) {
+		if(event.phase == TickEvent.Phase.END) {
 			updateTimer++;
 			if(updateTimer > 20) {
 				updateTimer = 0;
@@ -236,8 +237,8 @@ public class EntityCapabilityHandler {
 		List<EntityCapability<?, ?, E>> capabilities = new ArrayList<EntityCapability<?, ?, E>>();
 
 		for(EntityCapability<?, ?, ?> capability : REGISTERED_CAPABILITIES) {
-			if(entity.hasCapability(capability.getCapability(), null))
-				capabilities.add((EntityCapability<?, ?, E>) entity.getCapability(capability.getCapability(), null));
+			//if(entity.hasCapability(capability.getCapability(), null)) //todo this needs to be converted to an optional check
+			//	capabilities.add((EntityCapability<?, ?, E>) entity.getCapability(capability.getCapability(), null));
 		}
 
 		return capabilities;
