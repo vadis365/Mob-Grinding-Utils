@@ -91,26 +91,16 @@ public class MobGrindingUtils {
 		MinecraftForge.EVENT_BUS.register(new LocalWitherSoundEvent());
 		MinecraftForge.EVENT_BUS.register(new LocalDragonSoundEvent());
 		MinecraftForge.EVENT_BUS.register(new EntityHeadDropEvent());
-		MinecraftForge.EVENT_BUS.register(EntityCapabilityHandler.class);
 		MinecraftForge.EVENT_BUS.register(new MGUZombieReinforcementEvent());
 		MinecraftForge.EVENT_BUS.register(new FillXPBottleEvent());
 		MinecraftForge.EVENT_BUS.register(new MGUEndermanInhibitEvent());
-/*
-		if (event.getSide() == Side.CLIENT) {
-
-			MinecraftForge.EVENT_BUS.register(new BossBarHidingEvent());
-			MinecraftForge.EVENT_BUS.register(new TileEntitySaw());
-		}
-		EntityCapabilityHandler.registerEntityCapability(new BossBarPlayerCapability());
-		EntityCapabilityHandler.registerCapabilities();
-
- */ //todo
 	}
 	
 	private void doClientStuff(final FMLClientSetupEvent event) {
 		MinecraftForge.EVENT_BUS.register(new RenderChickenSwell());
 		MinecraftForge.EVENT_BUS.register(new GlobalWitherSoundEvent());
 		MinecraftForge.EVENT_BUS.register(new GlobalDragonSoundEvent());
+		MinecraftForge.EVENT_BUS.register(new BossBarHidingEvent());
 		MinecraftForge.EVENT_BUS.register(new ParticleTextureStitchEvent());
 
 	/*	ClientRegistry.bindTileEntityRenderer(ModBlocks.TANK_TILE, TileEntityTankRenderer::new);
