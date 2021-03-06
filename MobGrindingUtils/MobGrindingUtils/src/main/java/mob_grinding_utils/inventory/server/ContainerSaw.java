@@ -1,29 +1,37 @@
 package mob_grinding_utils.inventory.server;
 
+import mob_grinding_utils.ModContainers;
 import mob_grinding_utils.ModItems;
 import mob_grinding_utils.tile.TileEntitySaw;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
+import net.minecraft.network.PacketBuffer;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.math.BlockPos;
 
 public class ContainerSaw extends Container {
 	private final int numRows = 2;
-	TileEntitySaw fan;
-	public ContainerSaw(PlayerEntity player, TileEntitySaw tile) {
-		//TODO :P
-		super(); //todo
-		PlayerInventory playerInventory = player.inventory;
-		fan = tile;
+	public TileEntitySaw saw;
+	
+	public ContainerSaw(final int windowId, final PlayerInventory playerInventory, PacketBuffer extra) {
+		super(ModContainers.SAW.get(), windowId);
+		BlockPos tilePos = extra.readBlockPos();
+		TileEntity tile = playerInventory.player.getEntityWorld().getTileEntity(tilePos);
+		if (!(tile instanceof TileEntitySaw))
+			return;
+		saw = (TileEntitySaw) tile;
 		int i = (numRows - 4) * 18;
 
-		addSlot(new SlotRestriction(tile, 0, 18, 18, new ItemStack(ModItems.SAW_UPGRADE_SHARPNESS, 1), 10));
-		addSlot(new SlotRestriction(tile, 1, 43, 18, new ItemStack(ModItems.SAW_UPGRADE_LOOTING, 1), 10));
-		addSlot(new SlotRestriction(tile, 2, 68, 18, new ItemStack(ModItems.SAW_UPGRADE_FIRE, 1), 10));
-		addSlot(new SlotRestriction(tile, 3, 93, 18, new ItemStack(ModItems.SAW_UPGRADE_SMITE, 1), 10));
-		addSlot(new SlotRestriction(tile, 4, 118, 18, new ItemStack(ModItems.SAW_UPGRADE_ARTHROPOD, 1), 10));
-		addSlot(new SlotRestriction(tile, 5, 143, 18, new ItemStack(ModItems.SAW_UPGRADE_BEHEADING, 1), 10));
+		addSlot(new SlotRestriction((IInventory) tile, 0, 18, 18, new ItemStack(ModItems.SAW_UPGRADE_SHARPNESS, 1), 10));
+		addSlot(new SlotRestriction((IInventory) tile, 1, 43, 18, new ItemStack(ModItems.SAW_UPGRADE_LOOTING, 1), 10));
+		addSlot(new SlotRestriction((IInventory) tile, 2, 68, 18, new ItemStack(ModItems.SAW_UPGRADE_FIRE, 1), 10));
+		addSlot(new SlotRestriction((IInventory) tile, 3, 93, 18, new ItemStack(ModItems.SAW_UPGRADE_SMITE, 1), 10));
+		addSlot(new SlotRestriction((IInventory) tile, 4, 118, 18, new ItemStack(ModItems.SAW_UPGRADE_ARTHROPOD, 1), 10));
+		addSlot(new SlotRestriction((IInventory) tile, 5, 143, 18, new ItemStack(ModItems.SAW_UPGRADE_BEHEADING, 1), 10));
 
 		for (int j = 0; j < 3; j++)
 			for (int k = 0; k < 9; k++)
