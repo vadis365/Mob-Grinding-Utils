@@ -26,10 +26,10 @@ import net.minecraft.world.World;
 
 public class BlockXPTap extends DirectionalBlock implements ITileEntityProvider {
 
-	public static final VoxelShape XP_TAP_WEST_AABB = Block.makeCuboidShape(0.4375D, 0.5D, 0.25D, 1, 1D, 0.75);
-	public static final VoxelShape XP_TAP_EAST_AABB = Block.makeCuboidShape(0D, 0.5D, 0.25D, 0.5625D, 1D, 0.75D);
-	public static final VoxelShape XP_TAP_SOUTH_AABB = Block.makeCuboidShape(0.25D, 0.5D, 0D, 0.75D, 1D, 0.5625D);
-	public static final VoxelShape XP_TAP_NORTH_AABB = Block.makeCuboidShape(0.25D, 0.5D, 0.4375D, 0.75D, 1D, 1D);
+	public static final VoxelShape XP_TAP_WEST_AABB = Block.makeCuboidShape(7D, 8D, 4D, 16D, 16D, 12D);
+	public static final VoxelShape XP_TAP_EAST_AABB = Block.makeCuboidShape(0D, 8D, 4D, 9D, 16D, 12D);
+	public static final VoxelShape XP_TAP_SOUTH_AABB = Block.makeCuboidShape(4D, 8D, 0D, 12D, 16D, 9D);
+	public static final VoxelShape XP_TAP_NORTH_AABB = Block.makeCuboidShape(4D, 8D, 7D, 12D, 16D, 16D);
 	public static final BooleanProperty POWERED = BooleanProperty.create("powered");
 
 	public BlockXPTap(Block.Properties properties) {

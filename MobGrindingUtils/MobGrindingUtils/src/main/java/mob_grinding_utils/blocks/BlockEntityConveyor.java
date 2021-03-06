@@ -20,7 +20,7 @@ import net.minecraft.world.World;
 
 public class BlockEntityConveyor extends Block {
 	public static final DirectionProperty FACING = HorizontalBlock.HORIZONTAL_FACING;
-	public static final VoxelShape CONVEYOR_AABB = Block.makeCuboidShape(0D, 0D, 0D, 1D, 0.875D, 1D);
+	public static final VoxelShape CONVEYOR_AABB = Block.makeCuboidShape(0D, 0D, 0D, 16D, 14D, 16D);
 
 	public BlockEntityConveyor(Block.Properties properties) {
 		super(properties);
@@ -52,7 +52,7 @@ public class BlockEntityConveyor extends Block {
 
 	@Override
 	public BlockState getStateForPlacement(BlockItemUseContext context) {
-		Direction direction = context.getFace().getOpposite();
+		Direction direction = context.getPlacementHorizontalFacing().getOpposite();
 		return this.getDefaultState().with(FACING, direction);
 	}
 	

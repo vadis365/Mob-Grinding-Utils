@@ -32,7 +32,7 @@ public class BlockAbsorptionHopper extends ContainerBlock {
 	public static final EnumProperty<TileEntityAbsorptionHopper.EnumStatus> EAST = EnumProperty.create("east", TileEntityAbsorptionHopper.EnumStatus.class);
 	public static final EnumProperty<TileEntityAbsorptionHopper.EnumStatus> UP = EnumProperty.create("up", TileEntityAbsorptionHopper.EnumStatus.class);
 	public static final EnumProperty<TileEntityAbsorptionHopper.EnumStatus> DOWN = EnumProperty.create("down", TileEntityAbsorptionHopper.EnumStatus.class);
-	public static final VoxelShape HOPPER_AABB = Block.makeCuboidShape(0.25D, 0.25D, 0.25D, 0.75D, 0.75D, 0.75D);
+	public static final VoxelShape HOPPER_AABB = Block.makeCuboidShape(4D, 4D, 4D, 12D, 12D, 12D);
 
 	public BlockAbsorptionHopper(Block.Properties properties) {
 		super(properties);

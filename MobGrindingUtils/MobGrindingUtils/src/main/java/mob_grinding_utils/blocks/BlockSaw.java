@@ -33,7 +33,7 @@ import net.minecraft.world.server.ServerWorld;
 
 public class BlockSaw extends DirectionalBlock implements ITileEntityProvider {
 	public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
-	public static final VoxelShape SAW_AABB = Block.makeCuboidShape(0.0625D, 0.0625D, 0.0625D, 0.9375D, 0.9375D, 0.9375D);
+	public static final VoxelShape SAW_AABB = Block.makeCuboidShape(1D, 1D, 1D, 15D, 15D, 15D);
 	
 	public BlockSaw(Block.Properties properties) {
 		super(properties);

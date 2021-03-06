@@ -27,7 +27,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class BlockSpikes extends DirectionalBlock {
 
-	public static final VoxelShape SPIKES_AABB = Block.makeCuboidShape(0.0625D, 0.0625D, 0.0625D, 0.9375D, 0.9375D, 0.9375D);
+	public static final VoxelShape SPIKES_AABB = Block.makeCuboidShape(1D, 1D, 1D, 15D, 15D, 15D);
 
 	public BlockSpikes(Block.Properties properties) {
 		super(properties);
