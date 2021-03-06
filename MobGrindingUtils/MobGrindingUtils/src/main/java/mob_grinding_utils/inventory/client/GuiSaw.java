@@ -2,7 +2,9 @@ package mob_grinding_utils.inventory.client;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
+
 import mob_grinding_utils.inventory.server.ContainerSaw;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.PlayerInventory;
@@ -27,7 +29,7 @@ public class GuiSaw extends ContainerScreen<ContainerSaw> {
 
 	@Override
 	protected void drawGuiContainerForegroundLayer(MatrixStack matrixStack, int x, int y) {
-		//getMinecraft().fontRenderer.drawString(I18n.format(new TranslationTextComponent("tile.mob_grinding_utils.saw.name").getString()), xSize / 2 - getMinecraft().fontRenderer.getStringWidth(I18n.format(new TranslationTextComponent("tile.mob_grinding_utils.saw.name").getString())) / 2, ySize - 218, 4210752); //todo
+		Minecraft.getInstance().fontRenderer.drawString(matrixStack, I18n.format(new TranslationTextComponent("tile.mob_grinding_utils.saw.name").getString()), xSize / 2 - Minecraft.getInstance().fontRenderer.getStringWidth(I18n.format(new TranslationTextComponent("tile.mob_grinding_utils.saw.name").getString())) / 2, ySize - 218, 4210752);	
 	}
 
 	@Override
