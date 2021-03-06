@@ -200,7 +200,9 @@ public class TileEntityAbsorptionHopper extends TileEntityInventoryHelper implem
 		for (Direction facing : Direction.values()) {
 			if (status[facing.ordinal()] == EnumStatus.STATUS_OUTPUT_ITEM) {
 				TileEntity tile = getWorld().getTileEntity(pos.offset(facing));
-				IItemHandler handler = (IItemHandler) tile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, facing.getOpposite());
+				IItemHandler handler = null;
+				if(tile != null)
+					handler = (IItemHandler) tile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, facing.getOpposite());
 				if (tile != null && handler != null) {
 					if (getWorld().getGameTime() % 8 == 0 ) {
 						for (int i = 0; i < this.getSizeInventory(); ++i) {

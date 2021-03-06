@@ -56,7 +56,7 @@ public class BlockFan extends DirectionalBlock implements ITileEntityProvider {
 
 	@Override
 	public BlockState getStateForPlacement(BlockItemUseContext context) {
-		Direction direction = context.getFace().getOpposite();
+		Direction direction = context.getFace();
 		return this.getDefaultState().with(FACING, direction).with(POWERED, false);
 	}
 
@@ -93,7 +93,7 @@ public class BlockFan extends DirectionalBlock implements ITileEntityProvider {
 
 	@Override
 	public void neighborChanged(BlockState state, World world, BlockPos pos, Block block, BlockPos fromPos, boolean isMoving) {
-		boolean flag = !world.isBlockPowered(pos);
+		boolean flag = world.isBlockPowered(pos);
 		if (flag != state.get(POWERED))
 			world.setBlockState(pos, state.with(POWERED, flag), 4);
 	}

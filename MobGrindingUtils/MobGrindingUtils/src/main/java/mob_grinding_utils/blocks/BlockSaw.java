@@ -69,7 +69,7 @@ public class BlockSaw extends DirectionalBlock implements ITileEntityProvider {
 */
 	@Override
 	public BlockState getStateForPlacement(BlockItemUseContext context) {
-		Direction direction = context.getFace().getOpposite();
+		Direction direction = context.getFace();
 		return this.getDefaultState().with(FACING, direction).with(POWERED, false);
 	}
 
@@ -116,7 +116,7 @@ public class BlockSaw extends DirectionalBlock implements ITileEntityProvider {
 	public void neighborChanged(BlockState state, World world, BlockPos pos, Block block, BlockPos fromPos, boolean isMoving) {
 		if (!world.isRemote) {
 			TileEntitySaw tile = (TileEntitySaw) world.getTileEntity(pos);
-			boolean flag = !world.isBlockPowered(pos);
+			boolean flag = world.isBlockPowered(pos);
 			if (flag != state.get(POWERED))
 				world.setBlockState(pos, state.with(POWERED, flag), 4);
 			if (tile != null)

@@ -256,8 +256,8 @@ public class BlockEnderInhibitorOn extends Block {
 	@SuppressWarnings("incomplete-switch")
 	@Override
 	public BlockState getStateForPlacement(BlockItemUseContext context) {
-		Direction facing = context.getFace().getOpposite();
-		Direction direction = context.getPlayer().getHorizontalFacing().getOpposite();
+		Direction facing = context.getFace();
+		Direction direction = context.getPlayer().getHorizontalFacing();
 		EnumGemDirection newFacing = EnumGemDirection.DOWN_NORTH;
 		if (facing == Direction.UP) {
 			switch (direction) {
@@ -265,13 +265,13 @@ public class BlockEnderInhibitorOn extends Block {
 					newFacing = EnumGemDirection.DOWN_SOUTH;
 					break;
 				case EAST:
-					newFacing = EnumGemDirection.DOWN_EAST;
+					newFacing = EnumGemDirection.DOWN_WEST;
 					break;
 				case NORTH:
 					newFacing = EnumGemDirection.DOWN_NORTH;
 					break;
 				case WEST:
-					newFacing = EnumGemDirection.DOWN_WEST;
+					newFacing = EnumGemDirection.DOWN_EAST;
 					break;
 			}
 		}
@@ -281,29 +281,29 @@ public class BlockEnderInhibitorOn extends Block {
 				newFacing = EnumGemDirection.UP_SOUTH;
 				break;
 			case EAST:
-				newFacing = EnumGemDirection.UP_EAST;
+				newFacing = EnumGemDirection.UP_WEST;
 				break;
 			case NORTH:
 				newFacing = EnumGemDirection.UP_NORTH;
 				break;
 			case WEST:
-				newFacing = EnumGemDirection.UP_WEST;
+				newFacing = EnumGemDirection.UP_EAST;
 				break;
 			}
 		}
 		else {
 			switch (facing) {
 			case SOUTH:
-				newFacing = EnumGemDirection.SOUTH;
-				break;
-			case EAST:
-				newFacing = EnumGemDirection.EAST;
-				break;
-			case NORTH:
 				newFacing = EnumGemDirection.NORTH;
 				break;
-			case WEST:
+			case EAST:
 				newFacing = EnumGemDirection.WEST;
+				break;
+			case NORTH:
+				newFacing = EnumGemDirection.SOUTH;
+				break;
+			case WEST:
+				newFacing = EnumGemDirection.EAST;
 				break;
 			}
 		}

@@ -55,7 +55,7 @@ public class BlockSpikes extends DirectionalBlock {
 
 	@Override
 	public BlockState getStateForPlacement(BlockItemUseContext context) {
-		Direction direction = context.getFace().getOpposite();
+		Direction direction = context.getFace();
 		return this.getDefaultState().with(FACING, direction);
 	}
 
