@@ -200,10 +200,9 @@ public class TileEntityAbsorptionHopper extends TileEntityInventoryHelper implem
 		for (Direction facing : Direction.values()) {
 			if (status[facing.ordinal()] == EnumStatus.STATUS_OUTPUT_ITEM) {
 				TileEntity tile = getWorld().getTileEntity(pos.offset(facing));
-				
-				if (tile != null) {
-					IItemHandler handler = (IItemHandler) tile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, facing.getOpposite());
-					if (getWorld().getGameTime() % 8 == 0 && handler != null) {
+				IItemHandler handler = (IItemHandler) tile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, facing.getOpposite());
+				if (tile != null && handler != null) {
+					if (getWorld().getGameTime() % 8 == 0 ) {
 						for (int i = 0; i < this.getSizeInventory(); ++i) {
 							if (!getStackInSlot(i).isEmpty() && i != 0) {
 								ItemStack stack = getStackInSlot(i).copy();
@@ -238,14 +237,14 @@ public class TileEntityAbsorptionHopper extends TileEntityInventoryHelper implem
 
 			if (status[facing.ordinal()] == EnumStatus.STATUS_OUTPUT_FLUID) {
 				TileEntity tile = getWorld().getTileEntity(pos.offset(facing));
-				if (tile != null && tile.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, facing)) {
-					IFluidHandler recepticle = tile.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, facing);
-					IFluidTankProperties[] tankProperties = recepticle.getTankProperties();
-					for (IFluidTankProperties properties : tankProperties) {
-						if (properties.canFill() && properties.getCapacity() > 0) {
-							FluidStack contents = properties.getContents();
+				if (tile != null) {
+					IFluidHandler recepticle = (IFluidHandler) tile.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, facing);
+					int tanks = recepticle.getTanks();
+					for (int x = 0; x < tanks; x++) {
+						if (recepticle.getTankCapacity(tanks) > 0) {
+							FluidStack contents = recepticle.getFluidInTank(x);
 							if (tank.getFluid() != null) {
-								if (contents == null || contents.amount <= properties.getCapacity() - 100 && contents.containsFluid(new FluidStack(tank.getFluid(), 0))) {
+								if (contents == null || contents.getAmount() <= recepticle.getTankCapacity(tanks) - 100 && contents.containsFluid(new FluidStack(tank.getFluid(), 0))) {
 									recepticle.fill(tank.drain(new FluidStack(tank.getFluid(), 100), FluidAction.EXECUTE), FluidAction.EXECUTE);
 									markDirty();
 								}
@@ -259,7 +258,7 @@ public class TileEntityAbsorptionHopper extends TileEntityInventoryHelper implem
 		if (getWorld().getGameTime() % 3 == 0) {
 			if(!isInventoryFull(this, null))
 				captureDroppedItems();
-			if(tank.getFluid() == null || tank.getFluid().containsFluid(new FluidStack(FluidRegistry.getFluid("xpjuice"), 0)))
+			if(tank.getFluid() == null || tank.getFluid().containsFluid(new FluidStack(ModBlocks.FLUID_XP, 0)))
 				captureDroppedXP();
 		}
 	}
@@ -285,7 +284,7 @@ public class TileEntityAbsorptionHopper extends TileEntityInventoryHelper implem
 		for (ExperienceOrbEntity entity : getCaptureXP()) {
 			int xpAmount = entity.getXpValue();
 			if (tank.getFluidAmount() < tank.getCapacity() - xpAmount * 20) {
-				tank.fill(new FluidStack(FluidRegistry.getFluid("xpjuice"), xpAmount * 20), FluidAction.EXECUTE);
+				tank.fill(new FluidStack(ModBlocks.FLUID_XP, xpAmount * 20), FluidAction.EXECUTE);
 				entity.remove();
 			}
 			return true;

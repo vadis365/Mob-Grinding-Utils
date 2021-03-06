@@ -31,7 +31,7 @@ public class TileEntityXPTap extends TileEntity implements ITickableTileEntity {
 		if (!getWorld().isRemote && active) {
 			TileEntity tileentity = getWorld().getTileEntity(pos.offset(getWorld().getBlockState(pos).get(BlockXPTap.FACING).getOpposite()));
 			if (tileentity instanceof TileEntityTank) {
-				if (((TileEntityTank) tileentity).tank.getFluidAmount() > 0 && ((TileEntityTank) tileentity).tank.getFluid().getFluid().equals(FluidRegistry.getFluid("xpjuice")) && getWorld().getGameTime() % 3 == 0) {
+				if (((TileEntityTank) tileentity).tank.getFluidAmount() > 0 && ((TileEntityTank) tileentity).tank.getFluid().getFluid().equals(ModBlocks.FLUID_XP) && getWorld().getGameTime() % 3 == 0) {
 					int xpAmount = EntityXPOrbFalling.getXPSplit(Math.min(20, ((TileEntityTank) tileentity).tank.getFluidAmount() / 20));
 					((TileEntityTank) tileentity).tank.drain(xpAmount * 20, FluidAction.EXECUTE);
 					spawnXP(getWorld(), pos, xpAmount, (TileEntityTank) tileentity);
