@@ -1,0 +1,18 @@
+{
+  "replace": false,
+  "values": [
+    "mob_grinding_utils:absorption_hopper",
+    "mob_grinding_utils:dark_oak_stone",
+    "mob_grinding_utils:dragon_muffler",
+    "mob_grinding_utils:ender_inhibitor_off",
+    "mob_grinding_utils:ender_inhibitor_on",
+    "mob_grinding_utils:entity_conveyor",
+    "mob_grinding_utils:fan",
+    "mob_grinding_utils:saw",
+    "mob_grinding_utils:spikes",
+    "mob_grinding_utils:tank",
+    "mob_grinding_utils:tank_sink",
+    "mob_grinding_utils:wither_muffler",
+    "mob_grinding_utils:xp_tap"
+  ]
+}
