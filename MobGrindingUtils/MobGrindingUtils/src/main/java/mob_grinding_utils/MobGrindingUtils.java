@@ -1,7 +1,6 @@
 package mob_grinding_utils;
 
 import mob_grinding_utils.blocks.BlockSpikes;
-import mob_grinding_utils.client.particles.ParticleFluidXP;
 import mob_grinding_utils.client.render.TileEntityAbsorptionRenderer;
 import mob_grinding_utils.client.render.TileEntityFanRenderer;
 import mob_grinding_utils.client.render.TileEntitySawRenderer;
@@ -17,7 +16,6 @@ import mob_grinding_utils.events.LocalDragonSoundEvent;
 import mob_grinding_utils.events.LocalWitherSoundEvent;
 import mob_grinding_utils.events.MGUEndermanInhibitEvent;
 import mob_grinding_utils.events.MGUZombieReinforcementEvent;
-import mob_grinding_utils.events.ParticleTextureStitchEvent;
 import mob_grinding_utils.events.RenderChickenSwell;
 import mob_grinding_utils.inventory.client.GuiAbsorptionHopper;
 import mob_grinding_utils.inventory.client.GuiFan;
@@ -29,6 +27,7 @@ import net.minecraft.client.renderer.RenderTypeLookup;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
+import net.minecraft.particles.BasicParticleType;
 import net.minecraft.particles.ParticleType;
 import net.minecraft.util.DamageSource;
 import net.minecraftforge.common.MinecraftForge;
@@ -52,7 +51,7 @@ public class MobGrindingUtils {
 	public static final DeferredRegister<ContainerType<?>> CONTAINERS = DeferredRegister.create(ForgeRegistries.CONTAINERS, Reference.MOD_ID);
 	public static final DeferredRegister<ParticleType<?>> PARTICLES = DeferredRegister.create(ForgeRegistries.PARTICLE_TYPES, Reference.MOD_ID);
 
-	//public static final RegistryObject<ParticleType<?>> PARTICLE_FLUIDXP = PARTICLES.register("particle_fluid_xp", ParticleFluidXP::new); //todo
+	public static final RegistryObject<BasicParticleType> PARTICLE_FLUIDXP = PARTICLES.register("fluid_xp", () -> new BasicParticleType(false));
 
 	public static final ItemGroup TAB = new ItemGroup(Reference.MOD_ID) {
 		@Override
@@ -110,7 +109,6 @@ public class MobGrindingUtils {
 		MinecraftForge.EVENT_BUS.register(new GlobalWitherSoundEvent());
 		MinecraftForge.EVENT_BUS.register(new GlobalDragonSoundEvent());
 		MinecraftForge.EVENT_BUS.register(new BossBarHidingEvent());
-		MinecraftForge.EVENT_BUS.register(new ParticleTextureStitchEvent());
 
 	/*	ClientRegistry.bindTileEntityRenderer(ModBlocks.TANK_TILE, TileEntityTankRenderer::new);
 		ClientRegistry.bindTileEntityRenderer(ModBlocks.TANK_SINK_TILE, TileEntityTankRenderer::new);
