@@ -40,7 +40,7 @@ public class BlockWitherMuffler extends Block {
 			boolean swap = state.get(MODE) ? false : true;
 			world.setBlockState(pos, state.with(MODE, swap), 3);
 			CompoundNBT nbt = player.getPersistentData();
-			nbt.putBoolean("MGU_WitherMuffle" ,!state.get(MODE));
+			nbt.putBoolean("MGU_WitherMuffle", !state.get(MODE));
 			return ActionResultType.SUCCESS;
 		}
 	}

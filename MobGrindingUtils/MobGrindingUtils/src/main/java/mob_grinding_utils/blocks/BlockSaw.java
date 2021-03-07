@@ -4,6 +4,7 @@ import java.util.Random;
 
 import javax.annotation.Nullable;
 
+import mob_grinding_utils.MobGrindingUtils;
 import mob_grinding_utils.tile.TileEntitySaw;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
@@ -12,6 +13,7 @@ import net.minecraft.block.DirectionalBlock;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
@@ -30,6 +32,7 @@ import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
+import net.minecraftforge.fml.network.NetworkHooks;
 
 public class BlockSaw extends DirectionalBlock implements ITileEntityProvider {
 	public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
@@ -88,12 +91,15 @@ public class BlockSaw extends DirectionalBlock implements ITileEntityProvider {
 
 	@Override
 	public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
-		if (world.isRemote)
+		if (world.isRemote) {
 			return ActionResultType.SUCCESS;
-		if (world.getTileEntity(pos) instanceof TileEntitySaw)
-			System.out.println("Masher Gui Opens Here");
-			//player.openGui(MobGrindingUtils.INSTANCE, MobGrindingUtils.PROXY.GUI_ID_SAW, world, pos.getX(), pos.getY(), pos.getZ());
+	} else {
+		TileEntity tileentity = world.getTileEntity(pos);
+		if (tileentity  instanceof TileEntitySaw)
+			//System.out.println("Masher Gui Opens Here");
+			NetworkHooks.openGui((ServerPlayerEntity) player, (TileEntitySaw)tileentity, pos);
 		return ActionResultType.SUCCESS;
+	}
 	}
 
 

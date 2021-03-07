@@ -20,6 +20,7 @@ import mob_grinding_utils.events.ParticleTextureStitchEvent;
 import mob_grinding_utils.events.RenderChickenSwell;
 import mob_grinding_utils.inventory.client.GuiAbsorptionHopper;
 import mob_grinding_utils.inventory.client.GuiFan;
+import mob_grinding_utils.inventory.client.GuiSaw;
 import mob_grinding_utils.network.MGUNetwork;
 import net.minecraft.client.gui.ScreenManager;
 import net.minecraft.inventory.container.ContainerType;
@@ -113,5 +114,6 @@ public class MobGrindingUtils {
 		
 		ScreenManager.registerFactory(ModContainers.ABSORPTION_HOPPER.get(), GuiAbsorptionHopper::new);
 		ScreenManager.registerFactory(ModContainers.FAN.get(), GuiFan::new);
+		ScreenManager.registerFactory(ModContainers.SAW.get(), GuiSaw::new);
 	}
 }

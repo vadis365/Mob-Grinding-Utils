@@ -1,5 +1,5 @@
 {
     "variants": {
-        "normal": { "model": "mob_grinding_utils:block/dark_oak_stone" }
+        "": { "model": "mob_grinding_utils:block/dark_oak_stone" }
     }
 }

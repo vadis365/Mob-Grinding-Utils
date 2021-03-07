@@ -19,6 +19,7 @@ public class ContainerSaw extends Container {
 	
 	public ContainerSaw(final int windowId, final PlayerInventory playerInventory, PacketBuffer extra) {
 		super(ModContainers.SAW.get(), windowId);
+		
 		BlockPos tilePos = extra.readBlockPos();
 		TileEntity tile = playerInventory.player.getEntityWorld().getTileEntity(tilePos);
 		if (!(tile instanceof TileEntitySaw))

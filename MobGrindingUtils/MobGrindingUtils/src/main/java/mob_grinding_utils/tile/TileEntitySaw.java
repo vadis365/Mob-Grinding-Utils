@@ -1,33 +1,44 @@
 package mob_grinding_utils.tile;
 
+import java.nio.ByteBuffer;
 import java.util.List;
 import java.util.UUID;
 
 import com.mojang.authlib.GameProfile;
 
+import io.netty.buffer.Unpooled;
 import mob_grinding_utils.ModBlocks;
 import mob_grinding_utils.ModItems;
 import mob_grinding_utils.blocks.BlockSaw;
+import mob_grinding_utils.inventory.server.ContainerSaw;
 import mob_grinding_utils.items.ItemSawUpgrade;
 import net.minecraft.block.BlockState;
 import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.ItemStackHelper;
+import net.minecraft.inventory.container.Container;
+import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
+import net.minecraft.network.PacketBuffer;
+import net.minecraft.network.PacketThreadUtil;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.util.FakePlayerFactory;
 
-public class TileEntitySaw extends TileEntityInventoryHelper implements ITickableTileEntity {
+public class TileEntitySaw extends TileEntityInventoryHelper implements ITickableTileEntity, INamedContainerProvider {
 
 	public boolean active;
 	public int animationTicks, prevAnimationTicks;
@@ -212,5 +223,15 @@ public class TileEntitySaw extends TileEntityInventoryHelper implements ITickabl
 	@Override
 	public boolean canExtractItem(int index, ItemStack stack, Direction direction) {
 		return true;
+	}
+
+	@Override
+	public Container createMenu(int windowID, PlayerInventory playerInventory, PlayerEntity player) {
+		return new ContainerSaw(windowID, playerInventory, new PacketBuffer(Unpooled.buffer()).writeBlockPos(pos));
+	}
+
+	@Override
+	public ITextComponent getDisplayName() {
+		return new StringTextComponent("Mob Masher"); //TODO localise
 	}
 }

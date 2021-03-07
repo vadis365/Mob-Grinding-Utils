@@ -16,16 +16,15 @@ public class BossBarHidingEvent {
 	public void onRenderHUD(BossInfo event) {
 		if (event.getType().equals(RenderGameOverlayEvent.ElementType.BOSSINFO)) {
 			PlayerEntity player = Minecraft.getInstance().player;
-
 			if (player != null) {
 				CompoundNBT nbt = player.getPersistentData();
 				if (nbt.getBoolean("MGU_WitherMuffle")) {
-					if (event.getBossInfo().getName().getUnformattedComponentText().equals("Wither"))
+					if (event.getBossInfo().getName().getString().equals("Wither"))
 						event.setCanceled(true);
 				}
 
 				if (nbt.getBoolean("MGU_DragonMuffle")) {
-					if (event.getBossInfo().getName().getUnformattedComponentText().equals("Ender Dragon"))
+					if (event.getBossInfo().getName().getString().equals("Ender Dragon"))
 						event.setCanceled(true);
 				}
 			}

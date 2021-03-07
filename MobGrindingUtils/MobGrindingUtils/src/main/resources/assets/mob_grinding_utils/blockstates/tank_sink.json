@@ -1,5 +1,5 @@
 {
     "variants": {
-        "normal": { "model": "mob_grinding_utils:block/tank_sink" }
+        "": { "model": "mob_grinding_utils:block/tank_sink" }
     }
 }

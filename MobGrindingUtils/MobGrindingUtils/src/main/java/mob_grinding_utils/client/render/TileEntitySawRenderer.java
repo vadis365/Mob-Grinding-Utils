@@ -40,10 +40,11 @@ public class TileEntitySawRenderer extends TileEntityRenderer<TileEntitySaw> {
 
 		Direction facing = state.get(BlockSaw.FACING);
 
-		Minecraft.getInstance().textureManager.bindTexture(BASE_TEXTURE); // dunno if needed now
+		//Minecraft.getInstance().textureManager.bindTexture(BASE_TEXTURE); // dunno if needed now
 		IVertexBuilder ivertexbuilder = buffer.getBuffer(RenderType.getEntitySolid(BASE_TEXTURE));
+		
 		matrixStack.push();
-		matrixStack.translate(tile.getPos().getX() + 0.5D, tile.getPos().getY() + 0.5D, (float) tile.getPos().getZ() + 0.5D);
+		matrixStack.translate(0.5D, 0.5D, 0.5D);
 		matrixStack.scale(-1, -1, 1);
 
 		switch (facing) {
@@ -91,22 +92,26 @@ public class TileEntitySawRenderer extends TileEntityRenderer<TileEntitySaw> {
 		matrixStack.pop();
 		
 		Minecraft.getInstance().textureManager.bindTexture(BLADE_TEXTURE);
+		
 		matrixStack.push();
+		IVertexBuilder ivertexbuilder2 = buffer.getBuffer(RenderType.getEntitySolid(BLADE_TEXTURE));
 		matrixStack.translate(0F, 0.2F, -0.16F);
 		matrixStack.rotate(Vector3f.XP.rotationDegrees(8F));
-		saw_blade.render(matrixStack, ivertexbuilder, combinedLight, OverlayTexture.NO_OVERLAY, 0.5F, 0.5F, 0.5F, 1.0F);
+		saw_blade.render(matrixStack, ivertexbuilder2, combinedLight, OverlayTexture.NO_OVERLAY, 0.5F, 0.5F, 0.5F, 1.0F);
 		matrixStack.pop();
 
 		matrixStack.push();
+		IVertexBuilder ivertexbuilder3 = buffer.getBuffer(RenderType.getEntitySolid(BLADE_TEXTURE));
 		matrixStack.translate(0F, 0.00F, 0.16F);
 		matrixStack.rotate(Vector3f.XP.rotationDegrees(-8F));
-		saw_blade.render(matrixStack, ivertexbuilder, combinedLight, OverlayTexture.NO_OVERLAY, 0.5F, 0.5F, 0.5F, 1.0F);
+		saw_blade.render(matrixStack, ivertexbuilder3, combinedLight, OverlayTexture.NO_OVERLAY, 0.5F, 0.5F, 0.5F, 1.0F);
 		matrixStack.pop();
 
 		matrixStack.push();
+		IVertexBuilder ivertexbuilder4 = buffer.getBuffer(RenderType.getEntitySolid(BLADE_TEXTURE));
 		matrixStack.translate(0F, -0.2F, -0.16F);
 		matrixStack.rotate(Vector3f.XP.rotationDegrees(8F));
-		saw_blade.render(matrixStack, ivertexbuilder, combinedLight, OverlayTexture.NO_OVERLAY, 0.5F, 0.5F, 0.5F, 1.0F);
+		saw_blade.render(matrixStack, ivertexbuilder4, combinedLight, OverlayTexture.NO_OVERLAY, 0.5F, 0.5F, 0.5F, 1.0F);
 		matrixStack.pop();
 
 		matrixStack.pop();
