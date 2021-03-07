@@ -8,5 +8,8 @@ public class Generator {
         DataGenerator generator = event.getGenerator();
 
         generator.addProvider(new Recipes(generator));
+
+        MGUBlockTags blockTags = new MGUBlockTags(generator, event.getExistingFileHelper());
+        generator.addProvider(blockTags);
     }
 }
