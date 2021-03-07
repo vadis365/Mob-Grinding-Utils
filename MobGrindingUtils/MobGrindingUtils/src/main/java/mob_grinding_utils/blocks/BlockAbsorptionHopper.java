@@ -156,11 +156,4 @@ public class BlockAbsorptionHopper extends ContainerBlock {
 	protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
 		builder.add(NORTH, SOUTH, WEST, EAST, UP, DOWN);
 	}
-
-	@SubscribeEvent
-	@OnlyIn(Dist.CLIENT)
-	public void onTextureStitchPre(TextureStitchEvent.Pre event) {
-		//event.getMap().registerSprite(MobGrindingUtils.FLUID_XP.getStill()); //todo
-		//event.getMap().registerSprite(MobGrindingUtils.FLUID_XP.getFlowing()); //todo
-	}
 }

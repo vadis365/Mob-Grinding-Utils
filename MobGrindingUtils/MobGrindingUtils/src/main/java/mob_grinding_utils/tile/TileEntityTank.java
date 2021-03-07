@@ -9,6 +9,7 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
@@ -25,7 +26,12 @@ public class TileEntityTank extends TileEntity {
 		super(ModBlocks.TANK_TILE);
 
 	}
-/*
+
+	public TileEntityTank(TileEntityType<TileEntitySinkTank> TANK_SINK_TILE) {
+		super(TANK_SINK_TILE);
+	}
+
+	/*
 	@Override
 	public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState) {
 		return oldState.getBlock() != newState.getBlock();

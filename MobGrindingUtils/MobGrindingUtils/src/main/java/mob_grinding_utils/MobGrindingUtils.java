@@ -11,6 +11,7 @@ import mob_grinding_utils.events.ChickenFuseEvent;
 import mob_grinding_utils.events.ChickenInteractionEvent;
 import mob_grinding_utils.events.EntityHeadDropEvent;
 import mob_grinding_utils.events.FillXPBottleEvent;
+import mob_grinding_utils.events.FluidTextureStitchEvent;
 import mob_grinding_utils.events.GlobalDragonSoundEvent;
 import mob_grinding_utils.events.GlobalWitherSoundEvent;
 import mob_grinding_utils.events.LocalDragonSoundEvent;
@@ -22,20 +23,15 @@ import mob_grinding_utils.inventory.client.GuiAbsorptionHopper;
 import mob_grinding_utils.inventory.client.GuiFan;
 import mob_grinding_utils.inventory.client.GuiSaw;
 import mob_grinding_utils.network.MGUNetwork;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScreenManager;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.RenderTypeLookup;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
-import net.minecraft.particles.BasicParticleType;
-import net.minecraft.particles.ParticleType;
 import net.minecraft.util.DamageSource;
-import net.minecraftforge.client.event.ParticleFactoryRegisterEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
@@ -52,9 +48,9 @@ public class MobGrindingUtils {
 	public static DamageSource SPIKE_DAMAGE;
 
 	public static final DeferredRegister<ContainerType<?>> CONTAINERS = DeferredRegister.create(ForgeRegistries.CONTAINERS, Reference.MOD_ID);
-	public static final DeferredRegister<ParticleType<?>> PARTICLES = DeferredRegister.create(ForgeRegistries.PARTICLE_TYPES, Reference.MOD_ID);
+	//public static final DeferredRegister<ParticleType<?>> PARTICLES = DeferredRegister.create(ForgeRegistries.PARTICLE_TYPES, Reference.MOD_ID);
 
-	public static final RegistryObject<BasicParticleType> PARTICLE_FLUIDXP = PARTICLES.register("fluid_xp", () -> new BasicParticleType(false));
+	//public static final RegistryObject<BasicParticleType> PARTICLE_FLUIDXP = PARTICLES.register("fluid_xp", () -> new BasicParticleType(false));
 
 	public static final ItemGroup TAB = new ItemGroup(Reference.MOD_ID) {
 		@Override
@@ -73,7 +69,7 @@ public class MobGrindingUtils {
 
 		IEventBus modBus = FMLJavaModLoadingContext.get().getModEventBus();
 		CONTAINERS.register(modBus);
-		PARTICLES.register(modBus);
+	//	PARTICLES.register(modBus);
 
 		modBus.addListener(this::setup);
 		modBus.addListener(this::doClientStuff);
@@ -82,9 +78,9 @@ public class MobGrindingUtils {
 		modBus.addListener(Generator::gatherData);
 	}
 
-	public static void registerParticleFactory(ParticleFactoryRegisterEvent event) {
-		Minecraft.getInstance().particles.registerFactory(PARTICLE_FLUIDXP.get(),);
-	}
+//	public static void registerParticleFactory(ParticleFactoryRegisterEvent event) {
+//		Minecraft.getInstance().particles.registerFactory(PARTICLE_FLUIDXP.get());
+//	}
 
 	public void setup(FMLCommonSetupEvent event) {
 		/*
@@ -93,7 +89,7 @@ public class MobGrindingUtils {
 			FluidRegistry.registerFluid(FLUID_XP);
 			FluidRegistry.addBucketForFluid(FLUID_XP);
 			if (event.getSide() == Side.CLIENT)
-				MinecraftForge.EVENT_BUS.register(new BlockAbsorptionHopper());
+				
 		}
 */
 		SPIKE_DAMAGE = new DamageSource("spikes").setDamageBypassesArmor();
@@ -112,6 +108,7 @@ public class MobGrindingUtils {
 	}
 	
 	private void doClientStuff(final FMLClientSetupEvent event) {
+		MinecraftForge.EVENT_BUS.register(new FluidTextureStitchEvent());
 		MinecraftForge.EVENT_BUS.register(new RenderChickenSwell());
 		MinecraftForge.EVENT_BUS.register(new GlobalWitherSoundEvent());
 		MinecraftForge.EVENT_BUS.register(new GlobalDragonSoundEvent());
@@ -124,6 +121,7 @@ public class MobGrindingUtils {
 		ClientRegistry.bindTileEntityRenderer(ModBlocks.SAW_TILE, TileEntitySawRenderer::new);
 		ClientRegistry.bindTileEntityRenderer(ModBlocks.ABSORPTION_HOPPER_TILE, TileEntityAbsorptionRenderer::new);
 		ClientRegistry.bindTileEntityRenderer(ModBlocks.TANK_TILE, TileEntityTankRenderer::new);
+		ClientRegistry.bindTileEntityRenderer(ModBlocks.TANK_SINK_TILE, TileEntityTankRenderer::new);
 		
 		ScreenManager.registerFactory(ModContainers.ABSORPTION_HOPPER.get(), GuiAbsorptionHopper::new);
 		ScreenManager.registerFactory(ModContainers.FAN.get(), GuiFan::new);

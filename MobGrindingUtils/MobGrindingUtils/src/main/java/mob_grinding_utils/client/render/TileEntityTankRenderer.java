@@ -11,6 +11,7 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.inventory.container.PlayerContainer;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fluids.FluidStack;
@@ -32,10 +33,10 @@ public class TileEntityTankRenderer extends TileEntityRenderer<TileEntityTank> {
 		FluidStack fluidStack = new FluidStack(tile.tank.getFluid(), 100);
 		float height = (0.96875F / tile.tank.getCapacity()) * tile.tank.getFluidAmount();
 		
-		TextureAtlasSprite fluidStillSprite = Minecraft.getInstance().getAtlasSpriteGetter(PlayerContainer.LOCATION_BLOCKS_TEXTURE).apply(fluidStack.getFluid().getAttributes().getStillTexture());
+		TextureAtlasSprite fluidStillSprite = Minecraft.getInstance().getAtlasSpriteGetter(PlayerContainer.LOCATION_BLOCKS_TEXTURE).apply(new ResourceLocation("mob_grinding_utils:fluids/fluid_xp"));
 		IVertexBuilder buffer = bufferIn.getBuffer(RenderType.getTranslucent());
 		int fluidColor = fluidStack.getFluid().getAttributes().getColor();
-		
+	//	System.out.println("Texture Loc is: " + fluidStack.getFluid().getAttributes().getStillTexture());
 		matrixStack.push();
 		matrixStack.translate(0D, 0D, 0D);
 		float xMax, zMax, xMin, zMin, yMin = 0;

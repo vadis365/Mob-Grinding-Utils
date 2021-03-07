@@ -16,13 +16,13 @@ import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 public class TileEntitySinkTank extends TileEntityTank implements ITickableTileEntity {
 
 	public TileEntitySinkTank() {
-		super();
+		super(ModBlocks.TANK_SINK_TILE);
 	}
 
 	@Override
 	public void tick() {
 		if (!getWorld().isRemote)
-			if (tank.getFluid() == null || tank.getFluid().containsFluid(new FluidStack(ModBlocks.FLUID_XP, 0)))
+			if (tank.getFluid().isEmpty() || tank.getFluid().containsFluid(new FluidStack(ModBlocks.FLUID_XP, 1)))
 				captureDroppedXP();
 	}
 
@@ -36,6 +36,7 @@ public class TileEntitySinkTank extends TileEntityTank implements ITickableTileE
 				addPlayerXP(player, -1);
 				getWorld().playSound(null, player.getPosX(), player.getPosY(), player.getPosZ(), SoundEvents.ITEM_BOTTLE_FILL, SoundCategory.NEUTRAL , 0.1F, 0.5F * ((getWorld().rand.nextFloat() - getWorld().rand.nextFloat()) * 0.7F + 1.8F));
 				// MobGrindingUtils.NETWORK_WRAPPER.sendToAll(new MessageTapParticle(getPos().up())); //todo
+				getWorld().notifyBlockUpdate(pos, getBlockState(), getBlockState(), 3);
 			}
 			return true;
 		}

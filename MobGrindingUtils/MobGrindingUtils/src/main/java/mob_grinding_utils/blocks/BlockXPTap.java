@@ -90,12 +90,12 @@ public class BlockXPTap extends DirectionalBlock implements ITileEntityProvider 
 		if (world.isRemote)
 			return ActionResultType.SUCCESS;
 		 else {
-			boolean swap = state.get(POWERED) ? false : true;
-			world.setBlockState(pos, state.with(POWERED, swap), 3);
+			boolean swap = state.get(POWERED);
+			world.setBlockState(pos, state.with(POWERED, !swap), 3);
 			float f = state.get(POWERED) ? 0.6F : 0.5F;
 			world.playSound(null, pos, ModSounds.TAP_SQUEAK, SoundCategory.BLOCKS, 0.3F, f);
 			TileEntityXPTap tileentity = (TileEntityXPTap) world.getTileEntity(pos);
-			tileentity.setActive(((Boolean) state.get(POWERED)).booleanValue());
+			tileentity.setActive(!swap);
 			return ActionResultType.SUCCESS;
 		}
 	}

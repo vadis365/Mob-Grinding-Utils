@@ -348,7 +348,7 @@ public class ModBlocks {
 		@SubscribeEvent
 		public static void registerFluids(final RegistryEvent.Register<Fluid> evt) {
 			final IForgeRegistry<Fluid> registry = evt.getRegistry();
-			//registry.register(FLUID_XP); //todo ohhh lawd he blowin up...
+			registry.register(FLUID_XP); //todo ohhh lawd he blowin up...
 		}
 /*
 		@SideOnly(Side.CLIENT)
