@@ -22,6 +22,7 @@ import mob_grinding_utils.inventory.client.GuiAbsorptionHopper;
 import mob_grinding_utils.inventory.client.GuiFan;
 import mob_grinding_utils.inventory.client.GuiSaw;
 import mob_grinding_utils.network.MGUNetwork;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScreenManager;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.RenderTypeLookup;
@@ -31,6 +32,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.particles.BasicParticleType;
 import net.minecraft.particles.ParticleType;
 import net.minecraft.util.DamageSource;
+import net.minecraftforge.client.event.ParticleFactoryRegisterEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.RegistryObject;
@@ -78,6 +80,10 @@ public class MobGrindingUtils {
 
 		//Central Data generator, called on runData
 		modBus.addListener(Generator::gatherData);
+	}
+
+	public static void registerParticleFactory(ParticleFactoryRegisterEvent event) {
+		Minecraft.getInstance().particles.registerFactory(PARTICLE_FLUIDXP.get(),);
 	}
 
 	public void setup(FMLCommonSetupEvent event) {
