@@ -29,13 +29,14 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class TileEntityFan extends TileEntityInventoryHelper implements ITickableTileEntity, INamedContainerProvider {
 
 	private static final int[] SLOTS = new int[] {0, 1, 2};
-	public boolean showRenderBox = true;  // TODO set this to false by default - needs button and packet to work
+	public boolean showRenderBox = false;
 	float xPos, yPos, zPos;
 	float xNeg, yNeg, zNeg;
 
@@ -282,6 +283,6 @@ public class TileEntityFan extends TileEntityInventoryHelper implements ITickabl
 
 	@Override
 	public ITextComponent getDisplayName() {
-		return new StringTextComponent("Mob Fan"); //TODO localise
+		return new TranslationTextComponent("block.mob_grinding_utils.fan");
 	}
 }
