@@ -9,6 +9,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.DirectionalBlock;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.state.BooleanProperty;
@@ -23,6 +24,7 @@ import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
+import net.minecraftforge.fml.network.NetworkHooks;
 
 @SuppressWarnings("deprecation")
 public class BlockFan extends DirectionalBlock implements ITileEntityProvider {
@@ -69,10 +71,13 @@ public class BlockFan extends DirectionalBlock implements ITileEntityProvider {
 	public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
 		if (world.isRemote)
 			return ActionResultType.SUCCESS;
-		if (world.getTileEntity(pos) instanceof TileEntityFan)
-			System.out.println("Fan Gui Opens Here");
-			//player.openGui(MobGrindingUtils.INSTANCE, MobGrindingUtils.PROXY.GUI_ID_FAN, world, pos.getX(), pos.getY(), pos.getZ());
+		else {
+			TileEntity tileentity = world.getTileEntity(pos);
+			if (tileentity  instanceof TileEntityFan)
+			//System.out.println("Fan Gui Opens Here");
+			NetworkHooks.openGui((ServerPlayerEntity) player, (TileEntityFan)tileentity, pos);
 		return ActionResultType.SUCCESS;
+		}
 	}
 /*
 	@Override

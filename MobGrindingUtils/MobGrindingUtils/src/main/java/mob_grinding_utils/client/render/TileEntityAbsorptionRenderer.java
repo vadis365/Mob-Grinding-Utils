@@ -28,7 +28,7 @@ public class TileEntityAbsorptionRenderer extends TileEntityRenderer<TileEntityA
 			return;
 		IVertexBuilder ivertexbuilder = buffer.getBuffer(RenderType.getLines());
 		matrixStack.push();
-		matrixStack.translate(tile.getPos().getX() + 0.5D -0.0005D, tile.getPos().getY() + 0.5D-0.0005D, tile.getPos().getZ() + 0.5D -0.0005D);
+		matrixStack.translate(-0.0005D, -0.0005D, -0.0005D);
 		matrixStack.scale(0.999F, 0.999F, 0.999F);
 /*		GlStateManager.depthMask(false);
 		GlStateManager.enableBlend();

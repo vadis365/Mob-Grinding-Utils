@@ -74,7 +74,7 @@ public class BlockXPTap extends DirectionalBlock implements ITileEntityProvider 
 
 	@Override
 	public BlockState getStateForPlacement(BlockItemUseContext context) {
-		Direction direction = context.getFace().getOpposite();
+		Direction direction = context.getFace();
 		return this.getDefaultState().with(FACING, direction).with(POWERED, false);
 	}
 
@@ -110,7 +110,7 @@ public class BlockXPTap extends DirectionalBlock implements ITileEntityProvider 
 	}
 
 	private boolean canPlaceAt(IWorldReader world, BlockPos pos, Direction facing) {
-		BlockPos blockpos = pos.offset(facing.getOpposite());
+		BlockPos blockpos = pos.offset(facing);
 		boolean isSide = facing.getAxis().isHorizontal();
 		return isSide && world.getBlockState(blockpos).getBlock() instanceof BlockTank;
 	}

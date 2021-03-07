@@ -23,6 +23,8 @@ import mob_grinding_utils.inventory.client.GuiFan;
 import mob_grinding_utils.inventory.client.GuiSaw;
 import mob_grinding_utils.network.MGUNetwork;
 import net.minecraft.client.gui.ScreenManager;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.RenderTypeLookup;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
@@ -115,5 +117,8 @@ public class MobGrindingUtils {
 		ScreenManager.registerFactory(ModContainers.ABSORPTION_HOPPER.get(), GuiAbsorptionHopper::new);
 		ScreenManager.registerFactory(ModContainers.FAN.get(), GuiFan::new);
 		ScreenManager.registerFactory(ModContainers.SAW.get(), GuiSaw::new);
+		
+		 RenderTypeLookup.setRenderLayer(ModBlocks.TANK, RenderType.getCutout());
+		 RenderTypeLookup.setRenderLayer(ModBlocks.TANK_SINK, RenderType.getCutout());
 	}
 }

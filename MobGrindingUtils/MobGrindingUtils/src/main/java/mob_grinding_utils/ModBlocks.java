@@ -157,7 +157,7 @@ public class ModBlocks {
 				}
 			};
 
-			TANK = new BlockTank(Block.Properties.create(Material.GLASS, MaterialColor.QUARTZ).hardnessAndResistance(1.0F, 2000.0F).sound(SoundType.GLASS));
+			TANK = new BlockTank(Block.Properties.create(Material.GLASS, MaterialColor.QUARTZ).hardnessAndResistance(1.0F, 2000.0F).sound(SoundType.GLASS).notSolid());
 			TANK_ITEM = new BlockItem(TANK, new Item.Properties().group(MobGrindingUtils.TAB)) {
 				@Override
 				@OnlyIn(Dist.CLIENT)
@@ -173,7 +173,7 @@ public class ModBlocks {
 			};
 			TANK_TILE = TileEntityType.Builder.create(TileEntityTank::new, TANK).build(null);
 
-			TANK_SINK = new BlockTankSink(Block.Properties.create(Material.GLASS, MaterialColor.QUARTZ).hardnessAndResistance(1.0F, 2000.0F).sound(SoundType.GLASS));
+			TANK_SINK = new BlockTankSink(Block.Properties.create(Material.GLASS, MaterialColor.QUARTZ).hardnessAndResistance(1.0F, 2000.0F).sound(SoundType.GLASS).notSolid());
 			TANK_SINK_ITEM = new BlockItem(TANK_SINK, new Item.Properties().group(MobGrindingUtils.TAB)) {
 				@Override
 				@OnlyIn(Dist.CLIENT)

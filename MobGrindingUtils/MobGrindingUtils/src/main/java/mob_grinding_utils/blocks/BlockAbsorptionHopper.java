@@ -6,6 +6,7 @@ import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ContainerBlock;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.state.EnumProperty;
 import net.minecraft.state.StateContainer;
@@ -23,6 +24,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.network.NetworkHooks;
 
 public class BlockAbsorptionHopper extends ContainerBlock {
 
@@ -105,7 +107,7 @@ public class BlockAbsorptionHopper extends ContainerBlock {
 
 				if (!player.isSneaking()) {
 					world.notifyBlockUpdate(pos, state, state, 3);
-					//player.openGui(MobGrindingUtils.INSTANCE, MobGrindingUtils.PROXY.GUI_ID_ABSORPTION_HOPPER, world, pos.getX(), pos.getY(), pos.getZ());
+					NetworkHooks.openGui((ServerPlayerEntity) player, (TileEntityAbsorptionHopper)vacuum, pos);
 				} else
 					vacuum.toggleMode(hit.getFace());
 				BlockState newState = getActualState(vacuum, state, world, pos);

@@ -2,31 +2,40 @@ package mob_grinding_utils.tile;
 
 import java.util.List;
 
+import io.netty.buffer.Unpooled;
 import mob_grinding_utils.ModBlocks;
 import mob_grinding_utils.ModItems;
 import mob_grinding_utils.blocks.BlockFan;
+import mob_grinding_utils.inventory.server.ContainerFan;
 import mob_grinding_utils.items.ItemFanUpgrade;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.ItemStackHelper;
+import net.minecraft.inventory.container.Container;
+import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
+import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-public class TileEntityFan extends TileEntityInventoryHelper implements ITickableTileEntity {
+public class TileEntityFan extends TileEntityInventoryHelper implements ITickableTileEntity, INamedContainerProvider {
 
 	private static final int[] SLOTS = new int[] {0, 1, 2};
-	public boolean showRenderBox;
+	public boolean showRenderBox = true;  // TODO set this to false by default - needs button and packet to work
 	float xPos, yPos, zPos;
 	float xNeg, yNeg, zNeg;
 
@@ -265,5 +274,14 @@ public class TileEntityFan extends TileEntityInventoryHelper implements ITickabl
 	public boolean canExtractItem(int index, ItemStack stack, Direction direction) {
 		return false;
 	}
+	
+	@Override
+	public Container createMenu(int windowID, PlayerInventory playerInventory, PlayerEntity player) {
+		return new ContainerFan(windowID, playerInventory, new PacketBuffer(Unpooled.buffer()).writeBlockPos(pos));
+	}
 
+	@Override
+	public ITextComponent getDisplayName() {
+		return new StringTextComponent("Mob Fan"); //TODO localise
+	}
 }

@@ -5,18 +5,25 @@ import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import io.netty.buffer.Unpooled;
 import mob_grinding_utils.ModBlocks;
 import mob_grinding_utils.ModItems;
+import mob_grinding_utils.inventory.server.ContainerAbsorptionHopper;
 import mob_grinding_utils.inventory.server.InventoryWrapperAH;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.item.ExperienceOrbEntity;
 import net.minecraft.entity.item.ItemEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.inventory.ItemStackHelper;
+import net.minecraft.inventory.container.Container;
+import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
+import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
@@ -24,6 +31,8 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.EntityPredicates;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.capabilities.Capability;
@@ -39,7 +48,7 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 
 
-public class TileEntityAbsorptionHopper extends TileEntityInventoryHelper implements ITickableTileEntity {
+public class TileEntityAbsorptionHopper extends TileEntityInventoryHelper implements ITickableTileEntity, INamedContainerProvider {
     public FluidTank tank = new FluidTank(FluidAttributes.BUCKET_VOLUME *  16);
     private final LazyOptional<IFluidHandler> tank_holder = LazyOptional.of(() -> tank);
 	private IItemHandler itemHandler;
@@ -67,7 +76,7 @@ public class TileEntityAbsorptionHopper extends TileEntityInventoryHelper implem
 	}
 
 	public EnumStatus status[] = new EnumStatus[] { EnumStatus.STATUS_NONE, EnumStatus.STATUS_NONE, EnumStatus.STATUS_NONE, EnumStatus.STATUS_NONE, EnumStatus.STATUS_NONE, EnumStatus.STATUS_NONE };
-	public boolean showRenderBox;
+	public boolean showRenderBox = true;  // TODO set this to false by default - needs button and packet to work
 	public int offsetX, offsetY, offsetZ;
 
 	@Override
@@ -469,6 +478,16 @@ public class TileEntityAbsorptionHopper extends TileEntityInventoryHelper implem
 			return (LazyOptional<T>) (itemHandler == null ? (itemHandler = createUnSidedHandler()) : itemHandler);
         return super.getCapability(capability, facing);
     }
+
+	@Override
+	public Container createMenu(int windowID, PlayerInventory playerInventory, PlayerEntity player) {
+		return new ContainerAbsorptionHopper(windowID, playerInventory, new PacketBuffer(Unpooled.buffer()).writeBlockPos(pos));
+	}
+
+	@Override
+	public ITextComponent getDisplayName() {
+		return new StringTextComponent("Absorption Hopper"); //TODO localise
+	}
 
 }
 
