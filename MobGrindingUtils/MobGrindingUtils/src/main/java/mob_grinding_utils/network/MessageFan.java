@@ -16,55 +16,53 @@ import net.minecraftforge.fml.network.NetworkEvent;
 import java.util.function.Supplier;
 
 public class MessageFan {
-	public RegistryKey<World> dimension;
+	//public RegistryKey<World> dimension;
 	public int entityID, buttonID;
 	public BlockPos tilePos;
 
-	public MessageFan(PlayerEntity player, int button, BlockPos pos) {
-		dimension = player.getEntityWorld().getDimensionKey();
-		entityID = player.getEntityId();
+	public MessageFan(int button, BlockPos pos) {
+		//dimension = player.getEntityWorld().getDimensionKey();
+		//entityID = player.getEntityId();
 		buttonID = button;
 		tilePos = pos;
 	}
 
-	public MessageFan(PlayerEntity player, int button, int x, int y, int z) {
-		dimension = player.getEntityWorld().getDimensionKey();
-		entityID = player.getEntityId();
+	public MessageFan(int button, int x, int y, int z) {
+		//dimension = player.getEntityWorld().getDimensionKey();
+		//entityID = player.getEntityId();
 		buttonID = button;
 		tilePos = new BlockPos(x, y, z);
 	}
-
-	public MessageFan(ResourceLocation dimensionKey, int entityID, int buttonID, BlockPos tilePos) {
-		this.dimension = RegistryKey.getOrCreateKey(Registry.WORLD_KEY, dimensionKey);
-		this.entityID = entityID;
+/*
+	public MessageFan(int buttonID, BlockPos tilePos) {
+		//this.dimension = RegistryKey.getOrCreateKey(Registry.WORLD_KEY, dimensionKey);
+		//this.entityID = entityID;
 		this.buttonID = buttonID;
 		this.tilePos = tilePos;
 	}
-
+*/
 	public static void encode(final MessageFan message, PacketBuffer buf) {
-		buf.writeResourceLocation(message.dimension.getLocation());
-		buf.writeInt(message.entityID);
+		//buf.writeResourceLocation(message.dimension.getLocation());
+		//buf.writeInt(message.entityID);
 		buf.writeInt(message.buttonID);
 		buf.writeBlockPos(message.tilePos);
 	}
 
 	public static MessageFan decode(PacketBuffer buf) {
-		return new MessageFan(buf.readResourceLocation(), buf.readInt(), buf.readInt(), buf.readBlockPos());
+		return new MessageFan(buf.readInt(), buf.readBlockPos());
 	}
 
 	public static void handle(MessageFan message, final Supplier<NetworkEvent.Context> ctx) {
 		ctx.get().enqueueWork(() -> {
 
 			ServerPlayerEntity player = ctx.get().getSender();
-			ServerWorld world = player.getServer().getWorld(message.dimension);
-			if (world != null) {
-				TileEntityFan fan = (TileEntityFan) world.getTileEntity(message.tilePos);
-				if (fan != null) {
-					if (message.buttonID == 0)
-						fan.toggleRenderBox();
-					BlockState state = world.getBlockState(message.tilePos);
-					world.notifyBlockUpdate(message.tilePos, state, state, 3);
-				}
+			ServerWorld world = player.getServerWorld(); //player.getServer().getWorld(message.dimension);
+			TileEntityFan fan = (TileEntityFan) world.getTileEntity(message.tilePos);
+			if (fan != null) {
+				if (message.buttonID == 0)
+					fan.toggleRenderBox();
+				BlockState state = world.getBlockState(message.tilePos);
+				world.notifyBlockUpdate(message.tilePos, state, state, 3);
 			}
 
 		});
