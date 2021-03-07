@@ -4,6 +4,7 @@ import mob_grinding_utils.blocks.BlockSpikes;
 import mob_grinding_utils.client.render.TileEntityAbsorptionRenderer;
 import mob_grinding_utils.client.render.TileEntityFanRenderer;
 import mob_grinding_utils.client.render.TileEntitySawRenderer;
+import mob_grinding_utils.client.render.TileEntityTankRenderer;
 import mob_grinding_utils.datagen.Generator;
 import mob_grinding_utils.events.BossBarHidingEvent;
 import mob_grinding_utils.events.ChickenFuseEvent;
@@ -113,6 +114,7 @@ public class MobGrindingUtils {
 		ClientRegistry.bindTileEntityRenderer(ModBlocks.FAN_TILE, TileEntityFanRenderer::new);
 		ClientRegistry.bindTileEntityRenderer(ModBlocks.SAW_TILE, TileEntitySawRenderer::new);
 		ClientRegistry.bindTileEntityRenderer(ModBlocks.ABSORPTION_HOPPER_TILE, TileEntityAbsorptionRenderer::new);
+		ClientRegistry.bindTileEntityRenderer(ModBlocks.TANK_TILE, TileEntityTankRenderer::new);
 		
 		ScreenManager.registerFactory(ModContainers.ABSORPTION_HOPPER.get(), GuiAbsorptionHopper::new);
 		ScreenManager.registerFactory(ModContainers.FAN.get(), GuiFan::new);
