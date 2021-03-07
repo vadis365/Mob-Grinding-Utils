@@ -42,12 +42,6 @@ public class BlockTank extends ContainerBlock {
 /*
 	@Override
 	@SideOnly(Side.CLIENT)
-	public BlockRenderLayer getRenderLayer() {
-		return BlockRenderLayer.CUTOUT;
-	}
-
-	@Override
-	@SideOnly(Side.CLIENT)
 	public boolean shouldSideBeRendered(BlockState blockState, BlockAccess blockAccess, BlockPos pos, Direction side) {
 		return true;
 	}
@@ -56,12 +50,6 @@ public class BlockTank extends ContainerBlock {
 	public boolean isOpaqueCube(IBlockState state) {
 		return false;
 	}
-
-	@Override
-	public boolean canEntityDestroy(IBlockState state, IBlockAccess world, BlockPos pos, Entity entity) {
-      return !(entity instanceof EntityWither) && !(entity instanceof EntityDragon);
-	}
-
 	@Nullable
 	@Override
 	public Item getItemDropped(BlockState state, Random rand, int fortune) {

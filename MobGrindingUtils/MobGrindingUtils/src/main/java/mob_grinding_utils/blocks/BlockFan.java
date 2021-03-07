@@ -41,12 +41,6 @@ public class BlockFan extends DirectionalBlock implements ITileEntityProvider {
 	}
 /*
 	@Override
-	@SideOnly(Side.CLIENT)
-	public BlockRenderLayer getRenderLayer() {
-		return BlockRenderLayer.SOLID;
-	}
-
-	@Override
 	public boolean isOpaqueCube(BlockState state) {
 		return true;
 	}
@@ -74,17 +68,10 @@ public class BlockFan extends DirectionalBlock implements ITileEntityProvider {
 		else {
 			TileEntity tileentity = world.getTileEntity(pos);
 			if (tileentity  instanceof TileEntityFan)
-			//System.out.println("Fan Gui Opens Here");
 			NetworkHooks.openGui((ServerPlayerEntity) player, (TileEntityFan)tileentity, pos);
 		return ActionResultType.SUCCESS;
 		}
 	}
-/*
-	@Override
-	public boolean canEntityDestroy(BlockState state, IBlockAccess world, BlockPos pos, Entity entity) {
-      return !(entity instanceof EntityWither) && !(entity instanceof EntityDragon);
-	}
-*/
 
 	@Override
 	public void onReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving) {
