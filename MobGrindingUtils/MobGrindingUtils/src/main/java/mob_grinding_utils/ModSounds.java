@@ -52,7 +52,7 @@ public class ModSounds {
 		sound.setRegistryName(Reference.MOD_ID, name);
 	}
 
-	@Mod.EventBusSubscriber(modid = Reference.MOD_ID)
+	@Mod.EventBusSubscriber(modid = Reference.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
 	public static class RegistrationHandlerSounds {
 		@SubscribeEvent
 		public static void registerSoundEvents(final RegistryEvent.Register<SoundEvent> event) {
