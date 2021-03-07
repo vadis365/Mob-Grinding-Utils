@@ -1,6 +1,7 @@
 package mob_grinding_utils;
 
 import mob_grinding_utils.blocks.BlockSpikes;
+import mob_grinding_utils.client.particles.ParticleFluidXP;
 import mob_grinding_utils.client.render.TileEntityAbsorptionRenderer;
 import mob_grinding_utils.client.render.TileEntityFanRenderer;
 import mob_grinding_utils.client.render.TileEntitySawRenderer;
@@ -28,9 +29,11 @@ import net.minecraft.client.renderer.RenderTypeLookup;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
+import net.minecraft.particles.ParticleType;
 import net.minecraft.util.DamageSource;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
@@ -47,6 +50,9 @@ public class MobGrindingUtils {
 	public static DamageSource SPIKE_DAMAGE;
 
 	public static final DeferredRegister<ContainerType<?>> CONTAINERS = DeferredRegister.create(ForgeRegistries.CONTAINERS, Reference.MOD_ID);
+	public static final DeferredRegister<ParticleType<?>> PARTICLES = DeferredRegister.create(ForgeRegistries.PARTICLE_TYPES, Reference.MOD_ID);
+
+	//public static final RegistryObject<ParticleType<?>> PARTICLE_FLUIDXP = PARTICLES.register("particle_fluid_xp", ParticleFluidXP::new); //todo
 
 	public static final ItemGroup TAB = new ItemGroup(Reference.MOD_ID) {
 		@Override
@@ -65,6 +71,7 @@ public class MobGrindingUtils {
 
 		IEventBus modBus = FMLJavaModLoadingContext.get().getModEventBus();
 		CONTAINERS.register(modBus);
+		PARTICLES.register(modBus);
 
 		modBus.addListener(this::setup);
 		modBus.addListener(this::doClientStuff);
@@ -85,8 +92,6 @@ public class MobGrindingUtils {
 */
 		SPIKE_DAMAGE = new DamageSource("spikes").setDamageBypassesArmor();
 
-		//PROXY.registerRenderers();
-		//NetworkRegistry.INSTANCE.registerGuiHandler(INSTANCE, PROXY);
 		NETWORK_WRAPPER = MGUNetwork.getNetworkChannel();
 		
 		MinecraftForge.EVENT_BUS.addListener(BlockSpikes::dropXP);
