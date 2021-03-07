@@ -1,0 +1,14 @@
+
+{
+  "textures": [
+    "mob_grinding_utils:xp/fluid_xp_particles0",
+    "mob_grinding_utils:xp/fluid_xp_particles1",
+    "mob_grinding_utils:xp/fluid_xp_particles2",
+    "mob_grinding_utils:xp/fluid_xp_particles3",
+    "mob_grinding_utils:xp/fluid_xp_particles4",
+    "mob_grinding_utils:xp/fluid_xp_particles5",
+    "mob_grinding_utils:xp/fluid_xp_particles6",
+    "mob_grinding_utils:xp/fluid_xp_particles7",
+    "mob_grinding_utils:xp/fluid_xp_particles8"
+  ]
+}
