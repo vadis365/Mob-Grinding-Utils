@@ -75,12 +75,14 @@ public class BlockFan extends DirectionalBlock implements ITileEntityProvider {
 
 	@Override
 	public void onReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving) {
-		TileEntityFan tile = (TileEntityFan) world.getTileEntity(pos);
-		if (tile != null) {
-			InventoryHelper.dropInventoryItems(world, pos, tile);
-			world.updateComparatorOutputLevel(pos, this);
+		if (!state.isIn(newState.getBlock())) {
+			TileEntityFan tile = (TileEntityFan) world.getTileEntity(pos);
+			if (tile != null) {
+				InventoryHelper.dropInventoryItems(world, pos, tile);
+				world.updateComparatorOutputLevel(pos, this);
+			}
+			super.onReplaced(state, world, pos, newState, isMoving);
 		}
-		super.onReplaced(state, world, pos, newState, isMoving);
 	}
 
 	@Override

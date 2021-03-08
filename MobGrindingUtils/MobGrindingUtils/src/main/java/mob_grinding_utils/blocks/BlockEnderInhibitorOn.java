@@ -7,8 +7,10 @@ import mob_grinding_utils.ModBlocks;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItemUseContext;
+import net.minecraft.item.ItemStack;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.state.EnumProperty;
 import net.minecraft.state.StateContainer;
@@ -156,9 +158,8 @@ public class BlockEnderInhibitorOn extends Block {
 			flag = true;
 
 		if (!flag) {
-			//TODO DROP THE BLOCK LOGIC
-			//dropBlockAsItem(world, pos, state, 0);
-			//world.setBlockToAir(pos);
+			spawnAsEntity( world, pos, new ItemStack(ModBlocks.ENDER_INHIBITOR_OFF_ITEM, 1));
+			world.setBlockState(pos, Blocks.AIR.getDefaultState());
 		}
 
 		super.neighborChanged(state, world, pos, block, fromPos, isMoving);
