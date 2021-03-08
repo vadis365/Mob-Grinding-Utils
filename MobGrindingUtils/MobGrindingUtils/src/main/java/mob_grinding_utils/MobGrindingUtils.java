@@ -114,9 +114,6 @@ public class MobGrindingUtils {
 		MinecraftForge.EVENT_BUS.register(new GlobalDragonSoundEvent());
 		MinecraftForge.EVENT_BUS.register(new BossBarHidingEvent());
 
-	/*	ClientRegistry.bindTileEntityRenderer(ModBlocks.TANK_TILE, TileEntityTankRenderer::new);
-		ClientRegistry.bindTileEntityRenderer(ModBlocks.TANK_SINK_TILE, TileEntityTankRenderer::new);
-	*/
 		ClientRegistry.bindTileEntityRenderer(ModBlocks.FAN_TILE, TileEntityFanRenderer::new);
 		ClientRegistry.bindTileEntityRenderer(ModBlocks.SAW_TILE, TileEntitySawRenderer::new);
 		ClientRegistry.bindTileEntityRenderer(ModBlocks.ABSORPTION_HOPPER_TILE, TileEntityAbsorptionRenderer::new);

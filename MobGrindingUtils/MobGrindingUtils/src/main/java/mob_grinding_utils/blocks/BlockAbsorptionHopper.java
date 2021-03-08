@@ -14,6 +14,8 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.shapes.ISelectionContext;
@@ -106,6 +108,7 @@ public class BlockAbsorptionHopper extends ContainerBlock {
 					NetworkHooks.openGui((ServerPlayerEntity) player, (TileEntityAbsorptionHopper)vacuum, pos);
 				} else {
 					vacuum.toggleMode(hit.getFace());
+					world.playSound(null, pos, SoundEvents.BLOCK_LEVER_CLICK, SoundCategory.BLOCKS, 0.3F, 0.6F);
 					world.notifyBlockUpdate(pos, state, state, 3);
 				}
 			}

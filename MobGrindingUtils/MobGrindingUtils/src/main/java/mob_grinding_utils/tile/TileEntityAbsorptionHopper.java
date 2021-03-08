@@ -248,7 +248,7 @@ public class TileEntityAbsorptionHopper extends TileEntityInventoryHelper implem
 			if (status[facing.ordinal()] == EnumStatus.STATUS_OUTPUT_FLUID) {
 				TileEntity tile = getWorld().getTileEntity(pos.offset(facing));
 				if (tile != null) {
-					IFluidHandler recepticle = (IFluidHandler) tile.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, facing.getOpposite());
+			/*		IFluidHandler recepticle = (IFluidHandler) tile.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, facing.getOpposite());
 					int tanks = recepticle.getTanks();
 					for (int x = 0; x < tanks; x++) {
 						if (recepticle.getTankCapacity(tanks) > 0) {
@@ -260,7 +260,7 @@ public class TileEntityAbsorptionHopper extends TileEntityInventoryHelper implem
 								}
 							}
 						}
-					}
+					}*/
 				}
 			}
 		}
