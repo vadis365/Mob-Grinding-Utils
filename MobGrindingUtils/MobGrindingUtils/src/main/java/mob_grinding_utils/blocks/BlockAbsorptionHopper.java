@@ -75,12 +75,6 @@ public class BlockAbsorptionHopper extends ContainerBlock {
 	}
 /*
 	@Override
-	@SideOnly(Side.CLIENT)
-    public BlockRenderLayer getRenderLayer() {
-		return BlockRenderLayer.SOLID;
-	}
-
-	@Override
 	public boolean isOpaqueCube(IBlockState state) {
 		return false;
 	}
@@ -128,12 +122,7 @@ public class BlockAbsorptionHopper extends ContainerBlock {
 					.with(EAST, east).with(UP, up).with(DOWN, down);
 	}
 
-/* TODO Tags
-	@Override
-	public boolean canEntityDestroy(IBlockState state, IBlockAccess world, BlockPos pos, Entity entity) {
-      return !(entity instanceof EntityWither) && !(entity instanceof EntityDragon);
-    }
-
+/* TODO
 	@Nullable
 	@Override
 	public Item getItemDropped(IBlockState state, Random rand, int fortune) {

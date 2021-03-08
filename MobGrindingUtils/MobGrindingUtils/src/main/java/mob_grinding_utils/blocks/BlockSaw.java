@@ -62,14 +62,7 @@ public class BlockSaw extends DirectionalBlock implements ITileEntityProvider {
 	public BlockRenderType getRenderType(BlockState state) {
 		return BlockRenderType.INVISIBLE;
 	}
-/*
-	@Override
-	@SideOnly(Side.CLIENT)
-	public BlockRenderLayer getRenderLayer() {
-		return BlockRenderLayer.CUTOUT;
-	}
 
-*/
 	@Override
 	public BlockState getStateForPlacement(BlockItemUseContext context) {
 		Direction direction = context.getFace();
@@ -96,7 +89,6 @@ public class BlockSaw extends DirectionalBlock implements ITileEntityProvider {
 	} else {
 		TileEntity tileentity = world.getTileEntity(pos);
 		if (tileentity  instanceof TileEntitySaw)
-			//System.out.println("Masher Gui Opens Here");
 			NetworkHooks.openGui((ServerPlayerEntity) player, (TileEntitySaw)tileentity, pos);
 		return ActionResultType.SUCCESS;
 	}
@@ -112,12 +104,7 @@ public class BlockSaw extends DirectionalBlock implements ITileEntityProvider {
 		}
 		super.onReplaced(state, world, pos, newState, isMoving);
 	}
-/*
-	@Override
-	public boolean canEntityDestroy(IBlockState state, IBlockAccess world, BlockPos pos, Entity entity) {
-      return !(entity instanceof EntityWither) && !(entity instanceof EntityDragon);
-	}
-*/
+
 	@Override
 	public void neighborChanged(BlockState state, World world, BlockPos pos, Block block, BlockPos fromPos, boolean isMoving) {
 		if (!world.isRemote) {

@@ -30,7 +30,6 @@ public class FillXPBottleEvent {
 									tileentity.tank.drain(new FluidStack(tileentity.tank.getFluid(), 200), FluidAction.EXECUTE);
 									event.getWorld().playSound(null, player.getPosX(), player.getPosY(), player.getPosZ(), SoundEvents.ITEM_BOTTLE_FILL, SoundCategory.NEUTRAL, 1.0F, 1.0F);
 									turnBottleIntoItem(handItem, player, new ItemStack(Items.EXPERIENCE_BOTTLE));
-									System.out.println("Texture Loc is: " + tileentity.tank.getFluid().getFluid().getAttributes().getStillTexture());
 									handItem.shrink(1);
 									event.getWorld().notifyBlockUpdate(tileentity.getPos(), event.getWorld().getBlockState(tileentity.getPos()), event.getWorld().getBlockState(tileentity.getPos()), 3);
 								}

@@ -36,7 +36,6 @@ public class TileEntityTankRenderer extends TileEntityRenderer<TileEntityTank> {
 		TextureAtlasSprite fluidStillSprite = Minecraft.getInstance().getAtlasSpriteGetter(PlayerContainer.LOCATION_BLOCKS_TEXTURE).apply(new ResourceLocation("mob_grinding_utils:fluids/fluid_xp"));
 		IVertexBuilder buffer = bufferIn.getBuffer(RenderType.getTranslucent());
 		int fluidColor = fluidStack.getFluid().getAttributes().getColor();
-	//	System.out.println("Texture Loc is: " + fluidStack.getFluid().getAttributes().getStillTexture());
 		matrixStack.push();
 		matrixStack.translate(0D, 0D, 0D);
 		float xMax, zMax, xMin, zMin, yMin = 0;

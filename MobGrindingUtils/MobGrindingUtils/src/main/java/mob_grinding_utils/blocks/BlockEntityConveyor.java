@@ -36,13 +36,7 @@ public class BlockEntityConveyor extends Block {
 		return VoxelShapes.fullCube();
 	}
 	
-/*
-	@Override
-	public boolean canEntityDestroy(IBlockState state, IBlockAccess world, BlockPos pos, Entity entity) {
-      return !(entity instanceof EntityWither) && !(entity instanceof EntityDragon);
-    }
-    
-//TODO Add to block properties 
+/* TODO Add to block properties 
 
 	@Override
     public boolean canEntitySpawn(BlockState state, Entity entityIn) {

@@ -77,13 +77,6 @@ public class BlockXPTap extends DirectionalBlock implements ITileEntityProvider 
 		Direction direction = context.getFace();
 		return this.getDefaultState().with(FACING, direction).with(POWERED, false);
 	}
-
-	/* TODO tags
-	@Override
-	public boolean canEntityDestroy(IBlockState state, IBlockAccess world, BlockPos pos, Entity entity) {
-      return !(entity instanceof EntityWither) && !(entity instanceof EntityDragon);
-	}
-	*/
 	
 	@Override
 	public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
