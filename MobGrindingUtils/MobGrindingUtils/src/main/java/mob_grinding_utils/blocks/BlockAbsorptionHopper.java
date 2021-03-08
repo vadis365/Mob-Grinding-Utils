@@ -8,11 +8,8 @@ import net.minecraft.block.ContainerBlock;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.InventoryHelper;
-import net.minecraft.state.EnumProperty;
-import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
@@ -22,34 +19,14 @@ import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.event.TextureStitchEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.network.NetworkHooks;
 
 public class BlockAbsorptionHopper extends ContainerBlock {
-/*
-	public static final EnumProperty<TileEntityAbsorptionHopper.EnumStatus> NORTH = EnumProperty.create("north", TileEntityAbsorptionHopper.EnumStatus.class);
-	public static final EnumProperty<TileEntityAbsorptionHopper.EnumStatus> SOUTH = EnumProperty.create("south", TileEntityAbsorptionHopper.EnumStatus.class);
-	public static final EnumProperty<TileEntityAbsorptionHopper.EnumStatus> WEST = EnumProperty.create("west", TileEntityAbsorptionHopper.EnumStatus.class);
-	public static final EnumProperty<TileEntityAbsorptionHopper.EnumStatus> EAST = EnumProperty.create("east", TileEntityAbsorptionHopper.EnumStatus.class);
-	public static final EnumProperty<TileEntityAbsorptionHopper.EnumStatus> UP = EnumProperty.create("up", TileEntityAbsorptionHopper.EnumStatus.class);
-	public static final EnumProperty<TileEntityAbsorptionHopper.EnumStatus> DOWN = EnumProperty.create("down", TileEntityAbsorptionHopper.EnumStatus.class);
-*/	
+
 	public static final VoxelShape HOPPER_AABB = Block.makeCuboidShape(4D, 4D, 4D, 12D, 12D, 12D);
 
 	public BlockAbsorptionHopper(Block.Properties properties) {
 		super(properties);
-	/*	
-		// this probably won't work at all - will fix later
-		setDefaultState(this.stateContainer.getBaseState().with(NORTH, TileEntityAbsorptionHopper.EnumStatus.STATUS_NONE)
-		.with(SOUTH, TileEntityAbsorptionHopper.EnumStatus.STATUS_NONE)
-		.with(WEST, TileEntityAbsorptionHopper.EnumStatus.STATUS_NONE)
-		.with(EAST, TileEntityAbsorptionHopper.EnumStatus.STATUS_NONE)
-		.with(UP, TileEntityAbsorptionHopper.EnumStatus.STATUS_NONE)
-		.with(DOWN, TileEntityAbsorptionHopper.EnumStatus.STATUS_NONE));
-		*/
 	}
 
 	@Override
@@ -115,18 +92,7 @@ public class BlockAbsorptionHopper extends ContainerBlock {
 		}
 		return ActionResultType.SUCCESS;
 	}
-/*
-	public BlockState getActualState(TileEntityAbsorptionHopper tile, BlockState state, World world, BlockPos pos) { //// TODO HHHNNNGGGGNNNNGGGGHHHHHNNN!
-			TileEntityAbsorptionHopper.EnumStatus north = tile.getSideStatus(Direction.NORTH);
-			TileEntityAbsorptionHopper.EnumStatus south = tile.getSideStatus(Direction.SOUTH);
-			TileEntityAbsorptionHopper.EnumStatus west = tile.getSideStatus(Direction.WEST);
-			TileEntityAbsorptionHopper.EnumStatus east = tile.getSideStatus(Direction.EAST);
-			TileEntityAbsorptionHopper.EnumStatus up = tile.getSideStatus(Direction.UP);
-			TileEntityAbsorptionHopper.EnumStatus down = tile.getSideStatus(Direction.DOWN);
-			return state.with(NORTH, north).with(SOUTH, south).with(WEST, west)
-					.with(EAST, east).with(UP, up).with(DOWN, down);
-	}
-*/
+
 /* TODO
 	@Nullable
 	@Override
@@ -145,10 +111,4 @@ public class BlockAbsorptionHopper extends ContainerBlock {
 			}
 		}
 	}
-/*
-	@Override
-	protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
-		builder.add(NORTH, SOUTH, WEST, EAST, UP, DOWN);
-	}
-	*/
 }
