@@ -114,7 +114,8 @@ public class GuiAbsorptionHopper extends ContainerScreen<ContainerAbsorptionHopp
 		int fluid = tile.getScaledFluid(120);
 		RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 		if (fluid >= 1) {
-			TextureAtlasSprite sprite = (TextureAtlasSprite) Minecraft.getInstance().getAtlasSpriteGetter(tile.tank.getFluid().getFluid().getAttributes().getStillTexture());
+			//TextureAtlasSprite sprite = (TextureAtlasSprite) Minecraft.getInstance().getAtlasSpriteGetter(tile.tank.getFluid().getFluid().getAttributes().getStillTexture());
+			TextureAtlasSprite sprite = Minecraft.getInstance().getAtlasSpriteGetter(PlayerContainer.LOCATION_BLOCKS_TEXTURE).apply(tile.tank.getFluid().getFluid().getAttributes().getStillTexture());
 			Tessellator tessellator = Tessellator.getInstance();
 			BufferBuilder buffer = tessellator.getBuffer();
 			Minecraft.getInstance().textureManager.bindTexture(PlayerContainer.LOCATION_BLOCKS_TEXTURE); // dunno if needed now

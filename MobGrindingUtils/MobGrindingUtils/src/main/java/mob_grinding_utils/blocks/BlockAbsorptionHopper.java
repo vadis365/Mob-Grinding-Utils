@@ -27,18 +27,19 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.network.NetworkHooks;
 
 public class BlockAbsorptionHopper extends ContainerBlock {
-
+/*
 	public static final EnumProperty<TileEntityAbsorptionHopper.EnumStatus> NORTH = EnumProperty.create("north", TileEntityAbsorptionHopper.EnumStatus.class);
 	public static final EnumProperty<TileEntityAbsorptionHopper.EnumStatus> SOUTH = EnumProperty.create("south", TileEntityAbsorptionHopper.EnumStatus.class);
 	public static final EnumProperty<TileEntityAbsorptionHopper.EnumStatus> WEST = EnumProperty.create("west", TileEntityAbsorptionHopper.EnumStatus.class);
 	public static final EnumProperty<TileEntityAbsorptionHopper.EnumStatus> EAST = EnumProperty.create("east", TileEntityAbsorptionHopper.EnumStatus.class);
 	public static final EnumProperty<TileEntityAbsorptionHopper.EnumStatus> UP = EnumProperty.create("up", TileEntityAbsorptionHopper.EnumStatus.class);
 	public static final EnumProperty<TileEntityAbsorptionHopper.EnumStatus> DOWN = EnumProperty.create("down", TileEntityAbsorptionHopper.EnumStatus.class);
+*/	
 	public static final VoxelShape HOPPER_AABB = Block.makeCuboidShape(4D, 4D, 4D, 12D, 12D, 12D);
 
 	public BlockAbsorptionHopper(Block.Properties properties) {
 		super(properties);
-		
+	/*	
 		// this probably won't work at all - will fix later
 		setDefaultState(this.stateContainer.getBaseState().with(NORTH, TileEntityAbsorptionHopper.EnumStatus.STATUS_NONE)
 		.with(SOUTH, TileEntityAbsorptionHopper.EnumStatus.STATUS_NONE)
@@ -46,6 +47,7 @@ public class BlockAbsorptionHopper extends ContainerBlock {
 		.with(EAST, TileEntityAbsorptionHopper.EnumStatus.STATUS_NONE)
 		.with(UP, TileEntityAbsorptionHopper.EnumStatus.STATUS_NONE)
 		.with(DOWN, TileEntityAbsorptionHopper.EnumStatus.STATUS_NONE));
+		*/
 	}
 
 	@Override
@@ -102,15 +104,15 @@ public class BlockAbsorptionHopper extends ContainerBlock {
 				if (!player.isSneaking()) {
 					world.notifyBlockUpdate(pos, state, state, 3);
 					NetworkHooks.openGui((ServerPlayerEntity) player, (TileEntityAbsorptionHopper)vacuum, pos);
-				} else
+				} else {
 					vacuum.toggleMode(hit.getFace());
-				BlockState newState = getActualState(vacuum, state, world, pos);
-				world.setBlockState(pos, newState, 3);
+					world.notifyBlockUpdate(pos, state, state, 3);
+				}
 			}
 		}
 		return ActionResultType.SUCCESS;
 	}
-
+/*
 	public BlockState getActualState(TileEntityAbsorptionHopper tile, BlockState state, World world, BlockPos pos) { //// TODO HHHNNNGGGGNNNNGGGGHHHHHNNN!
 			TileEntityAbsorptionHopper.EnumStatus north = tile.getSideStatus(Direction.NORTH);
 			TileEntityAbsorptionHopper.EnumStatus south = tile.getSideStatus(Direction.SOUTH);
@@ -121,7 +123,7 @@ public class BlockAbsorptionHopper extends ContainerBlock {
 			return state.with(NORTH, north).with(SOUTH, south).with(WEST, west)
 					.with(EAST, east).with(UP, up).with(DOWN, down);
 	}
-
+*/
 /* TODO
 	@Nullable
 	@Override
@@ -140,9 +142,10 @@ public class BlockAbsorptionHopper extends ContainerBlock {
 			}
 		}
 	}
-
+/*
 	@Override
 	protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
 		builder.add(NORTH, SOUTH, WEST, EAST, UP, DOWN);
 	}
+	*/
 }

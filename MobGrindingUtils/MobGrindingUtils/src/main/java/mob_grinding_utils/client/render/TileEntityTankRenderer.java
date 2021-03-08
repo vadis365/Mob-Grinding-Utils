@@ -33,7 +33,7 @@ public class TileEntityTankRenderer extends TileEntityRenderer<TileEntityTank> {
 		FluidStack fluidStack = new FluidStack(tile.tank.getFluid(), 100);
 		float height = (0.96875F / tile.tank.getCapacity()) * tile.tank.getFluidAmount();
 		
-		TextureAtlasSprite fluidStillSprite = Minecraft.getInstance().getAtlasSpriteGetter(PlayerContainer.LOCATION_BLOCKS_TEXTURE).apply(new ResourceLocation("mob_grinding_utils:fluids/fluid_xp"));
+		TextureAtlasSprite fluidStillSprite = Minecraft.getInstance().getAtlasSpriteGetter(PlayerContainer.LOCATION_BLOCKS_TEXTURE).apply(fluidStack.getFluid().getAttributes().getStillTexture());
 		IVertexBuilder buffer = bufferIn.getBuffer(RenderType.getTranslucent());
 		int fluidColor = fluidStack.getFluid().getAttributes().getColor();
 		matrixStack.push();
