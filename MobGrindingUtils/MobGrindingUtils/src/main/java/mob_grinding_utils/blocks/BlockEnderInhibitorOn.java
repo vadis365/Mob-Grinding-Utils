@@ -21,6 +21,10 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.math.shapes.ISelectionContext;
+import net.minecraft.util.math.shapes.VoxelShape;
+import net.minecraft.util.math.shapes.VoxelShapes;
+import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
@@ -29,18 +33,24 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 public class BlockEnderInhibitorOn extends Block {
 
 	public static final EnumProperty<EnumGemDirection> TYPE = EnumProperty.create("type", EnumGemDirection.class);
+	public static final VoxelShape DOWN_NORTH_AABB = Block.makeCuboidShape(2D, 0D, 3D, 14D, 3D, 13D);
+	public static final VoxelShape DOWN_SOUTH_AABB = Block.makeCuboidShape(2D, 0D, 3D, 14D, 3D, 13D);
+	public static final VoxelShape DOWN_WEST_AABB = Block.makeCuboidShape(3D, 0D, 2D, 13D, 3D, 14D);
+	public static final VoxelShape DOWN_EAST_AABB = Block.makeCuboidShape(3D, 0D, 2D, 13D, 3D, 14D);
+	public static final VoxelShape UP_NORTH_AABB = Block.makeCuboidShape(2D, 13D, 3D, 14D, 16D, 13D);
+	public static final VoxelShape UP_SOUTH_AABB = Block.makeCuboidShape(2D, 13D, 3D, 14D, 16D, 13D);
+	public static final VoxelShape UP_WEST_AABB = Block.makeCuboidShape(3D, 13D, 2D, 13D, 16D, 14D);
+	public static final VoxelShape UP_EAST_AABB = Block.makeCuboidShape(3D, 13D, 2D, 13D, 16D, 14D);
+	public static final VoxelShape NORTH_AABB = Block.makeCuboidShape(2D, 3D, 0D, 14D, 13D, 3D);
+	public static final VoxelShape SOUTH_AABB = Block.makeCuboidShape(2D, 3D, 13D, 14D, 13D, 16D);
+	public static final VoxelShape WEST_AABB = Block.makeCuboidShape(0D, 3D, 2D, 3D, 13D, 14D);
+	public static final VoxelShape EAST_AABB = Block.makeCuboidShape(13D, 3D, 2D, 16D, 13D, 14D);
 
 	public BlockEnderInhibitorOn(Block.Properties properties) {
 		super(properties);
 		setDefaultState(this.stateContainer.getBaseState().with(TYPE, EnumGemDirection.DOWN_NORTH));
 	}
-//TODO this needs fixing in most blocks to use dragon and wither tags
-	/*
-	@Override
-	public boolean canEntityDestroy(IBlockState state, IBlockAccess world, BlockPos pos, Entity entity) {
-      return !(entity instanceof EntityWither) && !(entity instanceof EntityDragon);
-    }
-//
+/*
 	@Override
 	public boolean isOpaqueCube(IBlockState state) {
 		return false;
@@ -64,7 +74,6 @@ public class BlockEnderInhibitorOn extends Block {
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void animateTick(BlockState stateIn, World world, BlockPos pos, Random rand) {
-
 		for (int i = 0; i < 4; ++i) {
 			double d0 = (double) ((float) pos.getX() + rand.nextFloat());
 			double d1 = (double) ((float) pos.getY() + rand.nextFloat());
@@ -81,123 +90,46 @@ public class BlockEnderInhibitorOn extends Block {
 				d2 = (double) pos.getZ() + 0.5D + 0.25D * (double) j;
 				d5 = (double) (rand.nextFloat() * 2.0F * (float) j);
 			}
-
 			world.addParticle(ParticleTypes.PORTAL, d0, d1, d2, d3, d4, d5);
 		}
 	}
-/* TODO Voxel shapes (easy to do but can be sorted later)
-	@Override
-	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess world, BlockPos pos) {
 
-		float widthMin = 0, heightMin = 0, depthMin = 0;
-		float widthMax = 0, heightMax = 0, depthMax = 0;
+
+	@Override
+	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
 		switch (state.get(TYPE)) {
-
-			case SOUTH:
-				widthMin = 0.125F;
-				heightMin = 0.1875F;
-				depthMin = 0.8125F;
-				widthMax = 0.125F;
-				heightMax = 0.1875F;
-				depthMax = 0F;
-				break;
-			case NORTH:
-				widthMin = 0.125F;
-				heightMin = 0.1875F;
-				depthMin = 0F;
-				widthMax = 0.125F;
-				heightMax = 0.1875F;
-				depthMax = 0.8125F;
-				break;
-			case EAST:
-				widthMin = 0.8125F;
-				heightMin = 0.1875F;
-				depthMin = 0.125F;
-				widthMax = 0F;
-				heightMax = 0.1875F;
-				depthMax = 0.125F;
-				break;
-			case WEST:
-				widthMin = 0F;
-				heightMin = 0.1875F;
-				depthMin = 0.125F;
-				widthMax = 0.8125F;
-				heightMax = 0.1875F;
-				depthMax = 0.125F;
-				break;
-			case UP_NORTH:
-				widthMin = 0.125F;
-				heightMin = 0.8125F;
-				depthMin = 0.1875F;
-				widthMax = 0.125F;
-				heightMax = 0F;
-				depthMax = 0.1875F;
-				break;
-			case UP_EAST:
-				widthMin = 0.1875F;
-				heightMin = 0.8125F;
-				depthMin = 0.125F;
-				widthMax = 0.1875F;
-				heightMax = 0F;
-				depthMax = 0.125F;
-				break;
-			case UP_SOUTH:
-				widthMin = 0.125F;
-				heightMin = 0.8125F;
-				depthMin = 0.1875F;
-				widthMax = 0.125F;
-				heightMax = 0F;
-				depthMax = 0.1875F;
-				break;
-			case UP_WEST:
-				widthMin = 0.1875F;
-				heightMin = 0.8125F;
-				depthMin = 0.125F;
-				widthMax = 0.1875F;
-				heightMax = 0F;
-				depthMax = 0.125F;
-				break;
-			case DOWN_NORTH:
-				widthMin = 0.125F;
-				heightMin = 0F;
-				depthMin = 0.1875F;
-				widthMax = 0.125F;
-				heightMax = 0.8125F;
-				depthMax = 0.1875F;
-				break;
-			case DOWN_EAST:
-				widthMin = 0.1875F;
-				heightMin = 0F;
-				depthMin = 0.125F;
-				widthMax = 0.1875F;
-				heightMax = 0.8125F;
-				depthMax = 0.125F;
-				break;
-			case DOWN_SOUTH:
-				widthMin = 0.125F;
-				heightMin = 0F;
-				depthMin = 0.1875F;
-				widthMax = 0.125F;
-				heightMax = 0.8125F;
-				depthMax = 0.1875F;
-				break;
-			case DOWN_WEST:
-				widthMin = 0.1875F;
-				heightMin = 0F;
-				depthMin = 0.125F;
-				widthMax = 0.1875F;
-				heightMax = 0.8125F;
-				depthMax = 0.125F;
-				break;
+		case SOUTH:
+			return SOUTH_AABB;
+		case NORTH:
+			return NORTH_AABB;
+		case EAST:
+			return EAST_AABB;
+		case WEST:
+			return WEST_AABB;
+		case UP_NORTH:
+			return UP_NORTH_AABB;
+		case UP_EAST:
+			return UP_EAST_AABB;
+		case UP_SOUTH:
+			return UP_SOUTH_AABB;
+		case UP_WEST:
+			return UP_WEST_AABB;
+		case DOWN_NORTH:
+			return DOWN_NORTH_AABB;
+		case DOWN_EAST:
+			return DOWN_EAST_AABB;
+		case DOWN_SOUTH:
+			return DOWN_SOUTH_AABB;
+		case DOWN_WEST:
+			return DOWN_WEST_AABB;
 		}
-		return new AxisAlignedBB(0F + widthMin, 0F + heightMin, 0F + depthMin, 1F - widthMax, 1F - heightMax, 1F - depthMax);
+		return DOWN_NORTH_AABB;
 	}
-	
+
 	@Override
-	public AxisAlignedBB getCollisionBoundingBox(IBlockState state, IBlockAccess world, BlockPos pos) {
-		return NULL_AABB;
+	public VoxelShape getRaytraceShape(BlockState state, IBlockReader worldIn, BlockPos pos) {
+		return VoxelShapes.fullCube();
 	}
-*/
 	@Override
 	public void neighborChanged(BlockState state, World world, BlockPos pos, Block block, BlockPos fromPos, boolean isMoving) {
 		EnumGemDirection newFacing = state.get(TYPE);
