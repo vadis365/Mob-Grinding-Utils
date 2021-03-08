@@ -50,7 +50,6 @@ public class MessageAbsorptionHopper {
 		buf.writeBlockPos(message.tilePos);
 	}
 
-
 	public static MessageAbsorptionHopper decode(final PacketBuffer buf) {
 		return new MessageAbsorptionHopper(buf.readResourceLocation(), buf.readInt(), buf.readInt(), buf.readBlockPos());
 	}

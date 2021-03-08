@@ -5,7 +5,9 @@ import org.lwjgl.opengl.GL11;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 
+import mob_grinding_utils.MobGrindingUtils;
 import mob_grinding_utils.inventory.server.ContainerAbsorptionHopper;
+import mob_grinding_utils.network.MessageAbsorptionHopper;
 import mob_grinding_utils.tile.TileEntityAbsorptionHopper;
 import mob_grinding_utils.tile.TileEntityAbsorptionHopper.EnumStatus;
 import net.minecraft.client.Minecraft;
@@ -45,22 +47,58 @@ public class GuiAbsorptionHopper extends ContainerScreen<ContainerAbsorptionHopp
 		buttons.clear();
 		int xOffSet = (width - xSize) / 2;
 		int yOffSet = (height - ySize) / 2;
-		buttons.add(new GuiMediumButton(xOffSet + 7, yOffSet + 17, 0, 228, new StringTextComponent("Down"), null));
-		buttons.add(new GuiMediumButton(xOffSet + 7, yOffSet + 34, 0, 228, new StringTextComponent("Up"), null));// 
-		buttons.add(new GuiMediumButton(xOffSet + 7, yOffSet + 51, 0, 228, new StringTextComponent("North"), null)); 
-		buttons.add(new GuiMediumButton(xOffSet + 82, yOffSet + 17, 0, 228, new StringTextComponent("South"), null));
-		buttons.add(new GuiMediumButton(xOffSet + 82, yOffSet + 34, 0, 228, new StringTextComponent("West"), null));
-		buttons.add(new GuiMediumButton(xOffSet + 82, yOffSet + 51, 0, 228, new StringTextComponent("East"), null));
-		buttons.add(new GuiBigButton(xOffSet + 173, yOffSet + 113, 33, 228, StringTextComponent.EMPTY, null));
-		
-		buttons.add(new GuiSmallButton(xOffSet + 173, yOffSet + 25, 103, 228, new StringTextComponent("-"), null));//D
-		buttons.add(new GuiSmallButton(xOffSet + 225, yOffSet + 25, 103, 228, new StringTextComponent("+"), null));//U
-		
-		buttons.add(new GuiSmallButton(xOffSet + 173, yOffSet + 59, 103, 228, new StringTextComponent("-"), null));//N
-		buttons.add(new GuiSmallButton(xOffSet + 225, yOffSet + 59, 103, 228, new StringTextComponent("+"), null));//S
-		
-		buttons.add(new GuiSmallButton(xOffSet + 173, yOffSet + 93, 103, 228, new StringTextComponent("-"), null));//W
-		buttons.add(new GuiSmallButton(xOffSet + 225, yOffSet + 93, 103, 228, new StringTextComponent("+"), null));//E
+		addButton(new GuiMediumButton(xOffSet + 7, yOffSet + 17, 0, 228, new StringTextComponent("Down"), (button) -> {
+			MobGrindingUtils.NETWORK_WRAPPER.sendToServer(new MessageAbsorptionHopper(playerInventory.player, 0, tile.getPos()));
+		}));
+
+		addButton(new GuiMediumButton(xOffSet + 7, yOffSet + 34, 0, 228, new StringTextComponent("Up"), (button) -> {
+			MobGrindingUtils.NETWORK_WRAPPER.sendToServer(new MessageAbsorptionHopper(playerInventory.player, 1, tile.getPos()));
+		}));
+
+		addButton(new GuiMediumButton(xOffSet + 7, yOffSet + 51, 0, 228, new StringTextComponent("North"), (button) -> {
+			MobGrindingUtils.NETWORK_WRAPPER.sendToServer(new MessageAbsorptionHopper(playerInventory.player, 2, tile.getPos()));
+		}));
+
+		addButton(new GuiMediumButton(xOffSet + 82, yOffSet + 17, 0, 228, new StringTextComponent("South"), (button) -> {
+			MobGrindingUtils.NETWORK_WRAPPER.sendToServer(new MessageAbsorptionHopper(playerInventory.player, 3, tile.getPos()));
+		}));
+
+		addButton(new GuiMediumButton(xOffSet + 82, yOffSet + 34, 0, 228, new StringTextComponent("West"), (button) -> {
+			MobGrindingUtils.NETWORK_WRAPPER.sendToServer(new MessageAbsorptionHopper(playerInventory.player, 4, tile.getPos()));
+		}));
+
+		addButton(new GuiMediumButton(xOffSet + 82, yOffSet + 51, 0, 228, new StringTextComponent("East"), (button) -> {
+			MobGrindingUtils.NETWORK_WRAPPER.sendToServer(new MessageAbsorptionHopper(playerInventory.player, 5, tile.getPos()));
+		}));
+
+		addButton(new GuiBigButton(xOffSet + 173, yOffSet + 113, 33, 228, StringTextComponent.EMPTY, (button) -> {
+			MobGrindingUtils.NETWORK_WRAPPER.sendToServer(new MessageAbsorptionHopper(playerInventory.player, 6, tile.getPos()));
+			tile.showRenderBox = !tile.showRenderBox;
+		}));
+
+		addButton(new GuiSmallButton(xOffSet + 173, yOffSet + 25, 103, 228, new StringTextComponent("-"), (button) -> {
+			MobGrindingUtils.NETWORK_WRAPPER.sendToServer(new MessageAbsorptionHopper(playerInventory.player, 7, tile.getPos()));
+		}));
+
+		addButton(new GuiSmallButton(xOffSet + 225, yOffSet + 25, 103, 228, new StringTextComponent("+"), (button) -> {
+			MobGrindingUtils.NETWORK_WRAPPER.sendToServer(new MessageAbsorptionHopper(playerInventory.player, 8, tile.getPos()));
+		}));
+
+		addButton(new GuiSmallButton(xOffSet + 173, yOffSet + 59, 103, 228, new StringTextComponent("-"), (button) -> {
+			MobGrindingUtils.NETWORK_WRAPPER.sendToServer(new MessageAbsorptionHopper(playerInventory.player, 9, tile.getPos()));
+		}));
+
+		addButton(new GuiSmallButton(xOffSet + 225, yOffSet + 59, 103, 228, new StringTextComponent("+"), (button) -> {
+			MobGrindingUtils.NETWORK_WRAPPER.sendToServer(new MessageAbsorptionHopper(playerInventory.player, 10, tile.getPos()));
+		}));
+
+		addButton(new GuiSmallButton(xOffSet + 173, yOffSet + 93, 103, 228, new StringTextComponent("-"), (button) -> {
+			MobGrindingUtils.NETWORK_WRAPPER.sendToServer(new MessageAbsorptionHopper(playerInventory.player, 11, tile.getPos()));
+		}));
+
+		addButton(new GuiSmallButton(xOffSet + 225, yOffSet + 93, 103, 228, new StringTextComponent("+"), (button) -> {
+			MobGrindingUtils.NETWORK_WRAPPER.sendToServer(new MessageAbsorptionHopper(playerInventory.player, 12, tile.getPos()));
+		}));
 	}
 
 	@Override
@@ -114,7 +152,6 @@ public class GuiAbsorptionHopper extends ContainerScreen<ContainerAbsorptionHopp
 		int fluid = tile.getScaledFluid(120);
 		RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 		if (fluid >= 1) {
-			//TextureAtlasSprite sprite = (TextureAtlasSprite) Minecraft.getInstance().getAtlasSpriteGetter(tile.tank.getFluid().getFluid().getAttributes().getStillTexture());
 			TextureAtlasSprite sprite = Minecraft.getInstance().getAtlasSpriteGetter(PlayerContainer.LOCATION_BLOCKS_TEXTURE).apply(tile.tank.getFluid().getFluid().getAttributes().getStillTexture());
 			Tessellator tessellator = Tessellator.getInstance();
 			BufferBuilder buffer = tessellator.getBuffer();
