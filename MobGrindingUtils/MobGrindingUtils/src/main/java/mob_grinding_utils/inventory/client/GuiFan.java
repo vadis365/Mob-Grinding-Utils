@@ -55,7 +55,7 @@ public class GuiFan extends ContainerScreen<ContainerFan> {
 	protected void drawGuiContainerForegroundLayer(MatrixStack stack, int mouseX, int mouseY) {
 		String title = new TranslationTextComponent("block.mob_grinding_utils.fan").getString();
 		Minecraft.getInstance().fontRenderer.drawString(stack, title, xSize / 2 - Minecraft.getInstance().fontRenderer.getStringWidth(title) / 2, ySize - 218, 4210752);
-		Minecraft.getInstance().fontRenderer.drawStringWithShadow(stack, I18n.format(!tile.showRenderBox ? "Show Area" : "Hide Area"), xSize - 88 - Minecraft.getInstance().fontRenderer.getStringWidth(I18n.format(!tile.showRenderBox ? "Show Area" : "Hide Area")) / 2, ySize - 178, 14737632);
+		Minecraft.getInstance().fontRenderer.drawStringWithShadow(stack, !tile.showRenderBox ? "Show Area" : "Hide Area", xSize - 88 - Minecraft.getInstance().fontRenderer.getStringWidth(!tile.showRenderBox ? "Show Area" : "Hide Area") / 2, ySize - 178, 14737632);
 	}
 
 	@SuppressWarnings("deprecation")

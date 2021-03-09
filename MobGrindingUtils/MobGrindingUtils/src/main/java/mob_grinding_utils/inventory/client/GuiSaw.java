@@ -30,7 +30,8 @@ public class GuiSaw extends ContainerScreen<ContainerSaw> {
 
 	@Override
 	protected void drawGuiContainerForegroundLayer(MatrixStack matrixStack, int x, int y) {
-		Minecraft.getInstance().fontRenderer.drawString(matrixStack, I18n.format(new TranslationTextComponent("tile.mob_grinding_utils.saw.name").getString()), xSize / 2 - Minecraft.getInstance().fontRenderer.getStringWidth(I18n.format(new TranslationTextComponent("tile.mob_grinding_utils.saw.name").getString())) / 2, ySize - 218, 4210752);	
+		String title = new TranslationTextComponent("block.mob_grinding_utils.saw").getString();
+		Minecraft.getInstance().fontRenderer.drawString(matrixStack, title, xSize / 2 - Minecraft.getInstance().fontRenderer.getStringWidth(title) / 2, ySize - 218, 4210752);
 	}
 
 	@Override
