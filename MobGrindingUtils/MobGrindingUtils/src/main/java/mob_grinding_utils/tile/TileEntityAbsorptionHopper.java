@@ -45,7 +45,6 @@ import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.ItemHandlerHelper;
 
 
 public class TileEntityAbsorptionHopper extends TileEntityInventoryHelper implements ITickableTileEntity, INamedContainerProvider {
@@ -83,8 +82,8 @@ public class TileEntityAbsorptionHopper extends TileEntityInventoryHelper implem
 	public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket packet) {
 		EnumStatus[] old = new EnumStatus[] { status[0], status[1], status[2], status[3], status[4], status[5] };
 		super.onDataPacket(net, packet);
-		read(null, packet.getNbtCompound());
-	//	tank.onContentsChanged();
+		read(getBlockState(), packet.getNbtCompound());
+		//tank.onContentsChanged();
 		for (Direction facing : Direction.values()) {
 			if (old[facing.ordinal()] != status[facing.ordinal()]) {
 				getWorld().markBlockRangeForRenderUpdate(getPos(), getWorld().getBlockState(getPos()), getWorld().getBlockState(getPos()));
@@ -210,7 +209,7 @@ public class TileEntityAbsorptionHopper extends TileEntityInventoryHelper implem
 			if (status[facing.ordinal()] == EnumStatus.STATUS_OUTPUT_ITEM) {
 				TileEntity tile = getWorld().getTileEntity(pos.offset(facing));
 				
-				if (tile != null && !(tile instanceof IInventory)) {
+			/*	if (tile != null && !(tile instanceof IInventory)) {
 					IItemHandler handler = (IItemHandler) tile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, facing.getOpposite());
 					if (getWorld().getGameTime() % 8 == 0 ) {
 						for (int i = 0; i < this.getSizeInventory(); ++i) {
@@ -226,7 +225,7 @@ public class TileEntityAbsorptionHopper extends TileEntityInventoryHelper implem
 						}
 					}
 				}
-				else if (tile != null && tile instanceof IInventory) {
+				else */if (tile != null && tile instanceof IInventory) {
 					IInventory iinventory = (IInventory) tile;
 					if (isInventoryFull(iinventory, facing)) {
 						break;
@@ -248,19 +247,24 @@ public class TileEntityAbsorptionHopper extends TileEntityInventoryHelper implem
 			if (status[facing.ordinal()] == EnumStatus.STATUS_OUTPUT_FLUID) {
 				TileEntity tile = getWorld().getTileEntity(pos.offset(facing));
 				if (tile != null) {
-			/*		IFluidHandler recepticle = (IFluidHandler) tile.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, facing.getOpposite());
-					int tanks = recepticle.getTanks();
-					for (int x = 0; x < tanks; x++) {
-						if (recepticle.getTankCapacity(tanks) > 0) {
-							FluidStack contents = recepticle.getFluidInTank(x);
-							if (!tank.getFluid().isEmpty()) {
-								if (contents.isEmpty() || contents.getAmount() <= recepticle.getTankCapacity(tanks) - 100 && contents.containsFluid(new FluidStack(tank.getFluid(), 1))) {
-									recepticle.fill(tank.drain(new FluidStack(tank.getFluid(), 100), FluidAction.EXECUTE), FluidAction.EXECUTE);
-									markDirty();
-								}
-							}
-						}
-					}*/
+	                   LazyOptional<IFluidHandler> tileOptional = tile.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, facing.getOpposite());
+	                    tileOptional.ifPresent((recepticle) -> {
+	                    int tanks = recepticle.getTanks();
+	                    for (int x = 0; x < tanks; x++) {
+	                        if (recepticle.getTankCapacity(tanks) > 0) {
+	                            FluidStack contents = recepticle.getFluidInTank(x);
+	                            if (!tank.getFluid().isEmpty()) {
+	                                if (contents.isEmpty() || contents.getAmount() <= recepticle.getTankCapacity(tanks) - 100 && contents.containsFluid(new FluidStack(tank.getFluid(), 1))) {
+	                                    recepticle.fill(tank.drain(new FluidStack(tank.getFluid(), 100), FluidAction.EXECUTE), FluidAction.EXECUTE);
+	                                  
+	                                    world.notifyBlockUpdate(pos, getBlockState(), getBlockState(), 3);
+	                                    world.notifyBlockUpdate(pos.offset(facing), getBlockState(), getBlockState(), 3);
+	                                    markDirty();
+	                                }
+	                            }
+	                        }
+	                    }
+	                    });
 				}
 			}
 		}

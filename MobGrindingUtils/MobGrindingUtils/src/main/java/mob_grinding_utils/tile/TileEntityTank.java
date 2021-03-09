@@ -19,7 +19,7 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
 
 public class TileEntityTank extends TileEntity {
-    public FluidTank tank = new FluidTank(FluidAttributes.BUCKET_VOLUME * 32);
+	public FluidTank tank = new FluidTank(FluidAttributes.BUCKET_VOLUME *  32);
     private final LazyOptional<IFluidHandler> holder = LazyOptional.of(() -> tank);
     
 	public TileEntityTank() {
@@ -41,6 +41,7 @@ public class TileEntityTank extends TileEntity {
 	public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket packet) {
 		super.onDataPacket(net, packet);
 		read(null, packet.getNbtCompound());
+		//tank.onContentsChanged();
 		return;
 	}
 
