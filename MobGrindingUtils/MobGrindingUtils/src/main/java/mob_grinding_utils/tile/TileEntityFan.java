@@ -28,7 +28,6 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -36,7 +35,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 public class TileEntityFan extends TileEntityInventoryHelper implements ITickableTileEntity, INamedContainerProvider {
 
 	private static final int[] SLOTS = new int[] {0, 1, 2};
-	public boolean showRenderBox = false;
+	public boolean showRenderBox;
 	float xPos, yPos, zPos;
 	float xNeg, yNeg, zNeg;
 
@@ -53,12 +52,7 @@ public class TileEntityFan extends TileEntityInventoryHelper implements ITickabl
 		if (!getWorld().isRemote)
 			setAABBWithModifiers();
 	}
-/*
-	@Override
-	public boolean shouldRefresh(World world, BlockPos pos, BlockState oldState, BlockState newState) {
-		return oldState.getBlock() != newState.getBlock();
-	}
-*/
+
 	public int getWidthModifier() {
 		return hasWidthUpgrade() ? getItems().get(0).getCount() : 0;
 	}
@@ -233,7 +227,7 @@ public class TileEntityFan extends TileEntityInventoryHelper implements ITickabl
 
 	@Override
 	public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket packet) {
-		read(null, packet.getNbtCompound());
+		read(getBlockState(), packet.getNbtCompound());
 		onContentsChanged();
 	}
 

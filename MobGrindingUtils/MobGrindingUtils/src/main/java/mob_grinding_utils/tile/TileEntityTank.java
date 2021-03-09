@@ -26,7 +26,6 @@ public class TileEntityTank extends TileEntity  implements ITickableTileEntity {
 
 	public TileEntityTank() {
 		super(ModBlocks.TANK_TILE);
-
 	}
 
 	public TileEntityTank(TileEntityType<TileEntitySinkTank> TANK_SINK_TILE) {

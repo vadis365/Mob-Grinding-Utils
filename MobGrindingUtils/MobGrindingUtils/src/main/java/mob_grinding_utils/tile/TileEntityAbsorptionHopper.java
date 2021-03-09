@@ -76,7 +76,7 @@ public class TileEntityAbsorptionHopper extends TileEntityInventoryHelper implem
 	}
 
 	public EnumStatus status[] = new EnumStatus[] { EnumStatus.STATUS_NONE, EnumStatus.STATUS_NONE, EnumStatus.STATUS_NONE, EnumStatus.STATUS_NONE, EnumStatus.STATUS_NONE, EnumStatus.STATUS_NONE };
-	public boolean showRenderBox = true;  // TODO set this to false by default - needs button and packet to work
+	public boolean showRenderBox;
 	public int offsetX, offsetY, offsetZ;
 
 	@Override
