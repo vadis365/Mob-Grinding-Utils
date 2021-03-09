@@ -35,7 +35,6 @@ public class TileEntityXPTap extends TileEntity implements ITickableTileEntity {
 					int xpAmount = EntityXPOrbFalling.getXPSplit(Math.min(20, ((TileEntityTank) tileentity).tank.getFluidAmount() / 20));
 					((TileEntityTank) tileentity).tank.drain(xpAmount * 20, FluidAction.EXECUTE);
 					spawnXP(getWorld(), pos, xpAmount, (TileEntityTank) tileentity);
-					getWorld().notifyBlockUpdate(tileentity.getPos(), tileentity.getBlockState(), tileentity.getBlockState(), 3);
 					//MobGrindingUtils.NETWORK_WRAPPER.sendToAll(new MessageTapParticle(getPos())); //todo
 				}
 			}

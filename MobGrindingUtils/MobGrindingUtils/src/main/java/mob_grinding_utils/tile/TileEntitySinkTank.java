@@ -4,7 +4,6 @@ import java.util.List;
 
 import mob_grinding_utils.ModBlocks;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.util.EntityPredicates;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
@@ -13,7 +12,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 
-public class TileEntitySinkTank extends TileEntityTank implements ITickableTileEntity {
+public class TileEntitySinkTank extends TileEntityTank {
 
 	public TileEntitySinkTank() {
 		super(ModBlocks.TANK_SINK_TILE);
@@ -21,9 +20,11 @@ public class TileEntitySinkTank extends TileEntityTank implements ITickableTileE
 
 	@Override
 	public void tick() {
-		if (!getWorld().isRemote)
-			if (tank.getFluid().isEmpty() || tank.getFluid().containsFluid(new FluidStack(ModBlocks.FLUID_XP, 1)))
-				captureDroppedXP();
+		if (getWorld().isRemote)
+			return;
+		if (tank.getFluid().isEmpty() || tank.getFluid().containsFluid(new FluidStack(ModBlocks.FLUID_XP, 1)))
+			captureDroppedXP();
+		super.tick();
 	}
 
 	public boolean captureDroppedXP() {
@@ -36,7 +37,6 @@ public class TileEntitySinkTank extends TileEntityTank implements ITickableTileE
 				addPlayerXP(player, -1);
 				getWorld().playSound(null, player.getPosX(), player.getPosY(), player.getPosZ(), SoundEvents.ITEM_BOTTLE_FILL, SoundCategory.NEUTRAL , 0.1F, 0.5F * ((getWorld().rand.nextFloat() - getWorld().rand.nextFloat()) * 0.7F + 1.8F));
 				// MobGrindingUtils.NETWORK_WRAPPER.sendToAll(new MessageTapParticle(getPos().up())); //todo
-				getWorld().notifyBlockUpdate(pos, getBlockState(), getBlockState(), 3);
 			}
 			return true;
 		}

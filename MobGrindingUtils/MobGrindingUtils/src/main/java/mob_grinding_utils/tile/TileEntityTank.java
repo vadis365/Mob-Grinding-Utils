@@ -8,6 +8,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
+import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
@@ -18,10 +19,11 @@ import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
 
-public class TileEntityTank extends TileEntity {
+public class TileEntityTank extends TileEntity  implements ITickableTileEntity {
 	public FluidTank tank = new FluidTank(FluidAttributes.BUCKET_VOLUME *  32);
-    private final LazyOptional<IFluidHandler> holder = LazyOptional.of(() -> tank);
-    
+    private final LazyOptional<IFluidHandler> tank_holder = LazyOptional.of(() -> tank);
+	public int prevTankAmount;
+
 	public TileEntityTank() {
 		super(ModBlocks.TANK_TILE);
 
@@ -31,17 +33,23 @@ public class TileEntityTank extends TileEntity {
 		super(TANK_SINK_TILE);
 	}
 
-	/*
 	@Override
-	public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState) {
-		return oldState.getBlock() != newState.getBlock();
+	public void tick() {
+		if (getWorld().isRemote)
+			return;
+		if(prevTankAmount != tank.getFluidAmount())
+			updateBlock();
+		prevTankAmount = tank.getFluidAmount();
 	}
-*/
+
+	public void updateBlock() {
+		getWorld().notifyBlockUpdate(pos, getWorld().getBlockState(pos), getWorld().getBlockState(pos), 3);
+	}
+
 	@Override
 	public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket packet) {
 		super.onDataPacket(net, packet);
-		read(null, packet.getNbtCompound());
-		//tank.onContentsChanged();
+		read(getBlockState(), packet.getNbtCompound());
 		return;
 	}
 
@@ -76,7 +84,7 @@ public class TileEntityTank extends TileEntity {
     public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> capability, @Nullable Direction facing)
     {
         if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)
-            return holder.cast();
+            return tank_holder.cast();
         return super.getCapability(capability, facing);
     }
 
