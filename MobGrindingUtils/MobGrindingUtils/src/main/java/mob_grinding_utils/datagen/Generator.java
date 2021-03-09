@@ -11,5 +11,6 @@ public class Generator {
 
         MGUBlockTags blockTags = new MGUBlockTags(generator, event.getExistingFileHelper());
         generator.addProvider(blockTags);
+        generator.addProvider(new LootTables(generator));
     }
 }
