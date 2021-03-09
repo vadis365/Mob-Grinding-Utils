@@ -103,6 +103,7 @@ public class GuiAbsorptionHopper extends ContainerScreen<ContainerAbsorptionHopp
 
 	@Override
 	public void render(MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
+		this.renderBackground(stack);
 		super.render(stack, mouseX, mouseY, partialTicks);
 		renderHoveredTooltip(stack, mouseX, mouseY);
 	}
