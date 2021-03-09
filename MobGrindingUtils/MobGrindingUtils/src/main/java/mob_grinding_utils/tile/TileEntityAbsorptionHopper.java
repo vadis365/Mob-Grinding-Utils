@@ -248,14 +248,14 @@ public class TileEntityAbsorptionHopper extends TileEntityInventoryHelper implem
 				TileEntity tile = getWorld().getTileEntity(pos.offset(facing));
 				if (tile != null) {
 					LazyOptional<IFluidHandler> tileOptional = tile.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, facing.getOpposite());
-					tileOptional.ifPresent((recepticle) -> {
-						int tanks = recepticle.getTanks();
+					tileOptional.ifPresent((receptacle) -> {
+						int tanks = receptacle.getTanks();
 						for (int x = 0; x < tanks; x++) {
-							if (recepticle.getTankCapacity(tanks) > 0) {
-								FluidStack contents = recepticle.getFluidInTank(x);
+							if (receptacle.getTankCapacity(tanks) > 0) {
+								FluidStack contents = receptacle.getFluidInTank(x);
 								if (!tank.getFluid().isEmpty()) {
-									if (contents.isEmpty() || contents.getAmount() <= recepticle.getTankCapacity(tanks) - 100 && contents.containsFluid(new FluidStack(tank.getFluid(), 1))) {
-										recepticle.fill(tank.drain(new FluidStack(tank.getFluid(), 100), FluidAction.EXECUTE), FluidAction.EXECUTE);
+									if (contents.isEmpty() || contents.getAmount() <= receptacle.getTankCapacity(tanks) - 100 && contents.containsFluid(new FluidStack(tank.getFluid(), 1))) {
+										receptacle.fill(tank.drain(new FluidStack(tank.getFluid(), 100), FluidAction.EXECUTE), FluidAction.EXECUTE);
 										markDirty();
 									}
 								}
