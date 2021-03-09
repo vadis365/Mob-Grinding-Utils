@@ -21,6 +21,7 @@ import mob_grinding_utils.blocks.BlockTank;
 import mob_grinding_utils.blocks.BlockTankSink;
 import mob_grinding_utils.blocks.BlockWitherMuffler;
 import mob_grinding_utils.blocks.BlockXPTap;
+import mob_grinding_utils.client.render.TileSawStackItemRenderer;
 import mob_grinding_utils.tile.TileEntityAbsorptionHopper;
 import mob_grinding_utils.tile.TileEntityFan;
 import mob_grinding_utils.tile.TileEntitySaw;
@@ -121,7 +122,7 @@ public class ModBlocks {
 			FAN_TILE = TileEntityType.Builder.create(TileEntityFan::new, FAN).build(null);
 
 			SAW = new BlockSaw(Block.Properties.create(Material.IRON, MaterialColor.STONE).hardnessAndResistance(10.0F, 2000.0F).sound(SoundType.METAL));
-			SAW_ITEM = new BlockItem(SAW, new Item.Properties().group(MobGrindingUtils.TAB)) {
+			SAW_ITEM = new BlockItem(SAW, new Item.Properties().group(MobGrindingUtils.TAB).setISTER(() ->  TileSawStackItemRenderer::new)) {
 				@Override
 				@OnlyIn(Dist.CLIENT)
 				   public void addInformation(ItemStack stack, @Nullable World world, List<ITextComponent> list, ITooltipFlag flag) {
