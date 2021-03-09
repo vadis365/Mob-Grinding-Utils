@@ -11,7 +11,9 @@ import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
+import org.apache.logging.log4j.LogManager;
 
 public class BlockDragonMuffler extends Block {
 
@@ -34,14 +36,12 @@ public class BlockDragonMuffler extends Block {
 
 	@Override
 	public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
-		if (world.isRemote)
-			return ActionResultType.SUCCESS;
-		else {
-			boolean swap = state.get(MODE) ? false : true;
-			world.setBlockState(pos, state.with(MODE, swap), 3);
+			boolean swap = !state.get(MODE);
+			if (!world.isRemote)
+				world.setBlockState(pos, state.with(MODE, swap), 3);
 			CompoundNBT nbt = player.getPersistentData();
-			nbt.putBoolean("MGU_DragonMuffle" ,!state.get(MODE));
+			nbt.putBoolean("MGU_DragonMuffle" , swap);
+			player.sendStatusMessage(new StringTextComponent(swap ? "Now hiding Dragon boss bars.":"Now showing Dragon boss bars."), true);
 			return ActionResultType.SUCCESS;
-		}
 	}
 }

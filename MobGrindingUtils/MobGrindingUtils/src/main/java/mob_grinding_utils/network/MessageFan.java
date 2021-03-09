@@ -16,34 +16,20 @@ import net.minecraftforge.fml.network.NetworkEvent;
 import java.util.function.Supplier;
 
 public class MessageFan {
-	//public RegistryKey<World> dimension;
-	public int entityID, buttonID;
+	public int buttonID;
 	public BlockPos tilePos;
 
 	public MessageFan(int button, BlockPos pos) {
-		//dimension = player.getEntityWorld().getDimensionKey();
-		//entityID = player.getEntityId();
 		buttonID = button;
 		tilePos = pos;
 	}
 
 	public MessageFan(int button, int x, int y, int z) {
-		//dimension = player.getEntityWorld().getDimensionKey();
-		//entityID = player.getEntityId();
 		buttonID = button;
 		tilePos = new BlockPos(x, y, z);
 	}
-/*
-	public MessageFan(int buttonID, BlockPos tilePos) {
-		//this.dimension = RegistryKey.getOrCreateKey(Registry.WORLD_KEY, dimensionKey);
-		//this.entityID = entityID;
-		this.buttonID = buttonID;
-		this.tilePos = tilePos;
-	}
-*/
+
 	public static void encode(final MessageFan message, PacketBuffer buf) {
-		//buf.writeResourceLocation(message.dimension.getLocation());
-		//buf.writeInt(message.entityID);
 		buf.writeInt(message.buttonID);
 		buf.writeBlockPos(message.tilePos);
 	}
@@ -56,7 +42,7 @@ public class MessageFan {
 		ctx.get().enqueueWork(() -> {
 
 			ServerPlayerEntity player = ctx.get().getSender();
-			ServerWorld world = player.getServerWorld(); //player.getServer().getWorld(message.dimension);
+			ServerWorld world = player.getServerWorld();
 			TileEntityFan fan = (TileEntityFan) world.getTileEntity(message.tilePos);
 			if (fan != null) {
 				if (message.buttonID == 0)

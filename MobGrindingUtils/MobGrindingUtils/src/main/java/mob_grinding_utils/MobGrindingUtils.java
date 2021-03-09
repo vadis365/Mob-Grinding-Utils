@@ -23,23 +23,29 @@ import mob_grinding_utils.inventory.client.GuiAbsorptionHopper;
 import mob_grinding_utils.inventory.client.GuiFan;
 import mob_grinding_utils.inventory.client.GuiSaw;
 import mob_grinding_utils.network.MGUNetwork;
+import mob_grinding_utils.network.MessageFlagSync;
 import net.minecraft.client.gui.ScreenManager;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.RenderTypeLookup;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.DamageSource;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.fml.network.PacketDistributor;
 import net.minecraftforge.fml.network.simple.SimpleChannel;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
+import org.apache.logging.log4j.LogManager;
 
 
 @Mod(Reference.MOD_ID)
@@ -105,6 +111,7 @@ public class MobGrindingUtils {
 		MinecraftForge.EVENT_BUS.register(new MGUZombieReinforcementEvent());
 		MinecraftForge.EVENT_BUS.register(new FillXPBottleEvent());
 		MinecraftForge.EVENT_BUS.register(new MGUEndermanInhibitEvent());
+		MinecraftForge.EVENT_BUS.addListener(this::playerConnected);
 	}
 	
 	private void doClientStuff(final FMLClientSetupEvent event) {
@@ -126,5 +133,15 @@ public class MobGrindingUtils {
 		
 		 RenderTypeLookup.setRenderLayer(ModBlocks.TANK, RenderType.getCutout());
 		 RenderTypeLookup.setRenderLayer(ModBlocks.TANK_SINK, RenderType.getCutout());
+	}
+
+	private void playerConnected(final PlayerEvent.PlayerLoggedInEvent event) {
+		if (event.getPlayer() instanceof ServerPlayerEntity) {
+			ServerPlayerEntity player = (ServerPlayerEntity) event.getPlayer();
+			CompoundNBT nbt = player.getPersistentData();
+			if (nbt.contains("MGU_WitherMuffle") || nbt.contains("MGU_DragonMuffle")) {
+				NETWORK_WRAPPER.send(PacketDistributor.PLAYER.with(() -> player), new MessageFlagSync(nbt.getBoolean("MGU_WitherMuffle"), nbt.getBoolean("MGU_DragonMuffle")));
+			}
+		}
 	}
 }
