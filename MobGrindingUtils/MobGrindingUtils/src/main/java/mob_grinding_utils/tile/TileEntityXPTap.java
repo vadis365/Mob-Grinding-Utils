@@ -20,12 +20,7 @@ public class TileEntityXPTap extends TileEntity implements ITickableTileEntity {
 	}
 
 	public boolean active;
-/*
-	@Override
-	public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState) {
-		return oldState.getBlock() != newState.getBlock();
-	}
-*/
+
 	@Override
 	public void tick() {
 		if (!getWorld().isRemote && active) {
@@ -35,7 +30,7 @@ public class TileEntityXPTap extends TileEntity implements ITickableTileEntity {
 					int xpAmount = EntityXPOrbFalling.getXPSplit(Math.min(20, ((TileEntityTank) tileentity).tank.getFluidAmount() / 20));
 					((TileEntityTank) tileentity).tank.drain(xpAmount * 20, FluidAction.EXECUTE);
 					spawnXP(getWorld(), pos, xpAmount, (TileEntityTank) tileentity);
-					//MobGrindingUtils.NETWORK_WRAPPER.sendToAll(new MessageTapParticle(getPos())); //todo
+					//MobGrindingUtils.NETWORK_WRAPPER.sendToAll(new MessageTapParticle(getPos())); //TODO
 				}
 			}
 		}
@@ -80,6 +75,6 @@ public class TileEntityXPTap extends TileEntity implements ITickableTileEntity {
 
 	@Override
 	public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket packet) {
-		read(null, packet.getNbtCompound());
+		read(getBlockState(), packet.getNbtCompound());
 	}
 }

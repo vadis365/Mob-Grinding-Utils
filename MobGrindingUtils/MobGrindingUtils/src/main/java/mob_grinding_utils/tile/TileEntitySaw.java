@@ -1,6 +1,5 @@
 package mob_grinding_utils.tile;
 
-import java.nio.ByteBuffer;
 import java.util.List;
 import java.util.UUID;
 
@@ -26,7 +25,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.PacketBuffer;
-import net.minecraft.network.PacketThreadUtil;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.util.Direction;
@@ -47,12 +45,7 @@ public class TileEntitySaw extends TileEntityInventoryHelper implements ITickabl
 	public TileEntitySaw() {
 		super(ModBlocks.SAW_TILE, 6);
 	}
-/*
-	@Override
-	public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState) {
-		return oldState.getBlock() != newState.getBlock();
-	}
-*/
+
 	@Override
 	public void tick() {
 		if (getWorld().isRemote && active) {
@@ -167,7 +160,7 @@ public class TileEntitySaw extends TileEntityInventoryHelper implements ITickabl
 	@Override
 	public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket packet) {
 		super.onDataPacket(net, packet);
-		read(null, packet.getNbtCompound());
+		read(getBlockState(), packet.getNbtCompound());
 		if(!getWorld().isRemote)
 			getWorld().notifyBlockUpdate(pos, getWorld().getBlockState(pos), getWorld().getBlockState(pos), 3);
 		return;
