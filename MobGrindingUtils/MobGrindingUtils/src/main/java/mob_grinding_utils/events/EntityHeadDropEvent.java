@@ -6,6 +6,7 @@ import com.mojang.authlib.GameProfile;
 
 import mob_grinding_utils.items.ItemImaginaryInvisibleNotReallyThereSword;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.boss.dragon.EnderDragonEntity;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.monster.CreeperEntity;
 import net.minecraft.entity.monster.SkeletonEntity;
@@ -80,6 +81,8 @@ public class EntityHeadDropEvent {
 			return new ItemStack(Items.ZOMBIE_HEAD, 1);
 		if (target instanceof PlayerEntity)
 			return createHeadFor((PlayerEntity) target);
+		if (target instanceof EnderDragonEntity)
+			return new ItemStack(Items.DRAGON_HEAD, 1);
 		return ItemStack.EMPTY;
 	}
 	
