@@ -256,9 +256,9 @@ public class TileEntityAbsorptionHopper extends TileEntityInventoryHelper implem
 	                            if (!tank.getFluid().isEmpty()) {
 	                                if (contents.isEmpty() || contents.getAmount() <= recepticle.getTankCapacity(tanks) - 100 && contents.containsFluid(new FluidStack(tank.getFluid(), 1))) {
 	                                    recepticle.fill(tank.drain(new FluidStack(tank.getFluid(), 100), FluidAction.EXECUTE), FluidAction.EXECUTE);
-	                                  
+	                                  //TODO not ideal here - should happen in each fluid tank when contents is changed
 	                                    world.notifyBlockUpdate(pos, getBlockState(), getBlockState(), 3);
-	                                    world.notifyBlockUpdate(pos.offset(facing), getBlockState(), getBlockState(), 3);
+	                                    world.notifyBlockUpdate(pos.offset(facing), getWorld().getBlockState(pos.offset(facing)), getWorld().getBlockState(pos.offset(facing)), 3);
 	                                    markDirty();
 	                                }
 	                            }
