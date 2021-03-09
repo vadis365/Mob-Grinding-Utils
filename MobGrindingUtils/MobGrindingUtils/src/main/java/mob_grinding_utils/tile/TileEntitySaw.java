@@ -77,7 +77,7 @@ public class TileEntitySaw extends TileEntityInventoryHelper implements ITickabl
 			Entity entity = list.get(i);
 			if (entity != null) {
 				if (entity instanceof LivingEntity) {
-					ServerPlayerEntity fakePlayer = FakePlayerFactory.get((ServerWorld)getWorld(), new GameProfile(UUID.nameUUIDFromBytes(new TranslationTextComponent("fakeplayer.mob_masher").getString().getBytes()), new TranslationTextComponent("fakeplayer.mob_masher").getString()));
+					ServerPlayerEntity fakePlayer = FakePlayerFactory.get((ServerWorld)getWorld(), new GameProfile(UUID.nameUUIDFromBytes("fakeplayer.mob_masher".getBytes()), new TranslationTextComponent("fakeplayer.mob_masher").getString()));
 					fakePlayer.setPosition(this.pos.getX(), -100D, this.pos.getZ());
 					ItemStack tempSword = new ItemStack(ModItems.NULL_SWORD, 1);
 
