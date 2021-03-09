@@ -22,7 +22,7 @@
 
   "_comment": "Items",
   "item.mob_grinding_utils.mob_swab": "Mob Swab",
-  "item.mob_grinding_utils.mob_swab": "Mob Swab Used",
+  "item.mob_grinding_utils.mob_swab_used": "Mob Swab Used",
   "item.mob_grinding_utils.gm_chicken_feed": "GM Chicken Feed",
   "item.mob_grinding_utils.fan_upgrade_width": "Mob Fan Width Upgrade",
   "item.mob_grinding_utils.fan_upgrade_height": "Mob Fan Height Upgrade",
