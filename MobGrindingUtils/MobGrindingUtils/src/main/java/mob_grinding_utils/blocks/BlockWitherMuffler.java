@@ -11,6 +11,7 @@ import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
 
 public class BlockWitherMuffler extends Block {
@@ -34,14 +35,12 @@ public class BlockWitherMuffler extends Block {
 
 	@Override
 	public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
-		if (world.isRemote)
-			return ActionResultType.SUCCESS;
-		else {
-			boolean swap = state.get(MODE) ? false : true;
+		boolean swap = !state.get(MODE);
+		if (!world.isRemote)
 			world.setBlockState(pos, state.with(MODE, swap), 3);
-			CompoundNBT nbt = player.getPersistentData();
-			nbt.putBoolean("MGU_WitherMuffle", !state.get(MODE));
-			return ActionResultType.SUCCESS;
-		}
+		CompoundNBT nbt = player.getPersistentData();
+		nbt.putBoolean("MGU_WitherMuffle", swap);
+		player.sendStatusMessage(new StringTextComponent(swap ? "Now hiding Wither boss bars.":"Now showing Wither boss bars."), true);
+		return ActionResultType.SUCCESS;
 	}
 }

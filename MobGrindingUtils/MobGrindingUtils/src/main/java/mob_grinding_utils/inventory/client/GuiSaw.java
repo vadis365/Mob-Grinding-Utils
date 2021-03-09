@@ -23,13 +23,15 @@ public class GuiSaw extends ContainerScreen<ContainerSaw> {
 
 	@Override
 	public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+		this.renderBackground(matrixStack);
         super.render(matrixStack, mouseX, mouseY, partialTicks);
         renderHoveredTooltip(matrixStack, mouseX, mouseY);
     }
 
 	@Override
 	protected void drawGuiContainerForegroundLayer(MatrixStack matrixStack, int x, int y) {
-		Minecraft.getInstance().fontRenderer.drawString(matrixStack, I18n.format(new TranslationTextComponent("tile.mob_grinding_utils.saw.name").getString()), xSize / 2 - Minecraft.getInstance().fontRenderer.getStringWidth(I18n.format(new TranslationTextComponent("tile.mob_grinding_utils.saw.name").getString())) / 2, ySize - 218, 4210752);	
+		String title = new TranslationTextComponent("block.mob_grinding_utils.saw").getString();
+		Minecraft.getInstance().fontRenderer.drawString(matrixStack, title, xSize / 2 - Minecraft.getInstance().fontRenderer.getStringWidth(title) / 2, ySize - 218, 4210752);
 	}
 
 	@Override

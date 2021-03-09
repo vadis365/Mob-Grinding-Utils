@@ -103,20 +103,21 @@ public class GuiAbsorptionHopper extends ContainerScreen<ContainerAbsorptionHopp
 
 	@Override
 	public void render(MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
+		this.renderBackground(stack);
 		super.render(stack, mouseX, mouseY, partialTicks);
 		renderHoveredTooltip(stack, mouseX, mouseY);
 	}
 
 	@Override
 	protected void drawGuiContainerForegroundLayer(MatrixStack stack, int mouseX, int mouseY) {
-		fontRenderer.drawString(stack, I18n.format(new TranslationTextComponent("block.mob_grinding_utils.absorption_hopper").getString()), 8, ySize - 220, 4210752);
+		fontRenderer.drawString(stack, new TranslationTextComponent("block.mob_grinding_utils.absorption_hopper").getString(), 8, ySize - 220, 4210752);
 		
-		fontRenderer.drawString(stack, I18n.format(new TranslationTextComponent("block.mob_grinding_utils.absorption_hopper_d_u").getString()), 174, ySize - 212, 4210752);
+		fontRenderer.drawString(stack, new TranslationTextComponent("block.mob_grinding_utils.absorption_hopper_d_u").getString(), 174, ySize - 212, 4210752);
 		
-		fontRenderer.drawString(stack, I18n.format(new TranslationTextComponent("block.mob_grinding_utils.absorption_hopper_n_s").getString()), 174, ySize - 178, 4210752);
-		fontRenderer.drawString(stack, I18n.format(new TranslationTextComponent("block.mob_grinding_utils.absorption_hopper_w_e").getString()), 174, ySize - 144, 4210752);
+		fontRenderer.drawString(stack, new TranslationTextComponent("block.mob_grinding_utils.absorption_hopper_n_s").getString(), 174, ySize - 178, 4210752);
+		fontRenderer.drawString(stack, new TranslationTextComponent("block.mob_grinding_utils.absorption_hopper_w_e").getString(), 174, ySize - 144, 4210752);
 	
-		fontRenderer.drawStringWithShadow(stack, I18n.format(!tile.showRenderBox ? "Show Area" : "Hide Area"), xSize - 41 - fontRenderer.getStringWidth(I18n.format(!tile.showRenderBox ? "Show Area" : "Hide Area")) / 2, ySize - 109, 14737632);
+		fontRenderer.drawStringWithShadow(stack, !tile.showRenderBox ? "Show Area" : "Hide Area", xSize - 41 - fontRenderer.getStringWidth(!tile.showRenderBox ? "Show Area" : "Hide Area") / 2, ySize - 109, 14737632);
 	}
 
 	@SuppressWarnings("deprecation")

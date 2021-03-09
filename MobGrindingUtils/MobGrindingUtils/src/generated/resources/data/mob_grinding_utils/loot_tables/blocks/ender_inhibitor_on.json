@@ -6,7 +6,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "mob_grinding_utils:ender_inhibitor_off"
+          "name": "mob_grinding_utils:ender_inhibitor_on"
         }
       ],
       "conditions": [

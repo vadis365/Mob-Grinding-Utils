@@ -42,6 +42,12 @@ public class MGUNetwork {
                 .consumer(MessageFan::handle)
                 .add();
 
+        channel.messageBuilder(MessageFlagSync.class, 4, NetworkDirection.PLAY_TO_CLIENT)
+                .decoder(MessageFlagSync::decode)
+                .encoder(MessageFlagSync::encode)
+                .consumer(MessageFlagSync::handle)
+                .add();
+
         return channel;
     }
 }
