@@ -52,7 +52,7 @@ public class BlockFan extends DirectionalBlock implements ITileEntityProvider {
 
 	@Override
 	public BlockState getStateForPlacement(BlockItemUseContext context) {
-		Direction direction = context.getFace();
+		Direction direction = context.getNearestLookingDirection().getOpposite();
 		return this.getDefaultState().with(FACING, direction).with(POWERED, false);
 	}
 
