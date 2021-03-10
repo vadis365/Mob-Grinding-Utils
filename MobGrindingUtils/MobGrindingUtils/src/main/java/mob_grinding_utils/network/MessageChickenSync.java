@@ -2,6 +2,7 @@ package mob_grinding_utils.network;
 
 import java.util.function.Supplier;
 
+import net.minecraft.client.Minecraft;
 import org.apache.logging.log4j.LogManager;
 
 import net.minecraft.entity.LivingEntity;
@@ -39,7 +40,7 @@ public class MessageChickenSync {
 	public static void handle(MessageChickenSync message, final Supplier<NetworkEvent.Context> ctx) {
 		ctx.get().enqueueWork(() -> {
 
-			World world = ctx.get().getSender().world;
+			World world = Minecraft.getInstance().world;
 
 			if (world == null)
 				return;

@@ -39,7 +39,7 @@ public class ChickenInteractionEvent {
 							*/					
 							if (event.getPlayer() instanceof ServerPlayerEntity) {
 								ServerPlayerEntity playerServer = (ServerPlayerEntity) event.getPlayer();
-								MobGrindingUtils.NETWORK_WRAPPER.send(PacketDistributor.PLAYER.with(() -> playerServer), new MessageChickenSync(entity, nbt));
+								MobGrindingUtils.NETWORK_WRAPPER.send(PacketDistributor.ALL.noArg(), new MessageChickenSync(entity, nbt));
 							}
 						}
 						Vector3d vec3d = entity.getMotion();
