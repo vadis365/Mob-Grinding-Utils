@@ -1,6 +1,7 @@
 package mob_grinding_utils.network;
 
-import io.netty.buffer.ByteBuf;
+import java.util.function.Supplier;
+
 import mob_grinding_utils.tile.TileEntityAbsorptionHopper;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
@@ -14,8 +15,6 @@ import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.fml.network.NetworkEvent;
-
-import java.util.function.Supplier;
 
 public class MessageAbsorptionHopper {
 	public RegistryKey<World> dimension;
