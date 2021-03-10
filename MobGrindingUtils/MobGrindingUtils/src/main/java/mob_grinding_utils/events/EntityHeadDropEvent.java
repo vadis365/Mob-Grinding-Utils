@@ -5,7 +5,10 @@ import java.util.Collection;
 import com.mojang.authlib.GameProfile;
 
 import mob_grinding_utils.items.ItemImaginaryInvisibleNotReallyThereSword;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.boss.dragon.EnderDragonEntity;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.monster.CreeperEntity;
@@ -17,10 +20,14 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.NBTUtil;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.ModList;
+import net.minecraftforge.fml.RegistryObject;
+import net.minecraftforge.registries.ForgeRegistries;
 
 public class EntityHeadDropEvent {
 
@@ -60,16 +67,17 @@ public class EntityHeadDropEvent {
  		*/		
 		
 		
-		/* TODO remove hardcoded mod compat with raiders and WitherCrumbs/HeadCrumbs
+		// TODO remove hardcoded mod compat with raiders and WitherCrumbs/HeadCrumbs
 		if (target instanceof MobEntity) {
-			if (Loader.isModLoaded("headcrumbs"))
-				if (isHeadCrumb(target))
-				return createHeadFor(getPlayerByUsername(target.getName()));
+			if (ModList.get().isLoaded("player_mobs"))
+				if (isPlayerMob(target))
+				return createHeadFor(getPlayerByUsername(target.getName().getString()));
+				/*
 			if (Loader.isModLoaded("raiders"))
 				if (isPlayerRaider(target))
-				return createHeadFor(getPlayerByUsername(target.getName()));
+				return createHeadFor(getPlayerByUsername(target.getName()));*/
 		}
-		*/
+		
 		
 		if (target instanceof CreeperEntity)
 			return new ItemStack(Items.CREEPER_HEAD, 1);
@@ -87,12 +95,12 @@ public class EntityHeadDropEvent {
 	}
 	
 	// TODO remove hardcoded mod compat with raiders and WitherCrumbs/HeadCrumbs
-/*
-	public static boolean isHeadCrumb(Entity entity) {
-		ResourceLocation resourcelocation = EntityList.getKey(entity);
-		return resourcelocation.toString().equals("headcrumbs:human");
-	}
 
+	public static boolean isPlayerMob(Entity entity) {
+		RegistryObject<EntityType<?>> entityMob = RegistryObject.of(new ResourceLocation("player_mobs:player_mob"), ForgeRegistries.ENTITIES);
+		return entityMob.isPresent() && entityMob.get().equals(entity.getType());
+	}
+/*
 	public static boolean isPlayerRaider(Entity entity) {
 		ResourceLocation resourcelocation = EntityList.getKey(entity);
 		if(resourcelocation.toString().equals("raiders:raider"))
