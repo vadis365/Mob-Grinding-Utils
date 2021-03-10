@@ -43,7 +43,7 @@ public class ChickenInteractionEvent {
 							}
 						}
 						Vector3d vec3d = entity.getMotion();
-						entity.setMotion(vec3d.x, (double) 0.08D, vec3d.z);
+						entity.setMotion(vec3d.x, (double) 0.06D, vec3d.z);
 						((ChickenEntity) entity).setNoGravity(true);
 
 						if (!event.getPlayer().abilities.isCreativeMode)

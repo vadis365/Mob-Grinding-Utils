@@ -2,9 +2,9 @@ package mob_grinding_utils.network;
 
 import java.util.function.Supplier;
 
-import net.minecraft.client.Minecraft;
 import org.apache.logging.log4j.LogManager;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.passive.ChickenEntity;
 import net.minecraft.nbt.CompoundNBT;

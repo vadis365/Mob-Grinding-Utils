@@ -21,7 +21,7 @@ public class RenderChickenSwell {
 		if (event.getEntity() instanceof ChickenEntity) {
 			
 			if (event.getEntity().getPersistentData().contains("shouldExplode")) {
-				System.out.println("RENDER YOU FUCK!");
+				
 				if (event.getRenderer().getEntityModel() instanceof ChickenModel) {
 					
 					ChickenBodyModel model = new ChickenBodyModel();
@@ -30,7 +30,7 @@ public class RenderChickenSwell {
 					if (scale >= 0.75F)
 						scale = 0.75F;
 					event.getMatrixStack().push();
-					event.getMatrixStack().translate(event.getEntity().getPosX(), event.getEntity().getPosY() - 0.5D - scale, event.getEntity().getPosZ());
+					event.getMatrixStack().translate(0D, - 0.5D - scale, 0D);
 					event.getMatrixStack().rotate(Vector3f.YN.rotationDegrees(event.getEntity().renderYawOffset));
 					event.getMatrixStack().scale(1F + scale, 1F + scale, 1F + scale * 0.75F);
 					model.render(event.getMatrixStack(), event.getBuffers().getBuffer(RenderType.getEntitySolid(new ResourceLocation("textures/entity/chicken.png"))), event.getLight(), OverlayTexture.NO_OVERLAY, 1F, 1F, 1F, 1F);
