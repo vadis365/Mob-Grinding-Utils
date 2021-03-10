@@ -112,7 +112,7 @@ dependencies {
     runtimeOnly fg.deobf("mezz.jei:jei-${jei_version}")
 
     compile fg.deobf("curse.maven:top-245211:3157997")
-    compile fg.deobf("curse.maven:430513:3153298")
+    compile fg.deobf("curse.maven:playermobs-430513:3153298")
 }
 
 // Example for how to get properties into the manifest for reading by the runtime..
