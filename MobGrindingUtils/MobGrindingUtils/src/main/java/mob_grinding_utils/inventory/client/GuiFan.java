@@ -9,7 +9,6 @@ import mob_grinding_utils.network.MessageFan;
 import mob_grinding_utils.tile.TileEntityFan;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
@@ -17,7 +16,6 @@ import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import org.apache.logging.log4j.LogManager;
 
 @OnlyIn(Dist.CLIENT)
 public class GuiFan extends ContainerScreen<ContainerFan> {

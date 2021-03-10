@@ -1,19 +1,14 @@
 package mob_grinding_utils.network;
 
+import java.util.function.Supplier;
+
 import mob_grinding_utils.tile.TileEntityFan;
 import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.RegistryKey;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.fml.network.NetworkEvent;
-
-import java.util.function.Supplier;
 
 public class MessageFan {
 	public int buttonID;

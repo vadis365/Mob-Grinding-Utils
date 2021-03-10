@@ -1,21 +1,22 @@
 package mob_grinding_utils.datagen;
 
+import java.nio.file.Path;
+import java.util.function.Consumer;
+
 import com.google.gson.JsonObject;
-import mob_grinding_utils.MobGrindingUtils;
+
 import mob_grinding_utils.ModBlocks;
 import mob_grinding_utils.ModItems;
 import mob_grinding_utils.Reference;
-import net.minecraft.data.*;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
+import net.minecraft.data.DataGenerator;
+import net.minecraft.data.DirectoryCache;
+import net.minecraft.data.IFinishedRecipe;
+import net.minecraft.data.RecipeProvider;
+import net.minecraft.data.ShapedRecipeBuilder;
 import net.minecraft.item.Items;
-import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.Tags;
-
-import java.nio.file.Path;
-import java.util.function.Consumer;
 
 public class Recipes extends RecipeProvider {
     public Recipes(DataGenerator generatorIn) {

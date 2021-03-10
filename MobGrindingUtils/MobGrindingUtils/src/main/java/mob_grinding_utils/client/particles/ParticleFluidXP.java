@@ -3,7 +3,7 @@ package mob_grinding_utils.client.particles;
 import java.awt.Color;
 
 import com.mojang.blaze3d.vertex.IVertexBuilder;
-import net.minecraft.client.Minecraft;
+
 import net.minecraft.client.particle.IParticleFactory;
 import net.minecraft.client.particle.IParticleRenderType;
 import net.minecraft.client.particle.Particle;
@@ -11,9 +11,6 @@ import net.minecraft.client.particle.SpriteTexturedParticle;
 import net.minecraft.client.renderer.ActiveRenderInfo;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.particles.BasicParticleType;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.World;
 
 public class ParticleFluidXP extends SpriteTexturedParticle {
 

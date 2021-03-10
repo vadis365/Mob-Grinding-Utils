@@ -1,26 +1,30 @@
 package mob_grinding_utils.datagen;
 
-import com.google.common.collect.ImmutableList;
-import com.mojang.datafixers.util.Pair;
-import mob_grinding_utils.ModBlocks;
-import mob_grinding_utils.Reference;
-import net.minecraft.block.Block;
-import net.minecraft.data.DataGenerator;
-import net.minecraft.data.LootTableProvider;
-import net.minecraft.data.loot.BlockLootTables;
-import net.minecraft.loot.*;
-import net.minecraft.loot.functions.CopyNbt;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.RegistryObject;
-import net.minecraftforge.registries.ForgeRegistries;
-
-import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
+
+import javax.annotation.Nonnull;
+
+import com.google.common.collect.ImmutableList;
+import com.mojang.datafixers.util.Pair;
+
+import mob_grinding_utils.ModBlocks;
+import mob_grinding_utils.Reference;
+import net.minecraft.block.Block;
+import net.minecraft.data.DataGenerator;
+import net.minecraft.data.LootTableProvider;
+import net.minecraft.data.loot.BlockLootTables;
+import net.minecraft.loot.LootParameterSet;
+import net.minecraft.loot.LootParameterSets;
+import net.minecraft.loot.LootTable;
+import net.minecraft.loot.LootTableManager;
+import net.minecraft.loot.ValidationTracker;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.registries.ForgeRegistries;
 
 public class LootTables extends LootTableProvider {
     public LootTables(DataGenerator dataGeneratorIn) {

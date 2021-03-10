@@ -1,6 +1,5 @@
 package mob_grinding_utils.datagen;
 
-import mob_grinding_utils.MobGrindingUtils;
 import mob_grinding_utils.ModBlocks;
 import mob_grinding_utils.Reference;
 import net.minecraft.block.Block;

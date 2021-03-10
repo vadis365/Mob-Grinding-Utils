@@ -1,13 +1,12 @@
 package mob_grinding_utils.network;
 
 
-import mob_grinding_utils.MobGrindingUtils;
+import java.util.function.Supplier;
+
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.network.NetworkEvent;
-
-import java.util.function.Supplier;
 
 public class MessageTapParticle {
 

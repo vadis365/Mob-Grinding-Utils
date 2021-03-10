@@ -1,12 +1,11 @@
 package mob_grinding_utils.network;
 
+import java.util.function.Supplier;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.network.NetworkEvent;
-
-import java.util.function.Supplier;
 
 public class MessageFlagSync {
 

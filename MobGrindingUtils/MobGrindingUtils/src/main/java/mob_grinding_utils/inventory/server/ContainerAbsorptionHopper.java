@@ -3,7 +3,6 @@ package mob_grinding_utils.inventory.server;
 import mob_grinding_utils.ModContainers;
 import mob_grinding_utils.ModItems;
 import mob_grinding_utils.tile.TileEntityAbsorptionHopper;
-import mob_grinding_utils.tile.TileEntitySaw;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.IInventory;
