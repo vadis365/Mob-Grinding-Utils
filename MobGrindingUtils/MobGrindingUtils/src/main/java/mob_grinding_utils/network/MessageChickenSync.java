@@ -1,6 +1,9 @@
 package mob_grinding_utils.network;
 
-import net.minecraft.client.Minecraft;
+import java.util.function.Supplier;
+
+import org.apache.logging.log4j.LogManager;
+
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.passive.ChickenEntity;
 import net.minecraft.nbt.CompoundNBT;
@@ -8,9 +11,6 @@ import net.minecraft.network.PacketBuffer;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.network.NetworkEvent;
-import org.apache.logging.log4j.LogManager;
-
-import java.util.function.Supplier;
 
 public class MessageChickenSync {
 
