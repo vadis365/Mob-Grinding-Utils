@@ -4,7 +4,7 @@ import java.util.Random;
 
 import javax.annotation.Nullable;
 
-import mob_grinding_utils.MobGrindingUtils;
+import mob_grinding_utils.ModBlocks;
 import mob_grinding_utils.tile.TileEntitySaw;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
@@ -30,6 +30,7 @@ import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.IBlockReader;
+import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.fml.network.NetworkHooks;
@@ -66,7 +67,7 @@ public class BlockSaw extends DirectionalBlock implements ITileEntityProvider {
 	@Override
 	public BlockState getStateForPlacement(BlockItemUseContext context) {
 		Direction direction = context.getFace();
-		return this.getDefaultState().with(FACING, direction).with(POWERED, false);
+		return this.getDefaultState().with(FACING, direction).with(POWERED, context.getWorld().isBlockPowered(context.getPos()));
 	}
 
 	@Override
@@ -135,5 +136,10 @@ public class BlockSaw extends DirectionalBlock implements ITileEntityProvider {
 					tile.setActive(!state.get(POWERED));
 			}
 		}
+	}
+
+	@Override
+	public boolean getWeakChanges(BlockState state, IWorldReader world, BlockPos pos) {
+		return state.isIn(ModBlocks.SAW);
 	}
 }
