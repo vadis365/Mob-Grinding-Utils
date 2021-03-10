@@ -32,11 +32,7 @@ public class ChickenInteractionEvent {
 								nbt.putInt("countDown", 0);
 								if (event.getItemStack().hasTag() && event.getItemStack().getTag().contains("mguMobName"))
 									nbt.putString("mguMobName", event.getItemStack().getTag().getString("mguMobName"));
-								
-							/*	//TODO Remove chickens mod compat stuff
-								if (event.getItemStack().hasTag() && event.getItemStack().getTag().contains("chickenType"))
-									nbt.setString("chickenType", event.getItemStack().getTag().getString("chickenType"));
-							*/					
+				
 							if (event.getPlayer() instanceof ServerPlayerEntity) {
 								MobGrindingUtils.NETWORK_WRAPPER.send(PacketDistributor.ALL.noArg(), new MessageChickenSync(entity, nbt));
 							}

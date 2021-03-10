@@ -49,6 +49,7 @@ public class ItemMobSwab extends Item {
 					stack2.getTag().putString("mguMobName", mobName);
 					CompoundNBT nbt = new CompoundNBT();
 					target.writeAdditional(nbt);
+					System.out.println("MOB NAME IS: " + mobName);
 				}
 			player.setHeldItem(hand, stack2);
 		    return ActionResultType.SUCCESS;
