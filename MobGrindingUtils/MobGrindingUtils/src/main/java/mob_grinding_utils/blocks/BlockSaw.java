@@ -86,14 +86,13 @@ public class BlockSaw extends DirectionalBlock implements ITileEntityProvider {
 	public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
 		if (world.isRemote) {
 			return ActionResultType.SUCCESS;
-	} else {
-		TileEntity tileentity = world.getTileEntity(pos);
-		if (tileentity  instanceof TileEntitySaw)
-			NetworkHooks.openGui((ServerPlayerEntity) player, (TileEntitySaw)tileentity, pos);
-		return ActionResultType.SUCCESS;
+		} else {
+			TileEntity tileentity = world.getTileEntity(pos);
+			if (tileentity instanceof TileEntitySaw)
+				NetworkHooks.openGui((ServerPlayerEntity) player, (TileEntitySaw) tileentity, pos);
+			return ActionResultType.SUCCESS;
+		}
 	}
-	}
-
 
 	@Override
 	public void onReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving) {
@@ -108,14 +107,21 @@ public class BlockSaw extends DirectionalBlock implements ITileEntityProvider {
 	}
 
 	@Override
-	public void neighborChanged(BlockState state, World world, BlockPos pos, Block block, BlockPos fromPos, boolean isMoving) {
+	public void neighborChanged(BlockState state, World world, BlockPos pos, Block block, BlockPos fromPos,
+			boolean isMoving) {
 		if (!world.isRemote) {
 			TileEntitySaw tile = (TileEntitySaw) world.getTileEntity(pos);
-			boolean flag = world.isBlockPowered(pos);
-			if (flag != state.get(POWERED))
-				world.setBlockState(pos, state.with(POWERED, flag), 4);
-			if (tile != null)
-				tile.setActive(state.get(POWERED));
+			boolean flag = state.get(POWERED);
+			if (flag != world.isBlockPowered(pos)) {
+				if (flag)
+					world.getPendingBlockTicks().scheduleTick(pos, this, 4);
+				else {
+					world.setBlockState(pos, state.func_235896_a_(POWERED), 2);
+					if (tile != null)
+						tile.setActive(!state.get(POWERED));
+				}
+
+			}
 		}
 	}
 
@@ -123,11 +129,11 @@ public class BlockSaw extends DirectionalBlock implements ITileEntityProvider {
 	public void tick(BlockState state, ServerWorld world, BlockPos pos, Random rand) {
 		if (!world.isRemote) {
 			TileEntitySaw tile = (TileEntitySaw) world.getTileEntity(pos);
-			boolean flag = !world.isBlockPowered(pos);
-			if (flag != state.get(POWERED))
-				world.setBlockState(pos, state.with(POWERED, flag), 4);
-			if (tile != null)
-				tile.setActive(state.get(POWERED));
+			if (state.get(POWERED) && !world.isBlockPowered(pos)) {
+				world.setBlockState(pos, state.func_235896_a_(POWERED), 2);
+				if (tile != null)
+					tile.setActive(!state.get(POWERED));
+			}
 		}
 	}
 }
