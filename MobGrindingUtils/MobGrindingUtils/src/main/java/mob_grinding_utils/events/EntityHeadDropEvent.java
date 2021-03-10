@@ -33,7 +33,7 @@ public class EntityHeadDropEvent {
 		int beheadingLevel = 0;
 		if (event.getSource().getTrueSource() instanceof PlayerEntity) {
 			PlayerEntity fakePlayer = (PlayerEntity) event.getSource().getTrueSource();
-			if (fakePlayer.getDisplayName().toString().matches(new TranslationTextComponent("fakeplayer.mob_masher").toString())) {
+			if (fakePlayer.getDisplayName().getString().matches(new TranslationTextComponent("fakeplayer.mob_masher").getString())) {
 				if (fakePlayer.getHeldItemMainhand().getItem() instanceof ItemImaginaryInvisibleNotReallyThereSword) {
 					ItemStack tempSword = fakePlayer.getHeldItemMainhand();
 					if (tempSword.hasTag() && tempSword.getTag().contains("beheadingValue"))
