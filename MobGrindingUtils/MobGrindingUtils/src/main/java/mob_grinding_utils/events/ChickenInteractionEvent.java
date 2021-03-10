@@ -38,7 +38,6 @@ public class ChickenInteractionEvent {
 									nbt.setString("chickenType", event.getItemStack().getTag().getString("chickenType"));
 							*/					
 							if (event.getPlayer() instanceof ServerPlayerEntity) {
-								ServerPlayerEntity playerServer = (ServerPlayerEntity) event.getPlayer();
 								MobGrindingUtils.NETWORK_WRAPPER.send(PacketDistributor.ALL.noArg(), new MessageChickenSync(entity, nbt));
 							}
 						}

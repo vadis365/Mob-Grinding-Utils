@@ -19,11 +19,13 @@ buildscript {
             url "https://plugins.gradle.org/m2/"
         }
     }
-    dependencies {
-        classpath "com.wynprice.cursemaven:CurseMaven:1.2.+"
+}
+
+repositories {
+    maven {
+        url "https://www.cursemaven.com"
     }
 }
-apply plugin: "com.wynprice.cursemaven"
 
 repositories {
     maven { // TOP
@@ -89,7 +91,7 @@ minecraft {
             property 'forge.logging.console.level', 'debug'
 
             // Specify the modid for data generation, where to output the resulting resource, and where to look for existing resources.
-            args '--mod', 'examplemod', '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
+            args '--mod', 'mob_grinding_utils', '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
 
             mods {
                 mob_grinding_utils {
@@ -108,7 +110,9 @@ dependencies {
 
     compileOnly fg.deobf("mezz.jei:jei-${jei_version}:api")
     runtimeOnly fg.deobf("mezz.jei:jei-${jei_version}")
-    }
+
+    compile fg.deobf("curse.maven:top-245211:3157997")
+}
 
 // Example for how to get properties into the manifest for reading by the runtime..
 jar {
