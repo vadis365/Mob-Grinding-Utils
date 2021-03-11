@@ -45,7 +45,7 @@ public class ParticleFluidXP extends SpriteTexturedParticle {
 
         //setParticleTexture(Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(TEXTURE[0].toString()));
     }
-
+/*
         @Override
         public void tick() {
             prevTextureIndex = textureIndex;

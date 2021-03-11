@@ -272,7 +272,8 @@ public class ModBlocks {
 									.viscosity(1500)
 									.translationKey("mob_grinding_utils.fluid_xp")
 									.sound(SoundEvents.ENTITY_PLAYER_LEVELUP, SoundEvents.ENTITY_EXPERIENCE_ORB_PICKUP)
-					)).setRegistryName(Reference.MOD_ID, "fluid_xp");
+					).bucket(() -> ModItems.FLUID_XP_BUCKET))
+					.setRegistryName(Reference.MOD_ID, "fluid_xp");
 			
 	}
 
