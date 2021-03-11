@@ -11,6 +11,7 @@ import net.minecraft.client.particle.SpriteTexturedParticle;
 import net.minecraft.client.renderer.ActiveRenderInfo;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.particles.BasicParticleType;
+import net.minecraft.util.math.MathHelper;
 
 public class ParticleFluidXP extends SpriteTexturedParticle {
 
@@ -36,17 +37,17 @@ public class ParticleFluidXP extends SpriteTexturedParticle {
         particleBlue = (c.getBlue() / 255.0F - mb + rand.nextFloat() * mb);
 
         particleGravity = 0.01F;
-        //particleMaxAge = (int) (8.0D / (Math.random() * 0.8D + 0.2D));
+        age = (int) (8.0D / (Math.random() * 0.8D + 0.2D));
         motionX = 0.0D;
         motionY = 0.0D;
         motionZ = 0.0D;
-        //particleScale = ((MathHelper.sin(count / 2.0F) * 0.1F + 1.0F) * scale);
+        particleScale = ((MathHelper.sin(count / 2.0F) * 0.1F + 1.0F) * scale);
 
         //setParticleTexture(Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(TEXTURE[0].toString()));
     }
-    /* //todo dunno
+
         @Override
-        public void onUpdate() {
+        public void tick() {
             prevTextureIndex = textureIndex;
             prevPosX = posX;
             prevPosY = posY;
@@ -54,12 +55,12 @@ public class ParticleFluidXP extends SpriteTexturedParticle {
             motionY -= (double) particleGravity;
             move(motionX, motionY, motionZ);
             motionY *= 0.9800000190734863D;
-            if (this.particleAge++ >= this.particleMaxAge)
+            if (this.age++ >= this.particleMaxAge)
                 this.setExpired();
             textureIndex = 0 + particleAge * 8 / particleMaxAge;
             if (textureIndex > 8)
                 textureIndex = 8;
-            if(particleAge%3 == 0)
+            if(age%3 == 0)
                 if(prevTextureIndex != textureIndex)
                     setParticleTexture(Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(TEXTURE[textureIndex].toString()));
         }

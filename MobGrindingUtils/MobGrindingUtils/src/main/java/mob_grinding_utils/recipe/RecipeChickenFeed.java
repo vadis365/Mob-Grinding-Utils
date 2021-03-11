@@ -1,7 +1,7 @@
 package mob_grinding_utils.recipe;
 
+import mob_grinding_utils.ModBlocks;
 import mob_grinding_utils.ModItems;
-import net.minecraft.fluid.Fluids;
 import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -39,13 +39,11 @@ public class RecipeChickenFeed extends SpecialRecipe {
 				continue;
 			++cnt;
 			
-			if (is.getItem() == Items.LAVA_BUCKET) {
+			if (is.getItem() == ModItems.FLUID_XP_BUCKET) {
 	
 			LazyOptional<IFluidHandlerItem> bucketHandler = is.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null);
 			bucketHandler.ifPresent((receptacle) -> {
-				//temp ->
-				if(!is.isEmpty() && receptacle.getFluidInTank(1).getAmount() > 0 && receptacle.getFluidInTank(1).containsFluid(new FluidStack(Fluids.LAVA, 1))) {
-		//TODO	if(!is.isEmpty() && receptacle.getFluidInTank(1).getAmount() > 0 &&receptacle.getFluidInTank(1).containsFluid(new FluidStack(ModBlocks.FLUID_XP, 1))) {
+				if(!is.isEmpty() && receptacle.getFluidInTank(1).getAmount() > 0 &&receptacle.getFluidInTank(1).containsFluid(new FluidStack(ModBlocks.FLUID_XP, 1))) {
 					receptacle.drain(FluidAttributes.BUCKET_VOLUME, FluidAction.EXECUTE);
 					
 				}

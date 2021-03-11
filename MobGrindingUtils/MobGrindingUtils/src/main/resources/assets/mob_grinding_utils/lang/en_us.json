@@ -35,6 +35,7 @@
   "item.mob_grinding_utils.saw_upgrade_arthropod": "Mob Masher Upgrade Arthropods",
   "item.mob_grinding_utils.saw_upgrade_beheading": "Mob Masher Upgrade Beheading",
   "item.mob_grinding_utils.null_sword": "Imaginary Not Here Sword",
+  "item.mob_grinding_utils.fluid_xp_bucket": "Fluid XP Bucket",
 
   "_comment": "Creative Tab",
   "itemGroup.mob_grinding_utils": "Mob Grinding Utils",

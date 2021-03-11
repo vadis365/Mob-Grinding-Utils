@@ -11,7 +11,9 @@ import mob_grinding_utils.items.ItemGMChickenFeed;
 import mob_grinding_utils.items.ItemImaginaryInvisibleNotReallyThereSword;
 import mob_grinding_utils.items.ItemMobSwab;
 import mob_grinding_utils.items.ItemSawUpgrade;
+import net.minecraft.item.BucketItem;
 import net.minecraft.item.Item;
+import net.minecraft.item.Items;
 import net.minecraft.item.SwordItem;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -27,6 +29,7 @@ public class ModItems {
 	public static Item SAW_UPGRADE_ARTHROPOD, SAW_UPGRADE_BEHEADING, SAW_UPGRADE_FIRE, SAW_UPGRADE_LOOTING, SAW_UPGRADE_SHARPNESS, SAW_UPGRADE_SMITE;
 	public static Item MOB_SWAB, MOB_SWAB_USED;
 	public static Item GM_CHICKEN_FEED;
+	public static Item FLUID_XP_BUCKET;
 	public static SwordItem NULL_SWORD;
 	
 	public static void init() {
@@ -44,6 +47,7 @@ public class ModItems {
 		MOB_SWAB_USED = new ItemMobSwab(new Item.Properties().group(MobGrindingUtils.TAB).maxStackSize(1), true);
 		GM_CHICKEN_FEED = new ItemGMChickenFeed(new Item.Properties().group(MobGrindingUtils.TAB).maxStackSize(1));
 		NULL_SWORD = new ItemImaginaryInvisibleNotReallyThereSword(new Item.Properties().group(MobGrindingUtils.TAB));
+		FLUID_XP_BUCKET = new BucketItem(ModBlocks.FLUID_XP, new Item.Properties().containerItem(Items.BUCKET).group(MobGrindingUtils.TAB).maxStackSize(1));
 	}
 
 	public static void initReg() {
@@ -73,23 +77,5 @@ public class ModItems {
 			for (Item item : ITEMS)
 				registry.register(item);
 		}
-/*
-		@SideOnly(Side.CLIENT)
-		@SubscribeEvent
-		public static void registerModels(ModelRegistryEvent event) {
-			for (Item item : ITEMS)
-				if (item instanceof ISubItemsItem) {
-					List<String> models = ((ISubItemsItem) item).getModels();
-					for (int i = 0; i < models.size(); i++)
-						ModelLoader.setCustomModelResourceLocation(item, i, new ModelResourceLocation(Reference.MOD_ID + ":" + models.get(i), "inventory"));
-				} else {
-					ModelLoader.setCustomModelResourceLocation(item, 0, new ModelResourceLocation(item.getRegistryName().toString(), "inventory"));
-				}
-		}
-*/
-	}
-
-	public static interface ISubItemsItem {
-		List<String> getModels();
 	}
 }

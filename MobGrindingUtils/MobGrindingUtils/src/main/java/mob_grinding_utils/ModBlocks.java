@@ -273,6 +273,7 @@ public class ModBlocks {
 									.translationKey("mob_grinding_utils.fluid_xp")
 									.sound(SoundEvents.ENTITY_PLAYER_LEVELUP, SoundEvents.ENTITY_EXPERIENCE_ORB_PICKUP)
 					)).setRegistryName(Reference.MOD_ID, "fluid_xp");
+			
 	}
 
 	public static void initReg() {
