@@ -40,12 +40,10 @@ public class RecipeChickenFeed extends SpecialRecipe {
 			++cnt;
 			
 			if (is.getItem() == ModItems.FLUID_XP_BUCKET) {
-	
 			LazyOptional<IFluidHandlerItem> bucketHandler = is.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null);
 			bucketHandler.ifPresent((receptacle) -> {
-				if(!is.isEmpty() && receptacle.getFluidInTank(1).getAmount() > 0 &&receptacle.getFluidInTank(1).containsFluid(new FluidStack(ModBlocks.FLUID_XP, 1))) {
+				if(!is.isEmpty() && receptacle.getFluidInTank(1).getAmount() > 0 && receptacle.getFluidInTank(1).containsFluid(new FluidStack(ModBlocks.FLUID_XP, 1))) {
 					receptacle.drain(FluidAttributes.BUCKET_VOLUME, FluidAction.EXECUTE);
-					
 				}
 			});
 			hasBucket = true;
