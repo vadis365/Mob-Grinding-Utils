@@ -92,9 +92,9 @@ public class BlockTank extends ContainerBlock {
 		if (tileentity instanceof TileEntityTank) {
 			LazyOptional<IFluidHandler> fluidHandler = tileentity.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, hit.getFace());
 
-			if (fluidHandler != null) {
+			if (fluidHandler.isPresent()) {
 				FluidUtil.interactWithFluidHandler(player, hand, world, pos, hit.getFace());
-				if (FluidUtil.getFluidHandler(player.getHeldItem(hand)) != null)
+				if (FluidUtil.getFluidHandler(player.getHeldItem(hand)).isPresent())
 					return ActionResultType.SUCCESS;
 			}
 		}

@@ -1,51 +1,19 @@
 package mob_grinding_utils.recipe;
 
-import java.util.ArrayList;
-import java.util.List;
+import mob_grinding_utils.Reference;
+import net.minecraft.item.crafting.IRecipeSerializer;
+import net.minecraft.item.crafting.SpecialRecipeSerializer;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
 
-import net.minecraft.item.crafting.IRecipe;
-
-
+@Mod.EventBusSubscriber(modid = Reference.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ModRecipes {
-	public static final List<IRecipe> RECIPES = new ArrayList<IRecipe>();
-
-	// Chicken Feed
-	//public static final IRecipe CHICKEN_FEED = new RecipeChickenFeed();
-	/*
-	private static ResourceLocation getResource(String inName) {
-		return new ResourceLocation(Reference.MOD_ID, inName);
-	}
-
-	public static void init() {
-		try {
-			for (Field field : ModRecipes.class.getDeclaredFields()) {
-				Object obj = field.get(null);
-				if (obj instanceof IRecipe) {
-					IRecipe recipe = (IRecipe) obj;
-					String name = field.getName().toLowerCase(Locale.ENGLISH);
-					registerRecipe(name, recipe);
-				}
-			}
-		} catch (IllegalAccessException e) {
-			throw new RuntimeException(e);
-		}
-	}
-
-	public static void registerRecipe(String inName, IRecipe recipe) {
-		RECIPES.add(recipe);
-		recipe.setRegistryName(getResource(inName));
-	}
-
-	@Mod.EventBusSubscriber(modid = Reference.MOD_ID)
-	public static class RegistrationHandlerRecipes {
-		//@SideOnly(Side.CLIENT)
-		@SubscribeEvent
-		public static void registerRecipes(final RegistryEvent.Register<IRecipe> event) {
-			init();
-			final IForgeRegistry<IRecipe> registry = event.getRegistry();
-			for (IRecipe recipes : RECIPES)
-				registry.register(recipes);
-		}
-	}
-	*/
+	public static RecipeChickenFeed CHICKEN_FEED = new RecipeChickenFeed(new ResourceLocation(Reference.MOD_ID, "crafting_special_chicken_feed"));
+    
+	@SubscribeEvent
+    public static void onRecipeRegistry(final RegistryEvent.Register<IRecipeSerializer<?>> event) {
+      //TODO  event.getRegistry().register(CHICKEN_FEED.setRegistryName(new ResourceLocation(Reference.MOD_ID, "chicken_feed")));
+    }
 }

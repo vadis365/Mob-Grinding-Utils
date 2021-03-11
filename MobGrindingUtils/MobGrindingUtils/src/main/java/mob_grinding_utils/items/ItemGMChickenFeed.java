@@ -29,5 +29,4 @@ public class ItemGMChickenFeed extends Item {
 			list.add(new TranslationTextComponent("tooltip.chickenfeed_3").mergeStyle(TextFormatting.GREEN).appendString(" " + stack.getTag().get("mguMobName") + " 'DNA'."));
 		}
 	}
-
 }
