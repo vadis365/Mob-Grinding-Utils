@@ -1,5 +1,7 @@
 package mob_grinding_utils.events;
 
+import java.util.Optional;
+
 import mob_grinding_utils.MobGrindingUtils;
 import mob_grinding_utils.ModSounds;
 import mob_grinding_utils.network.MessageChickenSync;
@@ -11,14 +13,11 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.item.SpawnEggItem;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.world.World;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.fml.network.PacketDistributor;
-import net.minecraftforge.registries.ForgeRegistries;
 
 public class ChickenFuseEvent {
 
@@ -39,13 +38,11 @@ public class ChickenFuseEvent {
 					}
 
 					if (startTime >= 20) {
-						entity.remove();
+						
 						entity.playSound(SoundEvents.ENTITY_CHICKEN_DEATH, 1F, 1F);
 						entity.playSound(ModSounds.CHICKEN_RISE, 0.5F, 1F);
-
-						ResourceLocation resourcelocation = new ResourceLocation(event.getEntity().getPersistentData().getString("mguMobName"));
-						RegistryObject<EntityType<?>> entityMob = RegistryObject.of(resourcelocation, ForgeRegistries.ENTITIES);
 						
+						Optional<EntityType<?>> entityMob = EntityType.byKey(event.getEntity().getPersistentData().getString("mguMobName"));
 						if (entityMob.isPresent()) {
 							SpawnEggItem egg = SpawnEggItem.getEgg(entityMob.get());
 							if (egg != null)
@@ -57,6 +54,7 @@ public class ChickenFuseEvent {
 							ItemEntity feather = new ItemEntity(world, entity.getPosX() + (double) (world.rand.nextFloat() * entity.getWidth() * 2.0F) - (double) entity.getWidth(), entity.getPosY() + (double) (world.rand.nextFloat() * entity.getHeight()), entity.getPosZ() + (double) (world.rand.nextFloat() * entity.getWidth() * 2.0F) - (double) entity.getWidth(), stack);
 							world.addEntity(feather);
 						}
+						entity.remove();
 					}
 				}
 			}

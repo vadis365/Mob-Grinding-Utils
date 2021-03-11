@@ -41,7 +41,7 @@ public class ItemMobSwab extends Item {
 	@Override
 	public ActionResultType itemInteractionForEntity(ItemStack stack, PlayerEntity player, LivingEntity target, Hand hand) {
 		if (target instanceof LivingEntity && !(target instanceof PlayerEntity) && !used) {
-				String mobName = target.getEntityString();
+				String mobName = target.getType().getRegistryName().toString();
 				ItemStack stack2 = new ItemStack(ModItems.MOB_SWAB_USED, 1);
 				if (!stack2.hasTag())
 					stack2.setTag(new CompoundNBT());
@@ -49,7 +49,6 @@ public class ItemMobSwab extends Item {
 					stack2.getTag().putString("mguMobName", mobName);
 					CompoundNBT nbt = new CompoundNBT();
 					target.writeAdditional(nbt);
-					System.out.println("MOB NAME IS: " + mobName);
 				}
 			player.setHeldItem(hand, stack2);
 		    return ActionResultType.SUCCESS;

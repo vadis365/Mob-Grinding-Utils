@@ -7,6 +7,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.item.crafting.SpecialRecipe;
+import net.minecraft.item.crafting.SpecialRecipeSerializer;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
@@ -38,7 +39,8 @@ public class RecipeChickenFeed extends SpecialRecipe {
 				continue;
 			++cnt;
 			
-			if (is.getItem() == Items.LAVA_BUCKET) { //temp
+			if (is.getItem() == Items.LAVA_BUCKET) {
+	
 			LazyOptional<IFluidHandlerItem> bucketHandler = is.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null);
 			bucketHandler.ifPresent((receptacle) -> {
 				//temp ->
@@ -107,10 +109,7 @@ public class RecipeChickenFeed extends SpecialRecipe {
 		return width * height >= 2;
 	}
 
-	@Override
 	public IRecipeSerializer<?> getSerializer() {
-		// TODO Auto-generated method stub
-		return null;
+		return new SpecialRecipeSerializer<>(RecipeChickenFeed::new);
 	}
-
 }
