@@ -21,14 +21,11 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.NBTUtil;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModList;
-import net.minecraftforge.fml.RegistryObject;
-import net.minecraftforge.registries.ForgeRegistries;
 
 public class EntityHeadDropEvent {
 
@@ -63,20 +60,14 @@ public class EntityHeadDropEvent {
 		
 		/*TODO enable this and fix EndeIO compat 
 		if (target instanceof EndermanEntity)
-			if (Loader.isModLoaded("enderio"))
-				return new ItemStack(Item.REGISTRY.getObject(new ResourceLocation("enderio:block_enderman_skull")), 1, 0);
+			if (ModList.get().isLoaded("enderio"))
+				return new ItemStack(Item.REGISTRY.getObject(new ResourceLocation("enderio:block_enderman_skull")), 1);
  		*/		
 		
-		
-		// TODO remove hardcoded mod compat with raiders and WitherCrumbs/HeadCrumbs
 		if (target instanceof MobEntity) {
 			if (ModList.get().isLoaded("player_mobs"))
 				if (isPlayerMob(target))
 				return createHeadFor(getPlayerByUsername(target.getName().getString()));
-				/*
-			if (Loader.isModLoaded("raiders"))
-				if (isPlayerRaider(target))
-				return createHeadFor(getPlayerByUsername(target.getName()));*/
 		}
 		
 		
@@ -95,30 +86,12 @@ public class EntityHeadDropEvent {
 		return ItemStack.EMPTY;
 	}
 	
-	// TODO remove hardcoded mod compat with raiders and WitherCrumbs/HeadCrumbs
 
 	public static boolean isPlayerMob(Entity entity) {
 		Optional<EntityType<?>> entityMob = EntityType.byKey("player_mobs:player_mob");
 		return entityMob.isPresent() && entityMob.get().equals(entity.getType());
 	}
-/*
-	public static boolean isPlayerRaider(Entity entity) {
-		ResourceLocation resourcelocation = EntityList.getKey(entity);
-		if(resourcelocation.toString().equals("raiders:raider"))
-			return true;
-		if(resourcelocation.toString().equals("raiders:brute"))
-			return true;
-		if(resourcelocation.toString().equals("raiders:witch"))
-			return true;
-		if(resourcelocation.toString().equals("raiders:tweaker"))
-			return true;
-		if(resourcelocation.toString().equals("raiders:pyromaniac"))
-			return true;
-		if(resourcelocation.toString().equals("raiders:ranger"))
-			return true;
-		return false;
-	}
-*/
+
 	public static GameProfile getPlayerByUsername(String name) {
 		return new GameProfile(null, name);
 	}

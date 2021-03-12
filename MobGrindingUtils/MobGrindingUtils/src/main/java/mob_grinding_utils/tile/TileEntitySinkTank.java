@@ -2,7 +2,9 @@ package mob_grinding_utils.tile;
 
 import java.util.List;
 
+import mob_grinding_utils.MobGrindingUtils;
 import mob_grinding_utils.ModBlocks;
+import mob_grinding_utils.network.MessageTapParticle;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.EntityPredicates;
 import net.minecraft.util.SoundCategory;
@@ -11,6 +13,7 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
+import net.minecraftforge.fml.network.PacketDistributor;
 
 public class TileEntitySinkTank extends TileEntityTank {
 
@@ -36,7 +39,7 @@ public class TileEntitySinkTank extends TileEntityTank {
 				tank.fill(new FluidStack(ModBlocks.FLUID_XP, 20), FluidAction.EXECUTE);
 				addPlayerXP(player, -1);
 				getWorld().playSound(null, player.getPosX(), player.getPosY(), player.getPosZ(), SoundEvents.ITEM_BOTTLE_FILL, SoundCategory.NEUTRAL , 0.1F, 0.5F * ((getWorld().rand.nextFloat() - getWorld().rand.nextFloat()) * 0.7F + 1.8F));
-				// MobGrindingUtils.NETWORK_WRAPPER.sendToAll(new MessageTapParticle(getPos().up())); //TODO
+				MobGrindingUtils.NETWORK_WRAPPER.send(PacketDistributor.ALL.noArg(), new MessageTapParticle(getPos().up()));
 			}
 			return true;
 		}

@@ -1,6 +1,6 @@
-package mob_grinding_utils.recipe;
+package mob_grinding_utils;
 
-import mob_grinding_utils.Reference;
+import mob_grinding_utils.recipe.RecipeChickenFeed;
 import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.event.RegistryEvent;

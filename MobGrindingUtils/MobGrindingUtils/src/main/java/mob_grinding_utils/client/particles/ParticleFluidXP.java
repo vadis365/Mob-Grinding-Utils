@@ -2,28 +2,23 @@ package mob_grinding_utils.client.particles;
 
 import java.awt.Color;
 
-import com.mojang.blaze3d.vertex.IVertexBuilder;
-
+import net.minecraft.client.particle.IAnimatedSprite;
 import net.minecraft.client.particle.IParticleFactory;
 import net.minecraft.client.particle.IParticleRenderType;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.SpriteTexturedParticle;
-import net.minecraft.client.renderer.ActiveRenderInfo;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.particles.BasicParticleType;
 import net.minecraft.util.math.MathHelper;
 
 public class ParticleFluidXP extends SpriteTexturedParticle {
 
-    public double colorR = 0;
-    public double colorG = 0;
-    public double colorB = 0;
-    public int textureIndex = 0;
-    public int prevTextureIndex = 0;
+	@SuppressWarnings("unused")
+	private final IAnimatedSprite sprites;
 
-    public ParticleFluidXP(ClientWorld world, double x, double y, double z, double tx, double ty, double tz, int count, int color, float scale) {
-        super(world, x, y, z, 0.0D, 0.0D, 0.0D);
-
+    public ParticleFluidXP(ClientWorld world, double x, double y, double z, double tx, double ty, double tz, int count, int color, float scale, IAnimatedSprite sprite) {
+    	super(world, x, y, z, 0.0D, 0.0D, 0.0D);
+    	this.sprites = sprite;
         motionX = 0.0D;
         motionY = 0.0D;
         motionZ = 0.0D;
@@ -42,55 +37,43 @@ public class ParticleFluidXP extends SpriteTexturedParticle {
         motionY = 0.0D;
         motionZ = 0.0D;
         particleScale = ((MathHelper.sin(count / 2.0F) * 0.1F + 1.0F) * scale);
-
-        //setParticleTexture(Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(TEXTURE[0].toString()));
     }
-/*
-        @Override
+
+		@Override
         public void tick() {
-            prevTextureIndex = textureIndex;
             prevPosX = posX;
             prevPosY = posY;
             prevPosZ = posZ;
             motionY -= (double) particleGravity;
             move(motionX, motionY, motionZ);
             motionY *= 0.9800000190734863D;
-            if (this.age++ >= this.particleMaxAge)
+            if (this.age++ >= this.maxAge)
                 this.setExpired();
-            textureIndex = 0 + particleAge * 8 / particleMaxAge;
-            if (textureIndex > 8)
-                textureIndex = 8;
-            if(age%3 == 0)
-                if(prevTextureIndex != textureIndex)
-                    setParticleTexture(Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(TEXTURE[textureIndex].toString()));
         }
-     */
-/* //todo not sure what 1 means...
+
 	@Override
-	public int getFXLayer() {
-		return 1;
+	public IParticleRenderType getRenderType() {
+		return IParticleRenderType.PARTICLE_SHEET_TRANSLUCENT;
 	}
-*/
-    @Override
-    public void renderParticle(IVertexBuilder buffer, ActiveRenderInfo renderInfo, float partialTicks) {
 
-    }
+	@Override
+	public int getBrightnessForRender(float partialTicks) {
+		return 15728880;
+	}
+	
+	public static class Factory implements IParticleFactory<BasicParticleType> {
+		IAnimatedSprite sprites;
 
-    @Override
-    public IParticleRenderType getRenderType() {
-        return IParticleRenderType.NO_RENDER; //todo temp
-    }
+        public Factory(IAnimatedSprite sprite) {
+        	this.sprites = sprite;
+		}
+ 
+		@Override
+		public Particle makeParticle(BasicParticleType typeIn, ClientWorld world, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
+			ParticleFluidXP particle = new ParticleFluidXP(world, x + world.rand.nextDouble() - 0.5D * 0.05D, y + 0.125D, z + world.rand.nextDouble() - 0.5D * 0.05D, xSpeed, ySpeed, zSpeed, 20, 16776960, 0.25F, sprites);
+			particle.selectSpriteRandomly(sprites);
+			return particle;
+		}
 
-    @Override
-    public int getBrightnessForRender(float partialTicks) {
-        return 15728880;
-    }
-
-    public static class Factory implements IParticleFactory<BasicParticleType> {
-        @Override
-        public Particle makeParticle(BasicParticleType typeIn, ClientWorld worldIn, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
-            return null;
-        }
-    }
-
+	}
 }

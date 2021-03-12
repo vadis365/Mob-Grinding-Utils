@@ -1,8 +1,10 @@
 package mob_grinding_utils.tile;
 
+import mob_grinding_utils.MobGrindingUtils;
 import mob_grinding_utils.ModBlocks;
 import mob_grinding_utils.blocks.BlockXPTap;
 import mob_grinding_utils.entity.EntityXPOrbFalling;
+import mob_grinding_utils.network.MessageTapParticle;
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
@@ -12,6 +14,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
+import net.minecraftforge.fml.network.PacketDistributor;
 
 public class TileEntityXPTap extends TileEntity implements ITickableTileEntity {
 	
@@ -30,7 +33,7 @@ public class TileEntityXPTap extends TileEntity implements ITickableTileEntity {
 					int xpAmount = EntityXPOrbFalling.getXPSplit(Math.min(20, ((TileEntityTank) tileentity).tank.getFluidAmount() / 20));
 					((TileEntityTank) tileentity).tank.drain(xpAmount * 20, FluidAction.EXECUTE);
 					spawnXP(getWorld(), pos, xpAmount, (TileEntityTank) tileentity);
-					//MobGrindingUtils.NETWORK_WRAPPER.sendToAll(new MessageTapParticle(getPos())); //TODO
+					MobGrindingUtils.NETWORK_WRAPPER.send(PacketDistributor.ALL.noArg(), new MessageTapParticle(getPos()));
 				}
 			}
 		}

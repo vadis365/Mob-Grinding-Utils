@@ -32,10 +32,13 @@ import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.particles.BasicParticleType;
+import net.minecraft.particles.ParticleType;
 import net.minecraft.util.DamageSource;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
@@ -53,9 +56,9 @@ public class MobGrindingUtils {
 	public static DamageSource SPIKE_DAMAGE;
 
 	public static final DeferredRegister<ContainerType<?>> CONTAINERS = DeferredRegister.create(ForgeRegistries.CONTAINERS, Reference.MOD_ID);
-	//public static final DeferredRegister<ParticleType<?>> PARTICLES = DeferredRegister.create(ForgeRegistries.PARTICLE_TYPES, Reference.MOD_ID);
+	public static final DeferredRegister<ParticleType<?>> PARTICLES = DeferredRegister.create(ForgeRegistries.PARTICLE_TYPES, Reference.MOD_ID);
 
-	//public static final RegistryObject<BasicParticleType> PARTICLE_FLUIDXP = PARTICLES.register("fluid_xp", () -> new BasicParticleType(false));
+	public static final RegistryObject<BasicParticleType> PARTICLE_FLUID_XP = PARTICLES.register("fluid_xp_particles", () -> new BasicParticleType(true));
 
 	public static final ItemGroup TAB = new ItemGroup(Reference.MOD_ID) {
 		@Override
@@ -63,18 +66,13 @@ public class MobGrindingUtils {
 			return new ItemStack(ModBlocks.SPIKES_ITEM);
 		}
 	};
-/*
-	static { 
-		FluidRegistry.enableUniversalBucket();
-	} 
-*/
 
 	public MobGrindingUtils() {
 		ModContainers modContainers = new ModContainers();
 
 		IEventBus modBus = FMLJavaModLoadingContext.get().getModEventBus();
 		CONTAINERS.register(modBus);
-	//	PARTICLES.register(modBus);
+		PARTICLES.register(modBus);
 
 		modBus.addListener(this::setup);
 		modBus.addListener(this::doClientStuff);
@@ -82,10 +80,6 @@ public class MobGrindingUtils {
 		//Central Data generator, called on runData
 		modBus.addListener(Generator::gatherData);
 	}
-
-//	public static void registerParticleFactory(ParticleFactoryRegisterEvent event) {
-//		Minecraft.getInstance().particles.registerFactory(PARTICLE_FLUIDXP.get());
-//	}
 
 	public void setup(FMLCommonSetupEvent event) {
 		/*
