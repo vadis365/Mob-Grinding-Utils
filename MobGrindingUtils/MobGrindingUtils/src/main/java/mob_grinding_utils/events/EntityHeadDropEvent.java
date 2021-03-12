@@ -1,6 +1,7 @@
 package mob_grinding_utils.events;
 
 import java.util.Collection;
+import java.util.Optional;
 
 import com.mojang.authlib.GameProfile;
 
@@ -97,7 +98,7 @@ public class EntityHeadDropEvent {
 	// TODO remove hardcoded mod compat with raiders and WitherCrumbs/HeadCrumbs
 
 	public static boolean isPlayerMob(Entity entity) {
-		RegistryObject<EntityType<?>> entityMob = RegistryObject.of(new ResourceLocation("player_mobs:player_mob"), ForgeRegistries.ENTITIES);
+		Optional<EntityType<?>> entityMob = EntityType.byKey("player_mobs:player_mob");
 		return entityMob.isPresent() && entityMob.get().equals(entity.getType());
 	}
 /*

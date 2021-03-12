@@ -1,7 +1,5 @@
 package mob_grinding_utils.blocks;
 
-import mob_grinding_utils.ModBlocks;
-import mob_grinding_utils.ModItems;
 import mob_grinding_utils.tile.TileEntityTank;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
@@ -9,11 +7,9 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.ContainerBlock;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.fluid.Fluid;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
@@ -43,23 +39,7 @@ public class BlockTank extends ContainerBlock {
 	public BlockRenderType getRenderType(BlockState state) {
 		return BlockRenderType.MODEL;
 	}
-/*
-	@Override
-	@SideOnly(Side.CLIENT)
-	public boolean shouldSideBeRendered(BlockState blockState, BlockAccess blockAccess, BlockPos pos, Direction side) {
-		return true;
-	}
 
-	@Override
-	public boolean isOpaqueCube(IBlockState state) {
-		return false;
-	}
-	@Nullable
-	@Override
-	public Item getItemDropped(BlockState state, Random rand, int fortune) {
-		return null;
-	}
-*/
 	@Override
 	public void onBlockHarvested(World world, BlockPos pos, BlockState state, PlayerEntity player) {
 		if (!world.isRemote && !player.abilities.isCreativeMode) {
@@ -91,18 +71,13 @@ public class BlockTank extends ContainerBlock {
 	}
 
 	@Override
-	public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player,Hand hand, BlockRayTraceResult hit) {
+	public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
 		TileEntity tileentity = world.getTileEntity(pos);
 		if (tileentity instanceof TileEntityTank) {
-			ItemStack heldItem = player.getHeldItem(hand);
 			LazyOptional<IFluidHandler> fluidHandler = tileentity.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, hit.getFace());
 			if (fluidHandler.isPresent()) {
-				Fluid tankFluid = ((TileEntityTank) tileentity).tank.getFluid().getFluid();
-				if (FluidUtil.interactWithFluidHandler(player, hand, world, pos, hit.getFace())) {
-					if (heldItem.getItem() == Items.BUCKET && tankFluid == ModBlocks.FLUID_XP)
-						player.setHeldItem(hand, new ItemStack(ModItems.FLUID_XP_BUCKET));
-					return ActionResultType.SUCCESS;
-				}
+				FluidUtil.interactWithFluidHandler(player, hand, world, pos, hit.getFace());
+				return ActionResultType.SUCCESS;
 			}
 		}
 		return ActionResultType.PASS;
