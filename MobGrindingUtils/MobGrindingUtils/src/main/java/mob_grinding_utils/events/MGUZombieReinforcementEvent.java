@@ -15,7 +15,7 @@ public class MGUZombieReinforcementEvent {
 			return;
 		if (event.getAttacker() instanceof PlayerEntity) {
 			PlayerEntity fakePlayer = (PlayerEntity) event.getAttacker();
-			if (fakePlayer.getDisplayName().getString().equals(new TranslationTextComponent("fakeplayer.mob_masher").toString()))
+			if (fakePlayer.getDisplayName().getString().equals(new TranslationTextComponent("fakeplayer.mob_masher").getString()))
 				event.setResult(Result.DENY);
 		}
 	}

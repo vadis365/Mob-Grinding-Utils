@@ -113,7 +113,7 @@ dependencies {
 
     compile fg.deobf("curse.maven:top-245211:3157997")
     compile fg.deobf("curse.maven:playermobs-430513:3153298")
-    compile fg.deobf("curse.maven:mek-268560:3183270")
+    //compile fg.deobf("curse.maven:mek-268560:3183270")
 }
 
 // Example for how to get properties into the manifest for reading by the runtime..
