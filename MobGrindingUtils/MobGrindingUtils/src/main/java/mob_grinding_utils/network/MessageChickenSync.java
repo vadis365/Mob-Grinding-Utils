@@ -38,34 +38,36 @@ public class MessageChickenSync {
 	}
 
 	public static void handle(MessageChickenSync message, final Supplier<NetworkEvent.Context> ctx) {
-		ctx.get().enqueueWork(() -> {
-
-			World world = Minecraft.getInstance().world;
-
-			if (world == null)
-				return;
-
-			else if (world.isRemote) {
-				LivingEntity chicken = (ChickenEntity) world.getEntityByID(message.chickenID);
-				if (chicken != null) {
-					CompoundNBT nbt = new CompoundNBT();
-					nbt = chicken.getPersistentData();
-					nbt.putBoolean("shouldExplode", message.nbt.getBoolean("shouldExplode"));
-					nbt.putInt("countDown", message.nbt.getInt("countDown"));
-					if (message.nbt.getInt("countDown") >= 20) {
-						for (int k = 0; k < 20; ++k) {
-							double xSpeed = world.rand.nextGaussian() * 0.02D;
-							double ySpeed = world.rand.nextGaussian() * 0.02D;
-							double zSpeed = world.rand.nextGaussian() * 0.02D;
-							world.addParticle(ParticleTypes.EXPLOSION, chicken.getPosX() + (double) (world.rand.nextFloat() * chicken.getWidth() * 2.0F) - (double) chicken.getWidth(), chicken.getPosY() + (double) (world.rand.nextFloat() * chicken.getHeight()), chicken.getPosZ() + (double) (world.rand.nextFloat() * chicken.getWidth() * 2.0F) - (double) chicken.getWidth(), xSpeed, ySpeed, zSpeed);
-							world.addParticle(ParticleTypes.LAVA, chicken.getPosX() + (double) (world.rand.nextFloat() * chicken.getWidth() * 2.0F) - (double) chicken.getWidth(), chicken.getPosY() + (double) (world.rand.nextFloat() * chicken.getHeight()), chicken.getPosZ() + (double) (world.rand.nextFloat() * chicken.getWidth() * 2.0F) - (double) chicken.getWidth(), xSpeed, ySpeed, zSpeed);
+		if(ctx.get().getDirection().getReceptionSide().isClient()) {
+			ctx.get().enqueueWork(() -> {
+	
+				World world = Minecraft.getInstance().world;
+	
+				if (world == null)
+					return;
+	
+				else if (world.isRemote) {
+					LivingEntity chicken = (ChickenEntity) world.getEntityByID(message.chickenID);
+					if (chicken != null) {
+						CompoundNBT nbt = new CompoundNBT();
+						nbt = chicken.getPersistentData();
+						nbt.putBoolean("shouldExplode", message.nbt.getBoolean("shouldExplode"));
+						nbt.putInt("countDown", message.nbt.getInt("countDown"));
+						if (message.nbt.getInt("countDown") >= 20) {
+							for (int k = 0; k < 20; ++k) {
+								double xSpeed = world.rand.nextGaussian() * 0.02D;
+								double ySpeed = world.rand.nextGaussian() * 0.02D;
+								double zSpeed = world.rand.nextGaussian() * 0.02D;
+								world.addParticle(ParticleTypes.EXPLOSION, chicken.getPosX() + (double) (world.rand.nextFloat() * chicken.getWidth() * 2.0F) - (double) chicken.getWidth(), chicken.getPosY() + (double) (world.rand.nextFloat() * chicken.getHeight()), chicken.getPosZ() + (double) (world.rand.nextFloat() * chicken.getWidth() * 2.0F) - (double) chicken.getWidth(), xSpeed, ySpeed, zSpeed);
+								world.addParticle(ParticleTypes.LAVA, chicken.getPosX() + (double) (world.rand.nextFloat() * chicken.getWidth() * 2.0F) - (double) chicken.getWidth(), chicken.getPosY() + (double) (world.rand.nextFloat() * chicken.getHeight()), chicken.getPosZ() + (double) (world.rand.nextFloat() * chicken.getWidth() * 2.0F) - (double) chicken.getWidth(), xSpeed, ySpeed, zSpeed);
+							}
 						}
+					} else {
+						LogManager.getLogger().info("WHY THE FUCK IS THE CHICKEN NULL!!!!?");
 					}
-				} else {
-					LogManager.getLogger().info("WHY THE FUCK IS THE CHICKEN NULL!!!!?");
 				}
-			}
-		});
+			});
+		}
 		ctx.get().setPacketHandled(true);
 	}
 }

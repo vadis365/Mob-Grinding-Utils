@@ -31,16 +31,11 @@ public class MessageTapParticle {
 	}
 
 	public static void handle(MessageTapParticle message, final Supplier<NetworkEvent.Context> ctx) {
-		ctx.get().enqueueWork(() -> {
-			World world = Minecraft.getInstance().world;
-
-			if (world == null)
-				return;
-
-			if (world.isRemote) {
-				ClientParticles.spawnGlitterParticles(world, message.tilePos.getX(), message.tilePos.getY(), message.tilePos.getZ(), 0D, 0D, 0D);
-			}
-		});
-		ctx.get().setPacketHandled(true);
+		if (ctx.get().getDirection().getReceptionSide().isClient()) {
+			ctx.get().enqueueWork(() -> {
+				ClientParticles.spawnGlitterParticles(message.tilePos.getX(), message.tilePos.getY(), message.tilePos.getZ(), 0D, 0D, 0D);
+			});
+			ctx.get().setPacketHandled(true);
+		}
 	}
 }

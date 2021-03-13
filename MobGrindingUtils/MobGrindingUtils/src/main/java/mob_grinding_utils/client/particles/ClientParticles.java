@@ -7,7 +7,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 @OnlyIn(Dist.CLIENT)
 public class ClientParticles {
-	public static void spawnGlitterParticles(World worldObj, double x, double y, double z, double vecX, double vecY, double vecZ) {
+	public static void spawnGlitterParticles( double x, double y, double z, double vecX, double vecY, double vecZ) {
 		World world = Minecraft.getInstance().world;
 		world.addParticle(MobGrindingUtils.PARTICLE_FLUID_XP.get(), false, x, y, z, vecX, vecY, vecZ);
 	}
