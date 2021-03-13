@@ -25,12 +25,14 @@ public class MessageFlagSync {
         return new MessageFlagSync(buf.readBoolean(), buf.readBoolean());
     }
 
-    public static void handle(MessageFlagSync message, final Supplier<NetworkEvent.Context> ctx) {
-        ctx.get().enqueueWork(() -> {
-            CompoundNBT nbt = Minecraft.getInstance().player.getPersistentData();
-            nbt.putBoolean("MGU_WitherMuffle", message.wither);
-            nbt.putBoolean("MGU_DragonMuffle", message.dragon);
-        });
-        ctx.get().setPacketHandled(true);
-    }
+	public static void handle(MessageFlagSync message, final Supplier<NetworkEvent.Context> ctx) {
+		if (ctx.get().getDirection().getReceptionSide().isClient()) {
+			ctx.get().enqueueWork(() -> {
+				CompoundNBT nbt = Minecraft.getInstance().player.getPersistentData();
+				nbt.putBoolean("MGU_WitherMuffle", message.wither);
+				nbt.putBoolean("MGU_DragonMuffle", message.dragon);
+			});
+		}
+		ctx.get().setPacketHandled(true);
+	}
 }
