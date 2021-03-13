@@ -32,7 +32,7 @@ public class ParticleFluidXP extends SpriteTexturedParticle {
         particleBlue = (c.getBlue() / 255.0F - mb + rand.nextFloat() * mb);
 
         particleGravity = 0.01F;
-        age = (int) (8.0D / (Math.random() * 0.8D + 0.2D));
+        maxAge = (int) (8.0D / (Math.random() * 0.8D + 0.2D));
         motionX = 0.0D;
         motionY = 0.0D;
         motionZ = 0.0D;
@@ -71,7 +71,7 @@ public class ParticleFluidXP extends SpriteTexturedParticle {
 		@Override
 		public Particle makeParticle(BasicParticleType typeIn, ClientWorld world, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
 			ParticleFluidXP particle = new ParticleFluidXP(world, x + world.rand.nextDouble() - 0.5D * 0.05D, y + 0.125D, z + world.rand.nextDouble() - 0.5D * 0.05D, xSpeed, ySpeed, zSpeed, 20, 16776960, 0.25F, sprites);
-			particle.selectSpriteWithAge(sprites);
+			particle.selectSpriteRandomly(sprites);
 			return particle;
 		}
 
