@@ -3,11 +3,9 @@ package mob_grinding_utils.network;
 
 import java.util.function.Supplier;
 
-import mob_grinding_utils.client.particles.ClientParticles;
-import net.minecraft.client.Minecraft;
+import mob_grinding_utils.MobGrindingUtils;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
 import net.minecraftforge.fml.network.NetworkEvent;
 
 public class MessageTapParticle {
@@ -32,14 +30,7 @@ public class MessageTapParticle {
 
 	public static void handle(MessageTapParticle message, final Supplier<NetworkEvent.Context> ctx) {
 		ctx.get().enqueueWork(() -> {
-			World world = ctx.get().getSender().getEntityWorld();
-
-			if (world == null)
-				return;
-
-			if (world.isRemote) {
-				ClientParticles.spawnGlitterParticles(world, message.tilePos.getX(), message.tilePos.getY(), message.tilePos.getZ(), 0D, 0D, 0D);
-			}
+				MobGrindingUtils.NETPROXY.spawnGlitterParticles(message.tilePos.getX(), message.tilePos.getY(), message.tilePos.getZ(), 0D, 0D, 0D);
 		});
 		ctx.get().setPacketHandled(true);
 	}

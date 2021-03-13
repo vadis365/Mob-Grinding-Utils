@@ -13,6 +13,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.item.SpawnEggItem;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.world.World;
 import net.minecraftforge.event.entity.living.LivingEvent;
@@ -41,7 +42,6 @@ public class ChickenFuseEvent {
 						
 						entity.playSound(SoundEvents.ENTITY_CHICKEN_DEATH, 1F, 1F);
 						entity.playSound(ModSounds.CHICKEN_RISE, 0.5F, 1F);
-						
 						Optional<EntityType<?>> entityMob = EntityType.byKey(event.getEntity().getPersistentData().getString("mguMobName"));
 						entityMob.ifPresent((mob) -> {
 							SpawnEggItem egg = SpawnEggItem.EGGS.get(mob);

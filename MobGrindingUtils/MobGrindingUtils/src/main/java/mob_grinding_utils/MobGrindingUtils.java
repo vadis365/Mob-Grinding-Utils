@@ -22,6 +22,8 @@ import mob_grinding_utils.events.RenderChickenSwell;
 import mob_grinding_utils.inventory.client.GuiAbsorptionHopper;
 import mob_grinding_utils.inventory.client.GuiFan;
 import mob_grinding_utils.inventory.client.GuiSaw;
+import mob_grinding_utils.network.MGUNetProxyClient;
+import mob_grinding_utils.network.MGUNetProxyCommon;
 import mob_grinding_utils.network.MGUNetwork;
 import mob_grinding_utils.network.MessageFlagSync;
 import mob_grinding_utils.recipe.RecipeChickenFeed;
@@ -41,6 +43,7 @@ import net.minecraft.util.DamageSource;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.Mod;
@@ -72,6 +75,7 @@ public class MobGrindingUtils {
 			return new ItemStack(ModBlocks.SPIKES_ITEM);
 		}
 	};
+	public static MGUNetProxyCommon NETPROXY;
 
 	public MobGrindingUtils() {
 		ModContainers modContainers = new ModContainers();
@@ -86,6 +90,8 @@ public class MobGrindingUtils {
 
 		//Central Data generator, called on runData
 		modBus.addListener(Generator::gatherData);
+
+		NETPROXY = DistExecutor.safeRunForDist(() -> MGUNetProxyClient::new, () -> MGUNetProxyCommon::new);
 	}
 
 	public void setup(FMLCommonSetupEvent event) {
