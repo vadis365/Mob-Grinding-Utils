@@ -251,10 +251,10 @@ public class TileEntityAbsorptionHopper extends TileEntityInventoryHelper implem
 					tileOptional.ifPresent((receptacle) -> {
 						int tanks = receptacle.getTanks();
 						for (int x = 0; x < tanks; x++) {
-							if (receptacle.getTankCapacity(tanks) > 0) {
+							if (receptacle.getTankCapacity(x) > 0) {
 								FluidStack contents = receptacle.getFluidInTank(x);
 								if (!tank.getFluid().isEmpty()) {
-									if (contents.isEmpty() || contents.getAmount() <= receptacle.getTankCapacity(tanks) - 100 && contents.containsFluid(new FluidStack(tank.getFluid(), 1))) {
+									if (contents.isEmpty() || contents.getAmount() <= receptacle.getTankCapacity(x) - 100 && contents.containsFluid(new FluidStack(tank.getFluid(), 1))) {
 										receptacle.fill(tank.drain(new FluidStack(tank.getFluid(), 100), FluidAction.EXECUTE), FluidAction.EXECUTE);
 										markDirty();
 									}
