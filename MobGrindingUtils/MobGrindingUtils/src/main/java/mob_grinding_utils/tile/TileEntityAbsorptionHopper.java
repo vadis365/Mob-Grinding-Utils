@@ -52,10 +52,13 @@ public class TileEntityAbsorptionHopper extends TileEntityInventoryHelper implem
     public FluidTank tank = new FluidTank(FluidAttributes.BUCKET_VOLUME *  16);
     private final LazyOptional<IFluidHandler> tank_holder = LazyOptional.of(() -> tank);
 	private IItemHandler itemHandler;
+	private LazyOptional<IItemHandler> itemholder = LazyOptional.empty();
     private static final int[] SLOTS = new int[] {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16};
     public int prevTankAmount;
 	public TileEntityAbsorptionHopper() {
 		super(ModBlocks.ABSORPTION_HOPPER_TILE, 17);
+		itemHandler = createUnSidedHandler();
+		itemholder = LazyOptional.of(() -> itemHandler);
 	}
 
 	public enum EnumStatus implements IStringSerializable {
@@ -478,7 +481,7 @@ public class TileEntityAbsorptionHopper extends TileEntityInventoryHelper implem
             return tank_holder.cast();
         
 		if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
-			return (LazyOptional<T>) (itemHandler == null ? (itemHandler = createUnSidedHandler()) : itemHandler);
+			return  itemholder.cast();
         return super.getCapability(capability, facing);
     }
 
