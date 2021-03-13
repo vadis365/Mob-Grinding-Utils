@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "O ",
+    "II",
+    "I "
+  ],
+  "key": {
+    "O": {
+      "tag": "forge:obsidian"
+    },
+    "I": {
+      "tag": "forge:ingots/iron"
+    }
+  },
+  "result": {
+    "item": "mob_grinding_utils:xp_tap"
+  }
+}

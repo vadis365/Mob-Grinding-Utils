@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " E ",
+    "ERE",
+    "OHO"
+  ],
+  "key": {
+    "E": {
+      "tag": "forge:ender_pearls"
+    },
+    "O": {
+      "tag": "forge:obsidian"
+    },
+    "R": {
+      "tag": "forge:dusts/redstone"
+    },
+    "H": {
+      "item": "minecraft:hopper"
+    }
+  },
+  "result": {
+    "item": "mob_grinding_utils:absorption_upgrade"
+  }
+}
