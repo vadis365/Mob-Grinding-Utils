@@ -1,5 +1,6 @@
 package mob_grinding_utils.recipe;
 
+import mob_grinding_utils.MobGrindingUtils;
 import mob_grinding_utils.ModBlocks;
 import mob_grinding_utils.ModItems;
 import net.minecraft.inventory.CraftingInventory;
@@ -106,6 +107,6 @@ public class RecipeChickenFeed extends SpecialRecipe {
 	}
 
 	public IRecipeSerializer<?> getSerializer() {
-		return new SpecialRecipeSerializer<>(RecipeChickenFeed::new);
+		return MobGrindingUtils.RECIPE_CHICKEN_FEED.get();
 	}
 }

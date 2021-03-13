@@ -32,7 +32,7 @@ public class MessageTapParticle {
 
 	public static void handle(MessageTapParticle message, final Supplier<NetworkEvent.Context> ctx) {
 		ctx.get().enqueueWork(() -> {
-			World world = Minecraft.getInstance().world;
+			World world = ctx.get().getSender().getEntityWorld();
 
 			if (world == null)
 				return;

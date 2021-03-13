@@ -24,6 +24,7 @@ import mob_grinding_utils.inventory.client.GuiFan;
 import mob_grinding_utils.inventory.client.GuiSaw;
 import mob_grinding_utils.network.MGUNetwork;
 import mob_grinding_utils.network.MessageFlagSync;
+import mob_grinding_utils.recipe.RecipeChickenFeed;
 import net.minecraft.client.gui.ScreenManager;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.RenderTypeLookup;
@@ -31,6 +32,8 @@ import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.IRecipeSerializer;
+import net.minecraft.item.crafting.SpecialRecipeSerializer;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.particles.BasicParticleType;
 import net.minecraft.particles.ParticleType;
@@ -57,8 +60,11 @@ public class MobGrindingUtils {
 
 	public static final DeferredRegister<ContainerType<?>> CONTAINERS = DeferredRegister.create(ForgeRegistries.CONTAINERS, Reference.MOD_ID);
 	public static final DeferredRegister<ParticleType<?>> PARTICLES = DeferredRegister.create(ForgeRegistries.PARTICLE_TYPES, Reference.MOD_ID);
+	public static final DeferredRegister<IRecipeSerializer<?>> RECIPES = DeferredRegister.create(ForgeRegistries.RECIPE_SERIALIZERS, Reference.MOD_ID);
 
 	public static final RegistryObject<BasicParticleType> PARTICLE_FLUID_XP = PARTICLES.register("fluid_xp_particles", () -> new BasicParticleType(true));
+
+	public static final RegistryObject<IRecipeSerializer<RecipeChickenFeed>> RECIPE_CHICKEN_FEED = RECIPES.register("chicken_feed_recipe", () ->  new SpecialRecipeSerializer<RecipeChickenFeed>(RecipeChickenFeed::new));
 
 	public static final ItemGroup TAB = new ItemGroup(Reference.MOD_ID) {
 		@Override
@@ -73,6 +79,7 @@ public class MobGrindingUtils {
 		IEventBus modBus = FMLJavaModLoadingContext.get().getModEventBus();
 		CONTAINERS.register(modBus);
 		PARTICLES.register(modBus);
+		RECIPES.register(modBus);
 
 		modBus.addListener(this::setup);
 		modBus.addListener(this::doClientStuff);

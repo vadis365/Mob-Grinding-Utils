@@ -46,7 +46,7 @@ sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = co
 println('Java: ' + System.getProperty('java.version') + ' JVM: ' + System.getProperty('java.vm.version') + '(' + System.getProperty('java.vendor') + ') Arch: ' + System.getProperty('os.arch'))
 minecraft {
     mappings channel: 'snapshot', version: "$mappings_version"
-    // accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
+    accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
 
     runs {
         client {
@@ -113,7 +113,9 @@ dependencies {
 
     compile fg.deobf("curse.maven:top-245211:3157997")
     compile fg.deobf("curse.maven:playermobs-430513:3153298")
-    //compile fg.deobf("curse.maven:mek-268560:3183270")
+    compile fg.deobf("curse.maven:mek-268560:3183270")
+    compile fg.deobf("curse.maven:IF-266515:3223241")
+    compile fg.deobf("curse.maven:TITANIUM-287342:3223141")
 }
 
 // Example for how to get properties into the manifest for reading by the runtime..

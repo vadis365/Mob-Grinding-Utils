@@ -43,11 +43,11 @@ public class ChickenFuseEvent {
 						entity.playSound(ModSounds.CHICKEN_RISE, 0.5F, 1F);
 						
 						Optional<EntityType<?>> entityMob = EntityType.byKey(event.getEntity().getPersistentData().getString("mguMobName"));
-						if (entityMob.isPresent()) {
-							SpawnEggItem egg = SpawnEggItem.getEgg(entityMob.get());
+						entityMob.ifPresent((mob) -> {
+							SpawnEggItem egg = SpawnEggItem.EGGS.get(mob);
 							if (egg != null)
 								entity.entityDropItem(new ItemStack(egg), 0.0F);
-						}
+						});
 
 						for (int k = 0; k < 4; ++k) {
 							ItemStack stack = new ItemStack(Items.FEATHER);
