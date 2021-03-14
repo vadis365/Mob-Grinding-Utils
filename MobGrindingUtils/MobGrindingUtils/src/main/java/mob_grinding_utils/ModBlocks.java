@@ -166,7 +166,7 @@ public class ModBlocks {
 					if(stack.hasTag() && !stack.getTag().contains("Empty")) {
 						FluidStack fluid = FluidStack.loadFluidStackFromNBT(stack.getTag());
 						if(fluid !=null) {
-							list.add(new TranslationTextComponent("Contains: "+ fluid.getFluid().getRegistryName().toString()).mergeStyle(TextFormatting.GREEN));
+							list.add(new TranslationTextComponent("Contains: "+ fluid.getDisplayName().getString()).mergeStyle(TextFormatting.GREEN));
 							list.add(new TranslationTextComponent(""+ fluid.getAmount() +"Mb/32000Mb").mergeStyle(TextFormatting.BLUE));
 						}
 					}
