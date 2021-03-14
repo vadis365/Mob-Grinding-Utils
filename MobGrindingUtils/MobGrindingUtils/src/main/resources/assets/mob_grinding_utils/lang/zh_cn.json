@@ -11,7 +11,7 @@
   "block.mob_grinding_utils.dark_oak_stone": "黑色橡木石头",
 
   "_comment": "Fluids",
-  "fluid.mob_grinding_utils.fluid_xp": "液体XP",
+  "mob_grinding_utils.fluid_xp": "液体XP",
 
   "_comment": "Items",
   "item.mob_grinding_utils.mob_swab": "怪物棉签",

@@ -18,7 +18,7 @@
   "block.mob_grinding_utils.entity_conveyor": "Entity Conveyor",
 
   "_comment": "Fluids",
-  "fluid.mob_grinding_utils.fluid_xp": "Fluid XP",
+  "mob_grinding_utils.fluid_xp": "Fluid XP",
 
   "_comment": "Items",
   "item.mob_grinding_utils.mob_swab": "Mob Swab",
