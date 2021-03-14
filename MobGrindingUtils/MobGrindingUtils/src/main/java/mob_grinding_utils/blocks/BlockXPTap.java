@@ -26,10 +26,10 @@ import net.minecraft.world.World;
 
 public class BlockXPTap extends DirectionalBlock implements ITileEntityProvider {
 
-	public static final VoxelShape XP_TAP_WEST_AABB = Block.makeCuboidShape(7D, 8D, 4D, 16D, 16D, 12D);
-	public static final VoxelShape XP_TAP_EAST_AABB = Block.makeCuboidShape(0D, 8D, 4D, 9D, 16D, 12D);
-	public static final VoxelShape XP_TAP_SOUTH_AABB = Block.makeCuboidShape(4D, 8D, 0D, 12D, 16D, 9D);
-	public static final VoxelShape XP_TAP_NORTH_AABB = Block.makeCuboidShape(4D, 8D, 7D, 12D, 16D, 16D);
+	public static final VoxelShape XP_TAP_WEST_AABB = Block.makeCuboidShape(7D, 6D, 4D, 16D, 16D, 12D);
+	public static final VoxelShape XP_TAP_EAST_AABB = Block.makeCuboidShape(0D, 6D, 4D, 9D, 16D, 12D);
+	public static final VoxelShape XP_TAP_SOUTH_AABB = Block.makeCuboidShape(4D, 6D, 0D, 12D, 16D, 9D);
+	public static final VoxelShape XP_TAP_NORTH_AABB = Block.makeCuboidShape(4D, 6D, 7D, 12D, 16D, 16D);
 	public static final BooleanProperty POWERED = BooleanProperty.create("powered");
 
 	public BlockXPTap(Block.Properties properties) {
@@ -51,22 +51,22 @@ public class BlockXPTap extends DirectionalBlock implements ITileEntityProvider 
 			return  XP_TAP_NORTH_AABB;
 		}
 	}
-/*
-	@Override
-	public boolean isOpaqueCube(IBlockState state) {
-		return false;
-	}
 
 	@Override
-	public boolean isFullBlock(IBlockState state) {
-		return false;
+	public VoxelShape getRaytraceShape(BlockState state, IBlockReader worldIn, BlockPos pos) {
+		switch (state.get(FACING)) {
+		default:
+		case EAST:
+			return XP_TAP_EAST_AABB;
+		case WEST:
+			return XP_TAP_WEST_AABB;
+		case SOUTH:
+			return XP_TAP_SOUTH_AABB;
+		case NORTH:
+			return  XP_TAP_NORTH_AABB;
+		}
 	}
 
-	@Override
-	public boolean isFullCube(IBlockState state) {
-		return false;
-	}
-*/
 	@Override
 	public BlockRenderType getRenderType(BlockState state) {
 		return BlockRenderType.MODEL;

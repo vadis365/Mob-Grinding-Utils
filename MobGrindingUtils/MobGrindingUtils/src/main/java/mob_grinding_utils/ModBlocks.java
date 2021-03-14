@@ -121,7 +121,7 @@ public class ModBlocks {
 			};
 			FAN_TILE = TileEntityType.Builder.create(TileEntityFan::new, FAN).build(null);
 
-			SAW = new BlockSaw(Block.Properties.create(Material.IRON, MaterialColor.STONE).hardnessAndResistance(10.0F, 2000.0F).sound(SoundType.METAL));
+			SAW = new BlockSaw(Block.Properties.create(Material.IRON, MaterialColor.STONE).hardnessAndResistance(10.0F, 2000.0F).sound(SoundType.METAL).notSolid());
 			SAW_ITEM = new BlockItem(SAW, new Item.Properties().group(MobGrindingUtils.TAB).setISTER(() ->  TileSawStackItemRenderer::new)) {
 				@Override
 				@OnlyIn(Dist.CLIENT)
@@ -133,7 +133,7 @@ public class ModBlocks {
 			};
 			SAW_TILE = TileEntityType.Builder.create(TileEntitySaw::new, SAW).build(null);
 
-			ABSORPTION_HOPPER = new BlockAbsorptionHopper(Block.Properties.create(Material.IRON, MaterialColor.STONE).hardnessAndResistance(10.0F, 2000.0F).sound(SoundType.METAL).harvestLevel(0).harvestTool(ToolType.PICKAXE));
+			ABSORPTION_HOPPER = new BlockAbsorptionHopper(Block.Properties.create(Material.IRON, MaterialColor.STONE).hardnessAndResistance(10.0F, 2000.0F).sound(SoundType.METAL).harvestLevel(0).harvestTool(ToolType.PICKAXE).notSolid());
 			ABSORPTION_HOPPER_ITEM = new BlockItem(ABSORPTION_HOPPER, new Item.Properties().group(MobGrindingUtils.TAB)) {
 				@Override
 				@OnlyIn(Dist.CLIENT)
@@ -148,7 +148,7 @@ public class ModBlocks {
 			};
 			ABSORPTION_HOPPER_TILE = TileEntityType.Builder.create(TileEntityAbsorptionHopper::new, ABSORPTION_HOPPER).build(null);
 			
-			SPIKES = new BlockSpikes(Block.Properties.create(Material.IRON, MaterialColor.STONE).hardnessAndResistance(5.0F, 2000.0F).sound(SoundType.METAL));
+			SPIKES = new BlockSpikes(Block.Properties.create(Material.IRON, MaterialColor.STONE).hardnessAndResistance(5.0F, 2000.0F).sound(SoundType.METAL).notSolid());
 			SPIKES_ITEM = new BlockItem(SPIKES, new Item.Properties().group(MobGrindingUtils.TAB)) {
 				@Override
 				@OnlyIn(Dist.CLIENT)
@@ -190,7 +190,7 @@ public class ModBlocks {
 			};
 			TANK_SINK_TILE = TileEntityType.Builder.create(TileEntitySinkTank::new, TANK_SINK).build(null);
 
-			XP_TAP = new BlockXPTap(Block.Properties.create(Material.REDSTONE_LIGHT, MaterialColor.STONE).hardnessAndResistance(1.0F, 2000.0F).sound(SoundType.METAL));
+			XP_TAP = new BlockXPTap(Block.Properties.create(Material.REDSTONE_LIGHT, MaterialColor.STONE).hardnessAndResistance(1.0F, 2000.0F).sound(SoundType.METAL).notSolid());
 			XP_TAP_ITEM = new BlockItem(XP_TAP, new Item.Properties().group(MobGrindingUtils.TAB)) {
 				@Override
 				@OnlyIn(Dist.CLIENT)
@@ -242,7 +242,7 @@ public class ModBlocks {
 				}
 			};
 	
-			ENDER_INHIBITOR_ON = new BlockEnderInhibitorOn(Block.Properties.create(Material.REDSTONE_LIGHT, MaterialColor.STONE).hardnessAndResistance(0.2F, 2000F).sound(SoundType.METAL));
+			ENDER_INHIBITOR_ON = new BlockEnderInhibitorOn(Block.Properties.create(Material.REDSTONE_LIGHT, MaterialColor.STONE).hardnessAndResistance(0.2F, 2000F).sound(SoundType.METAL).notSolid());
 			ENDER_INHIBITOR_ON_ITEM = new BlockItem(ENDER_INHIBITOR_ON, new Item.Properties().group(MobGrindingUtils.TAB)) {
 				@Override
 				@OnlyIn(Dist.CLIENT)
@@ -253,7 +253,7 @@ public class ModBlocks {
 				}
 			};
 
-			ENDER_INHIBITOR_OFF = new BlockEnderInhibitorOff(Block.Properties.create(Material.REDSTONE_LIGHT, MaterialColor.STONE).hardnessAndResistance(0.2F, 2000F).sound(SoundType.METAL));
+			ENDER_INHIBITOR_OFF = new BlockEnderInhibitorOff(Block.Properties.create(Material.REDSTONE_LIGHT, MaterialColor.STONE).hardnessAndResistance(0.2F, 2000F).sound(SoundType.METAL).notSolid());
 			ENDER_INHIBITOR_OFF_ITEM = new BlockItem(ENDER_INHIBITOR_OFF, new Item.Properties().group(MobGrindingUtils.TAB)) {
 				@Override
 				@OnlyIn(Dist.CLIENT)

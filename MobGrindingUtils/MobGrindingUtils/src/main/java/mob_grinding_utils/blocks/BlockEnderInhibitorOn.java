@@ -130,7 +130,33 @@ public class BlockEnderInhibitorOn extends Block {
 
 	@Override
 	public VoxelShape getRaytraceShape(BlockState state, IBlockReader worldIn, BlockPos pos) {
-		return VoxelShapes.fullCube();
+		switch (state.get(TYPE)) {
+		case SOUTH:
+			return SOUTH_AABB;
+		case NORTH:
+			return NORTH_AABB;
+		case EAST:
+			return EAST_AABB;
+		case WEST:
+			return WEST_AABB;
+		case UP_NORTH:
+			return UP_NORTH_AABB;
+		case UP_EAST:
+			return UP_EAST_AABB;
+		case UP_SOUTH:
+			return UP_SOUTH_AABB;
+		case UP_WEST:
+			return UP_WEST_AABB;
+		case DOWN_NORTH:
+			return DOWN_NORTH_AABB;
+		case DOWN_EAST:
+			return DOWN_EAST_AABB;
+		case DOWN_SOUTH:
+			return DOWN_SOUTH_AABB;
+		case DOWN_WEST:
+			return DOWN_WEST_AABB;
+		}
+		return DOWN_NORTH_AABB;
 	}
 	@Override
 	public void neighborChanged(BlockState state, World world, BlockPos pos, Block block, BlockPos fromPos, boolean isMoving) {

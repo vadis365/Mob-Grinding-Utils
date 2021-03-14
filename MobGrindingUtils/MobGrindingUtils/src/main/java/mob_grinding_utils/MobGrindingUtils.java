@@ -139,6 +139,12 @@ public class MobGrindingUtils {
 		
 		 RenderTypeLookup.setRenderLayer(ModBlocks.TANK, RenderType.getCutout());
 		 RenderTypeLookup.setRenderLayer(ModBlocks.TANK_SINK, RenderType.getCutout());
+		 RenderTypeLookup.setRenderLayer(ModBlocks.XP_TAP, RenderType.getCutout());
+		 RenderTypeLookup.setRenderLayer(ModBlocks.ENDER_INHIBITOR_ON, RenderType.getCutout());
+		 RenderTypeLookup.setRenderLayer(ModBlocks.ENDER_INHIBITOR_OFF, RenderType.getCutout());
+		 RenderTypeLookup.setRenderLayer(ModBlocks.SAW, RenderType.getCutout());
+		 RenderTypeLookup.setRenderLayer(ModBlocks.SPIKES, RenderType.getCutout());
+		 RenderTypeLookup.setRenderLayer(ModBlocks.ABSORPTION_HOPPER, RenderType.getCutout());
 	}
 
 	private void playerConnected(final PlayerEvent.PlayerLoggedInEvent event) {
