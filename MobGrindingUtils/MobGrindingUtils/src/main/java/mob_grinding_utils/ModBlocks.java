@@ -22,6 +22,8 @@ import mob_grinding_utils.blocks.BlockTankSink;
 import mob_grinding_utils.blocks.BlockWitherMuffler;
 import mob_grinding_utils.blocks.BlockXPTap;
 import mob_grinding_utils.client.render.TileSawStackItemRenderer;
+import mob_grinding_utils.itemblocks.BlockItemTank;
+import mob_grinding_utils.itemblocks.BlockItemTankSink;
 import mob_grinding_utils.tile.TileEntityAbsorptionHopper;
 import mob_grinding_utils.tile.TileEntityFan;
 import mob_grinding_utils.tile.TileEntitySaw;
@@ -50,7 +52,6 @@ import net.minecraftforge.common.ToolType;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fluids.FluidAttributes;
-import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.ForgeFlowingFluid;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.IForgeRegistry;
@@ -147,7 +148,7 @@ public class ModBlocks {
 				}
 			};
 			ABSORPTION_HOPPER_TILE = TileEntityType.Builder.create(TileEntityAbsorptionHopper::new, ABSORPTION_HOPPER).build(null);
-			
+
 			SPIKES = new BlockSpikes(Block.Properties.create(Material.IRON, MaterialColor.STONE).hardnessAndResistance(5.0F, 2000.0F).sound(SoundType.METAL).notSolid());
 			SPIKES_ITEM = new BlockItem(SPIKES, new Item.Properties().group(MobGrindingUtils.TAB)) {
 				@Override
@@ -159,35 +160,11 @@ public class ModBlocks {
 			};
 
 			TANK = new BlockTank(Block.Properties.create(Material.GLASS, MaterialColor.QUARTZ).hardnessAndResistance(1.0F, 2000.0F).sound(SoundType.GLASS).notSolid());
-			TANK_ITEM = new BlockItem(TANK, new Item.Properties().group(MobGrindingUtils.TAB)) {
-				@Override
-				@OnlyIn(Dist.CLIENT)
-				   public void addInformation(ItemStack stack, @Nullable World world, List<ITextComponent> list, ITooltipFlag flag) {
-					if(stack.hasTag() && !stack.getTag().contains("Empty")) {
-						FluidStack fluid = FluidStack.loadFluidStackFromNBT(stack.getTag());
-						if(fluid !=null) {
-							list.add(new TranslationTextComponent("Contains: "+ fluid.getDisplayName().getString()).mergeStyle(TextFormatting.GREEN));
-							list.add(new TranslationTextComponent(""+ fluid.getAmount() +"Mb/32000Mb").mergeStyle(TextFormatting.BLUE));
-						}
-					}
-				}
-			};
+			TANK_ITEM = new BlockItemTank(TANK, new Item.Properties().group(MobGrindingUtils.TAB));
 			TANK_TILE = TileEntityType.Builder.create(TileEntityTank::new, TANK).build(null);
 
 			TANK_SINK = new BlockTankSink(Block.Properties.create(Material.GLASS, MaterialColor.QUARTZ).hardnessAndResistance(1.0F, 2000.0F).sound(SoundType.GLASS).notSolid());
-			TANK_SINK_ITEM = new BlockItem(TANK_SINK, new Item.Properties().group(MobGrindingUtils.TAB)) {
-				@Override
-				@OnlyIn(Dist.CLIENT)
-				   public void addInformation(ItemStack stack, @Nullable World world, List<ITextComponent> list, ITooltipFlag flag) {
-					if(stack.hasTag() && !stack.getTag().contains("Empty")) {
-						FluidStack fluid = FluidStack.loadFluidStackFromNBT(stack.getTag());
-						if(fluid !=null) {
-							list.add(new TranslationTextComponent("Contains: "+ fluid.getDisplayName().getString()).mergeStyle(TextFormatting.GREEN));
-							list.add(new TranslationTextComponent(""+ fluid.getAmount() +"Mb/32000Mb").mergeStyle(TextFormatting.BLUE));
-						}
-					}
-				}
-			};
+			TANK_SINK_ITEM = new BlockItemTankSink(TANK_SINK, new Item.Properties().group(MobGrindingUtils.TAB));
 			TANK_SINK_TILE = TileEntityType.Builder.create(TileEntitySinkTank::new, TANK_SINK).build(null);
 
 			XP_TAP = new BlockXPTap(Block.Properties.create(Material.REDSTONE_LIGHT, MaterialColor.STONE).hardnessAndResistance(1.0F, 2000.0F).sound(SoundType.METAL).notSolid());
@@ -263,7 +240,7 @@ public class ModBlocks {
 					list.add(new TranslationTextComponent("tooltip.enderinhibitor_3").mergeStyle(TextFormatting.YELLOW));
 				}
 			};
-			
+
 			FLUID_XP = new ForgeFlowingFluid.Source(
 					new ForgeFlowingFluid.Properties(() -> FLUID_XP, () -> FLUID_XP,
 							FluidAttributes.builder(new ResourceLocation(Reference.MOD_ID, "fluids/fluid_xp"), new ResourceLocation(Reference.MOD_ID, "fluids/fluid_xp"))
@@ -274,7 +251,7 @@ public class ModBlocks {
 									.sound(SoundEvents.ENTITY_PLAYER_LEVELUP, SoundEvents.ENTITY_EXPERIENCE_ORB_PICKUP)
 					).bucket(() -> ModItems.FLUID_XP_BUCKET))
 					.setRegistryName(Reference.MOD_ID, "fluid_xp");
-			
+
 	}
 
 	public static void initReg() {
@@ -312,7 +289,7 @@ public class ModBlocks {
 		ITEM_BLOCKS.add(item);
 		item.setRegistryName(Reference.MOD_ID, newName[0]);
 	}
-	
+
 	public static void registerTileEntity(String name, TileEntityType<?> tileEntity) {
 		String[] newName = name.split("_tile");
 		TILE_ENTITIES.add(tileEntity);
@@ -347,19 +324,11 @@ public class ModBlocks {
 				registry.register(tileEntity);
 			}
 		}
-		
+
 		@SubscribeEvent
 		public static void registerFluids(final RegistryEvent.Register<Fluid> evt) {
 			final IForgeRegistry<Fluid> registry = evt.getRegistry();
 			registry.register(FLUID_XP); //todo ohhh lawd he blowin up...
 		}
-/*
-		@SideOnly(Side.CLIENT)
-		@SubscribeEvent
-		public static void registerModels(ModelRegistryEvent event) {
-			for (BlockItem item : ITEM_BLOCKS) {
-				ModelLoader.setCustomModelResourceLocation(item, 0, new ModelResourceLocation(item.getRegistryName().toString(), "inventory"));
-			}
-		}*/
 	}
 }
