@@ -22,6 +22,7 @@ import mob_grinding_utils.blocks.BlockTankSink;
 import mob_grinding_utils.blocks.BlockWitherMuffler;
 import mob_grinding_utils.blocks.BlockXPTap;
 import mob_grinding_utils.client.render.TileSawStackItemRenderer;
+import mob_grinding_utils.client.render.TileTankStackItemRenderer;
 import mob_grinding_utils.itemblocks.BlockItemTank;
 import mob_grinding_utils.itemblocks.BlockItemTankSink;
 import mob_grinding_utils.tile.TileEntityAbsorptionHopper;
@@ -160,11 +161,11 @@ public class ModBlocks {
 			};
 
 			TANK = new BlockTank(Block.Properties.create(Material.GLASS, MaterialColor.QUARTZ).hardnessAndResistance(1.0F, 2000.0F).sound(SoundType.GLASS).notSolid());
-			TANK_ITEM = new BlockItemTank(TANK, new Item.Properties().group(MobGrindingUtils.TAB));
+			TANK_ITEM = new BlockItemTank(TANK, new Item.Properties().group(MobGrindingUtils.TAB).setISTER(() ->  TileTankStackItemRenderer::new));
 			TANK_TILE = TileEntityType.Builder.create(TileEntityTank::new, TANK).build(null);
 
 			TANK_SINK = new BlockTankSink(Block.Properties.create(Material.GLASS, MaterialColor.QUARTZ).hardnessAndResistance(1.0F, 2000.0F).sound(SoundType.GLASS).notSolid());
-			TANK_SINK_ITEM = new BlockItemTankSink(TANK_SINK, new Item.Properties().group(MobGrindingUtils.TAB));
+			TANK_SINK_ITEM = new BlockItemTankSink(TANK_SINK, new Item.Properties().group(MobGrindingUtils.TAB).setISTER(() ->  TileTankStackItemRenderer::new));
 			TANK_SINK_TILE = TileEntityType.Builder.create(TileEntitySinkTank::new, TANK_SINK).build(null);
 
 			XP_TAP = new BlockXPTap(Block.Properties.create(Material.REDSTONE_LIGHT, MaterialColor.STONE).hardnessAndResistance(1.0F, 2000.0F).sound(SoundType.METAL).notSolid());

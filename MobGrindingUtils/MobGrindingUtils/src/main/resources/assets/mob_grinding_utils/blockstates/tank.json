@@ -1,5 +1,5 @@
 {
     "variants": {
-        "": { "model": "mob_grinding_utils:block/tank" }
+        "": { "model": "mob_grinding_utils:block/blank" }
     }
 }

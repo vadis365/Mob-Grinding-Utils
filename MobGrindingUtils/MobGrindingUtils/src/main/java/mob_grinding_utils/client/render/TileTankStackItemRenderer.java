@@ -5,51 +5,51 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 
+import mob_grinding_utils.ModBlocks;
 import mob_grinding_utils.models.ModelTankBlock;
-import mob_grinding_utils.tile.TileEntitySinkTank;
-import mob_grinding_utils.tile.TileEntityTank;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.model.ItemCameraTransforms.TransformType;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
-import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
+import net.minecraft.client.renderer.tileentity.ItemStackTileEntityRenderer;
 import net.minecraft.inventory.container.PlayerContainer;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fluids.FluidStack;
-
 @OnlyIn(Dist.CLIENT)
-public class TileEntityTankRenderer extends TileEntityRenderer<TileEntityTank> {
+public class TileTankStackItemRenderer extends ItemStackTileEntityRenderer {
 	private static final ResourceLocation TANK_TEXTURE = new ResourceLocation("mob_grinding_utils:textures/tiles/tank.png");
 	private static final ResourceLocation TANK_SINK_TEXTURE = new ResourceLocation("mob_grinding_utils:textures/tiles/tank_sink.png");
 	private final ModelTankBlock tank_model = new ModelTankBlock();
-	
-	public TileEntityTankRenderer(TileEntityRendererDispatcher rendererDispatcherIn) {
-		super(rendererDispatcherIn);
-	}
+	private FluidStack fluidStack;
 
 	@Override
-	public void render(TileEntityTank tile, float partialTicks, MatrixStack matrixStack, IRenderTypeBuffer bufferIn, int combinedLight, int combinedOverlay) {
+	public void func_239207_a_(ItemStack stack, TransformType transformType, MatrixStack matrixStack, IRenderTypeBuffer bufferIn, int combinedLight, int combinedOverlayIn) {
 		matrixStack.push();
 		matrixStack.translate(0.5D, 1.5D, 0.5D);
-		matrixStack.scale(-0.9999F, -0.9999F, 0.9999F); //don't want to cull, but also don't want z-fighty nonsense
+		matrixStack.scale(-0.9999F, -0.9999F, 0.9999F);
 		RenderSystem.enableBlend();
 		RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
-		tank_model.render(matrixStack, bufferIn.getBuffer(RenderType.getEntitySmoothCutout(getTexture(tile))), combinedLight, OverlayTexture.NO_OVERLAY, 1F, 1F, 1F, 1.0F);
+		tank_model.render(matrixStack, bufferIn.getBuffer(RenderType.getEntitySmoothCutout(getTexture(stack.getItem()))), combinedLight, OverlayTexture.NO_OVERLAY, 1F, 1F, 1F, 1.0F);
 		RenderSystem.disableBlend();
 	    RenderSystem.defaultBlendFunc();
 		matrixStack.pop();
 
-		if (tile.tank.getFluid().isEmpty())
+		if (stack.hasTag() && !stack.getTag().contains("Empty")) {
+			fluidStack = FluidStack.loadFluidStackFromNBT(stack.getTag());
+
+		} else
 			return;
-		float fluidLevel = tile.tank.getFluidAmount();
+
+		float fluidLevel = fluidStack.getAmount();
 		if (fluidLevel < 1)
 			return;
-		FluidStack fluidStack = new FluidStack(tile.tank.getFluid(), 100);
-		float height = (0.96875F / tile.tank.getCapacity()) * tile.tank.getFluidAmount();
+		float height = (0.96875F / 32000F) * fluidLevel; // volumes hardcoded until config
 		
 		TextureAtlasSprite fluidStillSprite = Minecraft.getInstance().getAtlasSpriteGetter(PlayerContainer.LOCATION_BLOCKS_TEXTURE).apply(fluidStack.getFluid().getAttributes().getStillTexture());
 		IVertexBuilder buffer = bufferIn.getBuffer(RenderType.getTranslucent());
@@ -68,11 +68,10 @@ public class TileEntityTankRenderer extends TileEntityRenderer<TileEntityTank> {
 		float blue = (fluidColor & 0xFF) / 255.0F;
 		renderCuboid(buffer, matrixStack, xMax, xMin, yMin, height, zMin, zMax, fluidStillSprite, red, green, blue, alpha, combinedLight);
 		matrixStack.pop();
-
 	}
-
-	private ResourceLocation getTexture(TileEntityTank tile) {
-		return tile instanceof TileEntitySinkTank ? TANK_SINK_TEXTURE : TANK_TEXTURE;
+	
+	private ResourceLocation getTexture(Item item) {
+		return item == ModBlocks.TANK_SINK_ITEM ? TANK_SINK_TEXTURE : TANK_TEXTURE;
 	}
 
 	private void renderCuboid(IVertexBuilder buffer, MatrixStack matrixStack, float xMax, float xMin, float yMin, float height, float zMin, float zMax, TextureAtlasSprite textureAtlasSprite, float red, float green, float blue, float alpha, int combinedLight) {
@@ -124,5 +123,4 @@ public class TileEntityTankRenderer extends TileEntityRenderer<TileEntityTank> {
 	private void addVertexWithUV(IVertexBuilder buffer, MatrixStack matrixStack, float x, float y, float z, float u, float v, float red, float green, float blue, float alpha, int combinedLight) {
 		buffer.pos(matrixStack.getLast().getMatrix(), x / 2f, y, z / 2f).color(red, green, blue, alpha).tex(u, v).lightmap(combinedLight, 240).normal(1, 0, 0).endVertex();
 	}
-
 }
