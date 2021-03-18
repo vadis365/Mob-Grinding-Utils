@@ -8,11 +8,7 @@ import com.google.gson.JsonObject;
 import mob_grinding_utils.ModBlocks;
 import mob_grinding_utils.ModItems;
 import mob_grinding_utils.Reference;
-import net.minecraft.data.DataGenerator;
-import net.minecraft.data.DirectoryCache;
-import net.minecraft.data.IFinishedRecipe;
-import net.minecraft.data.RecipeProvider;
-import net.minecraft.data.ShapedRecipeBuilder;
+import net.minecraft.data.*;
 import net.minecraft.item.Items;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.util.ResourceLocation;
@@ -80,6 +76,10 @@ public class Recipes extends RecipeProvider {
                 .addCriterion("", hasItem(Items.AIR))
                 .build(consumer, new ResourceLocation(Reference.MOD_ID, "recipe_tank"));
 
+        ShapelessRecipeBuilder.shapelessRecipe(ModBlocks.TANK_ITEM).addIngredient(ModBlocks.TANK_ITEM,1)
+                .addCriterion("", hasItem(Items.AIR))
+                .build(consumer, new ResourceLocation(Reference.MOD_ID, "recipe_tank_reset"));
+
         // Tank Sink
         ShapedRecipeBuilder.shapedRecipe(ModBlocks.TANK_SINK_ITEM)
                 .patternLine(" I ")
@@ -91,6 +91,10 @@ public class Recipes extends RecipeProvider {
                 .key('T', ModBlocks.TANK_ITEM)
                 .addCriterion("", hasItem(Items.AIR))
                 .build(consumer, new ResourceLocation(Reference.MOD_ID, "recipe_tank_sink"));
+
+        ShapelessRecipeBuilder.shapelessRecipe(ModBlocks.TANK_SINK_ITEM).addIngredient(ModBlocks.TANK_SINK_ITEM,1)
+                .addCriterion("", hasItem(Items.AIR))
+                .build(consumer, new ResourceLocation(Reference.MOD_ID, "recipe_tank_sink_reset"));
 
         // XP TAP
         ShapedRecipeBuilder.shapedRecipe(ModBlocks.XP_TAP_ITEM)
