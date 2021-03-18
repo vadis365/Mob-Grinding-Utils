@@ -22,7 +22,7 @@ import net.minecraftforge.registries.IForgeRegistry;
 
 // My Generic Item Registry ;)
 public class ModItems {
-	private static final List<Item> ITEMS = new LinkedList<Item>();
+	public static final List<Item> ITEMS = new LinkedList<Item>();
 
 	public static Item FAN_UPGRADE_WIDTH, FAN_UPGRADE_HEIGHT, FAN_UPGRADE_SPEED;
 	public static Item ABSORPTION_UPGRADE;

@@ -20,6 +20,10 @@
   "_comment": "Fluids",
   "mob_grinding_utils.fluid_xp": "Fluid XP",
 
+  "_comment": "Jei Info Tabs, here are the examples vadis",
+  "item.mob_grinding_utils.mob_swab.jei.info": "Mob Swab can be used//nTo swab mobs...",
+  "block.mob_grinding_utils.xp_tap.jei.info": "The XP Tap//nPours out xp from a tank...",
+
   "_comment": "Items",
   "item.mob_grinding_utils.mob_swab": "Mob Swab",
   "item.mob_grinding_utils.mob_swab_used": "Mob Swab Used",
