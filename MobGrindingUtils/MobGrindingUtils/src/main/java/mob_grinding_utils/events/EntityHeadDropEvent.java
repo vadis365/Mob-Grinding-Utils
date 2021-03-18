@@ -22,6 +22,7 @@ import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -36,8 +37,8 @@ public class EntityHeadDropEvent {
 		if (event.getEntityLiving().getHealth() > 0.0F)
 			return;
 		int beheadingLevel = 0;
-		if (event.getSource().getTrueSource() instanceof PlayerEntity) {
-			PlayerEntity fakePlayer = (PlayerEntity) event.getSource().getTrueSource();
+		if (event.getSource().getTrueSource() instanceof FakePlayer) {
+			FakePlayer fakePlayer = (FakePlayer) event.getSource().getTrueSource();
 			if (fakePlayer.getDisplayName().getString().matches(new TranslationTextComponent("fakeplayer.mob_masher").getString())) {
 				if (fakePlayer.getHeldItemMainhand().getItem() instanceof ItemImaginaryInvisibleNotReallyThereSword) {
 					ItemStack tempSword = fakePlayer.getHeldItemMainhand();

@@ -17,7 +17,6 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.INamedContainerProvider;
@@ -34,6 +33,7 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.server.ServerWorld;
+import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.common.util.FakePlayerFactory;
 
 public class TileEntitySaw extends TileEntityInventoryHelper implements ITickableTileEntity, INamedContainerProvider {
@@ -77,7 +77,7 @@ public class TileEntitySaw extends TileEntityInventoryHelper implements ITickabl
 			Entity entity = list.get(i);
 			if (entity != null) {
 				if (entity instanceof LivingEntity) {
-					ServerPlayerEntity fakePlayer = FakePlayerFactory.get((ServerWorld)getWorld(), new GameProfile(UUID.nameUUIDFromBytes("fakeplayer.mob_masher".getBytes()), new TranslationTextComponent("fakeplayer.mob_masher").getString()));
+					FakePlayer fakePlayer = FakePlayerFactory.get((ServerWorld)getWorld(), new GameProfile(UUID.nameUUIDFromBytes("fakeplayer.mob_masher".getBytes()), new TranslationTextComponent("fakeplayer.mob_masher").getString()));
 					fakePlayer.setPosition(this.pos.getX(), -100D, this.pos.getZ());
 					ItemStack tempSword = new ItemStack(ModItems.NULL_SWORD, 1);
 
