@@ -4,11 +4,6 @@
 	<classpathentry kind="src" path="src/main/resources"/>
 	<classpathentry kind="lib" path="C:/Users/Dave/.gradle/caches/modules-2/files-2.1/com.google.guava/guava/21.0/3a3d111be1be1b745edfa7d91678a12d7ed38709/guava-21.0.jar" sourcepath="C:/Users/Dave/.gradle/caches/modules-2/files-2.1/com.google.guava/guava/21.0/b9ed26b8c23fe7cd3e6b463b34e54e5c6d9536d5/guava-21.0-sources.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="C:/Users/Dave/.gradle/caches/forge_gradle/minecraft_user_repo/net/minecraftforge/forge/1.16.4-35.0.22_mapped_snapshot_20201028-1.16.3/forge-1.16.4-35.0.22_mapped_snapshot_20201028-1.16.3-recomp.jar" sourcepath="C:/Users/Dave/.gradle/caches/forge_gradle/minecraft_user_repo/net/minecraftforge/forge/1.16.4-35.0.22_mapped_snapshot_20201028-1.16.3/forge-1.16.4-35.0.22_mapped_snapshot_20201028-1.16.3-sources.jar">
-		<attributes>
-			<attribute name="gradle_used_by_scope" value="main,test"/>
-		</attributes>
-	</classpathentry>
 	<classpathentry kind="lib" path="C:/Users/Dave/.gradle/caches/modules-2/files-2.1/net.minecraftforge/forgespi/3.2.0/c6ca4e4e4a0343701407c760e642537b613b543/forgespi-3.2.0.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Dave/.gradle/caches/modules-2/files-2.1/net.minecraftforge/eventbus/3.0.5/ddaf05a46ff9e4af845e4b6fc914c0b9f98f28c2/eventbus-3.0.5-service.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Dave/.gradle/caches/modules-2/files-2.1/com.mojang/datafixerupper/4.0.26/ebd6690f33871ccee9b6132c6480668ee2e35020/datafixerupper-4.0.26.jar"/>
@@ -33,6 +28,21 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="lib" path="C:/Users/Dave/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-opengl/3.2.2/6ac5bb88b44c43ea195a570aab059f63da004cd8/lwjgl-opengl-3.2.2.jar" sourcepath="C:/Users/Dave/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-opengl/3.2.2/4f5dffe36ce3f4a35d9d0ea1b7b31cd49e36d58b/lwjgl-opengl-3.2.2-sources.jar">
+		<attributes>
+			<attribute name="gradle_used_by_scope" value="main,test"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="C:/Users/Dave/.gradle/caches/forge_gradle/minecraft_user_repo/net/minecraftforge/forge/1.16.4-35.0.22_mapped_snapshot_20201028-1.16.3/forge-1.16.4-35.0.22_mapped_snapshot_20201028-1.16.3-recomp.jar" sourcepath="C:/Users/Dave/.gradle/caches/forge_gradle/minecraft_user_repo/net/minecraftforge/forge/1.16.4-35.0.22_mapped_snapshot_20201028-1.16.3/forge-1.16.4-35.0.22_mapped_snapshot_20201028-1.16.3-sources.jar">
+		<attributes>
+			<attribute name="gradle_used_by_scope" value="main,test"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="C:/Users/Dave/.gradle/caches/forge_gradle/deobf_dependencies/mezz/jei/jei-1.16.4/7.6.0.57_mapped_snapshot_20201028-1.16.3/jei-1.16.4-7.6.0.57_mapped_snapshot_20201028-1.16.3-api.jar">
+		<attributes>
+			<attribute name="gradle_used_by_scope" value=""/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="C:/Users/Dave/.gradle/caches/modules-2/files-2.1/org.apache.commons/commons-lang3/3.8.1/6505a72a097d9270f7a9e7bf42c4238283247755/commons-lang3-3.8.1.jar" sourcepath="C:/Users/Dave/.gradle/caches/modules-2/files-2.1/org.apache.commons/commons-lang3/3.8.1/e9748d7783594da3735ad9724390a10e7cebc01d/commons-lang3-3.8.1-sources.jar">
 		<attributes>
 			<attribute name="gradle_used_by_scope" value="main,test"/>
 		</attributes>

@@ -1,5 +1,7 @@
 package mob_grinding_utils.client;
 
+import org.apache.commons.lang3.StringUtils;
+
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.constants.VanillaTypes;
@@ -7,14 +9,12 @@ import mezz.jei.api.registration.IRecipeRegistration;
 import mob_grinding_utils.ModBlocks;
 import mob_grinding_utils.ModItems;
 import mob_grinding_utils.Reference;
-import net.minecraft.block.Block;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextFormatting;
-import org.apache.commons.lang3.StringUtils;
 
 @JeiPlugin
 public class JEIPlugin implements IModPlugin {
