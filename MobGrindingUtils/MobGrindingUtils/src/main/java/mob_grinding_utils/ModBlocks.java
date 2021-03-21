@@ -19,6 +19,7 @@ import mob_grinding_utils.blocks.BlockSaw;
 import mob_grinding_utils.blocks.BlockSpikes;
 import mob_grinding_utils.blocks.BlockTank;
 import mob_grinding_utils.blocks.BlockTankSink;
+import mob_grinding_utils.blocks.BlockTintedGlass;
 import mob_grinding_utils.blocks.BlockWitherMuffler;
 import mob_grinding_utils.blocks.BlockXPTap;
 import mob_grinding_utils.client.render.TileSawStackItemRenderer;
@@ -33,6 +34,7 @@ import mob_grinding_utils.tile.TileEntityTank;
 import mob_grinding_utils.tile.TileEntityXPTap;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
+import net.minecraft.block.AbstractBlock.IPositionPredicate;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.material.MaterialColor;
 import net.minecraft.client.util.ITooltipFlag;
@@ -109,6 +111,9 @@ public class ModBlocks {
 	public static BlockItem ENDER_INHIBITOR_OFF_ITEM;
 	
 	public static Fluid FLUID_XP;
+	
+	public static Block TINTED_GLASS;
+	public static BlockItem TINTED_GLASS_ITEM;
 
 	public static void init() {
 		FAN = new BlockFan(Block.Properties.create(Material.IRON, MaterialColor.STONE).hardnessAndResistance(10.0F, 2000.0F).sound(SoundType.METAL));
@@ -252,7 +257,16 @@ public class ModBlocks {
 									.sound(SoundEvents.ENTITY_PLAYER_LEVELUP, SoundEvents.ENTITY_EXPERIENCE_ORB_PICKUP)
 					).bucket(() -> ModItems.FLUID_XP_BUCKET))
 					.setRegistryName(Reference.MOD_ID, "fluid_xp");
-
+			
+			TINTED_GLASS = new BlockTintedGlass(Block.Properties.create(Material.GLASS, MaterialColor.BLACK).hardnessAndResistance(1.0F, 2000.0F).sound(SoundType.GLASS).notSolid());
+			TINTED_GLASS_ITEM = new BlockItem(TINTED_GLASS, new Item.Properties().group(MobGrindingUtils.TAB)){
+				@Override
+				@OnlyIn(Dist.CLIENT)
+				   public void addInformation(ItemStack stack, @Nullable World world, List<ITextComponent> list, ITooltipFlag flag) {
+					list.add(new TranslationTextComponent("tooltip.tinted_glass_1").mergeStyle(TextFormatting.YELLOW));
+					list.add(new TranslationTextComponent("tooltip.tinted_glass_2").mergeStyle(TextFormatting.YELLOW));
+				}
+			};
 	}
 
 	public static void initReg() {

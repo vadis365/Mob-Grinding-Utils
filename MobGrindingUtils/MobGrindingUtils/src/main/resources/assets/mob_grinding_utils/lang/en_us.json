@@ -16,6 +16,7 @@
   "block.mob_grinding_utils.ender_inhibitor_on": "Ender Inhibitor Active",
   "block.mob_grinding_utils.ender_inhibitor_off": "Ender Inhibitor Inactive",
   "block.mob_grinding_utils.entity_conveyor": "Entity Conveyor",
+  "block.mob_grinding_utils.tinted_glass": "Tinted Glass",
 
   "_comment": "Fluids",
   "mob_grinding_utils.fluid_xp": "Fluid XP",
@@ -89,6 +90,9 @@
   "tooltip.enderinhibitor_1": "Inhibits Teleportation for Entities up to 8 Blocks away.",
   "tooltip.enderinhibitor_2": "Can be attached on ANY side of Solid Blocks.",
   "tooltip.enderinhibitor_3": "Right Click to Deactivate/Activate.",
+  
+  "tooltip.tinted_glass_1": "Glass blocks designed to prevent light.",
+  "tooltip.tinted_glass_2": "Tough enough to withstand Withers.",
 
   "_comment": "Item Tool tips",
   "tooltip.hopperupgrade": "Radius Modifier: +1. Max of 6.",

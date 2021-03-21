@@ -145,6 +145,7 @@ public class MobGrindingUtils {
 		 RenderTypeLookup.setRenderLayer(ModBlocks.SAW, RenderType.getCutout());
 		 RenderTypeLookup.setRenderLayer(ModBlocks.SPIKES, RenderType.getCutout());
 		 RenderTypeLookup.setRenderLayer(ModBlocks.ABSORPTION_HOPPER, RenderType.getCutout());
+		 RenderTypeLookup.setRenderLayer(ModBlocks.TINTED_GLASS, RenderType.getTranslucent());
 	}
 
 	private void playerConnected(final PlayerEvent.PlayerLoggedInEvent event) {

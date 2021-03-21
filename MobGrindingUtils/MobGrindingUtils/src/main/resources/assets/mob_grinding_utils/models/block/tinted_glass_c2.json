@@ -1,0 +1,12 @@
+{
+	"parent": "block/cube",
+    "textures": {
+		"particle": "mob_grinding_utils:blocks/tinted_glass_island",
+        "down": "mob_grinding_utils:blocks/tinted_glass_news",
+		"up": "mob_grinding_utils:blocks/tinted_glass_news",
+		"north": "mob_grinding_utils:blocks/tinted_glass_ns",
+		"south": "mob_grinding_utils:blocks/tinted_glass_ns",
+		"west": "mob_grinding_utils:blocks/tinted_glass_ns",
+		"east": "mob_grinding_utils:blocks/tinted_glass_ns"
+    }
+}
