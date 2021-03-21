@@ -28,10 +28,6 @@ repositories {
 }
 
 repositories {
-    maven { // TOP
-        name 'tterrag maven'
-        url "https://maven.tterrag.com/"
-    }
     maven { // JEI
         url "http://dvs1.progwml6.com/files/maven"
     }
