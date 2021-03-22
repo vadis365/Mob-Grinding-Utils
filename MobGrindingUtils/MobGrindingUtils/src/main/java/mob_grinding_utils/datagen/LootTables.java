@@ -61,6 +61,7 @@ public class LootTables extends LootTableProvider {
                     .filter(b -> b.getRegistryName().getNamespace().equals(Reference.MOD_ID))
                     .filter(b -> !b.getRegistryName().getPath().equals("tank"))
                     .filter(b -> !b.getRegistryName().getPath().equals("tank_sink"))
+                    .filter(b -> !b.getRegistryName().getPath().equals("jumbo_tank"))
                     .collect(Collectors.toList());
         }
     }

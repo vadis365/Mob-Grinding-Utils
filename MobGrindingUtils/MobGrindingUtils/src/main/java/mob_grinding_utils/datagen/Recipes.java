@@ -273,6 +273,30 @@ public class Recipes extends RecipeProvider {
                 .key('G', Tags.Items.DUSTS_GLOWSTONE)
                 .addCriterion("", hasItem(Items.AIR))
                 .build(consumer, new ResourceLocation(Reference.MOD_ID, "recipe_ender_inhibitor"));
+
+        //Jumbo Tank
+        ShapedRecipeBuilder.shapedRecipe(ModBlocks.JUMBO_TANK_ITEM)
+                .patternLine("ITI")
+                .patternLine("T T")
+                .patternLine("ITI")
+                .key('I', Tags.Items.INGOTS_IRON)
+                .key('T', ModBlocks.TANK_ITEM)
+                .addCriterion("", hasItem(Items.AIR))
+                .build(consumer, new ResourceLocation(Reference.MOD_ID, "recipe_jumbotank"));
+
+        ShapelessRecipeBuilder.shapelessRecipe(ModBlocks.JUMBO_TANK_ITEM).addIngredient(ModBlocks.JUMBO_TANK_ITEM,1)
+                .addCriterion("", hasItem(Items.AIR))
+                .build(consumer, new ResourceLocation(Reference.MOD_ID, "recipe_jumbo_tank_reset"));
+
+        //Tinted Glass
+        ShapedRecipeBuilder.shapedRecipe(ModBlocks.TINTED_GLASS_ITEM, 4)
+                .patternLine("CGC")
+                .patternLine("GCG")
+                .patternLine("CGC")
+                .key('C', ItemTags.COALS)
+                .key('G', Tags.Items.GLASS)
+                .addCriterion("", hasItem(Items.AIR))
+                .build(consumer, new ResourceLocation(Reference.MOD_ID, "recipe_tintedglass"));
     }
 
     @Override
