@@ -32,6 +32,8 @@ public class BlockItemTankJumbo extends BlockItem {
 				list.add(new TranslationTextComponent(""+ fluid.getAmount() +"Mb/1024000Mb").mergeStyle(TextFormatting.BLUE));
 			}
 		}
+		else
+			list.add(new TranslationTextComponent("Holds 1024000Mb (1024 Buckets)").mergeStyle(TextFormatting.BLUE));
 	}
 
 }

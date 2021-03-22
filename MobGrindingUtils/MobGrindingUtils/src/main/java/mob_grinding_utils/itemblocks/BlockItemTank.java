@@ -32,6 +32,8 @@ public class BlockItemTank extends BlockItem {
 				list.add(new TranslationTextComponent("" + fluid.getAmount() + "Mb/32000Mb").mergeStyle(TextFormatting.BLUE));
 			}
 		}
+		else
+			list.add(new TranslationTextComponent("Holds 32000Mb (32 Buckets)").mergeStyle(TextFormatting.BLUE));
 	}
 
 }

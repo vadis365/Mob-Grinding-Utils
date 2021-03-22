@@ -25,6 +25,7 @@ public class BlockItemTankSink extends BlockItem {
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	   public void addInformation(ItemStack stack, @Nullable World world, List<ITextComponent> list, ITooltipFlag flag) {
+		
 		if(stack.hasTag() && !stack.getTag().contains("Empty")) {
 			FluidStack fluid = FluidStack.loadFluidStackFromNBT(stack.getTag());
 			if(fluid !=null) {
@@ -32,6 +33,8 @@ public class BlockItemTankSink extends BlockItem {
 				list.add(new TranslationTextComponent(""+ fluid.getAmount() +"Mb/32000Mb").mergeStyle(TextFormatting.BLUE));
 			}
 		}
+		else
+			list.add(new TranslationTextComponent("Holds 32000Mb (32 Buckets)").mergeStyle(TextFormatting.BLUE));
 	}
 
 }
