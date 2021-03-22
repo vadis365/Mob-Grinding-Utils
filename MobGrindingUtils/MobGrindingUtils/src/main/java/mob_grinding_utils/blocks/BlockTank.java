@@ -77,9 +77,8 @@ public class BlockTank extends ContainerBlock {
 		if (tileentity instanceof TileEntityTank) {
 			LazyOptional<IFluidHandler> fluidHandler = tileentity.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, hit.getFace());
 			fluidHandler.ifPresent((handler) -> {
-				if (player.getHeldItem(hand).isEmpty() && !handler.getFluidInTank(0).isEmpty()) {
+				if (player.getHeldItem(hand).isEmpty() && !handler.getFluidInTank(0).isEmpty())
 					player.sendStatusMessage(new TranslationTextComponent(handler.getFluidInTank(0).getDisplayName().getString() + ": "+ handler.getFluidInTank(0).getAmount()+"/"+handler.getTankCapacity(0)), true);
-				}
 				else
 					FluidUtil.interactWithFluidHandler(player, hand, world, pos, hit.getFace());
 			});
