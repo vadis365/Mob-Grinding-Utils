@@ -16,6 +16,7 @@ import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.LazyOptional;
@@ -75,10 +76,14 @@ public class BlockTank extends ContainerBlock {
 		TileEntity tileentity = world.getTileEntity(pos);
 		if (tileentity instanceof TileEntityTank) {
 			LazyOptional<IFluidHandler> fluidHandler = tileentity.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, hit.getFace());
-			if (fluidHandler.isPresent()) {
-				FluidUtil.interactWithFluidHandler(player, hand, world, pos, hit.getFace());
-				return ActionResultType.SUCCESS;
-			}
+			fluidHandler.ifPresent((handler) -> {
+				if (player.getHeldItem(hand).isEmpty()) {
+					player.sendStatusMessage(new TranslationTextComponent(handler.getFluidInTank(0).getDisplayName().getString() + ": "+ handler.getFluidInTank(0).getAmount()+"/"+handler.getTankCapacity(0)), true);
+				}
+				else
+					FluidUtil.interactWithFluidHandler(player, hand, world, pos, hit.getFace());
+			});
+			return ActionResultType.SUCCESS;
 		}
 		return ActionResultType.PASS;
 	}
