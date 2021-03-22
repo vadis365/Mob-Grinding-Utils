@@ -52,22 +52,7 @@ public class BlockEnderInhibitorOn extends Block {
 		super(properties);
 		setDefaultState(this.stateContainer.getBaseState().with(TYPE, EnumGemDirection.DOWN_NORTH));
 	}
-/*
-	@Override
-	public boolean isOpaqueCube(IBlockState state) {
-		return false;
-	}
 
-	@Override
-	public boolean isFullBlock(IBlockState state) {
-		return false;
-	}
-
-	@Override
-	public boolean isFullCube(IBlockState state) {
-		return false;
-	}
-*/
 	@Override
 	public BlockRenderType getRenderType(BlockState state) {
 		return BlockRenderType.MODEL;
@@ -158,6 +143,7 @@ public class BlockEnderInhibitorOn extends Block {
 		}
 		return DOWN_NORTH_AABB;
 	}
+
 	@Override
 	public void neighborChanged(BlockState state, World world, BlockPos pos, Block block, BlockPos fromPos, boolean isMoving) {
 		EnumGemDirection newFacing = state.get(TYPE);

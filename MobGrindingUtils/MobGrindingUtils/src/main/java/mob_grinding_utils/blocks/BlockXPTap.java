@@ -1,14 +1,17 @@
 package mob_grinding_utils.blocks;
 
+import mob_grinding_utils.ModBlocks;
 import mob_grinding_utils.ModSounds;
 import mob_grinding_utils.tile.TileEntityXPTap;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.block.DirectionalBlock;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItemUseContext;
+import net.minecraft.item.ItemStack;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.TileEntity;
@@ -95,28 +98,28 @@ public class BlockXPTap extends DirectionalBlock implements ITileEntityProvider 
 
 	@Override
 	public boolean isValidPosition(BlockState state, IWorldReader world, BlockPos pos) {
-		for (Direction enumfacing : FACING.getAllowedValues()) {
-			if (canPlaceAt(world, pos, enumfacing))
+		for (Direction enumfacing : Direction.values()) {
+			if (canPlaceAt(world, pos.offset(enumfacing.getOpposite()), enumfacing))
 				return true;
 		}
 		return false;
 	}
 
 	private boolean canPlaceAt(IWorldReader world, BlockPos pos, Direction facing) {
-		BlockPos blockpos = pos.offset(facing);
+		BlockState blockstate = world.getBlockState(pos);
 		boolean isSide = facing.getAxis().isHorizontal();
-		return isSide && world.getBlockState(blockpos).getBlock() instanceof BlockTank;
+		return isSide && blockstate.getBlock() instanceof BlockTank;
 	}
-/*
+
 	@Override
-    public void onNeighborChange(BlockAccess world, BlockPos pos, BlockPos neighbor) {
-		Direction facing = world.getBlockState(pos).getValue(FACING);
-    	if(!canPlaceAt((World) world, pos, facing)) {
-            this.dropBlockAsItem((World) world, pos, world.getBlockState(pos), 0);
-            ((World) world).setBlockToAir(pos);
-        }
-    }
-*/
+	public void neighborChanged(BlockState state, World world, BlockPos pos, Block block, BlockPos fromPos, boolean isMoving) {
+		Direction facing = world.getBlockState(pos).get(FACING);
+		if (!canPlaceAt(world, pos.offset(facing.getOpposite()), facing)) {
+			spawnAsEntity(world, pos, new ItemStack(ModBlocks.XP_TAP_ITEM, 1));
+			world.setBlockState(pos, Blocks.AIR.getDefaultState());
+		}
+		super.neighborChanged(state, world, pos, block, fromPos, isMoving);
+	}
 
 	@Override
 	protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {

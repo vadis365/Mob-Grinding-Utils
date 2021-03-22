@@ -39,12 +39,4 @@ public class BlockEnderInhibitorOff extends BlockEnderInhibitorOn {
 			return ActionResultType.SUCCESS;
 		}
 	}
-
-	//TODO Block drops
-	/*
-	@Override
-	public Item getItemDropped(BlockState state, Random rand, int fortune) {
-		return Item.getItemFromBlock(ModBlocks.ENDER_INHIBITOR_ON.getDefaultState().with(BlockEnderInhibitorOn.TYPE, BlockEnderInhibitorOn.EnumGemDirection.DOWN_NORTH).getBlock());
-	}
-	*/
 }

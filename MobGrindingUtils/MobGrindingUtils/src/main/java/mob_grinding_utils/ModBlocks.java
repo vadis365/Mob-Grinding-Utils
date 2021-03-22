@@ -221,7 +221,7 @@ public class ModBlocks {
 				}
 			};
 
-			ENTITY_CONVEYOR = new BlockEntityConveyor(Block.Properties.create(Material.ROCK, MaterialColor.STONE).hardnessAndResistance(0.5F, 2000.0F).sound(SoundType.STONE));
+			ENTITY_CONVEYOR = new BlockEntityConveyor(Block.Properties.create(Material.ROCK, MaterialColor.STONE).hardnessAndResistance(0.5F, 2000.0F).sound(SoundType.STONE).setAllowsSpawn((state, reader, pos, entitytype) -> {return true;}));
 			ENTITY_CONVEYOR_ITEM = new BlockItem(ENTITY_CONVEYOR, new Item.Properties().group(MobGrindingUtils.TAB)) {
 				@Override
 				@OnlyIn(Dist.CLIENT)
