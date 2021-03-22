@@ -1,5 +1,5 @@
 {
     "variants": {
-        "": { "model": "mob_grinding_utils:block/jumbo_tank" }
+        "": { "model": "mob_grinding_utils:block/blank" }
     }
 }

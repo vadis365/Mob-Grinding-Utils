@@ -25,6 +25,7 @@ import net.minecraftforge.fluids.FluidStack;
 public class TileTankStackItemRenderer extends ItemStackTileEntityRenderer {
 	private static final ResourceLocation TANK_TEXTURE = new ResourceLocation("mob_grinding_utils:textures/tiles/tank.png");
 	private static final ResourceLocation TANK_SINK_TEXTURE = new ResourceLocation("mob_grinding_utils:textures/tiles/tank_sink.png");
+	private static final ResourceLocation TANK_JUMBO_TEXTURE = new ResourceLocation("mob_grinding_utils:textures/tiles/tank_jumbo.png");
 	private final ModelTankBlock tank_model = new ModelTankBlock();
 	private FluidStack fluidStack;
 
@@ -49,7 +50,10 @@ public class TileTankStackItemRenderer extends ItemStackTileEntityRenderer {
 		float fluidLevel = fluidStack.getAmount();
 		if (fluidLevel < 1)
 			return;
-		float height = (0.96875F / 32000F) * fluidLevel; // volumes hardcoded until config
+		float tankMax = 32000F;
+		if(stack.getItem() == ModBlocks.JUMBO_TANK_ITEM)
+			tankMax = 1024000F;
+		float height = (0.96875F / tankMax) * fluidLevel; // volumes hardcoded until config
 		
 		TextureAtlasSprite fluidStillSprite = Minecraft.getInstance().getAtlasSpriteGetter(PlayerContainer.LOCATION_BLOCKS_TEXTURE).apply(fluidStack.getFluid().getAttributes().getStillTexture());
 		IVertexBuilder buffer = bufferIn.getBuffer(RenderType.getTranslucent());
@@ -71,7 +75,7 @@ public class TileTankStackItemRenderer extends ItemStackTileEntityRenderer {
 	}
 	
 	private ResourceLocation getTexture(Item item) {
-		return item == ModBlocks.TANK_SINK_ITEM ? TANK_SINK_TEXTURE : TANK_TEXTURE;
+		return item == ModBlocks.JUMBO_TANK_ITEM ? TANK_JUMBO_TEXTURE : item == ModBlocks.TANK_SINK_ITEM ? TANK_SINK_TEXTURE : TANK_TEXTURE;
 	}
 
 	private void renderCuboid(IVertexBuilder buffer, MatrixStack matrixStack, float xMax, float xMin, float yMin, float height, float zMin, float zMax, TextureAtlasSprite textureAtlasSprite, float red, float green, float blue, float alpha, int combinedLight) {

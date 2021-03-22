@@ -275,7 +275,7 @@ public class ModBlocks {
 			};
 
 			JUMBO_TANK = new BlockTankJumbo(Block.Properties.create(Material.IRON, MaterialColor.GRAY).hardnessAndResistance(1.0F, 2000.0F).sound(SoundType.METAL));
-			JUMBO_TANK_ITEM = new BlockItemTankJumbo(JUMBO_TANK, new Item.Properties().group(MobGrindingUtils.TAB));
+			JUMBO_TANK_ITEM = new BlockItemTankJumbo(JUMBO_TANK, new Item.Properties().group(MobGrindingUtils.TAB).setISTER(() ->  TileTankStackItemRenderer::new));
 			JUMBO_TANK_TILE = TileEntityType.Builder.create(TileEntityJumboTank::new, JUMBO_TANK).build(null);
 	}
 

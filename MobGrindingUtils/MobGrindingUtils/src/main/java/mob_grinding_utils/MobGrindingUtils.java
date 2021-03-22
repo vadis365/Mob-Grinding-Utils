@@ -132,6 +132,7 @@ public class MobGrindingUtils {
 		ClientRegistry.bindTileEntityRenderer(ModBlocks.ABSORPTION_HOPPER_TILE, TileEntityAbsorptionRenderer::new);
 		ClientRegistry.bindTileEntityRenderer(ModBlocks.TANK_TILE, TileEntityTankRenderer::new);
 		ClientRegistry.bindTileEntityRenderer(ModBlocks.TANK_SINK_TILE, TileEntityTankRenderer::new);
+		ClientRegistry.bindTileEntityRenderer(ModBlocks.JUMBO_TANK_TILE, TileEntityTankRenderer::new);
 		
 		ScreenManager.registerFactory(ModContainers.ABSORPTION_HOPPER.get(), GuiAbsorptionHopper::new);
 		ScreenManager.registerFactory(ModContainers.FAN.get(), GuiFan::new);
@@ -146,6 +147,7 @@ public class MobGrindingUtils {
 		 RenderTypeLookup.setRenderLayer(ModBlocks.SPIKES, RenderType.getCutout());
 		 RenderTypeLookup.setRenderLayer(ModBlocks.ABSORPTION_HOPPER, RenderType.getCutout());
 		 RenderTypeLookup.setRenderLayer(ModBlocks.TINTED_GLASS, RenderType.getTranslucent());
+		 RenderTypeLookup.setRenderLayer(ModBlocks.JUMBO_TANK, RenderType.getCutout());
 	}
 
 	private void playerConnected(final PlayerEvent.PlayerLoggedInEvent event) {

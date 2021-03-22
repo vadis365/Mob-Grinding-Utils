@@ -6,6 +6,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 
 import mob_grinding_utils.models.ModelTankBlock;
+import mob_grinding_utils.tile.TileEntityJumboTank;
 import mob_grinding_utils.tile.TileEntitySinkTank;
 import mob_grinding_utils.tile.TileEntityTank;
 import net.minecraft.client.Minecraft;
@@ -25,6 +26,7 @@ import net.minecraftforge.fluids.FluidStack;
 public class TileEntityTankRenderer extends TileEntityRenderer<TileEntityTank> {
 	private static final ResourceLocation TANK_TEXTURE = new ResourceLocation("mob_grinding_utils:textures/tiles/tank.png");
 	private static final ResourceLocation TANK_SINK_TEXTURE = new ResourceLocation("mob_grinding_utils:textures/tiles/tank_sink.png");
+	private static final ResourceLocation TANK_JUMBO_TEXTURE = new ResourceLocation("mob_grinding_utils:textures/tiles/tank_jumbo.png");
 	private final ModelTankBlock tank_model = new ModelTankBlock();
 	
 	public TileEntityTankRenderer(TileEntityRendererDispatcher rendererDispatcherIn) {
@@ -72,7 +74,7 @@ public class TileEntityTankRenderer extends TileEntityRenderer<TileEntityTank> {
 	}
 
 	private ResourceLocation getTexture(TileEntityTank tile) {
-		return tile instanceof TileEntitySinkTank ? TANK_SINK_TEXTURE : TANK_TEXTURE;
+		return tile instanceof TileEntityJumboTank ? TANK_JUMBO_TEXTURE : tile instanceof TileEntitySinkTank ? TANK_SINK_TEXTURE : TANK_TEXTURE;
 	}
 
 	private void renderCuboid(IVertexBuilder buffer, MatrixStack matrixStack, float xMax, float xMin, float yMin, float height, float zMin, float zMax, TextureAtlasSprite textureAtlasSprite, float red, float green, float blue, float alpha, int combinedLight) {
