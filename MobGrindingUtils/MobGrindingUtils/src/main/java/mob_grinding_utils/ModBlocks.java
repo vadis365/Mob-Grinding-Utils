@@ -18,6 +18,7 @@ import mob_grinding_utils.blocks.BlockFan;
 import mob_grinding_utils.blocks.BlockSaw;
 import mob_grinding_utils.blocks.BlockSpikes;
 import mob_grinding_utils.blocks.BlockTank;
+import mob_grinding_utils.blocks.BlockTankJumbo;
 import mob_grinding_utils.blocks.BlockTankSink;
 import mob_grinding_utils.blocks.BlockTintedGlass;
 import mob_grinding_utils.blocks.BlockWitherMuffler;
@@ -25,16 +26,17 @@ import mob_grinding_utils.blocks.BlockXPTap;
 import mob_grinding_utils.client.render.TileSawStackItemRenderer;
 import mob_grinding_utils.client.render.TileTankStackItemRenderer;
 import mob_grinding_utils.itemblocks.BlockItemTank;
+import mob_grinding_utils.itemblocks.BlockItemTankJumbo;
 import mob_grinding_utils.itemblocks.BlockItemTankSink;
 import mob_grinding_utils.tile.TileEntityAbsorptionHopper;
 import mob_grinding_utils.tile.TileEntityFan;
+import mob_grinding_utils.tile.TileEntityJumboTank;
 import mob_grinding_utils.tile.TileEntitySaw;
 import mob_grinding_utils.tile.TileEntitySinkTank;
 import mob_grinding_utils.tile.TileEntityTank;
 import mob_grinding_utils.tile.TileEntityXPTap;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
-import net.minecraft.block.AbstractBlock.IPositionPredicate;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.material.MaterialColor;
 import net.minecraft.client.util.ITooltipFlag;
@@ -114,6 +116,10 @@ public class ModBlocks {
 	
 	public static Block TINTED_GLASS;
 	public static BlockItem TINTED_GLASS_ITEM;
+
+	public static Block JUMBO_TANK;
+	public static BlockItem JUMBO_TANK_ITEM;
+	public static TileEntityType<TileEntityJumboTank> JUMBO_TANK_TILE;
 
 	public static void init() {
 		FAN = new BlockFan(Block.Properties.create(Material.IRON, MaterialColor.STONE).hardnessAndResistance(10.0F, 2000.0F).sound(SoundType.METAL));
@@ -267,6 +273,10 @@ public class ModBlocks {
 					list.add(new TranslationTextComponent("tooltip.tinted_glass_2").mergeStyle(TextFormatting.YELLOW));
 				}
 			};
+
+			JUMBO_TANK = new BlockTankJumbo(Block.Properties.create(Material.IRON, MaterialColor.GRAY).hardnessAndResistance(1.0F, 2000.0F).sound(SoundType.METAL));
+			JUMBO_TANK_ITEM = new BlockItemTankJumbo(JUMBO_TANK, new Item.Properties().group(MobGrindingUtils.TAB));
+			JUMBO_TANK_TILE = TileEntityType.Builder.create(TileEntityJumboTank::new, JUMBO_TANK).build(null);
 	}
 
 	public static void initReg() {
@@ -343,7 +353,7 @@ public class ModBlocks {
 		@SubscribeEvent
 		public static void registerFluids(final RegistryEvent.Register<Fluid> evt) {
 			final IForgeRegistry<Fluid> registry = evt.getRegistry();
-			registry.register(FLUID_XP); //todo ohhh lawd he blowin up...
+			registry.register(FLUID_XP);
 		}
 	}
 }

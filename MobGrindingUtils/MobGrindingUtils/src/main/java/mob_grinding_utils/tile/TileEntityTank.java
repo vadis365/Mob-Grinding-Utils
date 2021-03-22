@@ -32,6 +32,11 @@ public class TileEntityTank extends TileEntity  implements ITickableTileEntity {
 		super(TANK_SINK_TILE);
 	}
 
+	public TileEntityTank(TileEntityType<TileEntityJumboTank> JUMBO_TANK_TILE, FluidTank tankIn) {
+		super(JUMBO_TANK_TILE);
+		this.tank = tankIn;
+	}
+
 	@Override
 	public void tick() {
 		if (getWorld().isRemote)
