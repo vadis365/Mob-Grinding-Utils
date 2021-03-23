@@ -3,6 +3,7 @@ package mob_grinding_utils.tile;
 import mob_grinding_utils.MobGrindingUtils;
 import mob_grinding_utils.ModBlocks;
 import mob_grinding_utils.blocks.BlockXPTap;
+import mob_grinding_utils.datagen.MGUFluidTags;
 import mob_grinding_utils.entity.EntityXPOrbFalling;
 import mob_grinding_utils.network.MessageTapParticle;
 import net.minecraft.block.BlockState;
@@ -13,6 +14,9 @@ import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import net.minecraftforge.fml.network.PacketDistributor;
 
@@ -28,18 +32,22 @@ public class TileEntityXPTap extends TileEntity implements ITickableTileEntity {
 	public void tick() {
 		if (!getWorld().isRemote && active) {
 			TileEntity tileentity = getWorld().getTileEntity(pos.offset(getWorld().getBlockState(pos).get(BlockXPTap.FACING).getOpposite()));
-			if (tileentity instanceof TileEntityTank) {
-				if (((TileEntityTank) tileentity).tank.getFluidAmount() > 0 && ((TileEntityTank) tileentity).tank.getFluid().getFluid().equals(ModBlocks.FLUID_XP) && getWorld().getGameTime() % 3 == 0) {
-					int xpAmount = EntityXPOrbFalling.getXPSplit(Math.min(20, ((TileEntityTank) tileentity).tank.getFluidAmount() / 20));
-					((TileEntityTank) tileentity).tank.drain(xpAmount * 20, FluidAction.EXECUTE);
-					spawnXP(getWorld(), pos, xpAmount, (TileEntityTank) tileentity);
-					MobGrindingUtils.NETWORK_WRAPPER.send(PacketDistributor.ALL.noArg(), new MessageTapParticle(getPos()));
-				}
+			if (tileentity != null) {
+				LazyOptional<IFluidHandler> fluidHandler = tileentity.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, getWorld().getBlockState(pos).get(BlockXPTap.FACING));
+				fluidHandler.ifPresent((handler) -> {
+					if (handler.getFluidInTank(0).getAmount() > 0 && handler.getFluidInTank(0).getFluid().isIn(MGUFluidTags.EXPERIENCE) && getWorld().getGameTime() % 3 == 0) {
+						int xpAmount = EntityXPOrbFalling.getXPSplit(Math.min(20, handler.getFluidInTank(0).getAmount() / 20));
+						if (!handler.drain(xpAmount * 20, FluidAction.EXECUTE).isEmpty()) {
+							spawnXP(getWorld(), pos, xpAmount, tileentity);
+							MobGrindingUtils.NETWORK_WRAPPER.send(PacketDistributor.ALL.noArg(), new MessageTapParticle(getPos()));
+						}
+					}
+				});
 			}
 		}
 	}
 
-	public void spawnXP(World world, BlockPos pos, int xp, TileEntityTank tankTile) {
+	public void spawnXP(World world, BlockPos pos, int xp, TileEntity tankTile) {
 		tankTile.markDirty();
 		EntityXPOrbFalling orb = new EntityXPOrbFalling(world, pos.getX() + 0.5D, pos.getY() - 0.125D, pos.getZ() + 0.5D, xp);
 		world.addEntity(orb);

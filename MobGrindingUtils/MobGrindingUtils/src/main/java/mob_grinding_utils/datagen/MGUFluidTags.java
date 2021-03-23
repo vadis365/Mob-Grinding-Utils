@@ -15,10 +15,12 @@ public class MGUFluidTags extends FluidTagsProvider {
         super(generatorIn, Reference.MOD_ID, existingFileHelper);
     }
 
+    public static final ITag.INamedTag<Fluid> EXPERIENCE = FluidTags.makeWrapperTag(new ResourceLocation("forge", "experience").toString());
+    public static final ITag.INamedTag<Fluid> XPJUICE = FluidTags.makeWrapperTag(new ResourceLocation("forge", "xpjuice").toString());
+
     @Override
     protected void registerTags() {
-        ITag.INamedTag<Fluid> experience = FluidTags.makeWrapperTag(new ResourceLocation("forge", "experience").toString());
-
-        getOrCreateBuilder(experience).add(ModBlocks.FLUID_XP);
+        getOrCreateBuilder(MGUFluidTags.EXPERIENCE).add(ModBlocks.FLUID_XP);
+        getOrCreateBuilder(MGUFluidTags.XPJUICE).add(ModBlocks.FLUID_XP);
     }
 }
