@@ -95,15 +95,6 @@ public class MobGrindingUtils {
 	}
 
 	public void setup(FMLCommonSetupEvent event) {
-		/*
-		if (!ModList.get().isLoaded("openblocks") && !ModList.get().isLoaded("enderio")) {
-			FLUID_XP = new Fluid("xpjuice", new ResourceLocation("mob_grinding_utils:fluids/fluid_xp"), new ResourceLocation("mob_grinding_utils:fluids/fluid_xp")).setLuminosity(10).setDensity(800).setViscosity(1500).setUnlocalizedName("mob_grinding_utils.fluid_xp");
-			FluidRegistry.registerFluid(FLUID_XP);
-			FluidRegistry.addBucketForFluid(FLUID_XP);
-			if (event.getSide() == Side.CLIENT)
-				
-		}
-*/
 		SPIKE_DAMAGE = new DamageSource("spikes").setDamageBypassesArmor();
 
 		NETWORK_WRAPPER = MGUNetwork.getNetworkChannel();
