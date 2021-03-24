@@ -18,6 +18,7 @@
   "block.mob_grinding_utils.entity_conveyor": "Entity Conveyor",
   "block.mob_grinding_utils.tinted_glass": "Tinted Glass",
   "block.mob_grinding_utils.jumbo_tank": "Jumbo Tank",
+  "block.mob_grinding_utils.xpsolidifier": "XP Solidifier",
 
   "_comment": "Fluids",
   "mob_grinding_utils.fluid_xp": "Fluid XP",

@@ -22,6 +22,7 @@ import mob_grinding_utils.events.RenderChickenSwell;
 import mob_grinding_utils.inventory.client.GuiAbsorptionHopper;
 import mob_grinding_utils.inventory.client.GuiFan;
 import mob_grinding_utils.inventory.client.GuiSaw;
+import mob_grinding_utils.inventory.client.GuiXPSolidifier;
 import mob_grinding_utils.network.MGUNetProxyClient;
 import mob_grinding_utils.network.MGUNetProxyCommon;
 import mob_grinding_utils.network.MGUNetwork;
@@ -133,6 +134,7 @@ public class MobGrindingUtils {
 		ClientRegistry.bindTileEntityRenderer(ModBlocks.JUMBO_TANK_TILE, TileEntityTankRenderer::new);
 		
 		ScreenManager.registerFactory(ModContainers.ABSORPTION_HOPPER.get(), GuiAbsorptionHopper::new);
+		ScreenManager.registerFactory(ModContainers.SOLIDIFIER.get(), GuiXPSolidifier::new);
 		ScreenManager.registerFactory(ModContainers.FAN.get(), GuiFan::new);
 		ScreenManager.registerFactory(ModContainers.SAW.get(), GuiSaw::new);
 		
