@@ -13,5 +13,6 @@ public class Generator {
         generator.addProvider(blockTags);
         generator.addProvider(new LootTables(generator));
         generator.addProvider(new MGUFluidTags(generator, event.getExistingFileHelper()));
+        generator.addProvider(new BlockStates(generator, event.getExistingFileHelper()));
     }
 }
