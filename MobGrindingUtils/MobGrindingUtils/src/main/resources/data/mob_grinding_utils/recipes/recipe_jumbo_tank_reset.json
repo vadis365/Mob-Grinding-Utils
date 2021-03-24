@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "mob_grinding_utils:jumbo_tank"
+    }
+  ],
+  "result": {
+    "item": "mob_grinding_utils:jumbo_tank"
+  }
+}

@@ -41,12 +41,7 @@ public class BlockSpikes extends DirectionalBlock {
 	public VoxelShape getRaytraceShape(BlockState state, IBlockReader worldIn, BlockPos pos) {
 		return VoxelShapes.fullCube();
 	}
-/*
-	@Override
-	public boolean isOpaqueCube(IBlockState state) {
-		return false;
-	}
-*/
+
 	@Override
 	public BlockRenderType getRenderType(BlockState state) {
 		return BlockRenderType.MODEL;
