@@ -8,13 +8,36 @@ import java.util.Locale;
 
 import javax.annotation.Nullable;
 
-import mob_grinding_utils.blocks.*;
+import mob_grinding_utils.blocks.BlockAbsorptionHopper;
+import mob_grinding_utils.blocks.BlockDarkOakStone;
+import mob_grinding_utils.blocks.BlockDragonMuffler;
+import mob_grinding_utils.blocks.BlockDreadfulDirt;
+import mob_grinding_utils.blocks.BlockEnderInhibitorOff;
+import mob_grinding_utils.blocks.BlockEnderInhibitorOn;
+import mob_grinding_utils.blocks.BlockEntityConveyor;
+import mob_grinding_utils.blocks.BlockFan;
+import mob_grinding_utils.blocks.BlockSaw;
+import mob_grinding_utils.blocks.BlockSpikes;
+import mob_grinding_utils.blocks.BlockTank;
+import mob_grinding_utils.blocks.BlockTankJumbo;
+import mob_grinding_utils.blocks.BlockTankSink;
+import mob_grinding_utils.blocks.BlockTintedGlass;
+import mob_grinding_utils.blocks.BlockWitherMuffler;
+import mob_grinding_utils.blocks.BlockXPSolidifier;
+import mob_grinding_utils.blocks.BlockXPTap;
 import mob_grinding_utils.client.render.TileSawStackItemRenderer;
 import mob_grinding_utils.client.render.TileTankStackItemRenderer;
 import mob_grinding_utils.itemblocks.BlockItemTank;
 import mob_grinding_utils.itemblocks.BlockItemTankJumbo;
 import mob_grinding_utils.itemblocks.BlockItemTankSink;
-import mob_grinding_utils.tile.*;
+import mob_grinding_utils.tile.TileEntityAbsorptionHopper;
+import mob_grinding_utils.tile.TileEntityFan;
+import mob_grinding_utils.tile.TileEntityJumboTank;
+import mob_grinding_utils.tile.TileEntitySaw;
+import mob_grinding_utils.tile.TileEntitySinkTank;
+import mob_grinding_utils.tile.TileEntityTank;
+import mob_grinding_utils.tile.TileEntityXPSolidifier;
+import mob_grinding_utils.tile.TileEntityXPTap;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
@@ -104,6 +127,9 @@ public class ModBlocks {
 	public static Block XPSOLIDIFIER;
 	public static BlockItem XPSOLIDIFIER_ITEM;
 	public static TileEntityType<TileEntityXPSolidifier> XPSOLIDIFIER_TILE;
+
+	public static Block DREADFUL_DIRT;
+	public static BlockItem DREADFUL_DIRT_ITEM;
 
 	public static void init() {
 		FAN = new BlockFan(Block.Properties.create(Material.IRON, MaterialColor.STONE).hardnessAndResistance(10.0F, 2000.0F).sound(SoundType.METAL));
@@ -265,6 +291,17 @@ public class ModBlocks {
 			XPSOLIDIFIER = new BlockXPSolidifier();
 			XPSOLIDIFIER_ITEM = new BlockItem(XPSOLIDIFIER, new Item.Properties().group(MobGrindingUtils.TAB));
 			XPSOLIDIFIER_TILE = TileEntityType.Builder.create(TileEntityXPSolidifier::new, XPSOLIDIFIER).build(null);
+			
+			DREADFUL_DIRT = new BlockDreadfulDirt(Block.Properties.create(Material.EARTH, MaterialColor.PURPLE).hardnessAndResistance(1.0F, 2000.0F).sound(SoundType.GROUND));
+			DREADFUL_DIRT_ITEM = new BlockItem(DREADFUL_DIRT, new Item.Properties().group(MobGrindingUtils.TAB)) {
+				@Override
+				@OnlyIn(Dist.CLIENT)
+				   public void addInformation(ItemStack stack, @Nullable World world, List<ITextComponent> list, ITooltipFlag flag) {
+					list.add(new TranslationTextComponent("tooltip.dreadful_dirt_1").mergeStyle(TextFormatting.YELLOW));
+					list.add(new TranslationTextComponent("tooltip.dreadful_dirt_2").mergeStyle(TextFormatting.YELLOW));
+				}
+			};
+
 	}
 
 	public static void initReg() {

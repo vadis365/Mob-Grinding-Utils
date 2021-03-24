@@ -1,0 +1,12 @@
+{
+    "parent": "block/cube",
+    "textures": {
+        "particle": "mob_grinding_utils:blocks/dreadful_dirt_top",
+        "down": "mob_grinding_utils:blocks/dreadful_dirt_side",
+        "up": "mob_grinding_utils:blocks/dreadful_dirt_top",
+        "north": "mob_grinding_utils:blocks/dreadful_dirt_side",
+        "east": "mob_grinding_utils:blocks/dreadful_dirt_side",
+        "south": "mob_grinding_utils:blocks/dreadful_dirt_side",
+        "west": "mob_grinding_utils:blocks/dreadful_dirt_side"
+    }
+}
