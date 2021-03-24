@@ -109,7 +109,6 @@ public class BlockXPTap extends DirectionalBlock implements ITileEntityProvider 
 	private boolean canPlaceAt(IWorldReader world, BlockPos pos, Direction facing) {
 		BlockState blockstate = world.getBlockState(pos);
 		boolean isSide = facing.getAxis().isHorizontal();
-		//return isSide && blockstate.getBlock() instanceof BlockTank;
 		TileEntity te = world.getTileEntity(pos);
 		if (te != null && te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY).isPresent() && isSide)
 			return true;

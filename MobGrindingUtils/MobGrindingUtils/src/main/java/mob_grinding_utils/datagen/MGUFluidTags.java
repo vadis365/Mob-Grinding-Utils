@@ -1,5 +1,6 @@
 package mob_grinding_utils.datagen;
 
+import mob_grinding_utils.MobGrindingUtils;
 import mob_grinding_utils.ModBlocks;
 import mob_grinding_utils.Reference;
 import net.minecraft.data.DataGenerator;
@@ -15,12 +16,9 @@ public class MGUFluidTags extends FluidTagsProvider {
         super(generatorIn, Reference.MOD_ID, existingFileHelper);
     }
 
-    public static final ITag.INamedTag<Fluid> EXPERIENCE = FluidTags.makeWrapperTag(new ResourceLocation("forge", "experience").toString());
-    public static final ITag.INamedTag<Fluid> XPJUICE = FluidTags.makeWrapperTag(new ResourceLocation("forge", "xpjuice").toString());
-
     @Override
     protected void registerTags() {
-        getOrCreateBuilder(MGUFluidTags.EXPERIENCE).add(ModBlocks.FLUID_XP);
-        getOrCreateBuilder(MGUFluidTags.XPJUICE).add(ModBlocks.FLUID_XP);
+        getOrCreateBuilder(MobGrindingUtils.EXPERIENCE).add(ModBlocks.FLUID_XP);
+        getOrCreateBuilder(MobGrindingUtils.XPJUICE).add(ModBlocks.FLUID_XP);
     }
 }

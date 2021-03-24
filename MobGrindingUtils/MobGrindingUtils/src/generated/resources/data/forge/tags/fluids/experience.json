@@ -1,8 +1,6 @@
 {
   "replace": false,
   "values": [
-    "mob_grinding_utils:fluid_xp",
-    "industrialforegoing:essence",
-    "cofh_core:experience"
+    "mob_grinding_utils:fluid_xp"
   ]
 }
