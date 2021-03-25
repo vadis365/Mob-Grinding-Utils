@@ -43,6 +43,7 @@ import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.material.MaterialColor;
 import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.entity.EntityClassification;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
@@ -130,6 +131,7 @@ public class ModBlocks {
 
 	public static Block DREADFUL_DIRT;
 	public static BlockItem DREADFUL_DIRT_ITEM;
+	public static Material MATERIAL_DREADFUL_DIRT;
 
 	public static void init() {
 		FAN = new BlockFan(Block.Properties.create(Material.IRON, MaterialColor.STONE).hardnessAndResistance(10.0F, 2000.0F).sound(SoundType.METAL));
@@ -292,7 +294,8 @@ public class ModBlocks {
 			XPSOLIDIFIER_ITEM = new BlockItem(XPSOLIDIFIER, new Item.Properties().group(MobGrindingUtils.TAB));
 			XPSOLIDIFIER_TILE = TileEntityType.Builder.create(TileEntityXPSolidifier::new, XPSOLIDIFIER).build(null);
 			
-			DREADFUL_DIRT = new BlockDreadfulDirt(Block.Properties.create(Material.EARTH, MaterialColor.PURPLE).hardnessAndResistance(1.0F, 2000.0F).sound(SoundType.GROUND));
+			MATERIAL_DREADFUL_DIRT = new Material(MaterialColor.DIRT, false, true, false, true, true, false, null);
+			DREADFUL_DIRT = new BlockDreadfulDirt(Block.Properties.create(MATERIAL_DREADFUL_DIRT, MaterialColor.PURPLE).hardnessAndResistance(1.0F, 2000.0F).sound(SoundType.GROUND).tickRandomly().setAllowsSpawn((state, reader, pos, entitytype) -> {return entitytype.getClassification() == EntityClassification.MONSTER;}));
 			DREADFUL_DIRT_ITEM = new BlockItem(DREADFUL_DIRT, new Item.Properties().group(MobGrindingUtils.TAB)) {
 				@Override
 				@OnlyIn(Dist.CLIENT)
@@ -301,7 +304,6 @@ public class ModBlocks {
 					list.add(new TranslationTextComponent("tooltip.dreadful_dirt_2").mergeStyle(TextFormatting.YELLOW));
 				}
 			};
-
 	}
 
 	public static void initReg() {
