@@ -297,6 +297,20 @@ public class Recipes extends RecipeProvider {
                 .key('G', Tags.Items.GLASS)
                 .addCriterion("", hasItem(Items.AIR))
                 .build(consumer, new ResourceLocation(Reference.MOD_ID, "recipe_tintedglass"));
+
+        ShapedRecipeBuilder.shapedRecipe(ModItems.GM_CHICKEN_FEED_CURSED)
+                .patternLine("BEB")
+                .patternLine("RSX")
+                .patternLine("BGB")
+                .key('B', ModItems.FLUID_XP_BUCKET)
+                .key('E', Items.SPIDER_EYE)
+                .key('R', Items.ROTTEN_FLESH)
+                .key('S', Tags.Items.SEEDS)
+                .key('X', Tags.Items.BONES)
+                .key('G', Tags.Items.GUNPOWDER)
+                .addCriterion("", hasItem(Items.AIR))
+                .build(consumer, new ResourceLocation(Reference.MOD_ID, "recipe_cursed_feed"));
+
     }
 
     @Override

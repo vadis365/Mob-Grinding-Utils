@@ -18,6 +18,7 @@ import net.minecraft.block.Block;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.LootTableProvider;
 import net.minecraft.data.loot.BlockLootTables;
+import net.minecraft.item.Items;
 import net.minecraft.loot.LootParameterSet;
 import net.minecraft.loot.LootParameterSets;
 import net.minecraft.loot.LootTable;
@@ -53,6 +54,7 @@ public class LootTables extends LootTableProvider {
             registerDropping(ModBlocks.ENDER_INHIBITOR_OFF, ModBlocks.ENDER_INHIBITOR_ON_ITEM);
             registerDropSelfLootTable(ModBlocks.TINTED_GLASS);
             registerDropSelfLootTable(ModBlocks.XPSOLIDIFIER);
+            registerLootTable(ModBlocks.DREADFUL_DIRT, (block) -> droppingWithSilkTouch(block, Items.DIRT));
         }
 
         @Nonnull
