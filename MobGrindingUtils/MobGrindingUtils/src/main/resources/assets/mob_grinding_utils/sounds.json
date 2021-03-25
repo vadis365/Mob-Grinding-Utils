@@ -28,5 +28,11 @@
     "sounds": [
       "mob_grinding_utils:chicken_rise"
     ]
+  },
+    "spoopy_change": {
+    "category": "hostile",
+    "sounds": [
+      "mob_grinding_utils:spoopy_change"
+    ]
   }
 }

@@ -19,6 +19,7 @@ public class ModSounds {
 	public static SoundEvent ENTITY_WITHER_DEATH_LOCAL;
 	public static SoundEvent ENTITY_DRAGON_DEATH_LOCAL;
 	public static SoundEvent CHICKEN_RISE;
+	public static SoundEvent SPOOPY_CHANGE;
 
 	public static SoundEvent registerSoundResource(String name) {
 		return new SoundEvent(new ResourceLocation(Reference.MOD_ID, name));
@@ -30,6 +31,7 @@ public class ModSounds {
 		ENTITY_WITHER_DEATH_LOCAL = registerSoundResource("entity_wither_death_local");
 		ENTITY_DRAGON_DEATH_LOCAL = registerSoundResource("entity_dragon_death_local");
 		CHICKEN_RISE = registerSoundResource("chicken_rise");
+		SPOOPY_CHANGE = registerSoundResource("spoopy_change");
 	}
 
 	public static void initReg() {

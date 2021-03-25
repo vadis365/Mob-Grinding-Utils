@@ -32,6 +32,7 @@
   "item.mob_grinding_utils.mob_swab": "Mob Swab",
   "item.mob_grinding_utils.mob_swab_used": "Mob Swab Used",
   "item.mob_grinding_utils.gm_chicken_feed": "GM Chicken Feed",
+  "item.mob_grinding_utils.gm_chicken_feed_cursed": "GM Chicken Feed Cursed",
   "item.mob_grinding_utils.fan_upgrade_width": "Mob Fan Width Upgrade",
   "item.mob_grinding_utils.fan_upgrade_height": "Mob Fan Height Upgrade",
   "item.mob_grinding_utils.fan_upgrade_speed": "Mob Fan Distance Upgrade",
@@ -108,6 +109,7 @@
   "tooltip.chickenfeed_1": "Feed to Chickens.",
   "tooltip.chickenfeed_2": "Single use for the Chicken...",
   "tooltip.chickenfeed_3": "Contains:",
+  "tooltip.chickenfeed_4": "Creates a Rotten Egg.",
 
   "tooltip.mobswab_1": "Use on mobs to collect 'DNA'.",
   "tooltip.mobswab_2": "Craft with a Bucket of XP and Seeds.",

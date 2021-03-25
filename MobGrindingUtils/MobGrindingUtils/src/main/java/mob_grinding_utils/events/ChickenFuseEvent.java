@@ -3,6 +3,7 @@ package mob_grinding_utils.events;
 import java.util.Optional;
 
 import mob_grinding_utils.MobGrindingUtils;
+import mob_grinding_utils.ModItems;
 import mob_grinding_utils.ModSounds;
 import mob_grinding_utils.network.MessageChickenSync;
 import net.minecraft.entity.EntityType;
@@ -13,7 +14,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.item.SpawnEggItem;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.world.World;
 import net.minecraftforge.event.entity.living.LivingEvent;
@@ -39,9 +39,6 @@ public class ChickenFuseEvent {
 					}
 
 					if (startTime >= 20) {
-						
-						entity.playSound(SoundEvents.ENTITY_CHICKEN_DEATH, 1F, 1F);
-						entity.playSound(ModSounds.CHICKEN_RISE, 0.5F, 1F);
 						Optional<EntityType<?>> entityMob = EntityType.byKey(event.getEntity().getPersistentData().getString("mguMobName"));
 						entityMob.ifPresent((mob) -> {
 							for (SpawnEggItem eggItem : SpawnEggItem.getEggs()) {
@@ -51,6 +48,15 @@ public class ChickenFuseEvent {
 								}
 							}
 						});
+
+						if (nbt.contains("cursed") && nbt.getBoolean("cursed")) {
+							entity.entityDropItem(new ItemStack(ModItems.ROTTEN_EGG), 0.0F);
+							entity.playSound(ModSounds.SPOOPY_CHANGE, 1F, 1F);
+						}
+						else {
+							entity.playSound(SoundEvents.ENTITY_CHICKEN_DEATH, 1F, 1F);
+							entity.playSound(ModSounds.CHICKEN_RISE, 0.5F, 1F);
+						}
 
 						for (int k = 0; k < 4; ++k) {
 							ItemStack stack = new ItemStack(Items.FEATHER);
