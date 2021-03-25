@@ -14,6 +14,7 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.monster.IMob;
+import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
@@ -25,6 +26,8 @@ import net.minecraft.world.World;
 import net.minecraft.world.biome.MobSpawnInfo.Spawners;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraft.world.spawner.WorldEntitySpawner;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class BlockDreadfulDirt extends Block {
 
@@ -105,4 +108,18 @@ public class BlockDreadfulDirt extends Block {
             return true;
         return false;
     }
+
+	@Override
+	@OnlyIn(Dist.CLIENT)
+	public void animateTick(BlockState stateIn, World world, BlockPos pos, Random rand) {
+		for (int i = 0; i < 4; ++i) {
+			double d0 = (double) ((float) pos.getX() + rand.nextFloat());
+			double d1 = (double) ((float) pos.getY() + rand.nextFloat());
+			double d2 = (double) ((float) pos.getZ() + rand.nextFloat());
+			double d3 = ((double) rand.nextFloat() - 0.5D) * 0.5D;
+			double d4 = ((double) rand.nextFloat() - 0.5D) * 0.5D;
+			double d5 = ((double) rand.nextFloat() - 0.5D) * 0.5D;
+			world.addParticle(ParticleTypes.PORTAL, d0, d1, d2, d3, d4, d5);
+		}
+	}
 }
