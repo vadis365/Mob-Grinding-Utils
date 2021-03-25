@@ -39,12 +39,7 @@ public class BlockFan extends DirectionalBlock implements ITileEntityProvider {
 	public BlockRenderType getRenderType(BlockState state) {
 		return BlockRenderType.MODEL;
 	}
-/*
-	@Override
-	public boolean isOpaqueCube(BlockState state) {
-		return true;
-	}
-*/
+
 	@Override
 	public TileEntity createNewTileEntity(IBlockReader world) {
 		return new TileEntityFan();
