@@ -34,27 +34,27 @@ public class BlockDreadfulDirt extends Block {
 
 	@Override
 	public void onBlockAdded(BlockState state, World world, BlockPos pos, BlockState oldState, boolean isMoving) {
-		if (world.canBlockSeeSky(pos))
-			world.getPendingBlockTicks().scheduleTick(pos, this, MathHelper.nextInt(RANDOM, 60, 120));
+		if (world.getLight(pos.up()) >= 10)
+			world.getPendingBlockTicks().scheduleTick(pos, this, MathHelper.nextInt(RANDOM, 20,60));
 	}
 
 	@SuppressWarnings("deprecation")
 	@Override
 	public BlockState updatePostPlacement(BlockState stateIn, Direction facing, BlockState facingState, IWorld world, BlockPos pos, BlockPos facingPos) {
-		if (world.canBlockSeeSky(pos))
-			world.getPendingBlockTicks().scheduleTick(pos, this, MathHelper.nextInt(RANDOM, 60, 120));
+		if (world.getLight(pos.up()) >= 10)
+			world.getPendingBlockTicks().scheduleTick(pos, this, MathHelper.nextInt(RANDOM, 20, 60));
 		return super.updatePostPlacement(stateIn, facing, facingState, world, pos, facingPos);
 	}
 
 	@Override
 	public void neighborChanged(BlockState state, World world, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving) {
-		if (world.canBlockSeeSky(pos))
-			world.getPendingBlockTicks().scheduleTick(pos, this, MathHelper.nextInt(RANDOM, 60, 120));
+		if (world.getLight(pos.up()) >= 10)
+			world.getPendingBlockTicks().scheduleTick(pos, this, MathHelper.nextInt(RANDOM, 20, 60));
 	}
 
 	@Deprecated
 	public void tick(BlockState state, ServerWorld world, BlockPos pos, Random rand) {
-		if (world.canBlockSeeSky(pos)) {
+		if (world.getLight(pos.up()) >= 10) {
 			BlockPos posUp = pos.up();
 			BlockState blockstate = AbstractFireBlock.getFireForPlacement(world, posUp);
 			if (world.getBlockState(posUp).getMaterial() == Material.AIR && blockstate.isValidPosition(world, posUp))
