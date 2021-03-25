@@ -10,6 +10,7 @@ import mob_grinding_utils.items.ItemFanUpgrade;
 import mob_grinding_utils.items.ItemGMChickenFeed;
 import mob_grinding_utils.items.ItemImaginaryInvisibleNotReallyThereSword;
 import mob_grinding_utils.items.ItemMobSwab;
+import mob_grinding_utils.items.ItemRottenEgg;
 import mob_grinding_utils.items.ItemSawUpgrade;
 import net.minecraft.item.BucketItem;
 import net.minecraft.item.Item;
@@ -31,6 +32,7 @@ public class ModItems {
 	public static Item GM_CHICKEN_FEED;
 	public static Item FLUID_XP_BUCKET;
 	public static SwordItem NULL_SWORD;
+	public static Item ROTTEN_EGG;
 	
 	public static void init() {
 		FAN_UPGRADE_WIDTH = new ItemFanUpgrade(new Item.Properties().group(MobGrindingUtils.TAB).maxStackSize(64), "width");
@@ -48,6 +50,7 @@ public class ModItems {
 		GM_CHICKEN_FEED = new ItemGMChickenFeed(new Item.Properties().group(MobGrindingUtils.TAB).maxStackSize(1));
 		NULL_SWORD = new ItemImaginaryInvisibleNotReallyThereSword(new Item.Properties().group(MobGrindingUtils.TAB));
 		FLUID_XP_BUCKET = new BucketItem(() -> ModBlocks.FLUID_XP, new Item.Properties().containerItem(Items.BUCKET).group(MobGrindingUtils.TAB).maxStackSize(1));
+		ROTTEN_EGG = new ItemRottenEgg(new Item.Properties().group(MobGrindingUtils.TAB).maxStackSize(1));
 	}
 
 	public static void initReg() {

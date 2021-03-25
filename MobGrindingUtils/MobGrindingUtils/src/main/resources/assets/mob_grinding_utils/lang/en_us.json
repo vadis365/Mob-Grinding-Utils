@@ -19,6 +19,7 @@
   "block.mob_grinding_utils.tinted_glass": "Tinted Glass",
   "block.mob_grinding_utils.jumbo_tank": "Jumbo Tank",
   "block.mob_grinding_utils.xpsolidifier": "XP Solidifier",
+  "block.mob_grinding_utils.dreadful_dirt": "Dreadful Dirt",
 
   "_comment": "Fluids",
   "mob_grinding_utils.fluid_xp": "Fluid XP",
@@ -43,6 +44,7 @@
   "item.mob_grinding_utils.saw_upgrade_beheading": "Mob Masher Upgrade Beheading",
   "item.mob_grinding_utils.null_sword": "Imaginary Not Here Sword",
   "item.mob_grinding_utils.fluid_xp_bucket": "Fluid XP Bucket",
+  "item.mob_grinding_utils.rotten_egg": "Rotten Egg",
 
   "_comment": "Creative Tab",
   "itemGroup.mob_grinding_utils": "Mob Grinding Utils",
@@ -116,5 +118,8 @@
   "tooltip.sawupgrade_fire": "Fire Aspect: +1. Max of 10.",
   "tooltip.sawupgrade_smite": "Smite: +1. Max of 10.",
   "tooltip.sawupgrade_arthropods": "Bane of Arthropods: +1. Max of 10.",
-  "tooltip.sawupgrade_beheading": "Beheading: +1. Max of 10."
+  "tooltip.sawupgrade_beheading": "Beheading: +1. Max of 10.",
+  
+  "tooltip.rotten_egg_1": "Creates a 5x5 area of Dreadful Dirt.",
+  "tooltip.rotten_egg_2": "Used on Grass, Dirt, Mycelum, or Farmland."
 }
