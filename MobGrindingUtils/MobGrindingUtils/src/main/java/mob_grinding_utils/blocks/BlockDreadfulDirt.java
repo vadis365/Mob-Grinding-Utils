@@ -56,6 +56,7 @@ public class BlockDreadfulDirt extends Block {
 	}
 
 	@Deprecated
+	@Override
 	public void tick(BlockState state, ServerWorld world, BlockPos pos, Random rand) {
 		if (world.getLight(pos.up()) >= 10) {
 			BlockPos posUp = pos.up();
