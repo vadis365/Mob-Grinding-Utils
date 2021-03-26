@@ -27,6 +27,7 @@ import mob_grinding_utils.blocks.BlockXPSolidifier;
 import mob_grinding_utils.blocks.BlockXPTap;
 import mob_grinding_utils.client.render.TileSawStackItemRenderer;
 import mob_grinding_utils.client.render.TileTankStackItemRenderer;
+import mob_grinding_utils.client.render.TileXPSolidifierStackItemRenderer;
 import mob_grinding_utils.itemblocks.BlockItemTank;
 import mob_grinding_utils.itemblocks.BlockItemTankJumbo;
 import mob_grinding_utils.itemblocks.BlockItemTankSink;
@@ -290,8 +291,8 @@ public class ModBlocks {
 			JUMBO_TANK_ITEM = new BlockItemTankJumbo(JUMBO_TANK, new Item.Properties().group(MobGrindingUtils.TAB).setISTER(() ->  TileTankStackItemRenderer::new));
 			JUMBO_TANK_TILE = TileEntityType.Builder.create(TileEntityJumboTank::new, JUMBO_TANK).build(null);
 
-			XPSOLIDIFIER = new BlockXPSolidifier();
-			XPSOLIDIFIER_ITEM = new BlockItem(XPSOLIDIFIER, new Item.Properties().group(MobGrindingUtils.TAB));
+			XPSOLIDIFIER = new BlockXPSolidifier(Block.Properties.create(Material.IRON, MaterialColor.GRAY).hardnessAndResistance(1.0F, 2000.0F).sound(SoundType.METAL).notSolid());
+			XPSOLIDIFIER_ITEM = new BlockItem(XPSOLIDIFIER, new Item.Properties().group(MobGrindingUtils.TAB).setISTER(() ->  TileXPSolidifierStackItemRenderer::new));
 			XPSOLIDIFIER_TILE = TileEntityType.Builder.create(TileEntityXPSolidifier::new, XPSOLIDIFIER).build(null);
 			
 			MATERIAL_DREADFUL_DIRT = new Material(MaterialColor.DIRT, false, true, false, true, true, false, null);

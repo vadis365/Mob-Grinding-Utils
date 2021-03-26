@@ -1,0 +1,8 @@
+{
+    "variants": {
+        "facing=north": { "model": "mob_grinding_utils:block/blank" },
+        "facing=south": { "model": "mob_grinding_utils:block/blank" },
+        "facing=west":  { "model": "mob_grinding_utils:block/blank" },
+        "facing=east":  { "model": "mob_grinding_utils:block/blank" }
+    }
+}

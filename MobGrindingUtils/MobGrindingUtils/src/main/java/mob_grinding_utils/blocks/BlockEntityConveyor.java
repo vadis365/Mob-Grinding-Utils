@@ -35,14 +35,6 @@ public class BlockEntityConveyor extends Block {
 	public VoxelShape getRaytraceShape(BlockState state, IBlockReader worldIn, BlockPos pos) {
 		return VoxelShapes.fullCube();
 	}
-	
-/* TODO Add to block properties 
-
-	@Override
-    public boolean canEntitySpawn(BlockState state, Entity entityIn) {
-        return true;
-    }
-*/
 
 	@Override
 	public BlockState getStateForPlacement(BlockItemUseContext context) {

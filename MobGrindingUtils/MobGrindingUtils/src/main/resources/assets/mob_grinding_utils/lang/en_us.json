@@ -98,6 +98,9 @@
   
   "tooltip.tinted_glass_1": "Glass blocks designed to prevent light.",
   "tooltip.tinted_glass_2": "Tough enough to withstand Withers.",
+  
+  "tooltip.dreadful_dirt_1": "Spawns More Hostile Mobs.",
+  "tooltip.dreadful_dirt_2": "Will Ignite in Lit Areas.",
 
   "_comment": "Item Tool tips",
   "tooltip.hopperupgrade": "Radius Modifier: +1. Max of 6.",

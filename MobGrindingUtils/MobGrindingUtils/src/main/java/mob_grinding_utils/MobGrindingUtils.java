@@ -5,6 +5,7 @@ import mob_grinding_utils.client.render.TileEntityAbsorptionRenderer;
 import mob_grinding_utils.client.render.TileEntityFanRenderer;
 import mob_grinding_utils.client.render.TileEntitySawRenderer;
 import mob_grinding_utils.client.render.TileEntityTankRenderer;
+import mob_grinding_utils.client.render.TileEntityXPSolidifierRenderer;
 import mob_grinding_utils.datagen.Generator;
 import mob_grinding_utils.events.BossBarHidingEvent;
 import mob_grinding_utils.events.ChickenFuseEvent;
@@ -132,6 +133,7 @@ public class MobGrindingUtils {
 		ClientRegistry.bindTileEntityRenderer(ModBlocks.TANK_TILE, TileEntityTankRenderer::new);
 		ClientRegistry.bindTileEntityRenderer(ModBlocks.TANK_SINK_TILE, TileEntityTankRenderer::new);
 		ClientRegistry.bindTileEntityRenderer(ModBlocks.JUMBO_TANK_TILE, TileEntityTankRenderer::new);
+		ClientRegistry.bindTileEntityRenderer(ModBlocks.XPSOLIDIFIER_TILE, TileEntityXPSolidifierRenderer::new);
 		
 		ScreenManager.registerFactory(ModContainers.ABSORPTION_HOPPER.get(), GuiAbsorptionHopper::new);
 		ScreenManager.registerFactory(ModContainers.SOLIDIFIER.get(), GuiXPSolidifier::new);
@@ -149,6 +151,7 @@ public class MobGrindingUtils {
 		 RenderTypeLookup.setRenderLayer(ModBlocks.TINTED_GLASS, RenderType.getTranslucent());
 		 RenderTypeLookup.setRenderLayer(ModBlocks.JUMBO_TANK, RenderType.getCutout());
 		 RenderTypeLookup.setRenderLayer(ModBlocks.DREADFUL_DIRT, RenderType.getCutout());
+		 RenderTypeLookup.setRenderLayer(ModBlocks.XPSOLIDIFIER, RenderType.getCutout());
 
 		 ModColourManager.registerColourHandlers();
 	}
