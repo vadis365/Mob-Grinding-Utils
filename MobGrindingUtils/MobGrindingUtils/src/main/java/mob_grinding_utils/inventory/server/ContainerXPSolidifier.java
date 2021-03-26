@@ -10,6 +10,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.items.SlotItemHandler;
 
 import javax.annotation.Nullable;
 
@@ -53,6 +54,10 @@ public class ContainerXPSolidifier extends Container {
             int y = originY + 58;
             this.addSlot(new Slot(playerInventory, col, x+1, y+1));
         }
+
+        this.addSlot(new SlotItemHandler(tile.mouldSlot, 0, 62,36 ));
+        this.addSlot(new SlotItemHandler(tile.upgradeSlot, 0, 26, 72));
+        this.addSlot(new SlotItemHandler(tile.outputSlot, 0, 130, 36));
     }
 
     @Override

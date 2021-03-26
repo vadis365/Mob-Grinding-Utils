@@ -23,6 +23,8 @@ import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
+import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.ItemStackHandler;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -31,6 +33,12 @@ public class TileEntityXPSolidifier extends TileEntity implements ITickableTileE
     public FluidTank tank = new FluidTank(FluidAttributes.BUCKET_VOLUME *  16);
     private final LazyOptional<IFluidHandler> tank_holder = LazyOptional.of(() -> tank);
     private int prevFluidLevel = 0;
+
+    public ItemStackHandler mouldSlot = new ItemStackHandler(1);
+    public ItemStackHandler upgradeSlot = new ItemStackHandler(1);
+    public ItemStackHandler outputSlot = new ItemStackHandler(1);
+    private final LazyOptional<IItemHandler> outputCap = LazyOptional.of(() -> outputSlot);
+
 
     public TileEntityXPSolidifier() {
         super(ModBlocks.XPSOLIDIFIER_TILE);
@@ -48,12 +56,18 @@ public class TileEntityXPSolidifier extends TileEntity implements ITickableTileE
     public void read(BlockState state, CompoundNBT nbt) {
         super.read(state, nbt);
         tank.readFromNBT(nbt);
+        mouldSlot.deserializeNBT(nbt.getCompound("mouldSlot"));
+        upgradeSlot.deserializeNBT(nbt.getCompound("upgradeSlot"));
+        outputSlot.deserializeNBT(nbt.getCompound("outputSlot"));
     }
 
     @Override
     public CompoundNBT write(CompoundNBT compound) {
         super.write(compound);
         tank.writeToNBT(compound);
+        compound.put("mouldSlot", mouldSlot.serializeNBT());
+        compound.put("upgradeSlot", upgradeSlot.serializeNBT());
+        compound.put("outputSlot", outputSlot.serializeNBT());
         return compound;
     }
     @Override
