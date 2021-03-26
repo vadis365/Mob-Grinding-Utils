@@ -25,8 +25,8 @@ public class ModColourManager {
 	private static void registerBlockColourHandlers(final BlockColors blockColors) {
 		final IBlockColor dreadfulDirtColour = (state, blockAccess, pos, tintIndex) -> {
 			if (blockAccess != null && pos != null)
-				return new Color(102, 33, 102).getRGB() & 0x00ffffff;
-			return new Color(102, 33, 102).getRGB() & 0x00ffffff;
+				return new Color(153, 50, 153).getRGB() & 0x00ffffff;
+			return new Color(153, 50, 153).getRGB() & 0x00ffffff;
 		};
 		blockColors.register(dreadfulDirtColour, ModBlocks.DREADFUL_DIRT);
 	}
