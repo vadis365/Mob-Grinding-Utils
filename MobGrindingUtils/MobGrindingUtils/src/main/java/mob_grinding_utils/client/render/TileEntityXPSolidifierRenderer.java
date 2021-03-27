@@ -82,7 +82,7 @@ public class TileEntityXPSolidifierRenderer extends TileEntityRenderer<TileEntit
 		matrixStack.translate(0D, 0.60625D, -0.22D);
 		matrixStack.rotate(Vector3f.XP.rotationDegrees(90.0F));
 		matrixStack.scale(1.25F, 1.25F, 1.25F);
-		ItemStack stackMould = tile.mouldSlot.getStackInSlot(0);
+		ItemStack stackMould = tile.inputSlots.getStackInSlot(0);
 		if (!stackMould.isEmpty()) {
 			Minecraft.getInstance().getTextureManager().bindTexture(PlayerContainer.LOCATION_BLOCKS_TEXTURE);
 			Minecraft.getInstance().getItemRenderer().renderItem(stackMould, ItemCameraTransforms.TransformType.GROUND, false, matrixStack, bufferIn, combinedLight, combinedOverlay, Minecraft.getInstance().getItemRenderer().getItemModelWithOverrides(stackMould, null, null));
