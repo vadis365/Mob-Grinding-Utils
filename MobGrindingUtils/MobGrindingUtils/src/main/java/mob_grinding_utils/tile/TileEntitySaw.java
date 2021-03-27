@@ -9,6 +9,7 @@ import io.netty.buffer.Unpooled;
 import mob_grinding_utils.ModBlocks;
 import mob_grinding_utils.ModItems;
 import mob_grinding_utils.blocks.BlockSaw;
+import mob_grinding_utils.fakeplayer.MGUFakePlayer;
 import mob_grinding_utils.inventory.server.ContainerSaw;
 import mob_grinding_utils.items.ItemSawUpgrade;
 import net.minecraft.block.BlockState;
@@ -77,8 +78,7 @@ public class TileEntitySaw extends TileEntityInventoryHelper implements ITickabl
 			Entity entity = list.get(i);
 			if (entity != null) {
 				if (entity instanceof LivingEntity) {
-					FakePlayer fakePlayer = FakePlayerFactory.get((ServerWorld)getWorld(), new GameProfile(UUID.nameUUIDFromBytes("fakeplayer.mob_masher".getBytes()), new TranslationTextComponent("fakeplayer.mob_masher").getString()));
-					fakePlayer.setPosition(this.pos.getX(), -100D, this.pos.getZ());
+					MGUFakePlayer fakePlayer = MGUFakePlayer.get((ServerWorld)getWorld(), this.pos.getX(), -100D, this.pos.getZ()).get();
 					ItemStack tempSword = new ItemStack(ModItems.NULL_SWORD, 1);
 
 					if(!tempSword.hasTag())

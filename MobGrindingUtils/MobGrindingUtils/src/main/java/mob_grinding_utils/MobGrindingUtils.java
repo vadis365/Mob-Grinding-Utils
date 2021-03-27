@@ -20,6 +20,7 @@ import mob_grinding_utils.events.LocalWitherSoundEvent;
 import mob_grinding_utils.events.MGUEndermanInhibitEvent;
 import mob_grinding_utils.events.MGUZombieReinforcementEvent;
 import mob_grinding_utils.events.RenderChickenSwell;
+import mob_grinding_utils.fakeplayer.MGUFakePlayer;
 import mob_grinding_utils.inventory.client.GuiAbsorptionHopper;
 import mob_grinding_utils.inventory.client.GuiFan;
 import mob_grinding_utils.inventory.client.GuiSaw;
@@ -46,8 +47,10 @@ import net.minecraft.tags.FluidTags;
 import net.minecraft.tags.ITag;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.RegistryObject;
@@ -126,6 +129,7 @@ public class MobGrindingUtils {
 		MinecraftForge.EVENT_BUS.register(new GlobalWitherSoundEvent());
 		MinecraftForge.EVENT_BUS.register(new GlobalDragonSoundEvent());
 		MinecraftForge.EVENT_BUS.register(new BossBarHidingEvent());
+		MinecraftForge.EVENT_BUS.addListener(this::worldUnload);
 
 		ClientRegistry.bindTileEntityRenderer(ModBlocks.FAN_TILE, TileEntityFanRenderer::new);
 		ClientRegistry.bindTileEntityRenderer(ModBlocks.SAW_TILE, TileEntitySawRenderer::new);
@@ -163,6 +167,12 @@ public class MobGrindingUtils {
 			if (nbt.contains("MGU_WitherMuffle") || nbt.contains("MGU_DragonMuffle")) {
 				NETWORK_WRAPPER.send(PacketDistributor.PLAYER.with(() -> player), new MessageFlagSync(nbt.getBoolean("MGU_WitherMuffle"), nbt.getBoolean("MGU_DragonMuffle")));
 			}
+		}
+	}
+
+	private void worldUnload(final WorldEvent.Unload event) {
+		if (event.getWorld() instanceof ServerWorld) {
+			MGUFakePlayer.unload(event.getWorld());
 		}
 	}
 }
