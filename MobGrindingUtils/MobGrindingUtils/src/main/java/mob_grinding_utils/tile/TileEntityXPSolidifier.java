@@ -23,6 +23,7 @@ import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
+import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 
@@ -34,8 +35,7 @@ public class TileEntityXPSolidifier extends TileEntity implements ITickableTileE
     private final LazyOptional<IFluidHandler> tank_holder = LazyOptional.of(() -> tank);
     private int prevFluidLevel = 0;
 
-    public ItemStackHandler mouldSlot = new ItemStackHandler(1);
-    public ItemStackHandler upgradeSlot = new ItemStackHandler(1);
+    public ItemStackHandler inputSlots = new ItemStackHandler(2);
     public ItemStackHandler outputSlot = new ItemStackHandler(1);
     private final LazyOptional<IItemHandler> outputCap = LazyOptional.of(() -> outputSlot);
 
@@ -56,8 +56,7 @@ public class TileEntityXPSolidifier extends TileEntity implements ITickableTileE
     public void read(BlockState state, CompoundNBT nbt) {
         super.read(state, nbt);
         tank.readFromNBT(nbt);
-        mouldSlot.deserializeNBT(nbt.getCompound("mouldSlot"));
-        upgradeSlot.deserializeNBT(nbt.getCompound("upgradeSlot"));
+        inputSlots.deserializeNBT(nbt.getCompound("inputSlots"));
         outputSlot.deserializeNBT(nbt.getCompound("outputSlot"));
     }
 
@@ -65,8 +64,7 @@ public class TileEntityXPSolidifier extends TileEntity implements ITickableTileE
     public CompoundNBT write(CompoundNBT compound) {
         super.write(compound);
         tank.writeToNBT(compound);
-        compound.put("mouldSlot", mouldSlot.serializeNBT());
-        compound.put("upgradeSlot", upgradeSlot.serializeNBT());
+        compound.put("inputSlots", inputSlots.serializeNBT());
         compound.put("outputSlot", outputSlot.serializeNBT());
         return compound;
     }
@@ -121,6 +119,8 @@ public class TileEntityXPSolidifier extends TileEntity implements ITickableTileE
     public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
         if (cap == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)
             return tank_holder.cast();
+        if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
+            return outputCap.cast();
         return super.getCapability(cap, side);
     }
 }

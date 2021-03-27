@@ -7,12 +7,12 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.items.SlotItemHandler;
 
-import javax.annotation.Nullable;
 
 public class ContainerXPSolidifier extends Container {
     public TileEntityXPSolidifier tile;
@@ -55,9 +55,12 @@ public class ContainerXPSolidifier extends Container {
             this.addSlot(new Slot(playerInventory, col, x+1, y+1));
         }
 
-        this.addSlot(new SlotItemHandler(tile.mouldSlot, 0, 62,36 ));
-        this.addSlot(new SlotItemHandler(tile.upgradeSlot, 0, 26, 72));
-        this.addSlot(new SlotItemHandler(tile.outputSlot, 0, 130, 36));
+        //Mould
+        this.addSlot(new RestrictedHandlerSlot(tile.inputSlots, 0, 62,36, Items.IRON_BARS, 1 ));
+        //Upgrade
+        this.addSlot(new RestrictedHandlerSlot(tile.inputSlots, 1, 26, 72, Items.NETHER_STAR, 10));
+        //Output
+        this.addSlot(new RestrictedHandlerSlot(tile.outputSlot, 0, 130, 36, Items.AIR, 0));
     }
 
     @Override
