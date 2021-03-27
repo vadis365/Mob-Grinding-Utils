@@ -50,6 +50,8 @@ public class GuiXPSolidifier extends ContainerScreen<ContainerXPSolidifier> {
         int zLevel = 0;
         this.blit(stack, xOffSet, yOffSet, 0, 0, xSize, ySize);
 
+        blitArrow(stack, xOffSet, yOffSet, .5f);
+
         int fluid = tile.getScaledFluid(70);
         RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
         if (fluid >= 1) {
@@ -64,6 +66,10 @@ public class GuiXPSolidifier extends ContainerScreen<ContainerXPSolidifier> {
             buffer.pos(xOffSet + 8, yOffSet + 88 - fluid, zLevel).tex(sprite.getMinU(), sprite.getMaxV()).endVertex();
             tessellator.draw();
         }
+    }
+
+    private void blitArrow(MatrixStack stack, int xOffSet, int yOffSet, float completion) {
+        this.blit(stack, xOffSet + 91, yOffSet + 36, 178, 73, (int)(24 * completion), 17);
     }
 
     @Override

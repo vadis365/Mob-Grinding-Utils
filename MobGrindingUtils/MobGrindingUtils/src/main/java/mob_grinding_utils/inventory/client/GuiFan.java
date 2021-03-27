@@ -36,7 +36,7 @@ public class GuiFan extends ContainerScreen<ContainerFan> {
 		super.init();
 		int xOffSet = (width - xSize) / 2;
 		int yOffSet = (height - ySize) / 2;
-		addButton(new GuiBigButton(xOffSet + 54, yOffSet + 42, 33, 228, StringTextComponent.EMPTY, (button) -> {
+		addButton(new GuiMGUButton(xOffSet + 54, yOffSet + 42, GuiMGUButton.Size.LARGE, 0, StringTextComponent.EMPTY, (button) -> {
 			MobGrindingUtils.NETWORK_WRAPPER.sendToServer(new MessageFan(0, tile.getPos()));
 			tile.showRenderBox = !tile.showRenderBox;
 		}));
