@@ -2,6 +2,7 @@ package mob_grinding_utils.inventory.client;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.widget.button.Button;
@@ -10,6 +11,7 @@ import net.minecraft.util.text.ITextComponent;
 
 public class GuiMGUButton extends Button {
     private static final ResourceLocation TEXTURES = new ResourceLocation("mob_grinding_utils:textures/gui/absorption_hopper_gui.png");
+    private static final ResourceLocation SOLIDIFIER_TEXTURES = new ResourceLocation("mob_grinding_utils:textures/gui/solidifier_gui.png");
     public Size size;
     public int id;
 
@@ -24,7 +26,7 @@ public class GuiMGUButton extends Button {
         Minecraft mc = Minecraft.getInstance();
         FontRenderer fontrenderer = mc.fontRenderer;
         if (visible) {
-            mc.getTextureManager().bindTexture(TEXTURES);
+            mc.getTextureManager().bindTexture(size == Size.SOLIDIFIER ? SOLIDIFIER_TEXTURES : TEXTURES);
             RenderSystem.color4f(0.75F, 0.75F, 0.75F, 0.5F);
             boolean hover = mouseX >= x && mouseY >= y && mouseX < x + width && mouseY < y + height;
             if(hover)
@@ -45,7 +47,8 @@ public class GuiMGUButton extends Button {
     enum Size {
         SMALL(16 , 16, 103, 228),
         MEDIUM(32, 16, 0, 228),
-        LARGE(68, 16, 33, 228);
+        LARGE(68, 16, 33, 228),
+        SOLIDIFIER(34, 16, 178, 92);
 
         int width, height, u, v;
         Size(int w, int h, int U, int V) {width = w; height = h; u = U; v = V;}

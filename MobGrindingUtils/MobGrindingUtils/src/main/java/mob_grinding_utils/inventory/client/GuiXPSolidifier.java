@@ -1,10 +1,15 @@
 package mob_grinding_utils.inventory.client;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.lwjgl.opengl.GL11;
+
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
+
 import mob_grinding_utils.MobGrindingUtils;
 import mob_grinding_utils.inventory.server.ContainerXPSolidifier;
-import mob_grinding_utils.network.MessageAbsorptionHopper;
 import mob_grinding_utils.network.MessageSolidifier;
 import mob_grinding_utils.tile.TileEntityXPSolidifier;
 import net.minecraft.client.Minecraft;
@@ -19,11 +24,6 @@ import net.minecraft.inventory.container.PlayerContainer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
-import org.lwjgl.opengl.GL11;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class GuiXPSolidifier extends ContainerScreen<ContainerXPSolidifier> {
     private static final ResourceLocation GUI_TEX = new ResourceLocation("mob_grinding_utils:textures/gui/solidifier_gui.png");
@@ -45,7 +45,7 @@ public class GuiXPSolidifier extends ContainerScreen<ContainerXPSolidifier> {
         int xOffSet = (width - xSize) / 2;
         int yOffSet = (height - ySize) / 2;
 
-        addButton(new GuiMGUButton(xOffSet + 62, yOffSet + 72, GuiMGUButton.Size.MEDIUM, 0, new StringTextComponent("Output") ,(button) -> {
+        addButton(new GuiMGUButton(xOffSet + 62, yOffSet + 72, GuiMGUButton.Size.SOLIDIFIER, 0, new StringTextComponent("Push") ,(button) -> {
             MobGrindingUtils.NETWORK_WRAPPER.sendToServer(new MessageSolidifier(0, tile.getPos()));
         }));
     }
@@ -66,7 +66,7 @@ public class GuiXPSolidifier extends ContainerScreen<ContainerXPSolidifier> {
 
         blitArrow(stack, xOffSet, yOffSet, .5f);
 
-        font.drawString(stack, tile.outputDirection.getString(), xOffSet + 100, yOffSet + 74, 5285857);
+        font.drawString(stack, tile.outputDirection.getString(), xOffSet + 124 - font.getStringWidth(tile.outputDirection.getString()) / 2, yOffSet + 76, 5285857);
 
         int fluid = tile.getScaledFluid(70);
         RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
