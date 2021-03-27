@@ -13,11 +13,13 @@ import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.inventory.container.PlayerContainer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.vector.Vector3f;
@@ -76,6 +78,27 @@ public class TileEntityXPSolidifierRenderer extends TileEntityRenderer<TileEntit
 
 		//this will move and be animated blah blah
 		xp_solidifier_model.renderRack(matrixStack, bufferIn.getBuffer(RenderType.getEntitySmoothCutout(TEXTURE)), combinedLight, OverlayTexture.NO_OVERLAY, 1F, 1F, 1F, 1.0F);
+		matrixStack.push();
+		matrixStack.translate(0D, 0.60625D, -0.22D);
+		matrixStack.rotate(Vector3f.XP.rotationDegrees(90.0F));
+		matrixStack.scale(1.25F, 1.25F, 1.25F);
+		ItemStack stackMould = tile.inputSlots.getStackInSlot(0);
+		if (!stackMould.isEmpty()) {
+			Minecraft.getInstance().getTextureManager().bindTexture(PlayerContainer.LOCATION_BLOCKS_TEXTURE);
+			Minecraft.getInstance().getItemRenderer().renderItem(stackMould, ItemCameraTransforms.TransformType.GROUND, false, matrixStack, bufferIn, combinedLight, combinedOverlay, Minecraft.getInstance().getItemRenderer().getItemModelWithOverrides(stackMould, null, null));
+		}
+		matrixStack.pop();
+
+		matrixStack.push();
+		matrixStack.translate(0D, 0.79375D, -0.22D);
+		matrixStack.rotate(Vector3f.XP.rotationDegrees(90.0F));
+		matrixStack.scale(1.25F, 1.25F, 1.25F);
+		ItemStack stackResult = tile.outputSlot.getStackInSlot(0);
+		if (!stackResult .isEmpty()) {
+			Minecraft.getInstance().getTextureManager().bindTexture(PlayerContainer.LOCATION_BLOCKS_TEXTURE);
+			Minecraft.getInstance().getItemRenderer().renderItem(stackResult, ItemCameraTransforms.TransformType.GROUND, false, matrixStack, bufferIn, combinedLight, combinedOverlay, Minecraft.getInstance().getItemRenderer().getItemModelWithOverrides(stackResult, null, null));
+		}
+		matrixStack.pop();
 
 		RenderSystem.disableBlend();
 	    RenderSystem.defaultBlendFunc();
@@ -88,7 +111,7 @@ public class TileEntityXPSolidifierRenderer extends TileEntityRenderer<TileEntit
 			return;
 		FluidStack fluidStack = new FluidStack(tile.tank.getFluid(), 100);
 		float height = (0.46875F / tile.tank.getCapacity()) * tile.tank.getFluidAmount();
-		
+
 		TextureAtlasSprite fluidStillSprite = Minecraft.getInstance().getAtlasSpriteGetter(PlayerContainer.LOCATION_BLOCKS_TEXTURE).apply(fluidStack.getFluid().getAttributes().getStillTexture());
 		IVertexBuilder buffer = bufferIn.getBuffer(RenderType.getTranslucent());
 		int fluidColor = fluidStack.getFluid().getAttributes().getColor();
