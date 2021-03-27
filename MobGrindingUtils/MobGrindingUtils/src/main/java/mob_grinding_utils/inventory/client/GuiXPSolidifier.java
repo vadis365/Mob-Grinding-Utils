@@ -15,8 +15,12 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.PlayerContainer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import org.lwjgl.opengl.GL11;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class GuiXPSolidifier extends ContainerScreen<ContainerXPSolidifier> {
     private static final ResourceLocation GUI_TEX = new ResourceLocation("mob_grinding_utils:textures/gui/solidifier_gui.png");
@@ -67,5 +71,18 @@ public class GuiXPSolidifier extends ContainerScreen<ContainerXPSolidifier> {
         this.renderBackground(stack);
         super.render(stack, mouseX, mouseY, partialTicks);
         renderHoveredTooltip(stack, mouseX, mouseY);
+    }
+
+    @Override
+    protected void renderHoveredTooltip(MatrixStack matrixStack, int x, int y) {
+        super.renderHoveredTooltip(matrixStack, x, y);
+        int xOffSet = (width - xSize) / 2;
+        int yOffSet = (height - ySize) / 2;
+        if (x > xOffSet + 8 && x < xOffSet + 20 && y > yOffSet + 20 && y < yOffSet + 88) {
+            List<ITextComponent> tooltip = new ArrayList<>();
+            tooltip.add(tile.tank.getFluid().getDisplayName());
+            tooltip.add(new StringTextComponent(tile.tank.getFluidAmount() + "/" + tile.tank.getCapacity()));
+            this.renderWrappedToolTip(matrixStack,  tooltip, x, y, this.font);
+        }
     }
 }

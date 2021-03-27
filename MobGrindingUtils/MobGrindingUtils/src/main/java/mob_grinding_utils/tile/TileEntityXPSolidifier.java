@@ -46,10 +46,16 @@ public class TileEntityXPSolidifier extends TileEntity implements ITickableTileE
 
     @Override
     public void tick() {
+        if (getWorld().getGameTime() % 20 == 0)
+            run();
+
         if (prevFluidLevel != tank.getFluidAmount()){
             updateBlock();
             prevFluidLevel = tank.getFluidAmount();
         }
+    }
+
+    private void run() {
     }
 
     @Override
