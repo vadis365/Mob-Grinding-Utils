@@ -1,5 +1,8 @@
 package mob_grinding_utils.tile;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import io.netty.buffer.Unpooled;
 import mob_grinding_utils.ModBlocks;
 import mob_grinding_utils.inventory.server.ContainerXPSolidifier;
@@ -28,10 +31,6 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.util.Arrays;
-
 public class TileEntityXPSolidifier extends TileEntity implements ITickableTileEntity, INamedContainerProvider {
     public FluidTank tank = new FluidTank(FluidAttributes.BUCKET_VOLUME *  16);
     private final LazyOptional<IFluidHandler> tank_holder = LazyOptional.of(() -> tank);
@@ -59,14 +58,12 @@ public class TileEntityXPSolidifier extends TileEntity implements ITickableTileE
         @Override
         public String getString() { return name; }
 
-        public static OutputDirection fromString(String string) {
-            try {
-                return OutputDirection.valueOf(string);
-            }
-            catch(IllegalArgumentException ex) {
-                return OutputDirection.NONE;
-            }
-        }
+		public static OutputDirection fromString(String string) {
+			for (OutputDirection direction : OutputDirection.values())
+				if (direction.name.equals(string))
+					return direction;
+			return OutputDirection.NONE;
+		}
     }
     public OutputDirection outputDirection = OutputDirection.NONE;
 
