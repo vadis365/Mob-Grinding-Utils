@@ -2,7 +2,10 @@ package mob_grinding_utils.inventory.client;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
+import mob_grinding_utils.MobGrindingUtils;
 import mob_grinding_utils.inventory.server.ContainerXPSolidifier;
+import mob_grinding_utils.network.MessageAbsorptionHopper;
+import mob_grinding_utils.network.MessageSolidifier;
 import mob_grinding_utils.tile.TileEntityXPSolidifier;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
@@ -37,6 +40,17 @@ public class GuiXPSolidifier extends ContainerScreen<ContainerXPSolidifier> {
     }
 
     @Override
+    protected void init() {
+        super.init();
+        int xOffSet = (width - xSize) / 2;
+        int yOffSet = (height - ySize) / 2;
+
+        addButton(new GuiMGUButton(xOffSet + 62, yOffSet + 72, GuiMGUButton.Size.MEDIUM, 0, new StringTextComponent("Output") ,(button) -> {
+            MobGrindingUtils.NETWORK_WRAPPER.sendToServer(new MessageSolidifier(0, tile.getPos()));
+        }));
+    }
+
+    @Override
     protected void drawGuiContainerForegroundLayer(MatrixStack matrixStack, int x, int y) {
         this.font.drawString(matrixStack, I18n.format("block.mob_grinding_utils.xpsolidifier"), 7,6,0x404040);
     }
@@ -51,6 +65,8 @@ public class GuiXPSolidifier extends ContainerScreen<ContainerXPSolidifier> {
         this.blit(stack, xOffSet, yOffSet, 0, 0, xSize, ySize);
 
         blitArrow(stack, xOffSet, yOffSet, .5f);
+
+        font.drawString(stack, tile.outputDirection.getString(), xOffSet + 100, yOffSet + 74, 5285857);
 
         int fluid = tile.getScaledFluid(70);
         RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);

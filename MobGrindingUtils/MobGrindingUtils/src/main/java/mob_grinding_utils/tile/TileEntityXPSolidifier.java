@@ -15,6 +15,7 @@ import net.minecraft.network.play.server.SUpdateTileEntityPacket;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
+import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.common.capabilities.Capability;
@@ -29,6 +30,7 @@ import net.minecraftforge.items.ItemStackHandler;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Arrays;
 
 public class TileEntityXPSolidifier extends TileEntity implements ITickableTileEntity, INamedContainerProvider {
     public FluidTank tank = new FluidTank(FluidAttributes.BUCKET_VOLUME *  16);
@@ -42,6 +44,52 @@ public class TileEntityXPSolidifier extends TileEntity implements ITickableTileE
 
     public TileEntityXPSolidifier() {
         super(ModBlocks.XPSOLIDIFIER_TILE);
+    }
+
+    public enum OutputDirection implements IStringSerializable {
+        NONE("none"),
+        NORTH("north"),
+        EAST("east"),
+        SOUTH("south"),
+        WEST("west");
+
+        String name;
+        OutputDirection(String nameIn) {name = nameIn;}
+
+        @Override
+        public String getString() { return name; }
+
+        public static OutputDirection fromString(String string) {
+            try {
+                return OutputDirection.valueOf(string);
+            }
+            catch(IllegalArgumentException ex) {
+                return OutputDirection.NONE;
+            }
+        }
+    }
+    public OutputDirection outputDirection = OutputDirection.NONE;
+
+    public OutputDirection toggleOutput() {
+        switch(outputDirection) {
+            case WEST:
+                outputDirection = OutputDirection.NONE;
+                break;
+            case SOUTH:
+                outputDirection = OutputDirection.WEST;
+                break;
+            case EAST:
+                outputDirection = OutputDirection.SOUTH;
+                break;
+            case NORTH:
+                outputDirection = OutputDirection.EAST;
+                break;
+            case NONE:
+                outputDirection = OutputDirection.NORTH;
+                break;
+        }
+        markDirty();
+        return outputDirection;
     }
 
     @Override
@@ -64,6 +112,7 @@ public class TileEntityXPSolidifier extends TileEntity implements ITickableTileE
         tank.readFromNBT(nbt);
         inputSlots.deserializeNBT(nbt.getCompound("inputSlots"));
         outputSlot.deserializeNBT(nbt.getCompound("outputSlot"));
+        outputDirection = OutputDirection.fromString(nbt.getString("outputDirection"));
     }
 
     @Override
@@ -72,6 +121,7 @@ public class TileEntityXPSolidifier extends TileEntity implements ITickableTileE
         tank.writeToNBT(compound);
         compound.put("inputSlots", inputSlots.serializeNBT());
         compound.put("outputSlot", outputSlot.serializeNBT());
+        compound.putString("outputDirection", outputDirection.getString());
         return compound;
     }
     @Override

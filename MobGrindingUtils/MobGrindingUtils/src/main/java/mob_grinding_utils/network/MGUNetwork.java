@@ -48,6 +48,12 @@ public class MGUNetwork {
                 .consumer(MessageFlagSync::handle)
                 .add();
 
+        channel.messageBuilder(MessageSolidifier.class, 5, NetworkDirection.PLAY_TO_SERVER)
+                .decoder(MessageSolidifier::decode)
+                .encoder(MessageSolidifier::encode)
+                .consumer(MessageSolidifier::handle)
+                .add();
+
         return channel;
     }
 }
