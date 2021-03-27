@@ -46,6 +46,8 @@
   "item.mob_grinding_utils.null_sword": "Imaginary Not Here Sword",
   "item.mob_grinding_utils.fluid_xp_bucket": "Fluid XP Bucket",
   "item.mob_grinding_utils.rotten_egg": "Rotten Egg",
+  "item.mob_grinding_utils.solid_xp_mould_baby": "XP Mould Jelly Baby",
+  "item.mob_grinding_utils.solid_xp_baby": "XP Jelly Baby",
 
   "_comment": "Creative Tab",
   "itemGroup.mob_grinding_utils": "Mob Grinding Utils",
@@ -124,7 +126,10 @@
   "tooltip.sawupgrade_smite": "Smite: +1. Max of 10.",
   "tooltip.sawupgrade_arthropods": "Bane of Arthropods: +1. Max of 10.",
   "tooltip.sawupgrade_beheading": "Beheading: +1. Max of 10.",
-  
+
   "tooltip.rotten_egg_1": "Creates a 5x5 area of Dreadful Dirt.",
-  "tooltip.rotten_egg_2": "Used on Grass, Dirt, Mycelum, or Farmland."
+  "tooltip.rotten_egg_2": "Used on Grass, Dirt, Mycelum, or Farmland.",
+
+   "tooltip.solid_xp": "Consumable. XP value: ",
+   "tooltip.solid_xp_mould": "Used in the XP Solidifier"
 }

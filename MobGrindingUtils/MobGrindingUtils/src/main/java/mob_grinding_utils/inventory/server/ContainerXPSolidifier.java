@@ -1,6 +1,7 @@
 package mob_grinding_utils.inventory.server;
 
 import mob_grinding_utils.ModContainers;
+import mob_grinding_utils.ModItems;
 import mob_grinding_utils.tile.TileEntityXPSolidifier;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -11,7 +12,6 @@ import net.minecraft.item.Items;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.items.SlotItemHandler;
 
 
 public class ContainerXPSolidifier extends Container {
@@ -56,11 +56,11 @@ public class ContainerXPSolidifier extends Container {
         }
 
         //Mould
-        this.addSlot(new RestrictedHandlerSlot(tile.inputSlots, 0, 62,36, Items.IRON_BARS, 1 ));
+        this.addSlot(new RestrictedHandlerSlot(tile.inputSlots, 0, 62, 36, ModItems.SOLID_XP_MOULD_BABY, 1 ));
         //Upgrade
         this.addSlot(new RestrictedHandlerSlot(tile.inputSlots, 1, 26, 72, Items.NETHER_STAR, 10));
         //Output
-        this.addSlot(new RestrictedHandlerSlot(tile.outputSlot, 0, 130, 36, Items.BONE, 1));
+        this.addSlot(new RestrictedHandlerSlot(tile.outputSlot, 0, 130, 36, ModItems.SOLID_XP_BABY, 1));
     }
 
     @Override
