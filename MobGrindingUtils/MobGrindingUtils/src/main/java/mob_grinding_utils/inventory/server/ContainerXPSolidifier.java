@@ -60,7 +60,7 @@ public class ContainerXPSolidifier extends Container {
         //Upgrade
         this.addSlot(new RestrictedHandlerSlot(tile.inputSlots, 1, 26, 72, Items.NETHER_STAR, 10));
         //Output
-        this.addSlot(new RestrictedHandlerSlot(tile.outputSlot, 0, 130, 36, Items.BONE, 0));
+        this.addSlot(new RestrictedHandlerSlot(tile.outputSlot, 0, 130, 36, Items.BONE, 1));
     }
 
     @Override
