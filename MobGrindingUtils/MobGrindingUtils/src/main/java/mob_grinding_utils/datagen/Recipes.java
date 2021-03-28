@@ -311,6 +311,43 @@ public class Recipes extends RecipeProvider {
                 .addCriterion("", hasItem(Items.AIR))
                 .build(consumer, new ResourceLocation(Reference.MOD_ID, "recipe_cursed_feed"));
 
+        ShapedRecipeBuilder.shapedRecipe(ModBlocks.XPSOLIDIFIER_ITEM)
+                .patternLine(" P ")
+                .patternLine("CHC")
+                .patternLine(" T ")
+                .key('P', Items.PISTON)
+                .key('C', ModBlocks.ENTITY_CONVEYOR_ITEM)
+                .key('H', Items.HOPPER)
+                .key('T', ModBlocks.TANK_ITEM)
+                .addCriterion("", hasItem(Items.AIR))
+                .build(consumer, new ResourceLocation(Reference.MOD_ID, "recipe_solidifier"));
+
+        ShapelessRecipeBuilder.shapelessRecipe(ModBlocks.XPSOLIDIFIER_ITEM).addIngredient(ModBlocks.XPSOLIDIFIER_ITEM,1)
+                .addCriterion("", hasItem(Items.AIR))
+                .build(consumer, new ResourceLocation(Reference.MOD_ID, "recipe_solidifier_reset"));
+
+        //Blank Mould
+        ShapedRecipeBuilder.shapedRecipe(ModItems.SOLID_XP_MOULD_BLANK)
+                .patternLine("XXX")
+                .patternLine("XBX")
+                .patternLine("XXX")
+                .key('X', Tags.Items.NUGGETS_GOLD)
+                .key('B', ModItems.FLUID_XP_BUCKET)
+                .addCriterion("", hasItem(Items.AIR))
+                .build(consumer, new ResourceLocation(Reference.MOD_ID, "recipe_mould_blank"));
+
+        //Mould upgrade chain, starting with blank
+        ShapelessRecipeBuilder.shapelessRecipe(ModItems.SOLID_XP_MOULD_BABY)
+                .addIngredient(ModItems.SOLID_XP_MOULD_BLANK)
+                .addCriterion("", hasItem(Items.AIR))
+                .build(consumer, new ResourceLocation(Reference.MOD_ID, "recipe_mould_baby_upgrade"));
+
+        //Last one in the chain should reset to blank
+        ShapelessRecipeBuilder.shapelessRecipe(ModItems.SOLID_XP_MOULD_BLANK)
+                .addIngredient(ModItems.SOLID_XP_MOULD_BABY)
+                .addCriterion("", hasItem(Items.AIR))
+                .build(consumer, new ResourceLocation(Reference.MOD_ID, "recipe_mould_reset"));
+
     }
 
     @Override
