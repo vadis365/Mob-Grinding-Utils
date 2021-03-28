@@ -348,6 +348,17 @@ public class Recipes extends RecipeProvider {
                 .addCriterion("", hasItem(Items.AIR))
                 .build(consumer, new ResourceLocation(Reference.MOD_ID, "recipe_mould_reset"));
 
+        //Solid XP Block
+        ShapelessRecipeBuilder.shapelessRecipe(ModBlocks.SOLID_XP_BLOCK_ITEM)
+                .addIngredient(ModItems.SOLID_XP_BABY, 9)
+                .addCriterion("", hasItem(Items.AIR))
+                .build(consumer, new ResourceLocation(Reference.MOD_ID, "recipe_xp_block"));
+        //Uncraft
+        ShapelessRecipeBuilder.shapelessRecipe(ModItems.SOLID_XP_BABY, 9)
+                .addIngredient(ModBlocks.SOLID_XP_BLOCK_ITEM)
+                .addCriterion("", hasItem(Items.AIR))
+                .build(consumer, new ResourceLocation(Reference.MOD_ID, "recipe_xp_block_uncraft"));
+
     }
 
     @Override
