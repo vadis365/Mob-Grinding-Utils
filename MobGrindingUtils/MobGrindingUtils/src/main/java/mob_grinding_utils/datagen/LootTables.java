@@ -53,7 +53,7 @@ public class LootTables extends LootTableProvider {
             registerDropSelfLootTable(ModBlocks.ENDER_INHIBITOR_ON);
             registerDropping(ModBlocks.ENDER_INHIBITOR_OFF, ModBlocks.ENDER_INHIBITOR_ON_ITEM);
             registerDropSelfLootTable(ModBlocks.TINTED_GLASS);
-            registerDropSelfLootTable(ModBlocks.XPSOLIDIFIER);
+    //        registerDropSelfLootTable(ModBlocks.XPSOLIDIFIER);
             registerLootTable(ModBlocks.DREADFUL_DIRT, (block) -> droppingWithSilkTouch(block, Items.DIRT));
         }
 
@@ -65,6 +65,7 @@ public class LootTables extends LootTableProvider {
                     .filter(b -> !b.getRegistryName().getPath().equals("tank"))
                     .filter(b -> !b.getRegistryName().getPath().equals("tank_sink"))
                     .filter(b -> !b.getRegistryName().getPath().equals("jumbo_tank"))
+                    .filter(b -> !b.getRegistryName().getPath().equals("xpsolidifier"))
                     .collect(Collectors.toList());
         }
     }

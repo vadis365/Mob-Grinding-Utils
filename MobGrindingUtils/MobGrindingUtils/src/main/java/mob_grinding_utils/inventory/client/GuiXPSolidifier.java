@@ -67,7 +67,7 @@ public class GuiXPSolidifier extends ContainerScreen<ContainerXPSolidifier> {
 
         font.drawString(stack, tile.outputDirection.getString(), xOffSet + 124 - font.getStringWidth(tile.outputDirection.getString()) / 2, yOffSet + 76, 5285857);
 
-        int fluid = tile.getScaledFluid(71);
+        int fluid = tile.getScaledFluid(70);
         RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
         if (fluid >= 1) {
             TextureAtlasSprite sprite = Minecraft.getInstance().getAtlasSpriteGetter(PlayerContainer.LOCATION_BLOCKS_TEXTURE).apply(tile.tank.getFluid().getFluid().getAttributes().getStillTexture());
