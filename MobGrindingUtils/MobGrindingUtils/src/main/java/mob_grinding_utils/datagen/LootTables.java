@@ -53,7 +53,6 @@ public class LootTables extends LootTableProvider {
             registerDropSelfLootTable(ModBlocks.ENDER_INHIBITOR_ON);
             registerDropping(ModBlocks.ENDER_INHIBITOR_OFF, ModBlocks.ENDER_INHIBITOR_ON_ITEM);
             registerDropSelfLootTable(ModBlocks.TINTED_GLASS);
-    //        registerDropSelfLootTable(ModBlocks.XPSOLIDIFIER);
             registerLootTable(ModBlocks.DREADFUL_DIRT, (block) -> droppingWithSilkTouch(block, Items.DIRT));
         }
 
