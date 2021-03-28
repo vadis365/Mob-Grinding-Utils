@@ -37,7 +37,7 @@ public class ModItems {
 	public static SwordItem NULL_SWORD;
 	public static Item ROTTEN_EGG;
 	public static Item SOLID_XP_MOULD_BABY; // more to be added here
-	public static Item SOLID_XP_BABY;
+	public static Item SOLID_XP_MOULD_BLANK, SOLID_XP_BABY;
 
 	public static void init() {
 		FAN_UPGRADE_WIDTH = new ItemFanUpgrade(new Item.Properties().group(MobGrindingUtils.TAB).maxStackSize(64), "width");
@@ -57,7 +57,8 @@ public class ModItems {
 		NULL_SWORD = new ItemImaginaryInvisibleNotReallyThereSword(new Item.Properties().group(MobGrindingUtils.TAB));
 		FLUID_XP_BUCKET = new BucketItem(() -> ModBlocks.FLUID_XP, new Item.Properties().containerItem(Items.BUCKET).group(MobGrindingUtils.TAB).maxStackSize(1));
 		ROTTEN_EGG = new ItemRottenEgg(new Item.Properties().group(MobGrindingUtils.TAB).maxStackSize(1));
-
+		
+		SOLID_XP_MOULD_BLANK = new ItemSolidXPMould(new Item.Properties().group(MobGrindingUtils.TAB).maxStackSize(64));
 		SOLID_XP_MOULD_BABY = new ItemSolidXPMould(new Item.Properties().group(MobGrindingUtils.TAB).maxStackSize(64));
 		SOLID_XP_BABY = new ItemSolidXP(new Item.Properties().group(MobGrindingUtils.TAB).maxStackSize(64).food((new Food.Builder()).hunger(0).saturation(0F).setAlwaysEdible().build()), 50);
 	}
