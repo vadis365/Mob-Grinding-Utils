@@ -51,7 +51,8 @@ public class TileEntityXPSolidifier extends TileEntity implements ITickableTileE
     public ItemStackHandler outputSlot = new ItemStackHandler(1);
     private final LazyOptional<IItemHandler> outputCap = LazyOptional.of(() -> outputSlot);
 
-    public int prevAnimationTicks;
+	public boolean active;
+	public int animationTicks, prevAnimationTicks;
 
     public TileEntityXPSolidifier() {
         super(ModBlocks.XPSOLIDIFIER_TILE);
@@ -103,17 +104,27 @@ public class TileEntityXPSolidifier extends TileEntity implements ITickableTileE
 
     @Override
     public void tick() {
-		if (getWorld().isRemote()) {
-			prevAnimationTicks = getProgress();
-			if (getProgress() >= MAX_MOULDING_TIME)
+		if (getWorld().isRemote && active) {
+			prevAnimationTicks = animationTicks;
+			if (animationTicks < MAX_MOULDING_TIME)
+				animationTicks ++;
+			if (animationTicks >= MAX_MOULDING_TIME) {
+				animationTicks -= MAX_MOULDING_TIME;
 				prevAnimationTicks -= MAX_MOULDING_TIME;
+			}
 		}
 
+		if (getWorld().isRemote && !active)
+			prevAnimationTicks = animationTicks = 0;
+
 		if (hasfluid() && canOperate()) {
+			setActive(true);
 			setProgress(getProgress() + 1);
 			if (getProgress() >= MAX_MOULDING_TIME) {
+				setActive(false);
 				outputSlot.setStackInSlot(0, new ItemStack(ModItems.SOLID_XP_BABY, 1)); //hardcoded result for now
 				tank.drain(FluidAttributes.BUCKET_VOLUME, FluidAction.EXECUTE);
+				return;
 			}
 		} else {
 			if (getProgress() > 0)
@@ -161,6 +172,10 @@ public class TileEntityXPSolidifier extends TileEntity implements ITickableTileE
         }
     }
 
+	public void setActive(boolean isActive) {
+		active = isActive;
+	}
+
 	private Direction getOutputFacing() {
 		switch (outputDirection) {
 		case WEST:
@@ -181,7 +196,7 @@ public class TileEntityXPSolidifier extends TileEntity implements ITickableTileE
 	}
 
 	@OnlyIn(Dist.CLIENT)
-	public ItemStack getCachedOutPutRenderStack() {
+	public ItemStack getCachedOutPutRenderStack() { // TODO this needs to be cached to NBT probably
 		if(hasMould()) {
 			if(inputSlots.getStackInSlot(0).getItem() == ModItems.SOLID_XP_MOULD_BABY)
 				return new ItemStack(ModItems.SOLID_XP_BABY, 1);
@@ -284,6 +299,7 @@ public class TileEntityXPSolidifier extends TileEntity implements ITickableTileE
         inputSlots.deserializeNBT(nbt.getCompound("inputSlots"));
         outputSlot.deserializeNBT(nbt.getCompound("outputSlot"));
         outputDirection = OutputDirection.fromString(nbt.getString("outputDirection"));
+        active = nbt.getBoolean("active");
         moulding_progress = nbt.getInt("moulding_progress");
     }
 
@@ -294,6 +310,7 @@ public class TileEntityXPSolidifier extends TileEntity implements ITickableTileE
         nbt.put("inputSlots", inputSlots.serializeNBT());
         nbt.put("outputSlot", outputSlot.serializeNBT());
         nbt.putString("outputDirection", outputDirection.getString());
+        nbt.putBoolean("active", active);
         nbt.putInt("moulding_progress", moulding_progress);
         return nbt;
     }
