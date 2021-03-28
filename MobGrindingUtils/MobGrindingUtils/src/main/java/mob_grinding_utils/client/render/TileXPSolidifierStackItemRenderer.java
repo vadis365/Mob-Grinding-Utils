@@ -21,7 +21,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fluids.FluidStack;
 @OnlyIn(Dist.CLIENT)
 public class TileXPSolidifierStackItemRenderer extends ItemStackTileEntityRenderer {
-	private static final ResourceLocation TEXTURE = new ResourceLocation("mob_grinding_utils:textures/tiles/xp_solidifier.png");
+	private static final ResourceLocation TEXTURE = new ResourceLocation("mob_grinding_utils:textures/tiles/xp_solidifier_no_push.png");
 	private final ModelXPSolidifier xp_solidifier_model = new ModelXPSolidifier();
 	private FluidStack fluidStack;
 

@@ -9,6 +9,7 @@ import mob_grinding_utils.ModBlocks;
 import mob_grinding_utils.blocks.BlockXPSolidifier;
 import mob_grinding_utils.models.ModelXPSolidifier;
 import mob_grinding_utils.tile.TileEntityXPSolidifier;
+import mob_grinding_utils.tile.TileEntityXPSolidifier.OutputDirection;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
@@ -30,6 +31,7 @@ import net.minecraftforge.fluids.FluidStack;
 @OnlyIn(Dist.CLIENT)
 public class TileEntityXPSolidifierRenderer extends TileEntityRenderer<TileEntityXPSolidifier> {
 	private static final ResourceLocation TEXTURE = new ResourceLocation("mob_grinding_utils:textures/tiles/xp_solidifier.png");
+	private static final ResourceLocation TEXTURE_NO_PUSH = new ResourceLocation("mob_grinding_utils:textures/tiles/xp_solidifier_no_push.png");
 	private final ModelXPSolidifier xp_solidifier_model = new ModelXPSolidifier();
 	
 	public TileEntityXPSolidifierRenderer(TileEntityRendererDispatcher rendererDispatcherIn) {
@@ -47,6 +49,38 @@ public class TileEntityXPSolidifierRenderer extends TileEntityRenderer<TileEntit
 			return;
 
 		Direction facing = state.get(BlockXPSolidifier.FACING);
+
+		float ticks = tile.prevAnimationTicks + (tile.getProgress() - tile.prevAnimationTicks)  * partialTicks;
+		
+		matrixStack.push();
+		matrixStack.translate(0.5D, 1.5D, 0.5D);
+		matrixStack.scale(-0.9999F, -0.9999F, 0.9999F);
+
+		switch (tile.outputDirection) {
+		case NONE:
+		case NORTH:
+			matrixStack.rotate(Vector3f.YP.rotationDegrees(90F));
+			break;
+		case SOUTH:
+			matrixStack.rotate(Vector3f.YN.rotationDegrees(90F));
+			break;
+		case WEST:
+			matrixStack.rotate(Vector3f.YP.rotationDegrees(0F));
+			break;
+		case EAST:
+			matrixStack.rotate(Vector3f.YN.rotationDegrees(180F));
+			break;
+		default:
+			matrixStack.rotate(Vector3f.YP.rotationDegrees(90F));
+			break;
+		}
+
+		RenderSystem.enableBlend();
+		RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
+		xp_solidifier_model.renderExport(matrixStack, bufferIn.getBuffer(RenderType.getEntitySmoothCutout(tile.outputDirection == OutputDirection.NONE ? TEXTURE_NO_PUSH : TEXTURE)), combinedLight, OverlayTexture.NO_OVERLAY, 1F, 1F, 1F, 1.0F);
+		RenderSystem.disableBlend();
+	    RenderSystem.defaultBlendFunc();
+		matrixStack.pop();
 
 		matrixStack.push();
 		matrixStack.translate(0.5D, 1.5D, 0.5D);
@@ -68,15 +102,19 @@ public class TileEntityXPSolidifierRenderer extends TileEntityRenderer<TileEntit
 		default:
 			break;
 		}
-
+		
+		matrixStack.push();
 		RenderSystem.enableBlend();
+		
+		if(ticks <= 20F)
+			matrixStack.translate(0D, ticks * 0.009375F, 0D);
+		if(ticks > 20F && ticks < 60)
+			matrixStack.translate(0D, 0.1875F, 0D);
+		if(ticks >= 60F && ticks < 80F)
+			matrixStack.translate(0D, (80F - ticks)  * 0.009375F, 0D);
+		if(ticks >= 80F || ticks <= 0)
+			matrixStack.translate(0D, 0D, 0D);
 		RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
-		xp_solidifier_model.render(matrixStack, bufferIn.getBuffer(RenderType.getEntitySmoothCutout(TEXTURE)), combinedLight, OverlayTexture.NO_OVERLAY, 1F, 1F, 1F, 1.0F);
-
-		//this will be directional with rotations
-		xp_solidifier_model.renderExport(matrixStack, bufferIn.getBuffer(RenderType.getEntitySmoothCutout(TEXTURE)), combinedLight, OverlayTexture.NO_OVERLAY, 1F, 1F, 1F, 1.0F);
-
-		//this will move and be animated blah blah
 		xp_solidifier_model.renderRack(matrixStack, bufferIn.getBuffer(RenderType.getEntitySmoothCutout(TEXTURE)), combinedLight, OverlayTexture.NO_OVERLAY, 1F, 1F, 1F, 1.0F);
 		matrixStack.push();
 		matrixStack.translate(0D, 0.60625D, -0.22D);
@@ -88,15 +126,26 @@ public class TileEntityXPSolidifierRenderer extends TileEntityRenderer<TileEntit
 			Minecraft.getInstance().getItemRenderer().renderItem(stackMould, ItemCameraTransforms.TransformType.GROUND, false, matrixStack, bufferIn, combinedLight, combinedOverlay, Minecraft.getInstance().getItemRenderer().getItemModelWithOverrides(stackMould, null, null));
 		}
 		matrixStack.pop();
-
+		RenderSystem.disableBlend();
+	    RenderSystem.defaultBlendFunc();
+	    matrixStack.pop();
+	    
+		RenderSystem.enableBlend();
+		RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
+		xp_solidifier_model.render(matrixStack, bufferIn.getBuffer(RenderType.getEntitySmoothCutout(TEXTURE)), combinedLight, OverlayTexture.NO_OVERLAY, 1F, 1F, 1F, 1.0F);
+		
 		matrixStack.push();
 		matrixStack.translate(0D, 0.79375D, -0.22D);
 		matrixStack.rotate(Vector3f.XP.rotationDegrees(90.0F));
 		matrixStack.scale(1.25F, 1.25F, 1.25F);
 		ItemStack stackResult = tile.outputSlot.getStackInSlot(0);
-		if (!stackResult .isEmpty()) {
+		if (!stackResult.isEmpty()) {
 			Minecraft.getInstance().getTextureManager().bindTexture(PlayerContainer.LOCATION_BLOCKS_TEXTURE);
 			Minecraft.getInstance().getItemRenderer().renderItem(stackResult, ItemCameraTransforms.TransformType.GROUND, false, matrixStack, bufferIn, combinedLight, combinedOverlay, Minecraft.getInstance().getItemRenderer().getItemModelWithOverrides(stackResult, null, null));
+		}
+		else if (stackResult.isEmpty() && !tile.getCachedOutPutRenderStack().isEmpty() && tile.getProgress() >= 60) { //may want to add some earlier blending fade here
+			Minecraft.getInstance().getTextureManager().bindTexture(PlayerContainer.LOCATION_BLOCKS_TEXTURE);
+			Minecraft.getInstance().getItemRenderer().renderItem(tile.getCachedOutPutRenderStack(), ItemCameraTransforms.TransformType.GROUND, false, matrixStack, bufferIn, combinedLight, combinedOverlay, Minecraft.getInstance().getItemRenderer() .getItemModelWithOverrides(tile.getCachedOutPutRenderStack(), null, null));
 		}
 		matrixStack.pop();
 
@@ -129,6 +178,33 @@ public class TileEntityXPSolidifierRenderer extends TileEntityRenderer<TileEntit
 		float blue = (fluidColor & 0xFF) / 255.0F;
 		renderCuboid(buffer, matrixStack, xMax, xMin, yMin, height, zMin, zMax, fluidStillSprite, red, green, blue, alpha, combinedLight);
 		matrixStack.pop();
+
+		if(ticks > 20F && ticks < 60 && !stackMould.isEmpty()) {
+			matrixStack.push();
+			switch (facing) {
+			case NORTH:
+				matrixStack.translate(0D, 0D, 0D);
+				break;
+			case SOUTH:
+				matrixStack.translate(0D, 0D, 0.125D);
+				break;
+			case WEST:
+				matrixStack.translate(-0.0625D, 0D, 0.0625D);
+				break;
+			case EAST:
+				matrixStack.translate(0.0625D, 0D, 0.0625D);
+				break;
+			default:
+				break;
+			}
+			xMax = 1.62F;
+			zMax = 1.5F;
+			xMin = 0.38F;
+			zMin = 0.25F;
+			yMin = 0.6875F;
+			renderCuboid(buffer, matrixStack, xMax, xMin, yMin, 0.6875F + ticks * 0.000625F, zMin, zMax, fluidStillSprite, red, green, blue, alpha, combinedLight);
+			matrixStack.pop();
+		}
 
 	}
 
