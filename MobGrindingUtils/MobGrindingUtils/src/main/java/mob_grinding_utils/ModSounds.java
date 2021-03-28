@@ -5,8 +5,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import net.minecraft.block.SoundType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
+import net.minecraft.util.SoundEvents;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -20,11 +22,14 @@ public class ModSounds {
 	public static SoundEvent ENTITY_DRAGON_DEATH_LOCAL;
 	public static SoundEvent CHICKEN_RISE;
 	public static SoundEvent SPOOPY_CHANGE;
+	public static SoundEvent SOLID_XP_BLOCK_BOING;
+
+	public static final SoundType SOLID_XP_BLOCK = new SoundType(1.0F, 1.0F, SoundEvents.ENTITY_PLAYER_LEVELUP, SoundEvents.ENTITY_EXPERIENCE_ORB_PICKUP, SoundEvents.ENTITY_EXPERIENCE_ORB_PICKUP, SoundEvents.ENTITY_EXPERIENCE_ORB_PICKUP, SoundEvents.ENTITY_EXPERIENCE_ORB_PICKUP);
 
 	public static SoundEvent registerSoundResource(String name) {
 		return new SoundEvent(new ResourceLocation(Reference.MOD_ID, name));
 	}
-	
+
 	public static void init() {
 		TAP_SQUEAK = registerSoundResource("tap_squeak");
 		ENTITY_WITHER_SPAWN_LOCAL = registerSoundResource("entity_wither_spawn_local");
@@ -32,6 +37,7 @@ public class ModSounds {
 		ENTITY_DRAGON_DEATH_LOCAL = registerSoundResource("entity_dragon_death_local");
 		CHICKEN_RISE = registerSoundResource("chicken_rise");
 		SPOOPY_CHANGE = registerSoundResource("spoopy_change");
+		SOLID_XP_BLOCK_BOING = registerSoundResource("solid_xp_block_boing");
 	}
 
 	public static void initReg() {

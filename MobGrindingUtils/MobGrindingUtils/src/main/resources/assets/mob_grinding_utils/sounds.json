@@ -34,5 +34,11 @@
     "sounds": [
       "mob_grinding_utils:spoopy_change"
     ]
+  },
+    "solid_xp_block_boing": {
+    "category": "block",
+    "sounds": [
+      "mob_grinding_utils:solid_xp_block_boing"
+    ]
   }
 }

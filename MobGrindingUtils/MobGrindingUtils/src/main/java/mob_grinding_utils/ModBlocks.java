@@ -17,6 +17,7 @@ import mob_grinding_utils.blocks.BlockEnderInhibitorOn;
 import mob_grinding_utils.blocks.BlockEntityConveyor;
 import mob_grinding_utils.blocks.BlockFan;
 import mob_grinding_utils.blocks.BlockSaw;
+import mob_grinding_utils.blocks.BlockSolidXP;
 import mob_grinding_utils.blocks.BlockSpikes;
 import mob_grinding_utils.blocks.BlockTank;
 import mob_grinding_utils.blocks.BlockTankJumbo;
@@ -67,7 +68,6 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.IForgeRegistry;
 
 public class ModBlocks {
-	
 	public static List<Block> BLOCKS = new LinkedList<Block>();
 	public static List<BlockItem> ITEM_BLOCKS = new ArrayList<BlockItem>();
 	public static List<TileEntityType<?>> TILE_ENTITIES = new LinkedList<TileEntityType<?>>();
@@ -133,6 +133,9 @@ public class ModBlocks {
 	public static Block DREADFUL_DIRT;
 	public static BlockItem DREADFUL_DIRT_ITEM;
 	public static Material MATERIAL_DREADFUL_DIRT;
+	
+	public static Block SOLID_XP_BLOCK;
+	public static BlockItem SOLID_XP_BLOCK_ITEM;
 
 	public static void init() {
 		FAN = new BlockFan(Block.Properties.create(Material.IRON, MaterialColor.STONE).hardnessAndResistance(10.0F, 2000.0F).sound(SoundType.METAL));
@@ -303,6 +306,15 @@ public class ModBlocks {
 				   public void addInformation(ItemStack stack, @Nullable World world, List<ITextComponent> list, ITooltipFlag flag) {
 					list.add(new TranslationTextComponent("tooltip.dreadful_dirt_1").mergeStyle(TextFormatting.YELLOW));
 					list.add(new TranslationTextComponent("tooltip.dreadful_dirt_2").mergeStyle(TextFormatting.YELLOW));
+				}
+			};
+
+			SOLID_XP_BLOCK = new BlockSolidXP(Block.Properties.create(Material.CLAY, MaterialColor.GRASS).slipperiness(0.8F).sound(ModSounds.SOLID_XP_BLOCK).notSolid().hardnessAndResistance(1.5F, 10F));
+			SOLID_XP_BLOCK_ITEM = new BlockItem(SOLID_XP_BLOCK, new Item.Properties().group(MobGrindingUtils.TAB)) {
+				@Override
+				@OnlyIn(Dist.CLIENT)
+				   public void addInformation(ItemStack stack, @Nullable World world, List<ITextComponent> list, ITooltipFlag flag) {
+					list.add(new TranslationTextComponent("tooltip.solid_xp_block").mergeStyle(TextFormatting.YELLOW));
 				}
 			};
 	}
