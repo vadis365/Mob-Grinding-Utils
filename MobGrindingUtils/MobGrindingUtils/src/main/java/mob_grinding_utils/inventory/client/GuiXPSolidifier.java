@@ -53,6 +53,7 @@ public class GuiXPSolidifier extends ContainerScreen<ContainerXPSolidifier> {
     @Override
     protected void drawGuiContainerForegroundLayer(MatrixStack matrixStack, int x, int y) {
         this.font.drawString(matrixStack, I18n.format("block.mob_grinding_utils.xpsolidifier"), 7,6,0x404040);
+        this.font.drawString(matrixStack, I18n.format("container.inventory", new Object[0]), 8, this.ySize - 96 + 2, 4210752);
     }
 
     @Override
@@ -64,11 +65,9 @@ public class GuiXPSolidifier extends ContainerScreen<ContainerXPSolidifier> {
         int zLevel = 0;
         this.blit(stack, xOffSet, yOffSet, 0, 0, xSize, ySize);
 
-        blitArrow(stack, xOffSet, yOffSet, .5f);
-
         font.drawString(stack, tile.outputDirection.getString(), xOffSet + 124 - font.getStringWidth(tile.outputDirection.getString()) / 2, yOffSet + 76, 5285857);
 
-        int fluid = tile.getScaledFluid(70);
+        int fluid = tile.getScaledFluid(71);
         RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
         if (fluid >= 1) {
             TextureAtlasSprite sprite = Minecraft.getInstance().getAtlasSpriteGetter(PlayerContainer.LOCATION_BLOCKS_TEXTURE).apply(tile.tank.getFluid().getFluid().getAttributes().getStillTexture());
@@ -82,10 +81,10 @@ public class GuiXPSolidifier extends ContainerScreen<ContainerXPSolidifier> {
             buffer.pos(xOffSet + 8, yOffSet + 88 - fluid, zLevel).tex(sprite.getMinU(), sprite.getMaxV()).endVertex();
             tessellator.draw();
         }
-    }
+		getMinecraft().getTextureManager().bindTexture(GUI_TEX);
+		this.blit(stack, xOffSet + 7, yOffSet + 17 , 178, 0, 6, 71);
 
-    private void blitArrow(MatrixStack stack, int xOffSet, int yOffSet, float completion) {
-        this.blit(stack, xOffSet + 91, yOffSet + 36, 178, 73, (int)(24 * completion), 17);
+		this.blit(stack, xOffSet + 91, yOffSet + 36, 178, 73, tile.getProgressScaled(24), 17);
     }
 
     @Override

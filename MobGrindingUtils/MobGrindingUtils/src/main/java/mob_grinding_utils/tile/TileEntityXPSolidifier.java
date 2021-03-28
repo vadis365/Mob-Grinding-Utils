@@ -203,6 +203,11 @@ public class TileEntityXPSolidifier extends TileEntity implements ITickableTileE
 		}
 		return ItemStack.EMPTY;
 	}
+	
+	@OnlyIn(Dist.CLIENT)
+    public int getProgressScaled(int count) {
+        return getProgress() * count / (MAX_MOULDING_TIME);
+    }
 
 	private boolean hasfluid() {
 		return !tank.getFluid().isEmpty() && tank.getFluid().getAmount() >= FluidAttributes.BUCKET_VOLUME && tank.getFluidInTank(0).getFluid().isIn(MobGrindingUtils.EXPERIENCE);
