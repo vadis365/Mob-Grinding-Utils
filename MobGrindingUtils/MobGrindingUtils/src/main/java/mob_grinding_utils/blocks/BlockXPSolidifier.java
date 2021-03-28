@@ -60,33 +60,22 @@ public class BlockXPSolidifier extends ContainerBlock {
 	}
 
 	@Override
-	public void onReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving) {
-		if (!state.isIn(newState.getBlock())) {
+	public void onBlockHarvested(World world, BlockPos pos, BlockState state, PlayerEntity player) {
+		if (!world.isRemote && !player.abilities.isCreativeMode) {
 			TileEntityXPSolidifier tile = (TileEntityXPSolidifier) world.getTileEntity(pos);
 			if (tile != null) {
+				CompoundNBT nbt = new CompoundNBT();
+				tile.write(nbt);
+				ItemStack stack = new ItemStack(Item.getItemFromBlock(this), 1);
+				if (tile.tank.getFluidAmount() > 0)
+					stack.setTag(nbt);
+				InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), stack);
 				if(!tile.inputSlots.getStackInSlot(0).isEmpty())
 					InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), tile.inputSlots.getStackInSlot(0));
 				if(!tile.inputSlots.getStackInSlot(1).isEmpty())
 					InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), tile.inputSlots.getStackInSlot(1));
 				if(!tile.outputSlot.getStackInSlot(0).isEmpty())
 					InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), tile.outputSlot.getStackInSlot(0));
-				world.updateComparatorOutputLevel(pos, this);
-			}
-			super.onReplaced(state, world, pos, newState, isMoving);
-		}
-	}
-
-	@Override
-	public void onBlockHarvested(World world, BlockPos pos, BlockState state, PlayerEntity player) {
-		if (!world.isRemote && !player.abilities.isCreativeMode) {
-			TileEntity tileentity = world.getTileEntity(pos);
-			if (tileentity instanceof TileEntityXPSolidifier) {
-				CompoundNBT nbt = new CompoundNBT();
-				tileentity.write(nbt);
-				ItemStack stack = new ItemStack(Item.getItemFromBlock(this), 1);
-				if (((TileEntityXPSolidifier) tileentity).tank.getFluidAmount() > 0)
-					stack.setTag(nbt);
-				InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), stack);
 				world.removeTileEntity(pos);
 			}
 		}
