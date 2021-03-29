@@ -359,6 +359,18 @@ public class Recipes extends RecipeProvider {
                 .addCriterion("", hasItem(Items.AIR))
                 .build(consumer, new ResourceLocation(Reference.MOD_ID, "recipe_xp_block_uncraft"));
 
+        //Solidifier upgrade
+        ShapedRecipeBuilder.shapedRecipe(ModItems.XP_SOLIDIFIER_UPGRADE)
+                .patternLine("SRS")
+                .patternLine("BXB")
+                .patternLine("SRS")
+                .key('S', Items.SUGAR)
+                .key('R', Tags.Items.DUSTS_REDSTONE)
+                .key('B', Items.BLAZE_POWDER)
+                .key('X', ModItems.FLUID_XP_BUCKET)
+                .addCriterion("", hasItem(Items.AIR))
+                .build(consumer, new ResourceLocation(Reference.MOD_ID, "recipe_xpsolidifier_upgrade"));
+
     }
 
     @Override
