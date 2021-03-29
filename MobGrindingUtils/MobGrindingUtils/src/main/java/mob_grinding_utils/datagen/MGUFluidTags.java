@@ -20,5 +20,9 @@ public class MGUFluidTags extends FluidTagsProvider {
     protected void registerTags() {
         getOrCreateBuilder(MobGrindingUtils.EXPERIENCE).add(ModBlocks.FLUID_XP);
         getOrCreateBuilder(MobGrindingUtils.XPJUICE).add(ModBlocks.FLUID_XP);
+
+        getOrCreateBuilder(MobGrindingUtils.EXPERIENCE).addOptional(new ResourceLocation("industrialforegoing","essence"));
+        getOrCreateBuilder(MobGrindingUtils.EXPERIENCE).addOptional(new ResourceLocation("pneumaticcraft","memory_essence"));
+        getOrCreateBuilder(MobGrindingUtils.EXPERIENCE).addOptional(new ResourceLocation("cofh_core","experience"));
     }
 }
