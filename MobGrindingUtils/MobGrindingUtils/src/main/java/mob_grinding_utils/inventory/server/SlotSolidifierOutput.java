@@ -8,10 +8,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
 
-public class SlotOutput extends SlotItemHandler {
+public class SlotSolidifierOutput extends SlotItemHandler {
     private Container container;
 
-    public SlotOutput(IItemHandler itemHandler, int index, int xPosition, int yPosition, Container container) {
+    public SlotSolidifierOutput(IItemHandler itemHandler, int index, int xPosition, int yPosition, Container container) {
         super(itemHandler, index, xPosition, yPosition);
         this.container = container;
     }
@@ -25,5 +25,10 @@ public class SlotOutput extends SlotItemHandler {
     public ItemStack onTake(PlayerEntity player, ItemStack stack) {
     	// keeping for possible stuffs
         return super.onTake(player, stack);
+    }
+    
+    @Override
+    public int getSlotStackLimit() {
+        return 1;
     }
 }

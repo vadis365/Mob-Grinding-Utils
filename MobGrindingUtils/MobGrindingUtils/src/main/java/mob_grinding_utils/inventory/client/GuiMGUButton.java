@@ -26,7 +26,7 @@ public class GuiMGUButton extends Button {
         Minecraft mc = Minecraft.getInstance();
         FontRenderer fontrenderer = mc.fontRenderer;
         if (visible) {
-            mc.getTextureManager().bindTexture(size == Size.SOLIDIFIER ? SOLIDIFIER_TEXTURES : TEXTURES);
+            mc.getTextureManager().bindTexture(getTextures(size));
             RenderSystem.color4f(0.75F, 0.75F, 0.75F, 0.5F);
             boolean hover = mouseX >= x && mouseY >= y && mouseX < x + width && mouseY < y + height;
             if(hover)
@@ -43,12 +43,26 @@ public class GuiMGUButton extends Button {
             drawCenteredString(matrixStack, fontrenderer, getMessage(), this.x + this.width / 2, this.y + (this.height - 8) / 2, textColour);
         }
     }
+    
+	public ResourceLocation getTextures(Size size) {
+		switch (size) {
+		case SMALL:
+		case MEDIUM:
+		case LARGE:
+			return TEXTURES;
+		case SOLIDIFIER:
+		case SOLIDIFIER_ON:
+			return SOLIDIFIER_TEXTURES;
+		}
+		return TEXTURES;
+	}
 
     enum Size {
         SMALL(16 , 16, 103, 228),
         MEDIUM(32, 16, 0, 228),
         LARGE(68, 16, 33, 228),
-        SOLIDIFIER(34, 16, 178, 92);
+        SOLIDIFIER(34, 16, 178, 92),
+        SOLIDIFIER_ON(20, 16, 178, 110);
 
         int width, height, u, v;
         Size(int w, int h, int U, int V) {width = w; height = h; u = U; v = V;}

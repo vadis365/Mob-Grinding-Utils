@@ -8,7 +8,6 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
@@ -43,7 +42,7 @@ public class ContainerXPSolidifier extends Container {
         //Upgrade
         this.addSlot(new RestrictedHandlerSlot(tile.inputSlots, 1, 26, 72, ModItems.XP_SOLIDIFIER_UPGRADE, 9));
         //Output
-        this.addSlot(new SlotOutput(tile.outputSlot, 0, 130, 36, this));
+        this.addSlot(new SlotSolidifierOutput(tile.outputSlot, 0, 130, 36, this));
 
         //Player Inventory
         for (int row = 0; row < 3; row++) {
@@ -78,7 +77,7 @@ public class ContainerXPSolidifier extends Container {
 					if (!this.mergeItemStack(stack1, 0, 1, false))
 						return ItemStack.EMPTY;
 
-				if (stack1.getItem() == Items.NETHER_STAR)
+				if (stack1.getItem() == ModItems.XP_SOLIDIFIER_UPGRADE)
 					if (!this.mergeItemStack(stack1, 1, 2, false))
 						return ItemStack.EMPTY;
 

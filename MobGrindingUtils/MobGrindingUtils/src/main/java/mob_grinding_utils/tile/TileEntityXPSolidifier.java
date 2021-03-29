@@ -46,6 +46,7 @@ public class TileEntityXPSolidifier extends TileEntity implements ITickableTileE
     private int prevFluidLevel = 0;
     public int moulding_progress = 0;
     public int MAX_MOULDING_TIME = 100;
+    public boolean isOn = false;
 
     public ItemStackHandler inputSlots = new ItemStackHandler(2);
     public ItemStackHandler outputSlot = new ItemStackHandler(1);
@@ -102,66 +103,81 @@ public class TileEntityXPSolidifier extends TileEntity implements ITickableTileE
         return outputDirection;
     }
 
+	public void toggleOnOff() {
+		isOn = !isOn;
+	}
+
     @Override
     public void tick() {
-		if (getWorld().isRemote && active) {
-			prevAnimationTicks = animationTicks;
-			if (animationTicks < MAX_MOULDING_TIME)
-				animationTicks += 1 + getModifierAmount();
-			if (animationTicks >= MAX_MOULDING_TIME) {
-				animationTicks -= MAX_MOULDING_TIME;
-				prevAnimationTicks -= MAX_MOULDING_TIME;
-			}
-		}
-
-		if (getWorld().isRemote && !active)
-			prevAnimationTicks = animationTicks = 0;
-
-		if (hasfluid() && canOperate()) {
-			setActive(true);
-			setProgress(getProgress() + 1 + getModifierAmount());
-			if (getProgress() >= MAX_MOULDING_TIME) {
-				setActive(false);
-				outputSlot.setStackInSlot(0, new ItemStack(ModItems.SOLID_XP_BABY, 1)); //hardcoded result for now
-				tank.drain(FluidAttributes.BUCKET_VOLUME, FluidAction.EXECUTE);
-				return;
-			}
-		} else {
-			if (getProgress() > 0) {
-				setProgress(0);
-				setActive(false);
+    	if(isOn) {
+			if (getWorld().isRemote && active) {
+				prevAnimationTicks = animationTicks;
+				if (animationTicks < MAX_MOULDING_TIME)
+					animationTicks += 1 + getModifierAmount();
+				if (animationTicks >= MAX_MOULDING_TIME) {
+					animationTicks -= MAX_MOULDING_TIME;
+					prevAnimationTicks -= MAX_MOULDING_TIME;
 				}
-		}
-
-		if (outputDirection != OutputDirection.NONE && getOutputFacing() != null) {
-			TileEntity tile = getWorld().getTileEntity(pos.offset(getOutputFacing()));
-			if (tile != null && tile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, getOutputFacing().getOpposite()).isPresent()) {
-				LazyOptional<IItemHandler> tileOptional = tile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, getOutputFacing().getOpposite());
-				tileOptional.ifPresent((handler) -> {
+			}
+	
+			if (getWorld().isRemote && !active)
+				prevAnimationTicks = animationTicks = 0;
+	
+			if (hasfluid() && canOperate()) {
+				setActive(true);
+				setProgress(getProgress() + 1 + getModifierAmount());
+				if (getProgress() >= MAX_MOULDING_TIME) {
+					setActive(false);
+					outputSlot.setStackInSlot(0, new ItemStack(ModItems.SOLID_XP_BABY, 1)); //hardcoded result for now
+					tank.drain(FluidAttributes.BUCKET_VOLUME, FluidAction.EXECUTE);
+					return;
+				}
+			} else {
+				if (getProgress() > 0) {
+					setProgress(0);
+					setActive(false);
+					}
+			}
+	
+			if (outputDirection != OutputDirection.NONE && getOutputFacing() != null) {
+				TileEntity tile = getWorld().getTileEntity(pos.offset(getOutputFacing()));
+				if (tile != null && tile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, getOutputFacing().getOpposite()).isPresent()) {
+					LazyOptional<IItemHandler> tileOptional = tile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, getOutputFacing().getOpposite());
+					tileOptional.ifPresent((handler) -> {
+						if (!outputSlot.getStackInSlot(0).isEmpty()) {
+							ItemStack stack = outputSlot.getStackInSlot(0).copy();
+							stack.setCount(1);
+							ItemStack stack1 = ItemHandlerHelper.insertItem(handler, stack, true);
+							if (stack1.isEmpty()) {
+								ItemHandlerHelper.insertItem(handler, outputSlot.extractItem(0, 1, false), false);
+								this.markDirty();
+							}
+						}
+					});
+				} else if (tile != null && tile instanceof IInventory) {
+					IInventory iinventory = (IInventory) tile;
+					if (isInventoryFull(iinventory, getOutputFacing()))
+						return;
 					if (!outputSlot.getStackInSlot(0).isEmpty()) {
 						ItemStack stack = outputSlot.getStackInSlot(0).copy();
-						stack.setCount(1);
-						ItemStack stack1 = ItemHandlerHelper.insertItem(handler, stack, true);
-						if (stack1.isEmpty()) {
-							ItemHandlerHelper.insertItem(handler, outputSlot.extractItem(0, 1, false), false);
-							this.markDirty();
-						}
+						ItemStack stack1 = putStackInInventoryAllSlots(iinventory, outputSlot.extractItem(0, 1, false), getOutputFacing().getOpposite());
+						if (stack1.isEmpty() || stack1.getCount() == 0)
+							iinventory.markDirty();
+						else
+							outputSlot.setStackInSlot(0, stack);
 					}
-				});
-			} else if (tile != null && tile instanceof IInventory) {
-				IInventory iinventory = (IInventory) tile;
-				if (isInventoryFull(iinventory, getOutputFacing()))
-					return;
-				if (!outputSlot.getStackInSlot(0).isEmpty()) {
-					ItemStack stack = outputSlot.getStackInSlot(0).copy();
-					ItemStack stack1 = putStackInInventoryAllSlots(iinventory, outputSlot.extractItem(0, 1, false), getOutputFacing().getOpposite());
-					if (stack1.isEmpty() || stack1.getCount() == 0)
-						iinventory.markDirty();
-					else
-						outputSlot.setStackInSlot(0, stack);
 				}
 			}
-		}
+    	}
+    	else {
+			if (getWorld().isRemote)
+				prevAnimationTicks = animationTicks = 0;
+			
+			if (getProgress() > 0) {
+				setActive(false);
+				setProgress(0);
+				}
+    	}
 
         if (prevFluidLevel != tank.getFluidAmount()){
             updateBlock();
@@ -309,6 +325,7 @@ public class TileEntityXPSolidifier extends TileEntity implements ITickableTileE
         inputSlots.deserializeNBT(nbt.getCompound("inputSlots"));
         outputSlot.deserializeNBT(nbt.getCompound("outputSlot"));
         outputDirection = OutputDirection.fromString(nbt.getString("outputDirection"));
+        isOn = nbt.getBoolean("isOn");
         active = nbt.getBoolean("active");
         moulding_progress = nbt.getInt("moulding_progress");
     }
@@ -320,6 +337,7 @@ public class TileEntityXPSolidifier extends TileEntity implements ITickableTileE
         nbt.put("inputSlots", inputSlots.serializeNBT());
         nbt.put("outputSlot", outputSlot.serializeNBT());
         nbt.putString("outputDirection", outputDirection.getString());
+        nbt.putBoolean("isOn", isOn);
         nbt.putBoolean("active", active);
         nbt.putInt("moulding_progress", moulding_progress);
         return nbt;
@@ -379,4 +397,6 @@ public class TileEntityXPSolidifier extends TileEntity implements ITickableTileE
             return outputCap.cast();
         return super.getCapability(cap, side);
     }
+
+
 }

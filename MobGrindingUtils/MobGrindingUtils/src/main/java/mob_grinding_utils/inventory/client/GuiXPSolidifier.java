@@ -48,12 +48,17 @@ public class GuiXPSolidifier extends ContainerScreen<ContainerXPSolidifier> {
         addButton(new GuiMGUButton(xOffSet + 62, yOffSet + 72, GuiMGUButton.Size.SOLIDIFIER, 0, new StringTextComponent("Push") ,(button) -> {
             MobGrindingUtils.NETWORK_WRAPPER.sendToServer(new MessageSolidifier(0, tile.getPos()));
         }));
+        
+        addButton(new GuiMGUButton(xOffSet + 148, yOffSet + 8, GuiMGUButton.Size.SOLIDIFIER_ON, 0, new StringTextComponent("") ,(button) -> {
+            MobGrindingUtils.NETWORK_WRAPPER.sendToServer(new MessageSolidifier(1, tile.getPos()));
+        }));
     }
 
     @Override
     protected void drawGuiContainerForegroundLayer(MatrixStack matrixStack, int x, int y) {
-        this.font.drawString(matrixStack, I18n.format("block.mob_grinding_utils.xpsolidifier"), 7,6,0x404040);
+        this.font.drawString(matrixStack, I18n.format("block.mob_grinding_utils.xpsolidifier"), 7, 6, 0x404040);
         this.font.drawString(matrixStack, I18n.format("container.inventory", new Object[0]), 8, this.ySize - 96 + 2, 4210752);
+        this.font.drawStringWithShadow(matrixStack, tile.isOn ? "On" : "Off", 158 - font.getStringWidth(tile.isOn ? "On" : "Off") / 2, 12, 14737632);
     }
 
     @Override

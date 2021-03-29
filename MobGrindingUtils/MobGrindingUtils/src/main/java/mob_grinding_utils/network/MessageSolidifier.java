@@ -40,8 +40,10 @@ public class MessageSolidifier {
             ServerWorld world = player.getServerWorld();
             TileEntityXPSolidifier solidifier = (TileEntityXPSolidifier) world.getTileEntity(message.tilePos);
             if (solidifier != null) {
-                if (message.buttonID ==0)
+                if (message.buttonID == 0)
                     solidifier.toggleOutput();
+                if (message.buttonID == 1)
+                    solidifier.toggleOnOff();
                 BlockState state = world.getBlockState(message.tilePos);
                 world.notifyBlockUpdate(message.tilePos, state, state, 3);
             }
