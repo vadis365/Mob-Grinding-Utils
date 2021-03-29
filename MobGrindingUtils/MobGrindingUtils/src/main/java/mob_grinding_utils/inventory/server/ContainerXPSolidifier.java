@@ -41,7 +41,7 @@ public class ContainerXPSolidifier extends Container {
         //Mould
         this.addSlot(new RestrictedHandlerSlot(tile.inputSlots, 0, 62, 36, ModItems.SOLID_XP_MOULD_BABY, 1 ));
         //Upgrade
-        this.addSlot(new RestrictedHandlerSlot(tile.inputSlots, 1, 26, 72, Items.NETHER_STAR, 10));
+        this.addSlot(new RestrictedHandlerSlot(tile.inputSlots, 1, 26, 72, ModItems.XP_SOLIDIFIER_UPGRADE, 9));
         //Output
         this.addSlot(new SlotOutput(tile.outputSlot, 0, 130, 36, this));
 

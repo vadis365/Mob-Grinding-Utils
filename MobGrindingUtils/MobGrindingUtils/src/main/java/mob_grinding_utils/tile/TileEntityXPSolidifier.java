@@ -107,7 +107,7 @@ public class TileEntityXPSolidifier extends TileEntity implements ITickableTileE
 		if (getWorld().isRemote && active) {
 			prevAnimationTicks = animationTicks;
 			if (animationTicks < MAX_MOULDING_TIME)
-				animationTicks ++;
+				animationTicks += 1 + getModifierAmount();
 			if (animationTicks >= MAX_MOULDING_TIME) {
 				animationTicks -= MAX_MOULDING_TIME;
 				prevAnimationTicks -= MAX_MOULDING_TIME;
@@ -119,7 +119,7 @@ public class TileEntityXPSolidifier extends TileEntity implements ITickableTileE
 
 		if (hasfluid() && canOperate()) {
 			setActive(true);
-			setProgress(getProgress() + 1);
+			setProgress(getProgress() + 1 + getModifierAmount());
 			if (getProgress() >= MAX_MOULDING_TIME) {
 				setActive(false);
 				outputSlot.setStackInSlot(0, new ItemStack(ModItems.SOLID_XP_BABY, 1)); //hardcoded result for now
@@ -127,8 +127,10 @@ public class TileEntityXPSolidifier extends TileEntity implements ITickableTileE
 				return;
 			}
 		} else {
-			if (getProgress() > 0)
+			if (getProgress() > 0) {
 				setProgress(0);
+				setActive(false);
+				}
 		}
 
 		if (outputDirection != OutputDirection.NONE && getOutputFacing() != null) {
@@ -136,32 +138,27 @@ public class TileEntityXPSolidifier extends TileEntity implements ITickableTileE
 			if (tile != null && tile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, getOutputFacing().getOpposite()).isPresent()) {
 				LazyOptional<IItemHandler> tileOptional = tile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, getOutputFacing().getOpposite());
 				tileOptional.ifPresent((handler) -> {
-					if (getWorld().getGameTime() % 5 == 0) {
-						if (!outputSlot.getStackInSlot(0).isEmpty()) {
-							ItemStack stack = outputSlot.getStackInSlot(0).copy();
-							stack.setCount(1);
-							ItemStack stack1 = ItemHandlerHelper.insertItem(handler, stack, true);
-							if (stack1.isEmpty()) {
-								ItemHandlerHelper.insertItem(handler, outputSlot.extractItem(0, 1, false), false);
-								this.markDirty();
-							}
+					if (!outputSlot.getStackInSlot(0).isEmpty()) {
+						ItemStack stack = outputSlot.getStackInSlot(0).copy();
+						stack.setCount(1);
+						ItemStack stack1 = ItemHandlerHelper.insertItem(handler, stack, true);
+						if (stack1.isEmpty()) {
+							ItemHandlerHelper.insertItem(handler, outputSlot.extractItem(0, 1, false), false);
+							this.markDirty();
 						}
 					}
 				});
-			}
-			else if (tile != null && tile instanceof IInventory) {
+			} else if (tile != null && tile instanceof IInventory) {
 				IInventory iinventory = (IInventory) tile;
 				if (isInventoryFull(iinventory, getOutputFacing()))
 					return;
-				else if (getWorld().getGameTime() % 5 == 0) {
-					if (!outputSlot.getStackInSlot(0).isEmpty()) {
-						ItemStack stack = outputSlot.getStackInSlot(0).copy();
-						ItemStack stack1 = putStackInInventoryAllSlots(iinventory, outputSlot.extractItem(0, 1, false), getOutputFacing().getOpposite());
-						if (stack1.isEmpty() || stack1.getCount() == 0)
-							iinventory.markDirty();
-						else
-							outputSlot.setStackInSlot(0, stack);
-					}
+				if (!outputSlot.getStackInSlot(0).isEmpty()) {
+					ItemStack stack = outputSlot.getStackInSlot(0).copy();
+					ItemStack stack1 = putStackInInventoryAllSlots(iinventory, outputSlot.extractItem(0, 1, false), getOutputFacing().getOpposite());
+					if (stack1.isEmpty() || stack1.getCount() == 0)
+						iinventory.markDirty();
+					else
+						outputSlot.setStackInSlot(0, stack);
 				}
 			}
 		}
@@ -223,6 +220,14 @@ public class TileEntityXPSolidifier extends TileEntity implements ITickableTileE
 
 	private boolean isOutputEmpty() {
 		return outputSlot.getStackInSlot(0).isEmpty();
+	}
+
+	private boolean hasUpgrade() {
+		return !inputSlots.getStackInSlot(1).isEmpty() && inputSlots.getStackInSlot(1).getItem() == ModItems.XP_SOLIDIFIER_UPGRADE;
+	}
+
+	public int getModifierAmount() {
+		return hasUpgrade() ? inputSlots.getStackInSlot(1).getCount() : 0;
 	}
 
 	private void setProgress(int counter) {
