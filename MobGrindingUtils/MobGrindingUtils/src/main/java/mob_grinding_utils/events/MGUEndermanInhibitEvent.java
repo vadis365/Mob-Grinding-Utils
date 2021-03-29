@@ -32,10 +32,12 @@ public class MGUEndermanInhibitEvent {
 		int q = MathHelper.floor(axisalignedbb.maxY);
 		int n1 = MathHelper.floor(axisalignedbb.minZ);
 		int o1 = MathHelper.floor(axisalignedbb.maxZ);
+		BlockPos.Mutable mutablePos = new BlockPos.Mutable();
+
 		for (int p1 = n; p1 < o; p1++)
 			for (int q1 = p; q1 < q; q1++)
 				for (int n2 = n1; n2 < o1; n2++) {
-					BlockState state = entity.getEntityWorld().getBlockState(new BlockPos(p1, q1, n2));
+					BlockState state = entity.getEntityWorld().getBlockState(mutablePos.setPos(p1, q1, n2));
 					if (state.getBlock() instanceof BlockEnderInhibitorOn && !(state.getBlock() instanceof BlockEnderInhibitorOff))
 						return true;
 				}

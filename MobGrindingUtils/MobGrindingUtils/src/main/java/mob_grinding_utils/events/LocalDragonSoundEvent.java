@@ -15,13 +15,16 @@ public class LocalDragonSoundEvent {
 		if (event.getEntity() instanceof EnderDragonEntity) {
 			EnderDragonEntity dragon = (EnderDragonEntity) event.getEntity();
 			World world = dragon.getEntityWorld();
+			BlockPos.Mutable mutablePos = new BlockPos.Mutable();
 			boolean playsound = true;
 			if (!world.isRemote) {
 				for (int x = -32; x < 32; x++)
 					for (int y = -32; y < 32; y++)
 						for (int z = -32; z < 32; z++)
-							if ((world.getBlockState(new BlockPos(dragon.getPosX() + x, dragon.getPosY() + y, dragon.getPosZ() + z)).getBlock() instanceof BlockDragonMuffler))
+							if ((world.getBlockState(mutablePos.setPos(dragon.getPosX() + x, dragon.getPosY() + y, dragon.getPosZ() + z)).getBlock() instanceof BlockDragonMuffler)) {
 								playsound = false;
+								break;
+							}
 				if (playsound) {
 					world.playSound(null, dragon.getPosX(), dragon.getPosY(), dragon.getPosZ(), ModSounds.ENTITY_DRAGON_DEATH_LOCAL, SoundCategory.HOSTILE, 5.0F, 1.0F);
 				}

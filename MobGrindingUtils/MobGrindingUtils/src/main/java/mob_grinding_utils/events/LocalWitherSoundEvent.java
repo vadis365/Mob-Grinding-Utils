@@ -15,13 +15,16 @@ public class LocalWitherSoundEvent {
 		if (event.getEntity() instanceof WitherEntity) {
 			WitherEntity wither = (WitherEntity) event.getEntity();
 			World world = wither.getEntityWorld();
+			BlockPos.Mutable mutablePos = new BlockPos.Mutable();
 			boolean playsound = true;
 			if (!world.isRemote) {
 				for (int x = -8; x < 8; x++)
 					for (int y = -8; y < 8; y++)
 						for (int z = -8; z < 8; z++)
-							if ((world.getBlockState(new BlockPos(wither.getPosX() + x, wither.getPosY() + y, wither.getPosZ() + z)).getBlock() instanceof BlockWitherMuffler))
+							if ((world.getBlockState(mutablePos.setPos(wither.getPosX() + x, wither.getPosY() + y, wither.getPosZ() + z)).getBlock() instanceof BlockWitherMuffler)) {
 								playsound = false;
+								break;
+							}
 				if (playsound) {
 					world.playSound(null, wither.getPosX(), wither.getPosY(), wither.getPosZ(), ModSounds.ENTITY_WITHER_SPAWN_LOCAL, SoundCategory.HOSTILE, 1.0F, 1.0F);
 					world.playSound(null, wither.getPosX(), wither.getPosY(), wither.getPosZ(), ModSounds.ENTITY_WITHER_DEATH_LOCAL, SoundCategory.HOSTILE, 1.0F, 1.0F);
