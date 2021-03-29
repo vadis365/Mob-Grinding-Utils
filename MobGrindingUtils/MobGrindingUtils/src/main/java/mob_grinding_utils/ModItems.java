@@ -14,6 +14,7 @@ import mob_grinding_utils.items.ItemRottenEgg;
 import mob_grinding_utils.items.ItemSawUpgrade;
 import mob_grinding_utils.items.ItemSolidXP;
 import mob_grinding_utils.items.ItemSolidXPMould;
+import mob_grinding_utils.items.ItemSolidifierUpgrade;
 import net.minecraft.item.BucketItem;
 import net.minecraft.item.Food;
 import net.minecraft.item.Item;
@@ -36,9 +37,10 @@ public class ModItems {
 	public static Item FLUID_XP_BUCKET;
 	public static SwordItem NULL_SWORD;
 	public static Item ROTTEN_EGG;
-	public static Item SOLID_XP_MOULD_BABY; // more to be added here
-	public static Item SOLID_XP_MOULD_BLANK, SOLID_XP_BABY;
-
+	public static Item SOLID_XP_MOULD_BLANK, SOLID_XP_MOULD_BABY; // more to be added here
+	public static Item SOLID_XP_BABY;
+	public static Item XP_SOLIDIFIER_UPGRADE;
+	
 	public static void init() {
 		FAN_UPGRADE_WIDTH = new ItemFanUpgrade(new Item.Properties().group(MobGrindingUtils.TAB).maxStackSize(64), "width");
 		FAN_UPGRADE_HEIGHT = new ItemFanUpgrade(new Item.Properties().group(MobGrindingUtils.TAB).maxStackSize(64), "height");
@@ -61,6 +63,7 @@ public class ModItems {
 		SOLID_XP_MOULD_BLANK = new ItemSolidXPMould(new Item.Properties().group(MobGrindingUtils.TAB).maxStackSize(64));
 		SOLID_XP_MOULD_BABY = new ItemSolidXPMould(new Item.Properties().group(MobGrindingUtils.TAB).maxStackSize(64));
 		SOLID_XP_BABY = new ItemSolidXP(new Item.Properties().group(MobGrindingUtils.TAB).maxStackSize(64).food((new Food.Builder()).hunger(0).saturation(0F).setAlwaysEdible().build()), 50);
+		XP_SOLIDIFIER_UPGRADE = new ItemSolidifierUpgrade(new Item.Properties().group(MobGrindingUtils.TAB).maxStackSize(64));
 	}
 
 	public static void initReg() {

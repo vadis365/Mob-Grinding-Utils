@@ -50,7 +50,8 @@
   "item.mob_grinding_utils.solid_xp_mould_blank": "XP Mould Blank",
   "item.mob_grinding_utils.solid_xp_mould_baby": "XP Mould Jelly Baby",
   "item.mob_grinding_utils.solid_xp_baby": "XP Jelly Baby",
-
+  "item.mob_grinding_utils.xp_solidifier_upgrade": "XP Solidifier Speed Upgrade",
+  
   "_comment": "Creative Tab",
   "itemGroup.mob_grinding_utils": "Mob Grinding Utils",
 
@@ -135,5 +136,7 @@
   "tooltip.rotten_egg_2": "Used on Grass, Dirt, Mycelum, or Farmland.",
 
    "tooltip.solid_xp": "Consumable. XP value: ",
-   "tooltip.solid_xp_mould": "Used in the XP Solidifier"
+   "tooltip.solid_xp_mould": "Used in the XP Solidifier",
+   
+   "tooltip.solidifier_upgrade": "Speed Modifier: +1. Max of 10."
 }
