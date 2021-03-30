@@ -15,13 +15,19 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class ItemSolidXPMould extends Item {
-	public ItemSolidXPMould(Properties properties) {
+	public String mouldType = "blank";
+	
+	public ItemSolidXPMould(Properties properties, String type) {
 		super(properties);
+		this.mouldType = type;
 	}
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void addInformation(ItemStack stack, @Nullable World world, List<ITextComponent> list, ITooltipFlag flag) {
-		list.add(new TranslationTextComponent("tooltip.solid_xp_mould").mergeStyle(TextFormatting.YELLOW));
+		if(mouldType == "blank")
+			list.add(new TranslationTextComponent("tooltip.solid_xp_mould_blank").mergeStyle(TextFormatting.YELLOW));
+		else
+			list.add(new TranslationTextComponent("tooltip.solid_xp_mould").mergeStyle(TextFormatting.YELLOW));
 	}
 }

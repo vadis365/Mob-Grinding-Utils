@@ -295,7 +295,16 @@ public class ModBlocks {
 			JUMBO_TANK_TILE = TileEntityType.Builder.create(TileEntityJumboTank::new, JUMBO_TANK).build(null);
 
 			XPSOLIDIFIER = new BlockXPSolidifier(Block.Properties.create(Material.IRON, MaterialColor.GRAY).hardnessAndResistance(1.0F, 2000.0F).sound(SoundType.METAL).notSolid());
-			XPSOLIDIFIER_ITEM = new BlockItem(XPSOLIDIFIER, new Item.Properties().group(MobGrindingUtils.TAB).setISTER(() ->  TileXPSolidifierStackItemRenderer::new));
+			XPSOLIDIFIER_ITEM = new BlockItem(XPSOLIDIFIER, new Item.Properties().group(MobGrindingUtils.TAB).setISTER(() ->  TileXPSolidifierStackItemRenderer::new)){
+				@Override
+				@OnlyIn(Dist.CLIENT)
+				   public void addInformation(ItemStack stack, @Nullable World world, List<ITextComponent> list, ITooltipFlag flag) {
+					list.add(new TranslationTextComponent("tooltip.xp_solidifier_1").mergeStyle(TextFormatting.YELLOW));
+					list.add(new TranslationTextComponent("tooltip.xp_solidifier_2").mergeStyle(TextFormatting.YELLOW));
+					list.add(new TranslationTextComponent("tooltip.xp_solidifier_3").mergeStyle(TextFormatting.YELLOW));
+					list.add(new TranslationTextComponent("tooltip.xp_solidifier_4").mergeStyle(TextFormatting.YELLOW));
+				}
+			};
 			XPSOLIDIFIER_TILE = TileEntityType.Builder.create(TileEntityXPSolidifier::new, XPSOLIDIFIER).build(null);
 			
 			MATERIAL_DREADFUL_DIRT = new Material(MaterialColor.DIRT, false, true, false, true, true, false, null);

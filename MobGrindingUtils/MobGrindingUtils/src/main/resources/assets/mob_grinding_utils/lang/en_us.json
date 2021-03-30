@@ -81,8 +81,8 @@
   "tooltip.spikes_1": "Basic spikes - will also drop Mob's XP.",
   "tooltip.spikes_2": "Mobs killed by spikes DO NOT count as Player Kills.",
 
-  "tooltip.xptap_1": "Attach to the side of a Singularity Tank.",
-  "tooltip.xptap_2": "Will turn XP Fluid back to Orbs.",
+  "tooltip.xptap_1": "Attach to the side of a Tank.",
+  "tooltip.xptap_2": "Will turn Fluid XP back to Orbs.",
 
   "tooltip.withermuffler_1": "Stops Wither Boss Death sounds",
   "tooltip.withermuffler_2": "within an 8 Block radius.",
@@ -107,6 +107,11 @@
   "tooltip.dreadful_dirt_1": "Spawns More Hostile Mobs.",
   "tooltip.dreadful_dirt_2": "Will Ignite in Daylight if Exposed to the Sky.",
   "tooltip.dreadful_dirt_3": "Light level of 10 and above Stops Hostile Mob Spawns.",
+  
+  "tooltip.xp_solidifier_1": "Solidifies Fluid XP.",
+  "tooltip.xp_solidifier_2": "Requires an XP Mould and Fluid XP in its Tank.",
+  "tooltip.xp_solidifier_3": "Can be configured to export Horizontally.",
+  "tooltip.xp_solidifier_4": "Speed is increased with XP Solidifier Speed Upgrades.",
   
   "tooltip.solid_xp_block": "Bouncy.",
 
@@ -138,6 +143,7 @@
 
    "tooltip.solid_xp": "Consumable. XP value: ",
    "tooltip.solid_xp_mould": "Used in the XP Solidifier",
+   "tooltip.solid_xp_mould_blank": "Crafts in to XP Moulds",
    
    "tooltip.solidifier_upgrade": "Speed Modifier: +1. Max of 9."
 }

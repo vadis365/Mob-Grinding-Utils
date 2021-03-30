@@ -60,8 +60,8 @@ public class ModItems {
 		FLUID_XP_BUCKET = new BucketItem(() -> ModBlocks.FLUID_XP, new Item.Properties().containerItem(Items.BUCKET).group(MobGrindingUtils.TAB).maxStackSize(1));
 		ROTTEN_EGG = new ItemRottenEgg(new Item.Properties().group(MobGrindingUtils.TAB).maxStackSize(1));
 		
-		SOLID_XP_MOULD_BLANK = new ItemSolidXPMould(new Item.Properties().group(MobGrindingUtils.TAB).maxStackSize(64));
-		SOLID_XP_MOULD_BABY = new ItemSolidXPMould(new Item.Properties().group(MobGrindingUtils.TAB).maxStackSize(64));
+		SOLID_XP_MOULD_BLANK = new ItemSolidXPMould(new Item.Properties().group(MobGrindingUtils.TAB).maxStackSize(64), "blank");
+		SOLID_XP_MOULD_BABY = new ItemSolidXPMould(new Item.Properties().group(MobGrindingUtils.TAB).maxStackSize(64), "baby");
 		SOLID_XP_BABY = new ItemSolidXP(new Item.Properties().group(MobGrindingUtils.TAB).maxStackSize(64).food((new Food.Builder()).hunger(0).saturation(0F).setAlwaysEdible().build()), 50);
 		XP_SOLIDIFIER_UPGRADE = new ItemSolidifierUpgrade(new Item.Properties().group(MobGrindingUtils.TAB).maxStackSize(64));
 	}
