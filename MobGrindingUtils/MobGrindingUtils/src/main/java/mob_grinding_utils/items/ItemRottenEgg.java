@@ -32,8 +32,8 @@ public class ItemRottenEgg extends Item {
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void addInformation(ItemStack stack, @Nullable World world, List<ITextComponent> list, ITooltipFlag flag) {
-		list.add(new TranslationTextComponent("tooltip.rotten_egg_1").mergeStyle(TextFormatting.RED));
-		list.add(new TranslationTextComponent("tooltip.rotten_egg_2").mergeStyle(TextFormatting.RED));
+		list.add(new TranslationTextComponent("tooltip.rotten_egg_1").mergeStyle(TextFormatting.YELLOW));
+		list.add(new TranslationTextComponent("tooltip.rotten_egg_2").mergeStyle(TextFormatting.YELLOW));
 	}
 
 	@Override

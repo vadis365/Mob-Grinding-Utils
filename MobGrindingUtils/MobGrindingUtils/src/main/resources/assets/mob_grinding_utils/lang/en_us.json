@@ -105,7 +105,8 @@
   "tooltip.tinted_glass_2": "Tough enough to withstand Withers.",
   
   "tooltip.dreadful_dirt_1": "Spawns More Hostile Mobs.",
-  "tooltip.dreadful_dirt_2": "Will Ignite in Lit Areas.",
+  "tooltip.dreadful_dirt_2": "Will Ignite in Daylight if Exposed to the Sky.",
+  "tooltip.dreadful_dirt_3": "Light level of 10 and above Stops Hostile Mob Spawns.",
   
   "tooltip.solid_xp_block": "Bouncy.",
 

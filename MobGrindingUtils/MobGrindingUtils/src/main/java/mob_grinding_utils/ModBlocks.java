@@ -306,6 +306,7 @@ public class ModBlocks {
 				   public void addInformation(ItemStack stack, @Nullable World world, List<ITextComponent> list, ITooltipFlag flag) {
 					list.add(new TranslationTextComponent("tooltip.dreadful_dirt_1").mergeStyle(TextFormatting.YELLOW));
 					list.add(new TranslationTextComponent("tooltip.dreadful_dirt_2").mergeStyle(TextFormatting.YELLOW));
+					list.add(new TranslationTextComponent("tooltip.dreadful_dirt_3").mergeStyle(TextFormatting.YELLOW));
 				}
 			};
 
