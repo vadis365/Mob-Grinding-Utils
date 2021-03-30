@@ -35,36 +35,48 @@ public class BlockDreadfulDirt extends Block {
 		super(properties);
 	}
 
+	public boolean shouldCatchFire(World world, BlockPos pos) {
+		if (world.canBlockSeeSky(pos) && (world.getDayTime() < 13000  || world.getDayTime() > 23000)) // standard night to day ticks
+			return true;
+		return false;		
+	}
+
+	public boolean shouldSpawnMob(World world, BlockPos pos) {
+		if (world.getLight(pos.up()) >= 10)
+			return false;
+		return true;		
+	}
+
 	@Override
 	public void onBlockAdded(BlockState state, World world, BlockPos pos, BlockState oldState, boolean isMoving) {
-		if (world.getLight(pos.up()) >= 10)
+		if (shouldCatchFire(world, pos) || shouldSpawnMob(world, pos))
 			world.getPendingBlockTicks().scheduleTick(pos, this, MathHelper.nextInt(RANDOM, 20,60));
 	}
 
 	@SuppressWarnings("deprecation")
 	@Override
 	public BlockState updatePostPlacement(BlockState stateIn, Direction facing, BlockState facingState, IWorld world, BlockPos pos, BlockPos facingPos) {
-		if (world.getLight(pos.up()) >= 10)
+		if (shouldCatchFire((World) world, pos) || shouldSpawnMob((World) world, pos))
 			world.getPendingBlockTicks().scheduleTick(pos, this, MathHelper.nextInt(RANDOM, 20, 60));
 		return super.updatePostPlacement(stateIn, facing, facingState, world, pos, facingPos);
 	}
 
 	@Override
 	public void neighborChanged(BlockState state, World world, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving) {
-		if (world.getLight(pos.up()) >= 10)
+		if (shouldCatchFire((World) world, pos) || shouldSpawnMob((World) world, pos))
 			world.getPendingBlockTicks().scheduleTick(pos, this, MathHelper.nextInt(RANDOM, 20, 60));
 	}
 
 	@Deprecated
 	@Override
 	public void tick(BlockState state, ServerWorld world, BlockPos pos, Random rand) {
-		if (world.getLight(pos.up()) >= 10) {
+		if (shouldCatchFire(world, pos)) {
 			BlockPos posUp = pos.up();
 			BlockState blockstate = AbstractFireBlock.getFireForPlacement(world, posUp);
 			if (world.getBlockState(posUp).getMaterial() == Material.AIR && blockstate.isValidPosition(world, posUp))
 				world.setBlockState(posUp, blockstate, 11);
 		}
-		else {
+		if (!shouldCatchFire(world, pos) && shouldSpawnMob(world, pos)) {
 			AxisAlignedBB areaToCheck = new AxisAlignedBB(pos).grow(5, 2, 5);
 			int entityCount = world.getEntitiesWithinAABB(MobEntity.class, areaToCheck, entity -> entity != null && entity instanceof IMob).size();
 
