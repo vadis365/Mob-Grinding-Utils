@@ -32,6 +32,8 @@ public class ItemSolidXP extends Item {
 	@OnlyIn(Dist.CLIENT)
 	public void addInformation(ItemStack stack, @Nullable World world, List<ITextComponent> list, ITooltipFlag flag) {
 		list.add(new TranslationTextComponent("tooltip.solid_xp").appendString(Integer.toString(xpValue)).mergeStyle(TextFormatting.YELLOW));
+		if (stack.getCount() > 1)
+			list.add(new TranslationTextComponent("tooltip.solid_xp2").appendString(Integer.toString(xpValue * stack.getCount())).mergeStyle(TextFormatting.YELLOW));
 	}
 
 	@Override
@@ -40,7 +42,11 @@ public class ItemSolidXP extends Item {
 			PlayerEntity player = (PlayerEntity) entity;
 			if (xpValue > 0)
 				if (!world.isRemote) {
-					TileEntitySinkTank.addPlayerXP(player, xpValue);
+					if (stack.getCount() > 1 && entity.isSneaking()) {
+						TileEntitySinkTank.addPlayerXP(player, xpValue * stack.getCount());
+						stack.shrink(stack.getCount()-1);
+					} else
+						TileEntitySinkTank.addPlayerXP(player, xpValue);
 					world.playSound(null, player.getPosition(), SoundEvents.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.PLAYERS, 0.5F, 0.8F + world.rand.nextFloat() * 0.4F);
 				}
 		}

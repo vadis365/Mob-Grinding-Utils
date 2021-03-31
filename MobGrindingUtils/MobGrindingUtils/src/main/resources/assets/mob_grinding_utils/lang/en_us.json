@@ -145,6 +145,7 @@
   "tooltip.rotten_egg_2": "Used on Grass, Dirt, Mycelum, or Farmland.",
 
    "tooltip.solid_xp": "Consumable. XP value: ",
+   "tooltip.solid_xp2": "Total Stack XP value: ",
    "tooltip.solid_xp_mould": "Used in the XP Solidifier",
    "tooltip.solid_xp_mould_blank": "Crafts in to XP Moulds",
    
