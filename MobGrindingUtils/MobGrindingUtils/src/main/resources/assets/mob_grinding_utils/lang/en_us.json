@@ -25,9 +25,12 @@
   "_comment": "Fluids",
   "mob_grinding_utils.fluid_xp": "Fluid XP",
 
-  "_comment": "Jei Info Tabs, here are the examples vadis",
-  "item.mob_grinding_utils.mob_swab.jei.info": "Mob Swab can be used//nTo swab mobs...",
-  "block.mob_grinding_utils.xp_tap.jei.info": "The XP Tap//nPours out xp from a tank...",
+  "_comment": "Jei Info Tabs",
+  "block.mob_grinding_utils.jumbo_tank.jei.info": "A larger version of the Singularity Tank, Holds 1024 buckets worth of any liquid.",
+  "block.mob_grinding_utils.xpsolidifier.jei.info": "Solidifies Fluid XP using moulds to create edible xp jellies.",
+  "block.mob_grinding_utils.tinted_glass.jei.info": "Allows you to see the inside of the mob farm without letting light inside.",
+  "block.mob_grinding_utils.dreadful_dirt.jei.info": "Rapidly spawns monsters in the dark, will burn if exposed to the sky during the day.",
+  "block.mob_grinding_utils.solid_xp_block.jei.info": "A block of solidified experience, very bouncy, much fun.",
 
   "_comment": "Items",
   "item.mob_grinding_utils.mob_swab": "Mob Swab",
