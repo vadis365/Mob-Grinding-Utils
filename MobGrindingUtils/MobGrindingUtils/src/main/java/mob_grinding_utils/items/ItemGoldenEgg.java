@@ -23,17 +23,17 @@ import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-public class ItemRottenEgg extends Item {
+public class ItemGoldenEgg extends Item {
 
-	public ItemRottenEgg(Properties properties) {
+	public ItemGoldenEgg(Properties properties) {
 		super(properties);
 	}
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void addInformation(ItemStack stack, @Nullable World world, List<ITextComponent> list, ITooltipFlag flag) {
-		list.add(new TranslationTextComponent("tooltip.rotten_egg_1").mergeStyle(TextFormatting.YELLOW));
-		list.add(new TranslationTextComponent("tooltip.rotten_egg_2").mergeStyle(TextFormatting.YELLOW));
+		list.add(new TranslationTextComponent("tooltip.golden_egg_1").mergeStyle(TextFormatting.YELLOW));
+		list.add(new TranslationTextComponent("tooltip.golden_egg_2").mergeStyle(TextFormatting.YELLOW));
 	}
 
 	@Override
@@ -49,7 +49,7 @@ public class ItemRottenEgg extends Item {
 					BlockState state = world.getBlockState(pos.add(x, 0, z));
 					if (state.getBlock() == Blocks.GRASS_BLOCK || state.getBlock() == Blocks.DIRT || state.getBlock() == Blocks.MYCELIUM || state.getBlock() == Blocks.FARMLAND) {
 						world.playEvent(null, 2001, pos.add(x, 0, z), Block.getStateId(world.getBlockState(pos.add(x, 0, z))));
-						world.setBlockState(pos.add(x, 0, z), ModBlocks.DREADFUL_DIRT.getDefaultState(), 3);
+						world.setBlockState(pos.add(x, 0, z), ModBlocks.DELIGHTFUL_DIRT.getDefaultState(), 3);
 						if (!player.abilities.isCreativeMode)
 							stackHeld.shrink(1);
 					}

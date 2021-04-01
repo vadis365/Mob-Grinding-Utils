@@ -8,6 +8,7 @@ import java.util.Locale;
 import mob_grinding_utils.items.ItemAbsorptionUpgrade;
 import mob_grinding_utils.items.ItemFanUpgrade;
 import mob_grinding_utils.items.ItemGMChickenFeed;
+import mob_grinding_utils.items.ItemGoldenEgg;
 import mob_grinding_utils.items.ItemImaginaryInvisibleNotReallyThereSword;
 import mob_grinding_utils.items.ItemMobSwab;
 import mob_grinding_utils.items.ItemRottenEgg;
@@ -33,10 +34,10 @@ public class ModItems {
 	public static Item ABSORPTION_UPGRADE;
 	public static Item SAW_UPGRADE_ARTHROPOD, SAW_UPGRADE_BEHEADING, SAW_UPGRADE_FIRE, SAW_UPGRADE_LOOTING, SAW_UPGRADE_SHARPNESS, SAW_UPGRADE_SMITE;
 	public static Item MOB_SWAB, MOB_SWAB_USED;
-	public static Item GM_CHICKEN_FEED, GM_CHICKEN_FEED_CURSED;
+	public static Item GM_CHICKEN_FEED, GM_CHICKEN_FEED_CURSED, NUTRITIOUS_CHICKEN_FEED;
 	public static Item FLUID_XP_BUCKET;
 	public static SwordItem NULL_SWORD;
-	public static Item ROTTEN_EGG;
+	public static Item ROTTEN_EGG, GOLDEN_EGG;
 	public static Item SOLID_XP_MOULD_BLANK, SOLID_XP_MOULD_BABY; // more to be added here
 	public static Item SOLID_XP_BABY;
 	public static Item XP_SOLIDIFIER_UPGRADE;
@@ -54,12 +55,14 @@ public class ModItems {
 		SAW_UPGRADE_SMITE = new ItemSawUpgrade(new Item.Properties().group(MobGrindingUtils.TAB).maxStackSize(64), "smite");
 		MOB_SWAB = new ItemMobSwab(new Item.Properties().group(MobGrindingUtils.TAB).maxStackSize(1), false);
 		MOB_SWAB_USED = new ItemMobSwab(new Item.Properties().group(MobGrindingUtils.TAB).maxStackSize(1), true);
-		GM_CHICKEN_FEED = new ItemGMChickenFeed(new Item.Properties().group(MobGrindingUtils.TAB).maxStackSize(1), false);
-		GM_CHICKEN_FEED_CURSED = new ItemGMChickenFeed(new Item.Properties().group(MobGrindingUtils.TAB).maxStackSize(1), true);
+		GM_CHICKEN_FEED = new ItemGMChickenFeed(new Item.Properties().group(MobGrindingUtils.TAB).maxStackSize(1), "mob");
+		GM_CHICKEN_FEED_CURSED = new ItemGMChickenFeed(new Item.Properties().group(MobGrindingUtils.TAB).maxStackSize(1), "cursed");
+		NUTRITIOUS_CHICKEN_FEED = new ItemGMChickenFeed(new Item.Properties().group(MobGrindingUtils.TAB).maxStackSize(1), "nutritious");
 		NULL_SWORD = new ItemImaginaryInvisibleNotReallyThereSword(new Item.Properties().group(MobGrindingUtils.TAB));
 		FLUID_XP_BUCKET = new BucketItem(() -> ModBlocks.FLUID_XP, new Item.Properties().containerItem(Items.BUCKET).group(MobGrindingUtils.TAB).maxStackSize(1));
 		ROTTEN_EGG = new ItemRottenEgg(new Item.Properties().group(MobGrindingUtils.TAB).maxStackSize(1));
-		
+		GOLDEN_EGG = new ItemGoldenEgg(new Item.Properties().group(MobGrindingUtils.TAB).maxStackSize(1));
+
 		SOLID_XP_MOULD_BLANK = new ItemSolidXPMould(new Item.Properties().group(MobGrindingUtils.TAB).maxStackSize(64), "blank");
 		SOLID_XP_MOULD_BABY = new ItemSolidXPMould(new Item.Properties().group(MobGrindingUtils.TAB).maxStackSize(64), "baby");
 		SOLID_XP_BABY = new ItemSolidXP(new Item.Properties().group(MobGrindingUtils.TAB).maxStackSize(64).food((new Food.Builder()).hunger(0).saturation(0F).setAlwaysEdible().build()), 50);
@@ -68,7 +71,7 @@ public class ModItems {
 
 	public static void initReg() {
 		try {
-			for (Field field : ModItems.class.getDeclaredFields()) {
+			for (Field field : ModItems.class.getDeclaredFields()) {	
 				Object obj = field.get(null);
 				if (obj instanceof Item) {
 					Item item = (Item) obj;

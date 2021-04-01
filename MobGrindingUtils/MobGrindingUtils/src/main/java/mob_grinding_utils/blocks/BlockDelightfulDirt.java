@@ -124,7 +124,7 @@ public class BlockDelightfulDirt extends Block {
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void animateTick(BlockState stateIn, World world, BlockPos pos, Random rand) {
-		if(world.getGameTime()%3 == 0) {
+		if(world.getGameTime()%3 == 0 && world.getBlockState(pos.up()).getMaterial() == Material.AIR) {
 			for (int i = 0; i < 4; ++i) {
 				double d0 = (double) ((float) pos.getX( ));
 				double d1 = (double) ((float) pos.getY() + 1D);

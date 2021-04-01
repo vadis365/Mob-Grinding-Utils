@@ -15,10 +15,10 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class ItemGMChickenFeed extends Item {
-	public boolean cursed;
-	public ItemGMChickenFeed(Properties properties, boolean cursed) {
+	public String type;
+	public ItemGMChickenFeed(Properties properties, String typeIn) {
 		super(properties);
-		this.cursed = cursed;
+		this.type = typeIn;
 	}
 
 	@Override
@@ -26,11 +26,16 @@ public class ItemGMChickenFeed extends Item {
 	public void addInformation(ItemStack stack, @Nullable World world, List<ITextComponent> list, ITooltipFlag flag) {
 		list.add(new TranslationTextComponent("tooltip.chickenfeed_1").mergeStyle(TextFormatting.YELLOW));
 		list.add(new TranslationTextComponent("tooltip.chickenfeed_2").mergeStyle(TextFormatting.YELLOW));
-		if (!cursed) {
-			if (stack.hasTag() && stack.getTag().contains("mguMobName")) {
+
+		if (type == "mob")
+			if (stack.hasTag() && stack.getTag().contains("mguMobName"))
 				list.add(new TranslationTextComponent("tooltip.chickenfeed_3").mergeStyle(TextFormatting.GREEN).appendString(" " + stack.getTag().get("mguMobName") + " 'DNA'."));
-			}
-		} else
+
+		if (type == "cursed")
 			list.add(new TranslationTextComponent("tooltip.chickenfeed_4").mergeStyle(TextFormatting.YELLOW));
+
+		if (type == "nutritious") 
+			list.add(new TranslationTextComponent("tooltip.chickenfeed_5").mergeStyle(TextFormatting.YELLOW));
 	}
+
 }

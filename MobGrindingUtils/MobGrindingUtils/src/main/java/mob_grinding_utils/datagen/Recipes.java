@@ -371,6 +371,19 @@ public class Recipes extends RecipeProvider {
                 .addCriterion("", hasItem(Items.AIR))
                 .build(consumer, new ResourceLocation(Reference.MOD_ID, "recipe_xpsolidifier_upgrade"));
 
+        ShapedRecipeBuilder.shapedRecipe(ModItems.NUTRITIOUS_CHICKEN_FEED)
+	        .patternLine("BCB")
+	        .patternLine("PSX")
+	        .patternLine("BWB")
+	        .key('B', ModItems.FLUID_XP_BUCKET)
+	        .key('C', Items.CARROT)
+	        .key('P', Items.POTATO)
+	        .key('S', Tags.Items.SEEDS)
+	        .key('X', Items.BEETROOT)
+	        .key('W', Items.WHEAT)
+	        .addCriterion("", hasItem(Items.AIR))
+	        .build(consumer, new ResourceLocation(Reference.MOD_ID, "recipe_nutritious_feed"));
+
     }
 
     @Override
