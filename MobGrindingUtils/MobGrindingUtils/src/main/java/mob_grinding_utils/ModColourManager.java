@@ -2,6 +2,7 @@ package mob_grinding_utils;
 
 import java.awt.Color;
 
+import mob_grinding_utils.blocks.BlockDelightfulDirt;
 import mob_grinding_utils.blocks.BlockDreadfulDirt;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
@@ -28,7 +29,15 @@ public class ModColourManager {
 				return new Color(153, 50, 153).getRGB() & 0x00ffffff;
 			return new Color(153, 50, 153).getRGB() & 0x00ffffff;
 		};
+
+		final IBlockColor delightfulDirtColour = (state, blockAccess, pos, tintIndex) -> {
+			if (blockAccess != null && pos != null)
+				return new Color(190, 255, 0).getRGB() & 0x00ffffff;
+			return new Color(190, 255, 0).getRGB() & 0x00ffffff;
+		};
+
 		blockColors.register(dreadfulDirtColour, ModBlocks.DREADFUL_DIRT);
+		blockColors.register(delightfulDirtColour, ModBlocks.DELIGHTFUL_DIRT);
 	}
 
 	private static void registerItemColourHandlers(final BlockColors blockColors, final ItemColors itemColors) {
@@ -37,9 +46,13 @@ public class ModColourManager {
 			final BlockState state = ((BlockItem) stack.getItem()).getBlock().getDefaultState();
 			if(state.getBlock() instanceof BlockDreadfulDirt)
 				return blockColors.getColor(state, null, null, tintIndex);
+			if(state.getBlock() instanceof BlockDelightfulDirt)
+				return blockColors.getColor(state, null, null, tintIndex);
 			return -1;
 		};
+
 		itemColors.register(itemBlockColourHandler, ModBlocks.DREADFUL_DIRT_ITEM);
+		itemColors.register(itemBlockColourHandler, ModBlocks.DELIGHTFUL_DIRT_ITEM);
 	}
 }
 

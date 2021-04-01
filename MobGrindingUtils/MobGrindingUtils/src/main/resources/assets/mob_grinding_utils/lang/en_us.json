@@ -21,6 +21,7 @@
   "block.mob_grinding_utils.xpsolidifier": "XP Solidifier",
   "block.mob_grinding_utils.dreadful_dirt": "Dreadful Dirt",
   "block.mob_grinding_utils.solid_xp_block": "Solid XP",
+  "block.mob_grinding_utils.delightful_dirt": "Delightful Dirt",
 
   "_comment": "Fluids",
   "mob_grinding_utils.fluid_xp": "Fluid XP",
@@ -110,6 +111,10 @@
   "tooltip.dreadful_dirt_1": "Spawns More Hostile Mobs.",
   "tooltip.dreadful_dirt_2": "Will Ignite in Daylight if Exposed to the Sky.",
   "tooltip.dreadful_dirt_3": "Light level of 10 and above Stops Hostile Mob Spawns.",
+  
+  "tooltip.delightful_dirt_1": "Spawns More Creature Mobs.",
+  "tooltip.delightful_dirt_2": "Will Snow-Cap at Night if Exposed to the Sky.",
+  "tooltip.delightful_dirt_3": "Light level below 10 Stops Creature Mob Spawns.",
   
   "tooltip.xp_solidifier_1": "Solidifies Fluid XP.",
   "tooltip.xp_solidifier_2": "Requires an XP Mould and Fluid XP in its Tank.",

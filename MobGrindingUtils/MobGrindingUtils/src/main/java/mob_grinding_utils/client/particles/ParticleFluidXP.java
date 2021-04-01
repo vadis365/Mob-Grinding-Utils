@@ -70,7 +70,7 @@ public class ParticleFluidXP extends SpriteTexturedParticle {
  
 		@Override
 		public Particle makeParticle(BasicParticleType typeIn, ClientWorld world, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
-			ParticleFluidXP particle = new ParticleFluidXP(world, x + world.rand.nextDouble() - 0.5D * 0.05D, y + 0.125D, z + world.rand.nextDouble() - 0.5D * 0.05D, xSpeed, ySpeed, zSpeed, 20, 16776960, 0.25F, sprites);
+			ParticleFluidXP particle = new ParticleFluidXP(world, x + world.rand.nextDouble() - 0.5D * 0.05D, y + 0.125D, z + world.rand.nextDouble() - 0.5D * 0.05D, xSpeed, ySpeed, zSpeed, 20, 16776960, 0.125F, sprites);
 			particle.selectSpriteRandomly(sprites);
 			return particle;
 		}

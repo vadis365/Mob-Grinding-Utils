@@ -10,6 +10,7 @@ import javax.annotation.Nullable;
 
 import mob_grinding_utils.blocks.BlockAbsorptionHopper;
 import mob_grinding_utils.blocks.BlockDarkOakStone;
+import mob_grinding_utils.blocks.BlockDelightfulDirt;
 import mob_grinding_utils.blocks.BlockDragonMuffler;
 import mob_grinding_utils.blocks.BlockDreadfulDirt;
 import mob_grinding_utils.blocks.BlockEnderInhibitorOff;
@@ -133,6 +134,9 @@ public class ModBlocks {
 	public static Block DREADFUL_DIRT;
 	public static BlockItem DREADFUL_DIRT_ITEM;
 	public static Material MATERIAL_DREADFUL_DIRT;
+	
+	public static Block DELIGHTFUL_DIRT;
+	public static BlockItem DELIGHTFUL_DIRT_ITEM;
 	
 	public static Block SOLID_XP_BLOCK;
 	public static BlockItem SOLID_XP_BLOCK_ITEM;
@@ -325,6 +329,17 @@ public class ModBlocks {
 				@OnlyIn(Dist.CLIENT)
 				   public void addInformation(ItemStack stack, @Nullable World world, List<ITextComponent> list, ITooltipFlag flag) {
 					list.add(new TranslationTextComponent("tooltip.solid_xp_block").mergeStyle(TextFormatting.YELLOW));
+				}
+			};
+			
+			DELIGHTFUL_DIRT = new BlockDelightfulDirt(Block.Properties.create(Material.EARTH, MaterialColor.PURPLE).hardnessAndResistance(1.0F, 2000.0F).sound(SoundType.GROUND).tickRandomly().setAllowsSpawn((state, reader, pos, entitytype) -> {return entitytype.getClassification() == EntityClassification.CREATURE;}));
+			DELIGHTFUL_DIRT_ITEM = new BlockItem(DELIGHTFUL_DIRT, new Item.Properties().group(MobGrindingUtils.TAB)) {
+				@Override
+				@OnlyIn(Dist.CLIENT)
+				   public void addInformation(ItemStack stack, @Nullable World world, List<ITextComponent> list, ITooltipFlag flag) {
+					list.add(new TranslationTextComponent("tooltip.delightful_dirt_1").mergeStyle(TextFormatting.YELLOW));
+					list.add(new TranslationTextComponent("tooltip.delightful_dirt_2").mergeStyle(TextFormatting.YELLOW));
+					list.add(new TranslationTextComponent("tooltip.delightful_dirt_3").mergeStyle(TextFormatting.YELLOW));
 				}
 			};
 	}
