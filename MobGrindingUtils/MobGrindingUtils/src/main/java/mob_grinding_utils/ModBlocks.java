@@ -16,6 +16,7 @@ import mob_grinding_utils.blocks.BlockDreadfulDirt;
 import mob_grinding_utils.blocks.BlockEnderInhibitorOff;
 import mob_grinding_utils.blocks.BlockEnderInhibitorOn;
 import mob_grinding_utils.blocks.BlockEntityConveyor;
+import mob_grinding_utils.blocks.BlockEntitySpawner;
 import mob_grinding_utils.blocks.BlockFan;
 import mob_grinding_utils.blocks.BlockSaw;
 import mob_grinding_utils.blocks.BlockSolidXP;
@@ -140,6 +141,9 @@ public class ModBlocks {
 	
 	public static Block SOLID_XP_BLOCK;
 	public static BlockItem SOLID_XP_BLOCK_ITEM;
+
+	public static Block ENTITY_SPAWNER;
+	public static BlockItem ENTITY_SPAWNER_ITEM;
 
 	public static void init() {
 		FAN = new BlockFan(Block.Properties.create(Material.IRON, MaterialColor.STONE).hardnessAndResistance(10.0F, 2000.0F).sound(SoundType.METAL));
@@ -340,6 +344,15 @@ public class ModBlocks {
 					list.add(new TranslationTextComponent("tooltip.delightful_dirt_1").mergeStyle(TextFormatting.YELLOW));
 					list.add(new TranslationTextComponent("tooltip.delightful_dirt_2").mergeStyle(TextFormatting.YELLOW));
 					list.add(new TranslationTextComponent("tooltip.delightful_dirt_3").mergeStyle(TextFormatting.YELLOW));
+				}
+			};
+
+			ENTITY_SPAWNER = new BlockEntitySpawner(Block.Properties.create(Material.IRON, MaterialColor.STONE).hardnessAndResistance(10.0F, 2000.0F).sound(SoundType.METAL).notSolid().tickRandomly());
+			ENTITY_SPAWNER_ITEM = new BlockItem(ENTITY_SPAWNER, new Item.Properties().group(MobGrindingUtils.TAB)) {
+				@Override
+				@OnlyIn(Dist.CLIENT)
+				   public void addInformation(ItemStack stack, @Nullable World world, List<ITextComponent> list, ITooltipFlag flag) {
+					list.add(new TranslationTextComponent("tooltip.entity_spawner").mergeStyle(TextFormatting.YELLOW));
 				}
 			};
 	}

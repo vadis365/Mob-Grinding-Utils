@@ -22,6 +22,7 @@
   "block.mob_grinding_utils.dreadful_dirt": "Dreadful Dirt",
   "block.mob_grinding_utils.solid_xp_block": "Solid XP",
   "block.mob_grinding_utils.delightful_dirt": "Delightful Dirt",
+  "block.mob_grinding_utils.entity_spawner": "Entity Spawner",
 
   "_comment": "Fluids",
   "mob_grinding_utils.fluid_xp": "Fluid XP",
@@ -107,24 +108,26 @@
   "tooltip.enderinhibitor_1": "Inhibits Teleportation for Entities up to 8 Blocks away.",
   "tooltip.enderinhibitor_2": "Can be attached on ANY side of Solid Blocks.",
   "tooltip.enderinhibitor_3": "Right Click to Deactivate/Activate.",
-  
+
   "tooltip.tinted_glass_1": "Glass blocks designed to prevent light.",
   "tooltip.tinted_glass_2": "Tough enough to withstand Withers.",
-  
+
   "tooltip.dreadful_dirt_1": "Spawns More Hostile Mobs.",
   "tooltip.dreadful_dirt_2": "Will Ignite in Daylight if Exposed to the Sky.",
   "tooltip.dreadful_dirt_3": "Light level of 10 and above Stops Hostile Mob Spawns.",
-  
+
   "tooltip.delightful_dirt_1": "Spawns More Creature Mobs.",
   "tooltip.delightful_dirt_2": "Will Snow-Cap at Night if Exposed to the Sky.",
   "tooltip.delightful_dirt_3": "Light level below 10 Stops Creature Mob Spawns.",
-  
+
   "tooltip.xp_solidifier_1": "Solidifies Fluid XP.",
   "tooltip.xp_solidifier_2": "Requires an XP Mould and Fluid XP in its Tank.",
   "tooltip.xp_solidifier_3": "Can be configured to export Horizontally.",
   "tooltip.xp_solidifier_4": "Speed is increased with XP Solidifier Speed Upgrades.",
-  
+
   "tooltip.solid_xp_block": "Bouncy.",
+
+  "tooltip.entity_spawner": "Add a Mob Egg blah, blah, blah, etc.",
 
   "_comment": "Item Tool tips",
   "tooltip.hopperupgrade": "Radius Modifier: +1. Max of 6.",

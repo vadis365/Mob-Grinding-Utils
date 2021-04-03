@@ -108,8 +108,7 @@ public class BlockSaw extends DirectionalBlock implements ITileEntityProvider {
 	}
 
 	@Override
-	public void neighborChanged(BlockState state, World world, BlockPos pos, Block block, BlockPos fromPos,
-			boolean isMoving) {
+	public void neighborChanged(BlockState state, World world, BlockPos pos, Block block, BlockPos fromPos, boolean isMoving) {
 		if (!world.isRemote) {
 			TileEntitySaw tile = (TileEntitySaw) world.getTileEntity(pos);
 			boolean flag = state.get(POWERED);

@@ -158,6 +158,7 @@ public class MobGrindingUtils {
 		 RenderTypeLookup.setRenderLayer(ModBlocks.DELIGHTFUL_DIRT, RenderType.getCutout());
 		 RenderTypeLookup.setRenderLayer(ModBlocks.XPSOLIDIFIER, RenderType.getCutout());
 		 RenderTypeLookup.setRenderLayer(ModBlocks.SOLID_XP_BLOCK, RenderType.getTranslucent());
+		 RenderTypeLookup.setRenderLayer(ModBlocks.ENTITY_SPAWNER, RenderType.getCutout());
 
 		 ModColourManager.registerColourHandlers();
 	}
