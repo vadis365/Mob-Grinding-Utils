@@ -32,31 +32,31 @@
   "death.attack.spikes.player": "%1$s刺穿了%2$s.",
 
   "_comment": "Block Tool tips",
-  "tooltip.fan_1": "在风扇面朝的方向推动实体",
-  "tooltip.fan_2": "范围可以使用怪物风扇升级来修改",
+  "block.mob_grinding_utils.fan.tooltip_1": "在风扇面朝的方向推动实体",
+  "block.mob_grinding_utils.fan.tooltip_2": "范围可以使用怪物风扇升级来修改",
 
-  "tooltip.saw_1": "高级的模块化的怪物屠宰机",
-  "tooltip.saw_2": "可以放入怪物捣碎机升级来增加各种功能",
+  "block.mob_grinding_utils.saw.tooltip_1": "高级的模块化的怪物屠宰机",
+  "block.mob_grinding_utils.saw.tooltip_2": "可以放入怪物捣碎机升级来增加各种功能",
 
-  "tooltip.hopper_1": "在7x7x7的区域吸取物品和XP球。",
-  "tooltip.hopper_2": "可以配置向任何一边输出。",
-  "tooltip.hopper_3": "液体将输入储罐，物品将输入箱子",
-  "tooltip.hopper_4": "范围通过吸取半径升级增加。",
+  "block.mob_grinding_utils.absorption_hopper.tooltip_1": "在7x7x7的区域吸取物品和XP球。",
+  "block.mob_grinding_utils.absorption_hopper.tooltip_2": "可以配置向任何一边输出。",
+  "block.mob_grinding_utils.absorption_hopper.tooltip_3": "液体将输入储罐，物品将输入箱子",
+  "block.mob_grinding_utils.absorption_hopper.tooltip_4": "范围通过吸取半径升级增加。",
 
-  "tooltip.spikes_1": "最基本的钉刺——仍然会有xp掉落。",
+  "block.mob_grinding_utils.spikes.tooltip_1": "最基本的钉刺——仍然会有xp掉落。",
 
-  "tooltip.xptap_1": "放置到奇异水槽的一个侧面",
-  "tooltip.xptap_2": "将XP流体转换为XP球。",
+  "block.mob_grinding_utils.xp_tap.tooltip_1": "放置到奇异水槽的一个侧面",
+  "block.mob_grinding_utils.xp_tap.tooltip_2": "将XP流体转换为XP球。",
 
-  "tooltip.withermuffler_1": "消除凋零死亡音效",
-  "tooltip.withermuffler_2": "在8格半径内。",
-  "tooltip.withermuffler_3": "右键点击隐藏boss血条",
+  "block.mob_grinding_utils.wither_muffler.tooltip_1": "消除凋零死亡音效",
+  "block.mob_grinding_utils.wither_muffler.tooltip_2": "在8格半径内。",
+  "block.mob_grinding_utils.wither_muffler.tooltip_3": "右键点击隐藏boss血条",
 
-  "tooltip.dragonmuffler_1": "消除末影龙死亡音效",
-  "tooltip.dragonmuffler_2": "在32格半径内。",
-  "tooltip.dragonmuffler_3": "右键点击隐藏boss血条",
+  "block.mob_grinding_utils.dragon_muffler.tooltip_1": "消除末影龙死亡音效",
+  "block.mob_grinding_utils.dragon_muffler.tooltip_2": "在32格半径内。",
+  "block.mob_grinding_utils.dragon_muffler.tooltip_3": "右键点击隐藏boss血条",
 
-  "tooltip.darkoakstone": "他们说这不可能完成...",
+  "block.mob_grinding_utils.dark_oak_stone.tooltip_1": "他们说这不可能完成...",
 
   "_comment": "Item Tool tips",
   "tooltip.hopperupgrade": "吸取漏斗范围：+1，最多放置6个。",

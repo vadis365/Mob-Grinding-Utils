@@ -8,26 +8,7 @@ import java.util.Locale;
 
 import javax.annotation.Nullable;
 
-import mob_grinding_utils.blocks.BlockAbsorptionHopper;
-import mob_grinding_utils.blocks.BlockDarkOakStone;
-import mob_grinding_utils.blocks.BlockDelightfulDirt;
-import mob_grinding_utils.blocks.BlockDragonMuffler;
-import mob_grinding_utils.blocks.BlockDreadfulDirt;
-import mob_grinding_utils.blocks.BlockEnderInhibitorOff;
-import mob_grinding_utils.blocks.BlockEnderInhibitorOn;
-import mob_grinding_utils.blocks.BlockEntityConveyor;
-import mob_grinding_utils.blocks.BlockEntitySpawner;
-import mob_grinding_utils.blocks.BlockFan;
-import mob_grinding_utils.blocks.BlockSaw;
-import mob_grinding_utils.blocks.BlockSolidXP;
-import mob_grinding_utils.blocks.BlockSpikes;
-import mob_grinding_utils.blocks.BlockTank;
-import mob_grinding_utils.blocks.BlockTankJumbo;
-import mob_grinding_utils.blocks.BlockTankSink;
-import mob_grinding_utils.blocks.BlockTintedGlass;
-import mob_grinding_utils.blocks.BlockWitherMuffler;
-import mob_grinding_utils.blocks.BlockXPSolidifier;
-import mob_grinding_utils.blocks.BlockXPTap;
+import mob_grinding_utils.blocks.*;
 import mob_grinding_utils.client.render.TileSawStackItemRenderer;
 import mob_grinding_utils.client.render.TileTankStackItemRenderer;
 import mob_grinding_utils.client.render.TileXPSolidifierStackItemRenderer;
@@ -147,214 +128,84 @@ public class ModBlocks {
 
 	public static void init() {
 		FAN = new BlockFan(Block.Properties.create(Material.IRON, MaterialColor.STONE).hardnessAndResistance(10.0F, 2000.0F).sound(SoundType.METAL));
-		FAN_ITEM = new BlockItem(FAN, new Item.Properties().group(MobGrindingUtils.TAB)) {
-			@Override
-			@OnlyIn(Dist.CLIENT)
-			   public void addInformation(ItemStack stack, @Nullable World world, List<ITextComponent> list, ITooltipFlag flag) {
-					list.add(new TranslationTextComponent("tooltip.fan_1").mergeStyle(TextFormatting.YELLOW));
-					list.add(new TranslationTextComponent("tooltip.fan_2").mergeStyle(TextFormatting.YELLOW));
-					list.add(new TranslationTextComponent("tooltip.fan_3").mergeStyle(TextFormatting.YELLOW));
-				}
-			};
-			FAN_TILE = TileEntityType.Builder.create(TileEntityFan::new, FAN).build(null);
+		FAN_ITEM = new MGUBlockItem(FAN, new Item.Properties().group(MobGrindingUtils.TAB));
+		FAN_TILE = TileEntityType.Builder.create(TileEntityFan::new, FAN).build(null);
 
-			SAW = new BlockSaw(Block.Properties.create(Material.IRON, MaterialColor.STONE).hardnessAndResistance(10.0F, 2000.0F).sound(SoundType.METAL).notSolid());
-			SAW_ITEM = new BlockItem(SAW, new Item.Properties().group(MobGrindingUtils.TAB).setISTER(() ->  TileSawStackItemRenderer::new)) {
-				@Override
-				@OnlyIn(Dist.CLIENT)
-				   public void addInformation(ItemStack stack, @Nullable World world, List<ITextComponent> list, ITooltipFlag flag) {
-					list.add(new TranslationTextComponent("tooltip.saw_1").mergeStyle(TextFormatting.YELLOW));
-					list.add(new TranslationTextComponent("tooltip.saw_2").mergeStyle(TextFormatting.YELLOW));
-					list.add(new TranslationTextComponent("tooltip.saw_3").mergeStyle(TextFormatting.YELLOW));
-				}
-			};
-			SAW_TILE = TileEntityType.Builder.create(TileEntitySaw::new, SAW).build(null);
+		SAW = new BlockSaw(Block.Properties.create(Material.IRON, MaterialColor.STONE).hardnessAndResistance(10.0F, 2000.0F).sound(SoundType.METAL).notSolid());
+		SAW_ITEM = new MGUBlockItem(SAW, new Item.Properties().group(MobGrindingUtils.TAB).setISTER(() ->  TileSawStackItemRenderer::new));
+		SAW_TILE = TileEntityType.Builder.create(TileEntitySaw::new, SAW).build(null);
 
-			ABSORPTION_HOPPER = new BlockAbsorptionHopper(Block.Properties.create(Material.IRON, MaterialColor.STONE).hardnessAndResistance(10.0F, 2000.0F).sound(SoundType.METAL).harvestLevel(0).harvestTool(ToolType.PICKAXE).notSolid());
-			ABSORPTION_HOPPER_ITEM = new BlockItem(ABSORPTION_HOPPER, new Item.Properties().group(MobGrindingUtils.TAB)) {
-				@Override
-				@OnlyIn(Dist.CLIENT)
-				   public void addInformation(ItemStack stack, @Nullable World world, List<ITextComponent> list, ITooltipFlag flag) {
-					list.add(new TranslationTextComponent("tooltip.hopper_1").mergeStyle(TextFormatting.YELLOW));
-					list.add(new TranslationTextComponent("tooltip.hopper_2").mergeStyle(TextFormatting.YELLOW));
-					list.add(new TranslationTextComponent("tooltip.hopper_3").mergeStyle(TextFormatting.YELLOW));
-					list.add(new TranslationTextComponent("tooltip.hopper_4").mergeStyle(TextFormatting.YELLOW));
-					list.add(new TranslationTextComponent("tooltip.hopper_5").mergeStyle(TextFormatting.YELLOW));
-					list.add(new TranslationTextComponent("tooltip.hopper_6").mergeStyle(TextFormatting.YELLOW));
-				}
-			};
-			ABSORPTION_HOPPER_TILE = TileEntityType.Builder.create(TileEntityAbsorptionHopper::new, ABSORPTION_HOPPER).build(null);
+		ABSORPTION_HOPPER = new BlockAbsorptionHopper(Block.Properties.create(Material.IRON, MaterialColor.STONE).hardnessAndResistance(10.0F, 2000.0F).sound(SoundType.METAL).harvestLevel(0).harvestTool(ToolType.PICKAXE).notSolid());
+		ABSORPTION_HOPPER_ITEM = new MGUBlockItem(ABSORPTION_HOPPER, new Item.Properties().group(MobGrindingUtils.TAB));
+		ABSORPTION_HOPPER_TILE = TileEntityType.Builder.create(TileEntityAbsorptionHopper::new, ABSORPTION_HOPPER).build(null);
 
-			SPIKES = new BlockSpikes(Block.Properties.create(Material.IRON, MaterialColor.STONE).hardnessAndResistance(5.0F, 2000.0F).sound(SoundType.METAL).notSolid());
-			SPIKES_ITEM = new BlockItem(SPIKES, new Item.Properties().group(MobGrindingUtils.TAB)) {
-				@Override
-				@OnlyIn(Dist.CLIENT)
-				   public void addInformation(ItemStack stack, @Nullable World world, List<ITextComponent> list, ITooltipFlag flag) {
-					list.add(new TranslationTextComponent("tooltip.spikes_1").mergeStyle(TextFormatting.YELLOW));
-					list.add(new TranslationTextComponent("tooltip.spikes_2").mergeStyle(TextFormatting.YELLOW));
-				}
-			};
+		SPIKES = new BlockSpikes(Block.Properties.create(Material.IRON, MaterialColor.STONE).hardnessAndResistance(5.0F, 2000.0F).sound(SoundType.METAL).notSolid());
+		SPIKES_ITEM = new MGUBlockItem(SPIKES, new Item.Properties().group(MobGrindingUtils.TAB));
 
-			TANK = new BlockTank(Block.Properties.create(Material.GLASS, MaterialColor.QUARTZ).hardnessAndResistance(1.0F, 2000.0F).sound(SoundType.GLASS).notSolid());
-			TANK_ITEM = new BlockItemTank(TANK, new Item.Properties().group(MobGrindingUtils.TAB).setISTER(() ->  TileTankStackItemRenderer::new));
-			TANK_TILE = TileEntityType.Builder.create(TileEntityTank::new, TANK).build(null);
+		TANK = new BlockTank(Block.Properties.create(Material.GLASS, MaterialColor.QUARTZ).hardnessAndResistance(1.0F, 2000.0F).sound(SoundType.GLASS).notSolid());
+		TANK_ITEM = new BlockItemTank(TANK, new Item.Properties().group(MobGrindingUtils.TAB).setISTER(() ->  TileTankStackItemRenderer::new));
+		TANK_TILE = TileEntityType.Builder.create(TileEntityTank::new, TANK).build(null);
 
-			TANK_SINK = new BlockTankSink(Block.Properties.create(Material.GLASS, MaterialColor.QUARTZ).hardnessAndResistance(1.0F, 2000.0F).sound(SoundType.GLASS).notSolid());
-			TANK_SINK_ITEM = new BlockItemTankSink(TANK_SINK, new Item.Properties().group(MobGrindingUtils.TAB).setISTER(() ->  TileTankStackItemRenderer::new));
-			TANK_SINK_TILE = TileEntityType.Builder.create(TileEntitySinkTank::new, TANK_SINK).build(null);
+		TANK_SINK = new BlockTankSink(Block.Properties.create(Material.GLASS, MaterialColor.QUARTZ).hardnessAndResistance(1.0F, 2000.0F).sound(SoundType.GLASS).notSolid());
+		TANK_SINK_ITEM = new BlockItemTankSink(TANK_SINK, new Item.Properties().group(MobGrindingUtils.TAB).setISTER(() ->  TileTankStackItemRenderer::new));
+		TANK_SINK_TILE = TileEntityType.Builder.create(TileEntitySinkTank::new, TANK_SINK).build(null);
 
-			XP_TAP = new BlockXPTap(Block.Properties.create(Material.REDSTONE_LIGHT, MaterialColor.STONE).hardnessAndResistance(1.0F, 2000.0F).sound(SoundType.METAL).notSolid());
-			XP_TAP_ITEM = new BlockItem(XP_TAP, new Item.Properties().group(MobGrindingUtils.TAB)) {
-				@Override
-				@OnlyIn(Dist.CLIENT)
-				   public void addInformation(ItemStack stack, @Nullable World world, List<ITextComponent> list, ITooltipFlag flag) {
-					list.add(new TranslationTextComponent("tooltip.xptap_1").mergeStyle(TextFormatting.YELLOW));
-					list.add(new TranslationTextComponent("tooltip.xptap_2").mergeStyle(TextFormatting.YELLOW));
-				}
-			};
-			XP_TAP_TILE = TileEntityType.Builder.create(TileEntityXPTap::new, XP_TAP).build(null);
+		XP_TAP = new BlockXPTap(Block.Properties.create(Material.REDSTONE_LIGHT, MaterialColor.STONE).hardnessAndResistance(1.0F, 2000.0F).sound(SoundType.METAL).notSolid());
+		XP_TAP_ITEM = new MGUBlockItem(XP_TAP, new Item.Properties().group(MobGrindingUtils.TAB));
+		XP_TAP_TILE = TileEntityType.Builder.create(TileEntityXPTap::new, XP_TAP).build(null);
 
-			WITHER_MUFFLER = new BlockWitherMuffler(Block.Properties.create(Material.WOOL, MaterialColor.STONE).hardnessAndResistance(0.5F, 2000F).sound(SoundType.CLOTH));
-			WITHER_MUFFLER_ITEM = new BlockItem(WITHER_MUFFLER, new Item.Properties().group(MobGrindingUtils.TAB)) {
-				@Override
-				@OnlyIn(Dist.CLIENT)
-				   public void addInformation(ItemStack stack, @Nullable World world, List<ITextComponent> list, ITooltipFlag flag) {
-					list.add(new TranslationTextComponent("tooltip.withermuffler_1").mergeStyle(TextFormatting.YELLOW));
-					list.add(new TranslationTextComponent("tooltip.withermuffler_2").mergeStyle(TextFormatting.YELLOW));
-					list.add(new TranslationTextComponent("tooltip.withermuffler_3").mergeStyle(TextFormatting.YELLOW));
-				}
-			};
+		WITHER_MUFFLER = new BlockWitherMuffler(Block.Properties.create(Material.WOOL, MaterialColor.STONE).hardnessAndResistance(0.5F, 2000F).sound(SoundType.CLOTH));
+		WITHER_MUFFLER_ITEM = new MGUBlockItem(WITHER_MUFFLER, new Item.Properties().group(MobGrindingUtils.TAB));
 
-			DRAGON_MUFFLER = new BlockDragonMuffler(Block.Properties.create(Material.WOOL, MaterialColor.STONE).hardnessAndResistance(0.5F, 2000F).sound(SoundType.CLOTH));
-			DRAGON_MUFFLER_ITEM = new BlockItem(DRAGON_MUFFLER, new Item.Properties().group(MobGrindingUtils.TAB)) {
-				@Override
-				@OnlyIn(Dist.CLIENT)
-				   public void addInformation(ItemStack stack, @Nullable World world, List<ITextComponent> list, ITooltipFlag flag) {
-					list.add(new TranslationTextComponent("tooltip.dragonmuffler_1").mergeStyle(TextFormatting.YELLOW));
-					list.add(new TranslationTextComponent("tooltip.dragonmuffler_2").mergeStyle(TextFormatting.YELLOW));
-					list.add(new TranslationTextComponent("tooltip.dragonmuffler_3").mergeStyle(TextFormatting.YELLOW));
-				}
-			};
+		DRAGON_MUFFLER = new BlockDragonMuffler(Block.Properties.create(Material.WOOL, MaterialColor.STONE).hardnessAndResistance(0.5F, 2000F).sound(SoundType.CLOTH));
+		DRAGON_MUFFLER_ITEM = new MGUBlockItem(DRAGON_MUFFLER, new Item.Properties().group(MobGrindingUtils.TAB));
 
-			DARK_OAK_STONE= new BlockDarkOakStone(Block.Properties.create(Material.ROCK, MaterialColor.STONE).hardnessAndResistance(1.5F, 10F).sound(SoundType.STONE).setLightLevel(bState -> 7));
-			DARK_OAK_STONE_ITEM = new BlockItem(DARK_OAK_STONE, new Item.Properties().group(MobGrindingUtils.TAB)) {
-				@Override
-				@OnlyIn(Dist.CLIENT)
-				   public void addInformation(ItemStack stack, @Nullable World world, List<ITextComponent> list, ITooltipFlag flag) {
-					list.add(new TranslationTextComponent("tooltip.darkoakstone").mergeStyle(TextFormatting.YELLOW));
-				}
-			};
+		DARK_OAK_STONE= new BlockDarkOakStone(Block.Properties.create(Material.ROCK, MaterialColor.STONE).hardnessAndResistance(1.5F, 10F).sound(SoundType.STONE).setLightLevel(bState -> 7));
+		DARK_OAK_STONE_ITEM = new MGUBlockItem(DARK_OAK_STONE, new Item.Properties().group(MobGrindingUtils.TAB));
 
-			ENTITY_CONVEYOR = new BlockEntityConveyor(Block.Properties.create(Material.ROCK, MaterialColor.STONE).hardnessAndResistance(0.5F, 2000.0F).sound(SoundType.STONE).setAllowsSpawn((state, reader, pos, entitytype) -> {return true;}));
-			ENTITY_CONVEYOR_ITEM = new BlockItem(ENTITY_CONVEYOR, new Item.Properties().group(MobGrindingUtils.TAB)) {
-				@Override
-				@OnlyIn(Dist.CLIENT)
-				   public void addInformation(ItemStack stack, @Nullable World world, List<ITextComponent> list, ITooltipFlag flag) {
-					list.add(new TranslationTextComponent("tooltip.entityconveyor_1").mergeStyle(TextFormatting.YELLOW));
-					list.add(new TranslationTextComponent("tooltip.entityconveyor_2").mergeStyle(TextFormatting.YELLOW));
-				}
-			};
+		ENTITY_CONVEYOR = new BlockEntityConveyor(Block.Properties.create(Material.ROCK, MaterialColor.STONE).hardnessAndResistance(0.5F, 2000.0F).sound(SoundType.STONE).setAllowsSpawn((state, reader, pos, entitytype) -> {return true;}));
+		ENTITY_CONVEYOR_ITEM = new MGUBlockItem(ENTITY_CONVEYOR, new Item.Properties().group(MobGrindingUtils.TAB));
 	
-			ENDER_INHIBITOR_ON = new BlockEnderInhibitorOn(Block.Properties.create(Material.REDSTONE_LIGHT, MaterialColor.STONE).hardnessAndResistance(0.2F, 2000F).sound(SoundType.METAL).notSolid());
-			ENDER_INHIBITOR_ON_ITEM = new BlockItem(ENDER_INHIBITOR_ON, new Item.Properties().group(MobGrindingUtils.TAB)) {
-				@Override
-				@OnlyIn(Dist.CLIENT)
-				   public void addInformation(ItemStack stack, @Nullable World world, List<ITextComponent> list, ITooltipFlag flag) {
-					list.add(new TranslationTextComponent("tooltip.enderinhibitor_1").mergeStyle(TextFormatting.YELLOW));
-					list.add(new TranslationTextComponent("tooltip.enderinhibitor_2").mergeStyle(TextFormatting.YELLOW));
-					list.add(new TranslationTextComponent("tooltip.enderinhibitor_3").mergeStyle(TextFormatting.YELLOW));
-				}
-			};
+		ENDER_INHIBITOR_ON = new BlockEnderInhibitorOn(Block.Properties.create(Material.REDSTONE_LIGHT, MaterialColor.STONE).hardnessAndResistance(0.2F, 2000F).sound(SoundType.METAL).notSolid());
+		ENDER_INHIBITOR_ON_ITEM = new MGUBlockItem(ENDER_INHIBITOR_ON, new Item.Properties().group(MobGrindingUtils.TAB));
 
-			ENDER_INHIBITOR_OFF = new BlockEnderInhibitorOff(Block.Properties.create(Material.REDSTONE_LIGHT, MaterialColor.STONE).hardnessAndResistance(0.2F, 2000F).sound(SoundType.METAL).notSolid());
-			ENDER_INHIBITOR_OFF_ITEM = new BlockItem(ENDER_INHIBITOR_OFF, new Item.Properties().group(MobGrindingUtils.TAB)) {
-				@Override
-				@OnlyIn(Dist.CLIENT)
-				   public void addInformation(ItemStack stack, @Nullable World world, List<ITextComponent> list, ITooltipFlag flag) {
-					list.add(new TranslationTextComponent("tooltip.enderinhibitor_1").mergeStyle(TextFormatting.YELLOW));
-					list.add(new TranslationTextComponent("tooltip.enderinhibitor_2").mergeStyle(TextFormatting.YELLOW));
-					list.add(new TranslationTextComponent("tooltip.enderinhibitor_3").mergeStyle(TextFormatting.YELLOW));
-				}
-			};
+		ENDER_INHIBITOR_OFF = new BlockEnderInhibitorOff(Block.Properties.create(Material.REDSTONE_LIGHT, MaterialColor.STONE).hardnessAndResistance(0.2F, 2000F).sound(SoundType.METAL).notSolid());
+		ENDER_INHIBITOR_OFF_ITEM = new MGUBlockItem(ENDER_INHIBITOR_OFF, new Item.Properties().group(MobGrindingUtils.TAB));
 
-			FLUID_XP = new ForgeFlowingFluid.Source(
-					new ForgeFlowingFluid.Properties(() -> FLUID_XP, () -> FLUID_XP,
-							FluidAttributes.builder(new ResourceLocation(Reference.MOD_ID, "fluids/fluid_xp"), new ResourceLocation(Reference.MOD_ID, "fluids/fluid_xp"))
-									.luminosity(10)
-									.density(800)
-									.viscosity(1500)
-									.translationKey("mob_grinding_utils.fluid_xp")
-									.sound(SoundEvents.ENTITY_PLAYER_LEVELUP, SoundEvents.ENTITY_EXPERIENCE_ORB_PICKUP)
-					).bucket(() -> ModItems.FLUID_XP_BUCKET))
-					.setRegistryName(Reference.MOD_ID, "fluid_xp");
+		FLUID_XP = new ForgeFlowingFluid.Source(
+				new ForgeFlowingFluid.Properties(() -> FLUID_XP, () -> FLUID_XP,
+						FluidAttributes.builder(new ResourceLocation(Reference.MOD_ID, "fluids/fluid_xp"), new ResourceLocation(Reference.MOD_ID, "fluids/fluid_xp"))
+								.luminosity(10)
+								.density(800)
+								.viscosity(1500)
+								.translationKey("mob_grinding_utils.fluid_xp")
+								.sound(SoundEvents.ENTITY_PLAYER_LEVELUP, SoundEvents.ENTITY_EXPERIENCE_ORB_PICKUP)
+				).bucket(() -> ModItems.FLUID_XP_BUCKET))
+				.setRegistryName(Reference.MOD_ID, "fluid_xp");
 			
-			TINTED_GLASS = new BlockTintedGlass(Block.Properties.create(Material.GLASS, MaterialColor.BLACK).hardnessAndResistance(1.0F, 2000.0F).sound(SoundType.GLASS).notSolid());
-			TINTED_GLASS_ITEM = new BlockItem(TINTED_GLASS, new Item.Properties().group(MobGrindingUtils.TAB)){
-				@Override
-				@OnlyIn(Dist.CLIENT)
-				   public void addInformation(ItemStack stack, @Nullable World world, List<ITextComponent> list, ITooltipFlag flag) {
-					list.add(new TranslationTextComponent("tooltip.tinted_glass_1").mergeStyle(TextFormatting.YELLOW));
-					list.add(new TranslationTextComponent("tooltip.tinted_glass_2").mergeStyle(TextFormatting.YELLOW));
-				}
-			};
+		TINTED_GLASS = new BlockTintedGlass(Block.Properties.create(Material.GLASS, MaterialColor.BLACK).hardnessAndResistance(1.0F, 2000.0F).sound(SoundType.GLASS).notSolid());
+		TINTED_GLASS_ITEM = new MGUBlockItem(TINTED_GLASS, new Item.Properties().group(MobGrindingUtils.TAB));
 
-			JUMBO_TANK = new BlockTankJumbo(Block.Properties.create(Material.IRON, MaterialColor.GRAY).hardnessAndResistance(1.0F, 2000.0F).sound(SoundType.METAL).notSolid());
-			JUMBO_TANK_ITEM = new BlockItemTankJumbo(JUMBO_TANK, new Item.Properties().group(MobGrindingUtils.TAB).setISTER(() ->  TileTankStackItemRenderer::new));
-			JUMBO_TANK_TILE = TileEntityType.Builder.create(TileEntityJumboTank::new, JUMBO_TANK).build(null);
+		JUMBO_TANK = new BlockTankJumbo(Block.Properties.create(Material.IRON, MaterialColor.GRAY).hardnessAndResistance(1.0F, 2000.0F).sound(SoundType.METAL).notSolid());
+		JUMBO_TANK_ITEM = new BlockItemTankJumbo(JUMBO_TANK, new Item.Properties().group(MobGrindingUtils.TAB).setISTER(() ->  TileTankStackItemRenderer::new));
+		JUMBO_TANK_TILE = TileEntityType.Builder.create(TileEntityJumboTank::new, JUMBO_TANK).build(null);
 
-			XPSOLIDIFIER = new BlockXPSolidifier(Block.Properties.create(Material.IRON, MaterialColor.GRAY).hardnessAndResistance(1.0F, 2000.0F).sound(SoundType.METAL).notSolid());
-			XPSOLIDIFIER_ITEM = new BlockItem(XPSOLIDIFIER, new Item.Properties().group(MobGrindingUtils.TAB).setISTER(() ->  TileXPSolidifierStackItemRenderer::new)){
-				@Override
-				@OnlyIn(Dist.CLIENT)
-				   public void addInformation(ItemStack stack, @Nullable World world, List<ITextComponent> list, ITooltipFlag flag) {
-					list.add(new TranslationTextComponent("tooltip.xp_solidifier_1").mergeStyle(TextFormatting.YELLOW));
-					list.add(new TranslationTextComponent("tooltip.xp_solidifier_2").mergeStyle(TextFormatting.YELLOW));
-					list.add(new TranslationTextComponent("tooltip.xp_solidifier_3").mergeStyle(TextFormatting.YELLOW));
-					list.add(new TranslationTextComponent("tooltip.xp_solidifier_4").mergeStyle(TextFormatting.YELLOW));
-				}
-			};
-			XPSOLIDIFIER_TILE = TileEntityType.Builder.create(TileEntityXPSolidifier::new, XPSOLIDIFIER).build(null);
+		XPSOLIDIFIER = new BlockXPSolidifier(Block.Properties.create(Material.IRON, MaterialColor.GRAY).hardnessAndResistance(1.0F, 2000.0F).sound(SoundType.METAL).notSolid());
+		XPSOLIDIFIER_ITEM = new MGUBlockItem(XPSOLIDIFIER, new Item.Properties().group(MobGrindingUtils.TAB).setISTER(() ->  TileXPSolidifierStackItemRenderer::new));
+		XPSOLIDIFIER_TILE = TileEntityType.Builder.create(TileEntityXPSolidifier::new, XPSOLIDIFIER).build(null);
 			
-			MATERIAL_DREADFUL_DIRT = new Material(MaterialColor.DIRT, false, true, false, true, true, false, null);
-			DREADFUL_DIRT = new BlockDreadfulDirt(Block.Properties.create(MATERIAL_DREADFUL_DIRT, MaterialColor.PURPLE).hardnessAndResistance(1.0F, 2000.0F).sound(SoundType.GROUND).tickRandomly().setAllowsSpawn((state, reader, pos, entitytype) -> {return entitytype.getClassification() == EntityClassification.MONSTER;}));
-			DREADFUL_DIRT_ITEM = new BlockItem(DREADFUL_DIRT, new Item.Properties().group(MobGrindingUtils.TAB)) {
-				@Override
-				@OnlyIn(Dist.CLIENT)
-				   public void addInformation(ItemStack stack, @Nullable World world, List<ITextComponent> list, ITooltipFlag flag) {
-					list.add(new TranslationTextComponent("tooltip.dreadful_dirt_1").mergeStyle(TextFormatting.YELLOW));
-					list.add(new TranslationTextComponent("tooltip.dreadful_dirt_2").mergeStyle(TextFormatting.YELLOW));
-					list.add(new TranslationTextComponent("tooltip.dreadful_dirt_3").mergeStyle(TextFormatting.YELLOW));
-				}
-			};
+		MATERIAL_DREADFUL_DIRT = new Material(MaterialColor.DIRT, false, true, false, true, true, false, null);
+		DREADFUL_DIRT = new BlockDreadfulDirt(Block.Properties.create(MATERIAL_DREADFUL_DIRT, MaterialColor.PURPLE).hardnessAndResistance(1.0F, 2000.0F).sound(SoundType.GROUND).tickRandomly().setAllowsSpawn((state, reader, pos, entitytype) -> {return entitytype.getClassification() == EntityClassification.MONSTER;}));
+		DREADFUL_DIRT_ITEM = new MGUBlockItem(DREADFUL_DIRT, new Item.Properties().group(MobGrindingUtils.TAB));
 
-			SOLID_XP_BLOCK = new BlockSolidXP(Block.Properties.create(Material.CLAY, MaterialColor.GRASS).slipperiness(0.8F).sound(ModSounds.SOLID_XP_BLOCK).notSolid().hardnessAndResistance(1.5F, 10F));
-			SOLID_XP_BLOCK_ITEM = new BlockItem(SOLID_XP_BLOCK, new Item.Properties().group(MobGrindingUtils.TAB)) {
-				@Override
-				@OnlyIn(Dist.CLIENT)
-				   public void addInformation(ItemStack stack, @Nullable World world, List<ITextComponent> list, ITooltipFlag flag) {
-					list.add(new TranslationTextComponent("tooltip.solid_xp_block").mergeStyle(TextFormatting.YELLOW));
-				}
-			};
+		SOLID_XP_BLOCK = new BlockSolidXP(Block.Properties.create(Material.CLAY, MaterialColor.GRASS).slipperiness(0.8F).sound(ModSounds.SOLID_XP_BLOCK).notSolid().hardnessAndResistance(1.5F, 10F));
+		SOLID_XP_BLOCK_ITEM = new MGUBlockItem(SOLID_XP_BLOCK, new Item.Properties().group(MobGrindingUtils.TAB));
 			
-			DELIGHTFUL_DIRT = new BlockDelightfulDirt(Block.Properties.create(Material.EARTH, MaterialColor.PURPLE).hardnessAndResistance(1.0F, 2000.0F).sound(SoundType.GROUND).tickRandomly().setAllowsSpawn((state, reader, pos, entitytype) -> {return entitytype.getClassification() == EntityClassification.CREATURE;}));
-			DELIGHTFUL_DIRT_ITEM = new BlockItem(DELIGHTFUL_DIRT, new Item.Properties().group(MobGrindingUtils.TAB)) {
-				@Override
-				@OnlyIn(Dist.CLIENT)
-				   public void addInformation(ItemStack stack, @Nullable World world, List<ITextComponent> list, ITooltipFlag flag) {
-					list.add(new TranslationTextComponent("tooltip.delightful_dirt_1").mergeStyle(TextFormatting.YELLOW));
-					list.add(new TranslationTextComponent("tooltip.delightful_dirt_2").mergeStyle(TextFormatting.YELLOW));
-					list.add(new TranslationTextComponent("tooltip.delightful_dirt_3").mergeStyle(TextFormatting.YELLOW));
-				}
-			};
+		DELIGHTFUL_DIRT = new BlockDelightfulDirt(Block.Properties.create(Material.EARTH, MaterialColor.PURPLE).hardnessAndResistance(1.0F, 2000.0F).sound(SoundType.GROUND).tickRandomly().setAllowsSpawn((state, reader, pos, entitytype) -> {return entitytype.getClassification() == EntityClassification.CREATURE;}));
+		DELIGHTFUL_DIRT_ITEM = new MGUBlockItem(DELIGHTFUL_DIRT, new Item.Properties().group(MobGrindingUtils.TAB));
 
 			ENTITY_SPAWNER = new BlockEntitySpawner(Block.Properties.create(Material.IRON, MaterialColor.STONE).hardnessAndResistance(10.0F, 2000.0F).sound(SoundType.METAL).notSolid().tickRandomly());
-			ENTITY_SPAWNER_ITEM = new BlockItem(ENTITY_SPAWNER, new Item.Properties().group(MobGrindingUtils.TAB)) {
-				@Override
-				@OnlyIn(Dist.CLIENT)
-				   public void addInformation(ItemStack stack, @Nullable World world, List<ITextComponent> list, ITooltipFlag flag) {
-					list.add(new TranslationTextComponent("tooltip.entity_spawner").mergeStyle(TextFormatting.YELLOW));
-				}
-			};
+			ENTITY_SPAWNER_ITEM = new MGUBlockItem(ENTITY_SPAWNER, new Item.Properties().group(MobGrindingUtils.TAB));
 	}
 
 	public static void initReg() {
