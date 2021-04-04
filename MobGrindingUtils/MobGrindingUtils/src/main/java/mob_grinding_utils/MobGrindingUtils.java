@@ -73,7 +73,6 @@ public class MobGrindingUtils {
 	public static final ITag.INamedTag<Fluid> EXPERIENCE = FluidTags.makeWrapperTag(new ResourceLocation("forge", "experience").toString());
 	public static final ITag.INamedTag<Fluid> XPJUICE = FluidTags.makeWrapperTag(new ResourceLocation("forge", "xpjuice").toString());
 
-	public static final DeferredRegister<ContainerType<?>> CONTAINERS = DeferredRegister.create(ForgeRegistries.CONTAINERS, Reference.MOD_ID);
 	public static final DeferredRegister<ParticleType<?>> PARTICLES = DeferredRegister.create(ForgeRegistries.PARTICLE_TYPES, Reference.MOD_ID);
 	public static final DeferredRegister<IRecipeSerializer<?>> RECIPES = DeferredRegister.create(ForgeRegistries.RECIPE_SERIALIZERS, Reference.MOD_ID);
 
@@ -90,10 +89,8 @@ public class MobGrindingUtils {
 	public static MGUNetProxyCommon NETPROXY;
 
 	public MobGrindingUtils() {
-		ModContainers modContainers = new ModContainers();
-
 		IEventBus modBus = FMLJavaModLoadingContext.get().getModEventBus();
-		CONTAINERS.register(modBus);
+		ModContainers.init(modBus);
 		PARTICLES.register(modBus);
 		RECIPES.register(modBus);
 
