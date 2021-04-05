@@ -3,6 +3,7 @@ package mob_grinding_utils;
 import mob_grinding_utils.blocks.BlockSpikes;
 import mob_grinding_utils.client.render.TileEntityAbsorptionRenderer;
 import mob_grinding_utils.client.render.TileEntityFanRenderer;
+import mob_grinding_utils.client.render.TileEntityMGUSpawnerRenderer;
 import mob_grinding_utils.client.render.TileEntitySawRenderer;
 import mob_grinding_utils.client.render.TileEntityTankRenderer;
 import mob_grinding_utils.client.render.TileEntityXPSolidifierRenderer;
@@ -23,6 +24,7 @@ import mob_grinding_utils.events.RenderChickenSwell;
 import mob_grinding_utils.fakeplayer.MGUFakePlayer;
 import mob_grinding_utils.inventory.client.GuiAbsorptionHopper;
 import mob_grinding_utils.inventory.client.GuiFan;
+import mob_grinding_utils.inventory.client.GuiMGUSpawner;
 import mob_grinding_utils.inventory.client.GuiSaw;
 import mob_grinding_utils.inventory.client.GuiXPSolidifier;
 import mob_grinding_utils.network.MGUNetProxyClient;
@@ -35,7 +37,6 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.RenderTypeLookup;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.fluid.Fluid;
-import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipeSerializer;
@@ -135,11 +136,13 @@ public class MobGrindingUtils {
 		ClientRegistry.bindTileEntityRenderer(ModBlocks.TANK_SINK_TILE, TileEntityTankRenderer::new);
 		ClientRegistry.bindTileEntityRenderer(ModBlocks.JUMBO_TANK_TILE, TileEntityTankRenderer::new);
 		ClientRegistry.bindTileEntityRenderer(ModBlocks.XPSOLIDIFIER_TILE, TileEntityXPSolidifierRenderer::new);
-		
+		ClientRegistry.bindTileEntityRenderer(ModBlocks.ENTITY_SPAWNER_TILE, TileEntityMGUSpawnerRenderer::new);
+
 		ScreenManager.registerFactory(ModContainers.ABSORPTION_HOPPER.get(), GuiAbsorptionHopper::new);
 		ScreenManager.registerFactory(ModContainers.SOLIDIFIER.get(), GuiXPSolidifier::new);
 		ScreenManager.registerFactory(ModContainers.FAN.get(), GuiFan::new);
 		ScreenManager.registerFactory(ModContainers.SAW.get(), GuiSaw::new);
+		ScreenManager.registerFactory(ModContainers.ENTITY_SPAWNER.get(), GuiMGUSpawner::new);
 		
 		 RenderTypeLookup.setRenderLayer(ModBlocks.TANK, RenderType.getCutout());
 		 RenderTypeLookup.setRenderLayer(ModBlocks.TANK_SINK, RenderType.getCutout());

@@ -6,9 +6,27 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 
-import javax.annotation.Nullable;
-
-import mob_grinding_utils.blocks.*;
+import mob_grinding_utils.blocks.BlockAbsorptionHopper;
+import mob_grinding_utils.blocks.BlockDarkOakStone;
+import mob_grinding_utils.blocks.BlockDelightfulDirt;
+import mob_grinding_utils.blocks.BlockDragonMuffler;
+import mob_grinding_utils.blocks.BlockDreadfulDirt;
+import mob_grinding_utils.blocks.BlockEnderInhibitorOff;
+import mob_grinding_utils.blocks.BlockEnderInhibitorOn;
+import mob_grinding_utils.blocks.BlockEntityConveyor;
+import mob_grinding_utils.blocks.BlockEntitySpawner;
+import mob_grinding_utils.blocks.BlockFan;
+import mob_grinding_utils.blocks.BlockSaw;
+import mob_grinding_utils.blocks.BlockSolidXP;
+import mob_grinding_utils.blocks.BlockSpikes;
+import mob_grinding_utils.blocks.BlockTank;
+import mob_grinding_utils.blocks.BlockTankJumbo;
+import mob_grinding_utils.blocks.BlockTankSink;
+import mob_grinding_utils.blocks.BlockTintedGlass;
+import mob_grinding_utils.blocks.BlockWitherMuffler;
+import mob_grinding_utils.blocks.BlockXPSolidifier;
+import mob_grinding_utils.blocks.BlockXPTap;
+import mob_grinding_utils.blocks.MGUBlockItem;
 import mob_grinding_utils.client.render.TileSawStackItemRenderer;
 import mob_grinding_utils.client.render.TileTankStackItemRenderer;
 import mob_grinding_utils.client.render.TileXPSolidifierStackItemRenderer;
@@ -18,6 +36,7 @@ import mob_grinding_utils.itemblocks.BlockItemTankSink;
 import mob_grinding_utils.tile.TileEntityAbsorptionHopper;
 import mob_grinding_utils.tile.TileEntityFan;
 import mob_grinding_utils.tile.TileEntityJumboTank;
+import mob_grinding_utils.tile.TileEntityMGUSpawner;
 import mob_grinding_utils.tile.TileEntitySaw;
 import mob_grinding_utils.tile.TileEntitySinkTank;
 import mob_grinding_utils.tile.TileEntityTank;
@@ -27,21 +46,13 @@ import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.material.MaterialColor;
-import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvents;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.ToolType;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -125,6 +136,7 @@ public class ModBlocks {
 
 	public static Block ENTITY_SPAWNER;
 	public static BlockItem ENTITY_SPAWNER_ITEM;
+	public static TileEntityType<TileEntityMGUSpawner> ENTITY_SPAWNER_TILE;
 
 	public static void init() {
 		FAN = new BlockFan(Block.Properties.create(Material.IRON, MaterialColor.STONE).hardnessAndResistance(10.0F, 2000.0F).sound(SoundType.METAL));
@@ -204,8 +216,9 @@ public class ModBlocks {
 		DELIGHTFUL_DIRT = new BlockDelightfulDirt(Block.Properties.create(Material.EARTH, MaterialColor.PURPLE).hardnessAndResistance(1.0F, 2000.0F).sound(SoundType.GROUND).tickRandomly().setAllowsSpawn((state, reader, pos, entitytype) -> {return entitytype.getClassification() == EntityClassification.CREATURE;}));
 		DELIGHTFUL_DIRT_ITEM = new MGUBlockItem(DELIGHTFUL_DIRT, new Item.Properties().group(MobGrindingUtils.TAB));
 
-			ENTITY_SPAWNER = new BlockEntitySpawner(Block.Properties.create(Material.IRON, MaterialColor.STONE).hardnessAndResistance(10.0F, 2000.0F).sound(SoundType.METAL).notSolid().tickRandomly());
-			ENTITY_SPAWNER_ITEM = new MGUBlockItem(ENTITY_SPAWNER, new Item.Properties().group(MobGrindingUtils.TAB));
+		ENTITY_SPAWNER = new BlockEntitySpawner(Block.Properties.create(Material.IRON, MaterialColor.STONE).hardnessAndResistance(10.0F, 2000.0F).sound(SoundType.METAL).notSolid().tickRandomly());
+		ENTITY_SPAWNER_ITEM = new MGUBlockItem(ENTITY_SPAWNER, new Item.Properties().group(MobGrindingUtils.TAB));
+		ENTITY_SPAWNER_TILE = TileEntityType.Builder.create(TileEntityMGUSpawner::new, ENTITY_SPAWNER).build(null);
 	}
 
 	public static void initReg() {

@@ -54,6 +54,12 @@ public class MGUNetwork {
                 .consumer(MessageSolidifier::handle)
                 .add();
 
+        channel.messageBuilder(MessageEntitySpawner.class, 0, NetworkDirection.PLAY_TO_SERVER)
+		        .decoder(MessageEntitySpawner::decode)
+		        .encoder(MessageEntitySpawner::encode)
+		        .consumer(MessageEntitySpawner::handle)
+		        .add();
+
         return channel;
     }
 }

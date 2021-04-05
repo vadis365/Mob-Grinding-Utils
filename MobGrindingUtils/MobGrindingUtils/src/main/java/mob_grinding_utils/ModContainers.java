@@ -2,6 +2,7 @@ package mob_grinding_utils;
 
 import mob_grinding_utils.inventory.server.ContainerAbsorptionHopper;
 import mob_grinding_utils.inventory.server.ContainerFan;
+import mob_grinding_utils.inventory.server.ContainerMGUSpawner;
 import mob_grinding_utils.inventory.server.ContainerSaw;
 import mob_grinding_utils.inventory.server.ContainerXPSolidifier;
 import net.minecraft.inventory.container.ContainerType;
@@ -22,4 +23,5 @@ public class ModContainers {
     public static final RegistryObject<ContainerType<ContainerSaw>> SAW = CONTAINERS.register("saw_container", () -> IForgeContainerType.create(ContainerSaw::new));
 
     public static final RegistryObject<ContainerType<ContainerXPSolidifier>> SOLIDIFIER = CONTAINERS.register("solidifier_container", () -> IForgeContainerType.create(ContainerXPSolidifier::new));
+    public static final RegistryObject<ContainerType<ContainerMGUSpawner>> ENTITY_SPAWNER = CONTAINERS.register("entity_spawner_container", () -> IForgeContainerType.create(ContainerMGUSpawner::new));
 }
