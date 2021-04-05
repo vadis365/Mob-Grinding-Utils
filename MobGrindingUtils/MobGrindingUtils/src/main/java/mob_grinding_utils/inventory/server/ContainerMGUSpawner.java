@@ -12,7 +12,6 @@ import net.minecraft.item.SpawnEggItem;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.items.SlotItemHandler;
 
 
 public class ContainerMGUSpawner extends Container {
@@ -39,15 +38,15 @@ public class ContainerMGUSpawner extends Container {
         int originY = 143;
 
         //Egg
-        this.addSlot(new SlotItemHandler(tile.inputSlots, 0, 44, 22 ));
+        this.addSlot(new SlotRestrictSizeOnly(tile.inputSlots, 0, 44, 22, 1));
         //Fuel
-        this.addSlot(new RestrictedHandlerSlot(tile.inputSlots, 1, 44, 76, ModItems.SOLID_XP_BABY, 64));
+        this.addSlot(new RestrictedHandlerSlot(tile.fuelSlot, 0, 44, 76, ModItems.SOLID_XP_BABY, 64));
         ////Upgrade Area Width
-        this.addSlot(new RestrictedHandlerSlot(tile.inputSlots, 2, 8, 112, ModItems.ABSORPTION_UPGRADE, 5));
+        this.addSlot(new RestrictedHandlerSlot(tile.inputSlots, 1, 8, 112, ModItems.ABSORPTION_UPGRADE, 5));
         //Upgrade Area Height
-        this.addSlot(new RestrictedHandlerSlot(tile.inputSlots, 3, 44, 112, ModItems.SAW_UPGRADE_LOOTING, 5));
+        this.addSlot(new RestrictedHandlerSlot(tile.inputSlots, 2, 44, 112, ModItems.SAW_UPGRADE_LOOTING, 5));
         //Upgrade Speed
-        this.addSlot(new RestrictedHandlerSlot(tile.inputSlots, 4, 80, 112, ModItems.XP_SOLIDIFIER_UPGRADE, 5));
+        this.addSlot(new RestrictedHandlerSlot(tile.inputSlots, 3, 80, 112, ModItems.XP_SOLIDIFIER_UPGRADE, 5));
 
         //Player Inventory
         for (int row = 0; row < 3; row++) {

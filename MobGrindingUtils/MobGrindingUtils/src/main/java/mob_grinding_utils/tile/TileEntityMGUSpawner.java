@@ -1,5 +1,6 @@
 package mob_grinding_utils.tile;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import io.netty.buffer.Unpooled;
@@ -24,6 +25,8 @@ import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.Direction;
+import net.minecraft.util.EntityPredicates;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
@@ -33,6 +36,11 @@ import net.minecraft.world.IServerWorld;
 import net.minecraft.world.spawner.WorldEntitySpawner;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 
 public class TileEntityMGUSpawner extends TileEntity implements ITickableTileEntity, INamedContainerProvider {
@@ -41,7 +49,9 @@ public class TileEntityMGUSpawner extends TileEntity implements ITickableTileEnt
     public int MAX_SPAWNING_TIME = 100;
     public boolean isOn = false;
 
-    public ItemStackHandler inputSlots = new ItemStackHandler(5);
+    public ItemStackHandler inputSlots = new ItemStackHandler(4);
+    public ItemStackHandler fuelSlot = new ItemStackHandler(1);
+    private final LazyOptional<IItemHandler> fuelSlotCap = LazyOptional.of(() -> fuelSlot);
 
 	public int animationTicks, prevAnimationTicks;
 	public boolean showRenderBox;
@@ -72,7 +82,7 @@ public class TileEntityMGUSpawner extends TileEntity implements ITickableTileEnt
 					setProgress(getProgress() + 1 + getSpeedModifierAmount());
 					if (getProgress() >= MAX_SPAWNING_TIME) {
 						if (spawnMobInArea(false)) //don't simulate
-							inputSlots.getStackInSlot(1).shrink(1);
+							fuelSlot.getStackInSlot(0).shrink(1);
 						setProgress(0);
 						return;
 					}
@@ -107,17 +117,17 @@ public class TileEntityMGUSpawner extends TileEntity implements ITickableTileEnt
 				int minZ = MathHelper.floor(axisalignedbb.minZ);
 				int maxZ = MathHelper.floor(axisalignedbb.maxZ);
 				BlockPos.Mutable mutablePos = new BlockPos.Mutable();
-
+				MobEntity entity = (MobEntity) type.create(getWorld());
 				for (int x = minX; x < maxX; x++)
 					for (int y = minY; y < maxY; y++)
 						for (int z = minZ; z < maxZ; z++) {
 							BlockPos posList = mutablePos.setPos(x, y, z);
-							if (WorldEntitySpawner.canCreatureTypeSpawnAtLocation(EntitySpawnPlacementRegistry.getPlacementType(type), getWorld(), posList, type)) {
+							if (entity != null)
+								entity.setPosition(posList.getX() + 0.5D, posList.getY(), posList.getZ() + 0.5D);
+							if (WorldEntitySpawner.canCreatureTypeSpawnAtLocation(EntitySpawnPlacementRegistry.getPlacementType(type), getWorld(), posList, type) && getWorld().getEntitiesWithinAABB(entity.getType(), entity.getBoundingBox(), EntityPredicates.IS_ALIVE).isEmpty() && getWorld().hasNoCollisions(entity)) {
 								if(test)
 									return true;
-								MobEntity entity = (MobEntity) type.create(world);
 								if (entity != null) {
-									entity.setPosition(posList.getX() + 0.5D, posList.getY(), posList.getZ() + 0.5D);
 									entity.onInitialSpawn((IServerWorld) getWorld(), getWorld().getDifficultyForLocation(posList), SpawnReason.NATURAL, null, null);
 									getWorld().addEntity(entity);
 									return true;
@@ -180,31 +190,31 @@ public class TileEntityMGUSpawner extends TileEntity implements ITickableTileEnt
 	}
 
 	private boolean hasFuel() {
-		return !inputSlots.getStackInSlot(1).isEmpty();
+		return !fuelSlot.getStackInSlot(0).isEmpty();
 	}
 
 	private boolean hasWidthUpgrade() {
-		return !inputSlots.getStackInSlot(2).isEmpty() && inputSlots.getStackInSlot(2).getItem() == ModItems.ABSORPTION_UPGRADE; //TODO temp items here
+		return !inputSlots.getStackInSlot(1).isEmpty() && inputSlots.getStackInSlot(1).getItem() == ModItems.ABSORPTION_UPGRADE; //TODO temp items here
 	}
 
 	public int getWidthModifierAmount() {
-		return hasWidthUpgrade() ? inputSlots.getStackInSlot(2).getCount() : 0;
+		return hasWidthUpgrade() ? inputSlots.getStackInSlot(1).getCount() : 0;
 	}
 
 	private boolean hasHeightUpgrade() {
-		return !inputSlots.getStackInSlot(3).isEmpty() && inputSlots.getStackInSlot(3).getItem() == ModItems.SAW_UPGRADE_LOOTING; //TODO temp items here
+		return !inputSlots.getStackInSlot(2).isEmpty() && inputSlots.getStackInSlot(2).getItem() == ModItems.SAW_UPGRADE_LOOTING; //TODO temp items here
 	}
 
 	public int getHeightModifierAmount() {
-		return hasHeightUpgrade() ? inputSlots.getStackInSlot(3).getCount() : 0;
+		return hasHeightUpgrade() ? inputSlots.getStackInSlot(2).getCount() : 0;
 	}
 
 	private boolean hasSpeedUpgrade() {
-		return !inputSlots.getStackInSlot(4).isEmpty() && inputSlots.getStackInSlot(4).getItem() == ModItems.XP_SOLIDIFIER_UPGRADE; //TODO temp items here
+		return !inputSlots.getStackInSlot(3).isEmpty() && inputSlots.getStackInSlot(3).getItem() == ModItems.XP_SOLIDIFIER_UPGRADE; //TODO temp items here
 	}
 
 	public int getSpeedModifierAmount() {
-		return hasSpeedUpgrade() ? inputSlots.getStackInSlot(4).getCount() : 0;
+		return hasSpeedUpgrade() ? inputSlots.getStackInSlot(3).getCount() : 0;
 	}
 
 	public AxisAlignedBB getAABBWithModifiers() {
@@ -314,5 +324,13 @@ public class TileEntityMGUSpawner extends TileEntity implements ITickableTileEnt
 		}
 		return entity;
 	}
+
+    @Nonnull
+    @Override
+    public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
+        if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
+            return fuelSlotCap.cast();
+        return super.getCapability(cap, side);
+    }
 
 }

@@ -51,8 +51,7 @@ public class TileEntityMGUSpawnerRenderer extends TileEntityRenderer<TileEntityM
 		matrixStack.translate(-0.0005D, -0.0005D, -0.0005D);
 		matrixStack.scale(0.999F, 0.999F, 0.999F);
 
-		WorldRenderer.drawBoundingBox(matrixStack, buffer.getBuffer(RenderType.getLines()), tile.getAABBForRender(), 1F,
-				0F, 0F, 1F);
+		WorldRenderer.drawBoundingBox(matrixStack, buffer.getBuffer(RenderType.getLines()), tile.getAABBForRender(), 1F, 0F, 0F, 1F);
 		matrixStack.pop();
 	}
 
