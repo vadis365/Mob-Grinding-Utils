@@ -38,7 +38,6 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
@@ -194,7 +193,7 @@ public class TileEntityMGUSpawner extends TileEntity implements ITickableTileEnt
 	}
 
 	private boolean hasWidthUpgrade() {
-		return !inputSlots.getStackInSlot(1).isEmpty() && inputSlots.getStackInSlot(1).getItem() == ModItems.ABSORPTION_UPGRADE; //TODO temp items here
+		return !inputSlots.getStackInSlot(1).isEmpty() && inputSlots.getStackInSlot(1).getItem() == ModItems.SPAWNER_UPGRADE_WIDTH;
 	}
 
 	public int getWidthModifierAmount() {
@@ -202,7 +201,7 @@ public class TileEntityMGUSpawner extends TileEntity implements ITickableTileEnt
 	}
 
 	private boolean hasHeightUpgrade() {
-		return !inputSlots.getStackInSlot(2).isEmpty() && inputSlots.getStackInSlot(2).getItem() == ModItems.SAW_UPGRADE_LOOTING; //TODO temp items here
+		return !inputSlots.getStackInSlot(2).isEmpty() && inputSlots.getStackInSlot(2).getItem() == ModItems.SPAWNER_UPGRADE_HEIGHT;
 	}
 
 	public int getHeightModifierAmount() {

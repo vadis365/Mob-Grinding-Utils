@@ -58,7 +58,9 @@
   "item.mob_grinding_utils.solid_xp_mould_blank": "XP Mould Blank",
   "item.mob_grinding_utils.solid_xp_mould_baby": "XP Mould Jelly Baby",
   "item.mob_grinding_utils.solid_xp_baby": "XP Jelly Baby",
-  "item.mob_grinding_utils.xp_solidifier_upgrade": "XP Solidifier Speed Upgrade",
+  "item.mob_grinding_utils.xp_solidifier_upgrade": "XP Speed Upgrade",
+  "item.mob_grinding_utils.spawner_upgrade_width": "Entity Spawner Width Upgrade",
+  "item.mob_grinding_utils.spawner_upgrade_height": "Entity Spawner Height Upgrade",
  
   "_comment": "Creative Tab",
   "itemGroup.mob_grinding_utils": "Mob Grinding Utils",
@@ -126,11 +128,16 @@
   "block.mob_grinding_utils.xpsolidifier.tooltip_1": "Solidifies Fluid XP.",
   "block.mob_grinding_utils.xpsolidifier.tooltip_2": "Requires an XP Mould and Fluid XP in its Tank.",
   "block.mob_grinding_utils.xpsolidifier.tooltip_3": "Can be configured to export Horizontally.",
-  "block.mob_grinding_utils.xpsolidifier.tooltip_4": "Speed is increased with XP Solidifier Speed Upgrades.",
+  "block.mob_grinding_utils.xpsolidifier.tooltip_4": "Speed is increased with XP Speed Upgrades.",
 
   "block.mob_grinding_utils.solid_xp_block.tooltip_1": "Bouncy.",
-
-  "block.mob_grinding_utils.entity_spawner.tooltip_1": "Add a Mob Egg blah, blah, blah, etc.",
+  
+  "block.mob_grinding_utils.entity_spawner.tooltip_1": "Can Spawn Mobs in a 3x3x1 area.",
+  "block.mob_grinding_utils.entity_spawner.tooltip_2": "Uses a Mob Egg in the Top Slot.",
+  "block.mob_grinding_utils.entity_spawner.tooltip_3": "Fuelled by Solid XP Jelly Babies.",
+  "block.mob_grinding_utils.entity_spawner.tooltip_4": "Enhanced with XP Speed Upgrades and Spawner Height/Width Upgrades.",
+  "block.mob_grinding_utils.entity_spawner.tooltip_5": "Area of Effect can be toggled in it's gui.",
+  "block.mob_grinding_utils.entity_spawner.tooltip_6": "Position can be offset in it's gui.",
 
   "_comment": "Item Tool tips",
   "tooltip.hopperupgrade": "Radius Modifier: +1. Max of 6.",
@@ -167,5 +174,7 @@
   "tooltip.solid_xp_mould": "Used in the XP Solidifier",
   "tooltip.solid_xp_mould_blank": "Crafts in to XP Moulds",
    
-  "tooltip.solidifier_upgrade": "Speed Modifier: +1. Max of 9."
+  "tooltip.solidifier_upgrade": "Speed Modifier: +1.",
+  "tooltip.spawner_upgrade_width": "Width Modifier: +1. Max of 5.",
+  "tooltip.spawner_upgrade_height": "Height Modifier: +1. Max of 5."
 }

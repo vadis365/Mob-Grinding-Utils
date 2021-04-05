@@ -1,4 +1,4 @@
-package mob_grinding_utils.blocks;
+package mob_grinding_utils.itemblocks;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.resources.I18n;

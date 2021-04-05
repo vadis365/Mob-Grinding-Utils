@@ -55,6 +55,7 @@ public class LootTables extends LootTableProvider {
             registerDropSelfLootTable(ModBlocks.TINTED_GLASS);
             registerLootTable(ModBlocks.DREADFUL_DIRT, (block) -> droppingWithSilkTouch(block, Items.DIRT));
             registerDropSelfLootTable(ModBlocks.SOLID_XP_BLOCK);
+            registerDropSelfLootTable(ModBlocks.ENTITY_SPAWNER);
         }
 
         @Nonnull

@@ -42,9 +42,9 @@ public class ContainerMGUSpawner extends Container {
         //Fuel
         this.addSlot(new RestrictedHandlerSlot(tile.fuelSlot, 0, 44, 76, ModItems.SOLID_XP_BABY, 64));
         ////Upgrade Area Width
-        this.addSlot(new RestrictedHandlerSlot(tile.inputSlots, 1, 8, 112, ModItems.ABSORPTION_UPGRADE, 5));
+        this.addSlot(new RestrictedHandlerSlot(tile.inputSlots, 1, 8, 112, ModItems.SPAWNER_UPGRADE_WIDTH, 5));
         //Upgrade Area Height
-        this.addSlot(new RestrictedHandlerSlot(tile.inputSlots, 2, 44, 112, ModItems.SAW_UPGRADE_LOOTING, 5));
+        this.addSlot(new RestrictedHandlerSlot(tile.inputSlots, 2, 44, 112, ModItems.SPAWNER_UPGRADE_HEIGHT, 5));
         //Upgrade Speed
         this.addSlot(new RestrictedHandlerSlot(tile.inputSlots, 3, 80, 112, ModItems.XP_SOLIDIFIER_UPGRADE, 5));
 
@@ -84,11 +84,11 @@ public class ContainerMGUSpawner extends Container {
 					if (!this.mergeItemStack(stack1, 1, 2, false))
 						return ItemStack.EMPTY;
 
-				if (stack1.getItem() == ModItems.ABSORPTION_UPGRADE)//temp as new items need to be made
+				if (stack1.getItem() == ModItems.SPAWNER_UPGRADE_WIDTH)//temp as new items need to be made
 					if (!this.mergeItemStack(stack1, 2, 3, false))
 						return ItemStack.EMPTY;
 
-				if (stack1.getItem() == ModItems.SAW_UPGRADE_LOOTING)
+				if (stack1.getItem() == ModItems.SPAWNER_UPGRADE_HEIGHT)
 					if (!this.mergeItemStack(stack1, 3, 4, false))
 						return ItemStack.EMPTY;
 

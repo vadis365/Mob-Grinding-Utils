@@ -11,6 +11,7 @@ import net.minecraft.block.HorizontalBlock;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.DirectionProperty;
@@ -69,6 +70,26 @@ public class BlockEntitySpawner extends Block implements ITileEntityProvider {
 			NetworkHooks.openGui((ServerPlayerEntity) player, (TileEntityMGUSpawner)tileentity, pos);
 		return ActionResultType.SUCCESS;
 		} 
+	}
+
+	@Override
+	public void onBlockHarvested(World world, BlockPos pos, BlockState state, PlayerEntity player) {
+		if (!world.isRemote && !player.abilities.isCreativeMode) {
+			TileEntityMGUSpawner tile = (TileEntityMGUSpawner) world.getTileEntity(pos);
+			if (tile != null) {
+				if(!tile.inputSlots.getStackInSlot(0).isEmpty())
+					InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), tile.inputSlots.getStackInSlot(0));
+				if(!tile.inputSlots.getStackInSlot(1).isEmpty())
+					InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), tile.inputSlots.getStackInSlot(1));
+				if(!tile.inputSlots.getStackInSlot(2).isEmpty())
+					InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), tile.inputSlots.getStackInSlot(2));
+				if(!tile.inputSlots.getStackInSlot(3).isEmpty())
+					InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), tile.inputSlots.getStackInSlot(3));
+				if(!tile.fuelSlot.getStackInSlot(0).isEmpty())
+					InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), tile.fuelSlot.getStackInSlot(0));
+				world.removeTileEntity(pos);
+			}
+		}
 	}
 
 	@Override

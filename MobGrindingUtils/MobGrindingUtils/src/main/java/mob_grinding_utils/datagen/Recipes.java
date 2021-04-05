@@ -8,7 +8,12 @@ import com.google.gson.JsonObject;
 import mob_grinding_utils.ModBlocks;
 import mob_grinding_utils.ModItems;
 import mob_grinding_utils.Reference;
-import net.minecraft.data.*;
+import net.minecraft.data.DataGenerator;
+import net.minecraft.data.DirectoryCache;
+import net.minecraft.data.IFinishedRecipe;
+import net.minecraft.data.RecipeProvider;
+import net.minecraft.data.ShapedRecipeBuilder;
+import net.minecraft.data.ShapelessRecipeBuilder;
 import net.minecraft.item.Items;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.util.ResourceLocation;
@@ -325,6 +330,18 @@ public class Recipes extends RecipeProvider {
         ShapelessRecipeBuilder.shapelessRecipe(ModBlocks.XPSOLIDIFIER_ITEM).addIngredient(ModBlocks.XPSOLIDIFIER_ITEM,1)
                 .addCriterion("", hasItem(Items.AIR))
                 .build(consumer, new ResourceLocation(Reference.MOD_ID, "recipe_solidifier_reset"));
+        
+        ShapedRecipeBuilder.shapedRecipe(ModBlocks.ENTITY_SPAWNER_ITEM)
+		        .patternLine("EEE")
+		        .patternLine("XRX")
+		        .patternLine("IPI")
+		        .key('P', Items.PISTON)
+		        .key('I', Tags.Items.STORAGE_BLOCKS_IRON)
+		        .key('R', Tags.Items.STORAGE_BLOCKS_REDSTONE)
+		        .key('X', ModBlocks.SOLID_XP_BLOCK)
+		        .key('E', Items.ENDER_EYE)
+		        .addCriterion("", hasItem(Items.AIR))
+		        .build(consumer, new ResourceLocation(Reference.MOD_ID, "recipe_entity_spawner"));
 
         //Blank Mould
         ShapedRecipeBuilder.shapedRecipe(ModItems.SOLID_XP_MOULD_BLANK)
@@ -383,6 +400,28 @@ public class Recipes extends RecipeProvider {
 	        .key('W', Items.WHEAT)
 	        .addCriterion("", hasItem(Items.AIR))
 	        .build(consumer, new ResourceLocation(Reference.MOD_ID, "recipe_nutritious_feed"));
+
+        //Spawner width upgrade
+        ShapedRecipeBuilder.shapedRecipe(ModItems.SPAWNER_UPGRADE_WIDTH)
+                .patternLine("EEE")
+                .patternLine("BXB")
+                .patternLine("EEE")
+                .key('E', Items.EGG)
+                .key('B', Items.BLAZE_POWDER)
+                .key('X', ModItems.FLUID_XP_BUCKET)
+                .addCriterion("", hasItem(Items.AIR))
+                .build(consumer, new ResourceLocation(Reference.MOD_ID, "recipe_spawner_upgrade_width"));
+        
+        //Spawner height upgrade
+        ShapedRecipeBuilder.shapedRecipe(ModItems.SPAWNER_UPGRADE_HEIGHT)
+                .patternLine("EBE")
+                .patternLine("EXE")
+                .patternLine("EBE")
+                .key('E', Items.EGG)
+                .key('B', Items.BLAZE_POWDER)
+                .key('X', ModItems.FLUID_XP_BUCKET)
+                .addCriterion("", hasItem(Items.AIR))
+                .build(consumer, new ResourceLocation(Reference.MOD_ID, "recipe_spawner_upgrade_height"));
 
     }
 
