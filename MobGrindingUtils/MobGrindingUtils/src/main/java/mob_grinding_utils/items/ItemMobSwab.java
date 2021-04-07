@@ -1,7 +1,9 @@
 package mob_grinding_utils.items;
 
 import java.util.List;
+import java.util.Objects;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import mob_grinding_utils.ModItems;
@@ -29,23 +31,24 @@ public class ItemMobSwab extends Item {
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void addInformation(ItemStack stack, @Nullable World world, List<ITextComponent> list, ITooltipFlag flag) {
+	public void addInformation(@Nonnull ItemStack stack, @Nullable World world, @Nonnull List<ITextComponent> list, @Nonnull ITooltipFlag flag) {
 		if (!used)
 			list.add(new TranslationTextComponent("tooltip.mobswab_1").mergeStyle(TextFormatting.YELLOW));
-		else if (used && stack.hasTag() && stack.getTag().contains("mguMobName")) {
+		else if (stack.hasTag() && Objects.requireNonNull(stack.getTag()).contains("mguMobName")) {
 			list.add(new TranslationTextComponent("tooltip.mobswab_2").mergeStyle(TextFormatting.YELLOW));
-			list.add(new TranslationTextComponent("tooltip.mobswab_3").mergeStyle(TextFormatting.GREEN).appendString( " " + stack.getTag().get("mguMobName").getString() + " 'DNA'."));
+			list.add(new TranslationTextComponent("tooltip.mobswab_3").mergeStyle(TextFormatting.GREEN).appendString( " " + Objects.requireNonNull(stack.getTag().get("mguMobName")).getString() + " 'DNA'."));
 		}
 	}
 
+	@Nonnull
 	@Override
-	public ActionResultType itemInteractionForEntity(ItemStack stack, PlayerEntity player, LivingEntity target, Hand hand) {
-		if (target instanceof LivingEntity && !(target instanceof PlayerEntity) && !used) {
-				String mobName = target.getType().getRegistryName().toString();
+	public ActionResultType itemInteractionForEntity(@Nonnull ItemStack stack, @Nonnull PlayerEntity player, @Nonnull LivingEntity target, @Nonnull Hand hand) {
+		if (!(target instanceof PlayerEntity) && !used) {
+				String mobName = Objects.requireNonNull(target.getType().getRegistryName()).toString();
 				ItemStack stack2 = new ItemStack(ModItems.MOB_SWAB_USED, 1);
 				if (!stack2.hasTag())
 					stack2.setTag(new CompoundNBT());
-				if (!stack2.getTag().contains("mguMobName")) {
+				if (!Objects.requireNonNull(stack2.getTag()).contains("mguMobName")) {
 					stack2.getTag().putString("mguMobName", mobName);
 					CompoundNBT nbt = new CompoundNBT();
 					target.writeAdditional(nbt);

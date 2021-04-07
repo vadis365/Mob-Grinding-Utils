@@ -2,6 +2,7 @@ package mob_grinding_utils.items;
 
 import java.util.List;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import net.minecraft.client.util.ITooltipFlag;
@@ -15,7 +16,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class ItemSolidXPMould extends Item {
-	public String mouldType = "blank";
+	public String mouldType;
 	
 	public ItemSolidXPMould(Properties properties, String type) {
 		super(properties);
@@ -24,8 +25,8 @@ public class ItemSolidXPMould extends Item {
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void addInformation(ItemStack stack, @Nullable World world, List<ITextComponent> list, ITooltipFlag flag) {
-		if(mouldType == "blank")
+	public void addInformation(@Nonnull ItemStack stack, @Nullable World world, @Nonnull List<ITextComponent> list, @Nonnull ITooltipFlag flag) {
+		if(mouldType.equals("blank"))
 			list.add(new TranslationTextComponent("tooltip.solid_xp_mould_blank").mergeStyle(TextFormatting.YELLOW));
 		else
 			list.add(new TranslationTextComponent("tooltip.solid_xp_mould").mergeStyle(TextFormatting.YELLOW));

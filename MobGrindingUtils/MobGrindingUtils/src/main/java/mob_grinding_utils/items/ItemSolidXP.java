@@ -2,6 +2,7 @@ package mob_grinding_utils.items;
 
 import java.util.List;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import mob_grinding_utils.tile.TileEntitySinkTank;
@@ -21,7 +22,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class ItemSolidXP extends Item {
-	public int xpValue = 50; // just a basic 
+	public int xpValue;
 
 	public ItemSolidXP(Properties properties, int value) {
 		super(properties);
@@ -30,14 +31,15 @@ public class ItemSolidXP extends Item {
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void addInformation(ItemStack stack, @Nullable World world, List<ITextComponent> list, ITooltipFlag flag) {
+	public void addInformation(ItemStack stack, @Nullable World world, List<ITextComponent> list, @Nonnull ITooltipFlag flag) {
 		list.add(new TranslationTextComponent("tooltip.solid_xp").appendString(Integer.toString(xpValue)).mergeStyle(TextFormatting.YELLOW));
 		if (stack.getCount() > 1)
 			list.add(new TranslationTextComponent("tooltip.solid_xp2").appendString(Integer.toString(xpValue * stack.getCount())).mergeStyle(TextFormatting.YELLOW));
 	}
 
+	@Nonnull
 	@Override
-	public ItemStack onItemUseFinish(ItemStack stack, World world, LivingEntity entity) {
+	public ItemStack onItemUseFinish(@Nonnull ItemStack stack, @Nonnull World world, @Nonnull LivingEntity entity) {
 		if (entity instanceof PlayerEntity) {
 			PlayerEntity player = (PlayerEntity) entity;
 			if (xpValue > 0)

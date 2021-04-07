@@ -1,7 +1,9 @@
 package mob_grinding_utils.items;
 
 import java.util.List;
+import java.util.Objects;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import net.minecraft.client.util.ITooltipFlag;
@@ -23,18 +25,18 @@ public class ItemGMChickenFeed extends Item {
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void addInformation(ItemStack stack, @Nullable World world, List<ITextComponent> list, ITooltipFlag flag) {
+	public void addInformation(@Nonnull ItemStack stack, @Nullable World world, List<ITextComponent> list, @Nonnull ITooltipFlag flag) {
 		list.add(new TranslationTextComponent("tooltip.chickenfeed_1").mergeStyle(TextFormatting.YELLOW));
 		list.add(new TranslationTextComponent("tooltip.chickenfeed_2").mergeStyle(TextFormatting.YELLOW));
 
-		if (type == "mob")
-			if (stack.hasTag() && stack.getTag().contains("mguMobName"))
+		if (type.equals("mob"))
+			if (stack.hasTag() && Objects.requireNonNull(stack.getTag()).contains("mguMobName"))
 				list.add(new TranslationTextComponent("tooltip.chickenfeed_3").mergeStyle(TextFormatting.GREEN).appendString(" " + stack.getTag().get("mguMobName") + " 'DNA'."));
 
-		if (type == "cursed")
+		if (type.equals("cursed"))
 			list.add(new TranslationTextComponent("tooltip.chickenfeed_4").mergeStyle(TextFormatting.YELLOW));
 
-		if (type == "nutritious") 
+		if (type.equals("nutritious"))
 			list.add(new TranslationTextComponent("tooltip.chickenfeed_5").mergeStyle(TextFormatting.YELLOW));
 	}
 
