@@ -2,6 +2,7 @@ package mob_grinding_utils.items;
 
 import java.util.List;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import net.minecraft.client.util.ITooltipFlag;
@@ -16,7 +17,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class ItemFanUpgrade extends Item {
 	
-	public String upgradeType = "width";
+	public String upgradeType;
 
 	public ItemFanUpgrade(Properties properties, String type) {
 		super(properties);
@@ -25,12 +26,12 @@ public class ItemFanUpgrade extends Item {
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void addInformation(ItemStack stack, @Nullable World world, List<ITextComponent> list, ITooltipFlag flag) {
-		if (upgradeType.matches("width"))
+	public void addInformation(@Nonnull ItemStack stack, @Nullable World world, @Nonnull List<ITextComponent> list, @Nonnull ITooltipFlag flag) {
+		if (upgradeType.equals("width"))
 			list.add(new TranslationTextComponent("tooltip.fanupgrade_width").mergeStyle(TextFormatting.YELLOW));
-		if (upgradeType.matches("height"))
+		if (upgradeType.equals("height"))
 			list.add(new TranslationTextComponent("tooltip.fanupgrade_height").mergeStyle(TextFormatting.YELLOW));
-		if (upgradeType.matches("speed"))
+		if (upgradeType.equals("speed"))
 			list.add(new TranslationTextComponent("tooltip.fanupgrade_distance").mergeStyle(TextFormatting.YELLOW));
 	}
 

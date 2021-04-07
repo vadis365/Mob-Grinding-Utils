@@ -2,6 +2,7 @@ package mob_grinding_utils.items;
 
 import java.util.List;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import net.minecraft.client.util.ITooltipFlag;
@@ -15,7 +16,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class ItemSawUpgrade extends Item  {
-	public String upgradeType = "sharpness";
+	public String upgradeType;
 
 	public ItemSawUpgrade(Properties properties, String type) {
 		super(properties);
@@ -24,18 +25,18 @@ public class ItemSawUpgrade extends Item  {
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void addInformation(ItemStack stack, @Nullable World world, List<ITextComponent> list, ITooltipFlag flag) {
-		if (upgradeType.matches("sharpness"))
+	public void addInformation(@Nonnull ItemStack stack, @Nullable World world, @Nonnull List<ITextComponent> list, @Nonnull ITooltipFlag flag) {
+		if (upgradeType.equals("sharpness"))
 			list.add(new TranslationTextComponent("tooltip.sawupgrade_sharpness").mergeStyle(TextFormatting.YELLOW));
-		if (upgradeType.matches("looting"))
+		if (upgradeType.equals("looting"))
 			list.add(new TranslationTextComponent("tooltip.sawupgrade_looting").mergeStyle(TextFormatting.YELLOW));
-		if (upgradeType.matches("fire"))
+		if (upgradeType.equals("fire"))
 			list.add(new TranslationTextComponent("tooltip.sawupgrade_fire").mergeStyle(TextFormatting.YELLOW));
-		if (upgradeType.matches("smite"))
+		if (upgradeType.equals("smite"))
 			list.add(new TranslationTextComponent("tooltip.sawupgrade_smite").mergeStyle(TextFormatting.YELLOW));
-		if (upgradeType.matches("arthropod"))
+		if (upgradeType.equals("arthropod"))
 			list.add(new TranslationTextComponent("tooltip.sawupgrade_arthropods").mergeStyle(TextFormatting.YELLOW));
-		if (upgradeType.matches("beheading"))
+		if (upgradeType.equals("beheading"))
 			list.add(new TranslationTextComponent("tooltip.sawupgrade_beheading").mergeStyle(TextFormatting.YELLOW));
 	}
 
