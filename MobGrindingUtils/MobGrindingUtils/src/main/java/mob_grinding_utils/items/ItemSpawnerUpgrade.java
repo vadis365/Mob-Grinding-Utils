@@ -26,9 +26,9 @@ public class ItemSpawnerUpgrade extends Item {
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void addInformation(ItemStack stack, @Nullable World world, List<ITextComponent> list, ITooltipFlag flag) {
-		if (upgradeType.matches("width"))
+		if (upgradeType.equals("width"))
 			list.add(new TranslationTextComponent("tooltip.spawner_upgrade_width").mergeStyle(TextFormatting.YELLOW));
-		if (upgradeType.matches("height"))
+		if (upgradeType.equals("height"))
 			list.add(new TranslationTextComponent("tooltip.spawner_upgrade_height").mergeStyle(TextFormatting.YELLOW));
 	}
 
