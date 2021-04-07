@@ -32,6 +32,8 @@ import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
+import javax.annotation.Nonnull;
+
 public class TileEntityFan extends TileEntityInventoryHelper implements ITickableTileEntity, INamedContainerProvider {
 
 	private static final int[] SLOTS = new int[] {0, 1, 2};
@@ -143,10 +145,7 @@ public class TileEntityFan extends TileEntityInventoryHelper implements ITickabl
 	}
 
 	public void toggleRenderBox() {
-		if (!showRenderBox)
-			showRenderBox = true;
-		else
-			showRenderBox = false;
+		showRenderBox = !showRenderBox;
 		markDirty();
 	}
 
@@ -154,8 +153,7 @@ public class TileEntityFan extends TileEntityInventoryHelper implements ITickabl
 		BlockState state = getWorld().getBlockState(getPos());
 		Direction facing = state.get(BlockFan.FACING);
 		List<LivingEntity> list = getWorld().getEntitiesWithinAABB(LivingEntity.class, getAABBWithModifiers());
-		for (int i = 0; i < list.size(); i++) {
-			Entity entity = list.get(i);
+		for (Entity entity : list) {
 			if (entity != null) {
 				if (entity instanceof LivingEntity) {
 					if (facing != Direction.UP && facing != Direction.DOWN) {
@@ -167,8 +165,7 @@ public class TileEntityFan extends TileEntityInventoryHelper implements ITickabl
 						entity.setMotion(vec3d.x, (double) f, vec3d.z);
 						entity.addVelocity(0D, 0.25D, 0D);
 						entity.fallDistance = 0;
-					} else if (facing == Direction.DOWN)
-						entity.addVelocity(0D, -0.2D, 0D);
+					} else entity.addVelocity(0D, -0.2D, 0D);
 				}
 			}
 		}
@@ -212,6 +209,7 @@ public class TileEntityFan extends TileEntityInventoryHelper implements ITickabl
 		zNeg = nbt.getFloat("zNeg");
 	}
 
+	@Nonnull
 	@Override
     public CompoundNBT getUpdateTag() {
 		CompoundNBT nbt = new CompoundNBT();
@@ -232,7 +230,7 @@ public class TileEntityFan extends TileEntityInventoryHelper implements ITickabl
 	}
 
 	public void onContentsChanged() {
-		if (this != null && !getWorld().isRemote) {
+		if (!getWorld().isRemote) {
 			final BlockState state = getWorld().getBlockState(getPos());
 			setAABBWithModifiers();
 			getWorld().notifyBlockUpdate(getPos(), state, state, 8);
@@ -245,6 +243,7 @@ public class TileEntityFan extends TileEntityInventoryHelper implements ITickabl
 		return stack.getItem() instanceof ItemFanUpgrade;
 	}
 
+	@Nonnull
 	@Override
 	public ItemStack removeStackFromSlot(int index) {
 		return ItemStackHelper.getAndRemove(getItems(), index);
@@ -255,6 +254,7 @@ public class TileEntityFan extends TileEntityInventoryHelper implements ITickabl
 		return 64;
 	}
 
+	@Nonnull
 	@Override
 	public int[] getSlotsForFace(Direction side) {
 		return SLOTS;
@@ -275,6 +275,7 @@ public class TileEntityFan extends TileEntityInventoryHelper implements ITickabl
 		return new ContainerFan(windowID, playerInventory, new PacketBuffer(Unpooled.buffer()).writeBlockPos(pos));
 	}
 
+	@Nonnull
 	@Override
 	public ITextComponent getDisplayName() {
 		return new TranslationTextComponent("block.mob_grinding_utils.fan");

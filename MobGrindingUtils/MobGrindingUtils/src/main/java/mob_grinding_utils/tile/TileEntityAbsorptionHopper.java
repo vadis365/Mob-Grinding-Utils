@@ -51,7 +51,7 @@ import net.minecraftforge.items.ItemHandlerHelper;
 public class TileEntityAbsorptionHopper extends TileEntityInventoryHelper implements ITickableTileEntity, INamedContainerProvider {
     public FluidTank tank = new FluidTank(FluidAttributes.BUCKET_VOLUME *  16);
     private final LazyOptional<IFluidHandler> tank_holder = LazyOptional.of(() -> tank);
-	private IItemHandler itemHandler;
+	private final IItemHandler itemHandler;
 	private LazyOptional<IItemHandler> itemholder = LazyOptional.empty();
     private static final int[] SLOTS = new int[] {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16};
     public int prevTankAmount;
@@ -72,6 +72,7 @@ public class TileEntityAbsorptionHopper extends TileEntityInventoryHelper implem
 			this.name = name;
 		}
 
+		@Nonnull
 		@Override
 		public String getString() {
 			return name;
@@ -161,10 +162,7 @@ public class TileEntityAbsorptionHopper extends TileEntityInventoryHelper implem
 	}
 
 	public void toggleRenderBox() {
-		if (!showRenderBox)
-			showRenderBox = true;
-		else
-			showRenderBox = false;
+		showRenderBox = !showRenderBox;
 		markDirty();
 	}
 
@@ -228,7 +226,7 @@ public class TileEntityAbsorptionHopper extends TileEntityInventoryHelper implem
 						}
 					});
 				}
-				else if (tile != null && tile instanceof IInventory) {
+				else if (tile instanceof IInventory) {
 					IInventory iinventory = (IInventory) tile;
 					if (isInventoryFull(iinventory, facing))
 						break;
@@ -351,17 +349,18 @@ public class TileEntityAbsorptionHopper extends TileEntityInventoryHelper implem
 		return hasUpgrade() ? getItems().get(0).getCount() : 0;
 	}
 
-    @Override
-    @Nullable
+    @Nonnull
+	@Override
     public ItemStack removeStackFromSlot(int index) {
         return ItemStackHelper.getAndRemove(getItems(), index);
     }
 
 	@Override
     public boolean isItemValidForSlot(int slot, ItemStack stack) {
-        return slot == 0 ? false : true;
+        return slot != 0;
     }
 	
+	@Nonnull
 	@Override
 	public int[] getSlotsForFace(Direction side) {
 		return SLOTS;
@@ -374,9 +373,7 @@ public class TileEntityAbsorptionHopper extends TileEntityInventoryHelper implem
 	
 	@Override
 	public boolean canExtractItem(int slot, ItemStack stack, Direction direction) {
-		if (slot == 0)
-			return false;
-		return true;
+		return slot != 0;
 	}
 
 	private boolean isInventoryFull(IInventory inventoryIn, Direction side) {
@@ -490,6 +487,7 @@ public class TileEntityAbsorptionHopper extends TileEntityInventoryHelper implem
 		return new ContainerAbsorptionHopper(windowID, playerInventory, new PacketBuffer(Unpooled.buffer()).writeBlockPos(pos));
 	}
 
+	@Nonnull
 	@Override
 	public ITextComponent getDisplayName() {
 		return new StringTextComponent("Absorption Hopper"); //TODO localise

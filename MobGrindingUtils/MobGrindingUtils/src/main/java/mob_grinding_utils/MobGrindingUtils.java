@@ -65,6 +65,8 @@ import net.minecraftforge.fml.network.simple.SimpleChannel;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 
+import javax.annotation.Nonnull;
+
 
 @Mod(Reference.MOD_ID)
 public class MobGrindingUtils {
@@ -82,6 +84,7 @@ public class MobGrindingUtils {
 	public static final RegistryObject<IRecipeSerializer<RecipeChickenFeed>> RECIPE_CHICKEN_FEED = RECIPES.register("chicken_feed_recipe", () ->  new SpecialRecipeSerializer<RecipeChickenFeed>(RecipeChickenFeed::new));
 
 	public static final ItemGroup TAB = new ItemGroup(Reference.MOD_ID) {
+		@Nonnull
 		@Override
 		public ItemStack createIcon() {
 			return new ItemStack(ModBlocks.SPIKES_ITEM);
