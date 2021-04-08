@@ -61,6 +61,7 @@
   "item.mob_grinding_utils.xp_solidifier_upgrade": "XP Speed Upgrade",
   "item.mob_grinding_utils.spawner_upgrade_width": "Entity Spawner Width Upgrade",
   "item.mob_grinding_utils.spawner_upgrade_height": "Entity Spawner Height Upgrade",
+  "item.mob_grinding_utils.monocle": "Darko has Mono(cle)",
  
   "_comment": "Creative Tab",
   "itemGroup.mob_grinding_utils": "Mob Grinding Utils",
@@ -176,5 +177,7 @@
    
   "tooltip.solidifier_upgrade": "Speed Modifier: +1.",
   "tooltip.spawner_upgrade_width": "Width Modifier: +1. Max of 5.",
-  "tooltip.spawner_upgrade_height": "Height Modifier: +1. Max of 5."
+  "tooltip.spawner_upgrade_height": "Height Modifier: +1. Max of 5.",
+
+  "tooltip.monocle": "What-ho? Spiffy, old bean!"
 }

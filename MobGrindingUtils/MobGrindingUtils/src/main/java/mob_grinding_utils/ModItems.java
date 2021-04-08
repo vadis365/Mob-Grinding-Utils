@@ -11,12 +11,15 @@ import mob_grinding_utils.items.ItemGMChickenFeed;
 import mob_grinding_utils.items.ItemGoldenEgg;
 import mob_grinding_utils.items.ItemImaginaryInvisibleNotReallyThereSword;
 import mob_grinding_utils.items.ItemMobSwab;
+import mob_grinding_utils.items.ItemMonocle;
 import mob_grinding_utils.items.ItemRottenEgg;
 import mob_grinding_utils.items.ItemSawUpgrade;
 import mob_grinding_utils.items.ItemSolidXP;
 import mob_grinding_utils.items.ItemSolidXPMould;
 import mob_grinding_utils.items.ItemSolidifierUpgrade;
 import mob_grinding_utils.items.ItemSpawnerUpgrade;
+import net.minecraft.inventory.EquipmentSlotType;
+import net.minecraft.item.ArmorMaterial;
 import net.minecraft.item.BucketItem;
 import net.minecraft.item.Food;
 import net.minecraft.item.Item;
@@ -42,6 +45,7 @@ public class ModItems {
 	public static Item SOLID_XP_MOULD_BLANK, SOLID_XP_MOULD_BABY; // more to be added here
 	public static Item SOLID_XP_BABY;
 	public static Item XP_SOLIDIFIER_UPGRADE, SPAWNER_UPGRADE_WIDTH, SPAWNER_UPGRADE_HEIGHT;
+	public static Item MONOCLE; // pointless shit
 	
 	public static void init() {
 		FAN_UPGRADE_WIDTH = new ItemFanUpgrade(new Item.Properties().group(MobGrindingUtils.TAB).maxStackSize(64), "width");
@@ -71,8 +75,10 @@ public class ModItems {
 
 		SPAWNER_UPGRADE_WIDTH = new ItemSpawnerUpgrade(new Item.Properties().group(MobGrindingUtils.TAB).maxStackSize(64), "width");
 		SPAWNER_UPGRADE_HEIGHT = new ItemSpawnerUpgrade(new Item.Properties().group(MobGrindingUtils.TAB).maxStackSize(64), "height");
+		
+		MONOCLE = new ItemMonocle(ArmorMaterial.CHAIN, EquipmentSlotType.HEAD, new Item.Properties().group(MobGrindingUtils.TAB).maxStackSize(1).maxDamage(256).defaultMaxDamage(ArmorMaterial.CHAIN.getDurability(EquipmentSlotType.HEAD)));
 	}
-
+	
 	public static void initReg() {
 		try {
 			for (Field field : ModItems.class.getDeclaredFields()) {	
