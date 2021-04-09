@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Random;
 
 import mob_grinding_utils.MobGrindingUtils;
-import mob_grinding_utils.ModBlocks;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -15,6 +14,7 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.SpawnReason;
 import net.minecraft.util.Direction;
+import net.minecraft.util.EntityPredicates;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
@@ -23,10 +23,13 @@ import net.minecraft.world.IWorld;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.MobSpawnInfo.Spawners;
+import net.minecraft.world.gen.feature.ConfiguredFeature;
+import net.minecraft.world.gen.feature.FlowersFeature;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraft.world.spawner.WorldEntitySpawner;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.common.IPlantable;
 
 public class BlockDelightfulDirt extends Block {
 
@@ -66,6 +69,7 @@ public class BlockDelightfulDirt extends Block {
 			world.getPendingBlockTicks().scheduleTick(pos, this, MathHelper.nextInt(RANDOM, 20, 60));
 	}
 
+	@SuppressWarnings("unchecked")
 	@Deprecated
 	@Override
 	public void tick(BlockState state, ServerWorld world, BlockPos pos, Random rand) {
@@ -79,11 +83,25 @@ public class BlockDelightfulDirt extends Block {
 			AxisAlignedBB areaToCheck = new AxisAlignedBB(pos).grow(5, 2, 5);
 			int entityCount = world.getEntitiesWithinAABB(MobEntity.class, areaToCheck, entity -> entity != null && entity.getType().getClassification() == EntityClassification.CREATURE).size();
 
-			if (entityCount < 8) {
-				Direction randomDirection = Direction.getRandomDirection(rand);
-				if(randomDirection.getAxis().isHorizontal() && world.getBlockState(pos.offset(randomDirection)).getBlock() == ModBlocks.DELIGHTFUL_DIRT)
-					spawnMob(world, pos.offset(randomDirection)); // just to add a little more
+			if (entityCount < 8)
 				spawnMob(world, pos);
+			
+			if (world.getGameTime() %20 == 0) {
+				BlockPos posUp = pos.up();
+				BlockState blockstate = Blocks.GRASS.getDefaultState();
+				if (world.getBlockState(posUp).getMaterial() == Material.AIR) {
+					if (rand.nextInt(8) == 0) {
+						List<ConfiguredFeature<?, ?>> list = world.getBiome(posUp).getGenerationSettings().getFlowerFeatures();
+						if (!list.isEmpty()) {
+							ConfiguredFeature<?, ?> configuredfeature = list.get(0);
+							@SuppressWarnings("rawtypes")
+							FlowersFeature flowersfeature = (FlowersFeature) configuredfeature.feature;
+							blockstate = flowersfeature.getFlowerToPlace(rand, posUp, configuredfeature.getConfig());
+						}
+					}
+					if (blockstate.isValidPosition(world, posUp))
+						world.setBlockState(posUp, blockstate, 3);
+				}
 			}
 		}
 	}
@@ -98,10 +116,17 @@ public class BlockDelightfulDirt extends Block {
 			MobEntity entity = (MobEntity) type.create(world);
 			if (entity != null) {
 				entity.setPosition(pos.getX() + 0.5D, pos.getY() + 1D, pos.getZ() + 0.5D);
-				entity.onInitialSpawn(world, world.getDifficultyForLocation(pos), SpawnReason.NATURAL, null, null);
-				world.addEntity(entity);
+				if (world.getEntitiesWithinAABB(entity.getType(), entity.getBoundingBox(), EntityPredicates.IS_ALIVE).isEmpty() && world.hasNoCollisions(entity)) {
+					entity.onInitialSpawn(world, world.getDifficultyForLocation(pos), SpawnReason.NATURAL, null, null);
+					world.addEntity(entity);
+				 }
 			}
 		}
+	}
+
+	@Override
+	public boolean canSustainPlant(BlockState state, IBlockReader world, BlockPos pos, Direction facing, IPlantable plantable) {
+		return true;
 	}
 
 	@Override

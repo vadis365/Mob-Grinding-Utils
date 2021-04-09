@@ -3,7 +3,6 @@ package mob_grinding_utils.blocks;
 import java.util.List;
 import java.util.Random;
 
-import mob_grinding_utils.ModBlocks;
 import net.minecraft.block.AbstractFireBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -16,6 +15,7 @@ import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.monster.IMob;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.Direction;
+import net.minecraft.util.EntityPredicates;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
@@ -80,12 +80,8 @@ public class BlockDreadfulDirt extends Block {
 			AxisAlignedBB areaToCheck = new AxisAlignedBB(pos).grow(5, 2, 5);
 			int entityCount = world.getEntitiesWithinAABB(MobEntity.class, areaToCheck, entity -> entity != null && entity instanceof IMob).size();
 
-			if (entityCount < 8) {
-				Direction randomDirection = Direction.getRandomDirection(rand);
-				if(randomDirection.getAxis().isHorizontal() && world.getBlockState(pos.offset(randomDirection)).getBlock() == ModBlocks.DREADFUL_DIRT)
-					spawnMob(world, pos.offset(randomDirection)); // just to add a little more
+			if (entityCount < 8)
 				spawnMob(world, pos);
-			}
 		}
 	}
 
@@ -99,8 +95,10 @@ public class BlockDreadfulDirt extends Block {
 			MobEntity entity = (MobEntity) type.create(world);
 			if (entity != null) {
 				entity.setPosition(pos.getX() + 0.5D, pos.getY() + 1D, pos.getZ() + 0.5D);
-				entity.onInitialSpawn(world, world.getDifficultyForLocation(pos), SpawnReason.NATURAL, null, null);
-				world.addEntity(entity);
+				 if(world.getEntitiesWithinAABB(entity.getType(), entity.getBoundingBox(), EntityPredicates.IS_ALIVE).isEmpty() && world.hasNoCollisions(entity)) {
+					entity.onInitialSpawn(world, world.getDifficultyForLocation(pos), SpawnReason.NATURAL, null, null);
+					world.addEntity(entity);
+				 }
 			}
 		}
 	}

@@ -2,6 +2,8 @@ package mob_grinding_utils.tile;
 
 import java.util.List;
 
+import javax.annotation.Nonnull;
+
 import io.netty.buffer.Unpooled;
 import mob_grinding_utils.ModBlocks;
 import mob_grinding_utils.ModItems;
@@ -10,6 +12,7 @@ import mob_grinding_utils.inventory.server.ContainerFan;
 import mob_grinding_utils.items.ItemFanUpgrade;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -31,8 +34,6 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-
-import javax.annotation.Nonnull;
 
 public class TileEntityFan extends TileEntityInventoryHelper implements ITickableTileEntity, INamedContainerProvider {
 
@@ -74,7 +75,7 @@ public class TileEntityFan extends TileEntityInventoryHelper implements ITickabl
 		int distance;
 		for (distance = 1; distance < 5 + getSpeedModifier(); distance++) {
 			BlockState state2 = getWorld().getBlockState(getPos().offset(facing, distance));
-			if (state2 != Blocks.AIR.getDefaultState())
+			if (state2 != Blocks.AIR.getDefaultState() && state2.getMaterial() != Material.TALL_PLANTS)
 				break;
 		}
 
