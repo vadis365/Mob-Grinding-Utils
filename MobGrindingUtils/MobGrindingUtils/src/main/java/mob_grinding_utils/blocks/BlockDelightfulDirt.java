@@ -85,23 +85,24 @@ public class BlockDelightfulDirt extends Block {
 
 			if (entityCount < 8)
 				spawnMob(world, pos);
-			
-			if (world.getGameTime() %20 == 0) {
+
+			if (world.getGameTime() % 20 == 0) {
 				BlockPos posUp = pos.up();
 				BlockState blockstate = Blocks.GRASS.getDefaultState();
 				if (world.getBlockState(posUp).getMaterial() == Material.AIR) {
 					if (rand.nextInt(8) == 0) {
 						List<ConfiguredFeature<?, ?>> list = world.getBiome(posUp).getGenerationSettings().getFlowerFeatures();
-						if (!list.isEmpty()) {
-							ConfiguredFeature<?, ?> configuredfeature = list.get(0);
-							@SuppressWarnings("rawtypes")
-							FlowersFeature flowersfeature = (FlowersFeature) configuredfeature.feature;
-							blockstate = flowersfeature.getFlowerToPlace(rand, posUp, configuredfeature.getConfig());
-						}
+						if (list.isEmpty())
+							return;
+						ConfiguredFeature<?, ?> configuredfeature = list.get(0);
+						@SuppressWarnings("rawtypes")
+						FlowersFeature flowersfeature = (FlowersFeature) configuredfeature.feature;
+						blockstate = flowersfeature.getFlowerToPlace(rand, posUp, configuredfeature.config);
 					}
 					if (blockstate.isValidPosition(world, posUp))
 						world.setBlockState(posUp, blockstate, 3);
 				}
+
 			}
 		}
 	}
