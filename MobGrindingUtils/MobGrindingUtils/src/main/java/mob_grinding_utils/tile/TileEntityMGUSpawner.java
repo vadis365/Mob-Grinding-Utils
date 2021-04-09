@@ -259,6 +259,7 @@ public class TileEntityMGUSpawner extends TileEntity implements ITickableTileEnt
     public void read(BlockState state, CompoundNBT nbt) {
         super.read(state, nbt);
         inputSlots.deserializeNBT(nbt.getCompound("inputSlots"));
+        fuelSlot.deserializeNBT(nbt.getCompound("fuelSlot"));
         isOn = nbt.getBoolean("isOn");
         showRenderBox = nbt.getBoolean("showRenderBox");
 		offsetX = nbt.getInt("offsetX");
@@ -271,6 +272,7 @@ public class TileEntityMGUSpawner extends TileEntity implements ITickableTileEnt
     public CompoundNBT write(CompoundNBT nbt) {
         super.write(nbt);
         nbt.put("inputSlots", inputSlots.serializeNBT());
+        nbt.put("fuelSlot", fuelSlot.serializeNBT());
         nbt.putBoolean("isOn", isOn);
         nbt.putBoolean("showRenderBox", showRenderBox);
         nbt.putInt("offsetX", offsetX);
