@@ -1,5 +1,9 @@
 package mob_grinding_utils.tile;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -33,6 +37,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.IServerWorld;
+import net.minecraft.world.World;
 import net.minecraft.world.spawner.WorldEntitySpawner;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -80,7 +85,7 @@ public class TileEntityMGUSpawner extends TileEntity implements ITickableTileEnt
 				if (canOperate()) {
 					setProgress(getProgress() + 1 + getSpeedModifierAmount());
 					if (getProgress() >= MAX_SPAWNING_TIME) {
-						if (spawnMobInArea(false)) //don't simulate
+						if (spawnMobInArea())
 							fuelSlot.getStackInSlot(0).shrink(1);
 						setProgress(0);
 						return;
@@ -101,7 +106,7 @@ public class TileEntityMGUSpawner extends TileEntity implements ITickableTileEnt
 		}
     }
 
-	private boolean spawnMobInArea(boolean test) {
+	private boolean spawnMobInArea() {
 			EntityType<?> type = null;
 			ItemStack eggStack = inputSlots.getStackInSlot(0);
 			SpawnEggItem eggItem = (SpawnEggItem) eggStack.getItem();
@@ -117,24 +122,33 @@ public class TileEntityMGUSpawner extends TileEntity implements ITickableTileEnt
 				int maxZ = MathHelper.floor(axisalignedbb.maxZ);
 				BlockPos.Mutable mutablePos = new BlockPos.Mutable();
 				MobEntity entity = (MobEntity) type.create(getWorld());
-				for (int x = minX; x < maxX; x++)
-					for (int y = minY; y < maxY; y++)
+				List<BlockPos> posArrayList = new ArrayList<BlockPos>();
+			if (entity != null) {
+				for (int x = minX; x < maxX; x++) {
+					for (int y = minY; y < maxY; y++) {
 						for (int z = minZ; z < maxZ; z++) {
-							BlockPos posList = mutablePos.setPos(x, y, z);
-							if (entity != null)
-								entity.setPosition(posList.getX() + 0.5D, posList.getY(), posList.getZ() + 0.5D);
-							if (WorldEntitySpawner.canCreatureTypeSpawnAtLocation(EntitySpawnPlacementRegistry.getPlacementType(type), getWorld(), posList, type) && getWorld().getEntitiesWithinAABB(entity.getType(), entity.getBoundingBox(), EntityPredicates.IS_ALIVE).isEmpty() && getWorld().hasNoCollisions(entity)) {
-								if(test)
-									return true;
-								if (entity != null) {
-									entity.onInitialSpawn((IServerWorld) getWorld(), getWorld().getDifficultyForLocation(posList), SpawnReason.NATURAL, null, null);
-									getWorld().addEntity(entity);
-									return true;
-								}
+							BlockPos posList = new BlockPos(x, y, z);
+							entity.setPosition(posList.getX() + 0.5D, posList.getY(), posList.getZ() + 0.5D);
+							if (isValidSpawnLocation(getWorld(), type, entity, posList)) {
+								posArrayList.add(posList);
 							}
 						}
+					}
+				}
+				if (!posArrayList.isEmpty()) {
+					Collections.shuffle(posArrayList);
+					entity.setPosition(posArrayList.get(0).getX() + 0.5D, posArrayList.get(0).getY(), posArrayList.get(0).getZ() + 0.5D);
+					entity.onInitialSpawn((IServerWorld) getWorld(), getWorld().getDifficultyForLocation(posArrayList.get(0)), SpawnReason.NATURAL, null, null);
+					getWorld().addEntity(entity);
+					return true;
+				}
 			}
+		}
 		return false;
+	}
+
+	public boolean isValidSpawnLocation(World world, EntityType<?> type, Entity entity, BlockPos pos) {
+		return WorldEntitySpawner.canCreatureTypeSpawnAtLocation(EntitySpawnPlacementRegistry.getPlacementType(type), world, pos, type) && world.getEntitiesWithinAABB(entity.getType(), entity.getBoundingBox(), EntityPredicates.IS_ALIVE).isEmpty() && getWorld().hasNoCollisions(entity);
 	}
 
 	public void toggleRenderBox() {
@@ -181,7 +195,7 @@ public class TileEntityMGUSpawner extends TileEntity implements ITickableTileEnt
     }
 
 	private boolean canOperate() {
-		return hasSpawnEggItem() && hasFuel() && spawnMobInArea(true); //simulate area spawning
+		return hasSpawnEggItem() && hasFuel();
 	}
 
 	public boolean hasSpawnEggItem() {
@@ -189,7 +203,7 @@ public class TileEntityMGUSpawner extends TileEntity implements ITickableTileEnt
 	}
 
 	private boolean hasFuel() {
-		return !fuelSlot.getStackInSlot(0).isEmpty();
+		return !fuelSlot.getStackInSlot(0).isEmpty() && fuelSlot.getStackInSlot(0).getItem() == ModItems.SOLID_XP_BABY;
 	}
 
 	private boolean hasWidthUpgrade() {

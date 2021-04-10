@@ -78,6 +78,9 @@ public class GuiMGUSpawner extends ContainerScreen<ContainerMGUSpawner> {
 		fontRenderer.drawString(stack, new TranslationTextComponent("block.mob_grinding_utils.absorption_hopper_w_e").getString(), 102, ySize - 144, 4210752);
 	
 		fontRenderer.drawStringWithShadow(stack, !tile.showRenderBox ? "Show Area" : "Hide Area", xSize - 41 - fontRenderer.getStringWidth(!tile.showRenderBox ? "Show Area" : "Hide Area") / 2, ySize - 109, 14737632);
+
+		if(tile.getProgress() > 0)
+			fontRenderer.drawString(stack, "Attempting Spawn", xSize- 140 - fontRenderer.getStringWidth("Attempting") / 2, ySize - 128, 4210752);
 	}
 
 	@SuppressWarnings("deprecation")
