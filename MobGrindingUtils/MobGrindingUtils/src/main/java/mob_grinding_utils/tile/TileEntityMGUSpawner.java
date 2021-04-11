@@ -54,7 +54,12 @@ public class TileEntityMGUSpawner extends TileEntity implements ITickableTileEnt
     public boolean isOn = false;
 
     public ItemStackHandler inputSlots = new ItemStackHandler(4);
-    public ItemStackHandler fuelSlot = new ItemStackHandler(1);
+    public ItemStackHandler fuelSlot = new ItemStackHandler(1) {
+        @Override
+        public boolean isItemValid(int slot, @Nonnull ItemStack stack) {
+            return stack.getItem() == ModItems.SOLID_XP_BABY;
+        }
+    };
     private final LazyOptional<IItemHandler> fuelSlotCap = LazyOptional.of(() -> fuelSlot);
 
 	public int animationTicks, prevAnimationTicks;
