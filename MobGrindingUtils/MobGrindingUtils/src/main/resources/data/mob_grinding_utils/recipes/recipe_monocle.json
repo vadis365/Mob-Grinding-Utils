@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " g",
+    "c "
+  ],
+  "key": {
+    "c": {
+      "item": "minecraft:chain"
+    },
+    "g": {
+      "tag": "forge:glass_panes/colorless"
+    }
+  },
+  "result": {
+    "item": "mob_grinding_utils:monocle",
+    "count": 1
+  }
+}
