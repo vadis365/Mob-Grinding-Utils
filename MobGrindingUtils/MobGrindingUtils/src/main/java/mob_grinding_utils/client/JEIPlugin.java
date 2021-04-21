@@ -16,16 +16,19 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextFormatting;
 
+import javax.annotation.Nonnull;
+
 @JeiPlugin
 public class JEIPlugin implements IModPlugin {
     public static final ResourceLocation ID = new ResourceLocation(Reference.MOD_ID, "jei_plugin");
+    @Nonnull
     @Override
     public ResourceLocation getPluginUid() {
         return ID;
     }
 
     @Override
-    public void registerRecipes(IRecipeRegistration registration) {
+    public void registerRecipes(@Nonnull IRecipeRegistration registration) {
         for (BlockItem block : ModBlocks.ITEM_BLOCKS) {
             String key = block.getTranslationKey()+".jei.info";
             if (I18n.hasKey(key)) {

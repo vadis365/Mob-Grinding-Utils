@@ -73,6 +73,8 @@ public class BlockTank extends ContainerBlock {
 
 	@Override
 	public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
+		if (world.isRemote)
+			return ActionResultType.SUCCESS;
 		TileEntity tileentity = world.getTileEntity(pos);
 		if (tileentity instanceof TileEntityTank) {
 			LazyOptional<IFluidHandler> fluidHandler = tileentity.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, hit.getFace());

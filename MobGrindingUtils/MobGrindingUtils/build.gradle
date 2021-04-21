@@ -112,6 +112,9 @@ dependencies {
     compile fg.deobf("curse.maven:mek-268560:3183270")
     compile fg.deobf("curse.maven:IF-266515:3223241")
     compile fg.deobf("curse.maven:TITANIUM-287342:3223141")
+    compile fg.deobf("curse.maven:XNET-260912:3140153")
+    compile fg.deobf("curse.maven:RFTBASE-326041:3206945")
+    compile fg.deobf("curse.maven:MCJTYLIB-233105:3236516")
 }
 
 // Example for how to get properties into the manifest for reading by the runtime..
