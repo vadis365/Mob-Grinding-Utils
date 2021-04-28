@@ -62,14 +62,12 @@ public class BlockEntitySpawner extends Block implements ITileEntityProvider {
 
 	@Override
 	public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
-		if (world.isRemote)
-			return ActionResultType.SUCCESS;
-		else {
+		if (!world.isRemote) {
 			TileEntity tileentity = world.getTileEntity(pos);
 			if (tileentity  instanceof TileEntityMGUSpawner)
 			NetworkHooks.openGui((ServerPlayerEntity) player, (TileEntityMGUSpawner)tileentity, pos);
+		}
 		return ActionResultType.SUCCESS;
-		} 
 	}
 
 	@Override

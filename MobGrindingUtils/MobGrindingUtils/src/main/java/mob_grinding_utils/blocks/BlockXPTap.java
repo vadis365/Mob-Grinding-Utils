@@ -84,17 +84,15 @@ public class BlockXPTap extends DirectionalBlock implements ITileEntityProvider 
 	
 	@Override
 	public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
-		if (world.isRemote)
-			return ActionResultType.SUCCESS;
-		 else {
+		if (!world.isRemote) {
 			boolean swap = state.get(POWERED);
 			world.setBlockState(pos, state.with(POWERED, !swap), 3);
 			float f = state.get(POWERED) ? 0.6F : 0.5F;
 			world.playSound(null, pos, ModSounds.TAP_SQUEAK, SoundCategory.BLOCKS, 0.3F, f);
 			TileEntityXPTap tileentity = (TileEntityXPTap) world.getTileEntity(pos);
 			tileentity.setActive(!swap);
-			return ActionResultType.SUCCESS;
 		}
+		return ActionResultType.SUCCESS;
 	}
 
 	@Override

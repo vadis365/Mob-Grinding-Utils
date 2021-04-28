@@ -8,7 +8,7 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
 
 public class SlotRestrictSizeOnly extends SlotItemHandler {
-    private int stackLimit;
+    private final int stackLimit;
 
     public SlotRestrictSizeOnly(IItemHandler itemHandler, int index, int xPosition, int yPosition, int max) {
         super(itemHandler, index, xPosition, yPosition);

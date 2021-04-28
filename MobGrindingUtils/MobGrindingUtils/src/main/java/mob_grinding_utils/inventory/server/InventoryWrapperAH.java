@@ -78,11 +78,10 @@ public class InventoryWrapperAH implements IItemHandlerModifiable {
 					copy.grow(stackInSlot.getCount());
 					getInv().setInventorySlotContents(slot, copy);
 					getInv().markDirty();
-					return stack;
 				} else {
 					stack.shrink(m);
-					return stack;
 				}
+				return stack;
 			}
 		} else {
 			if (!getInv().isItemValidForSlot(slot, stack))
@@ -95,11 +94,10 @@ public class InventoryWrapperAH implements IItemHandlerModifiable {
 				if (!simulate) {
 					getInv().setInventorySlotContents(slot, stack.split(m));
 					getInv().markDirty();
-					return stack;
 				} else {
 					stack.shrink(m);
-					return stack;
 				}
+				return stack;
 			} else {
 				if (!simulate) {
 					getInv().setInventorySlotContents(slot, stack);
@@ -158,6 +156,6 @@ public class InventoryWrapperAH implements IItemHandlerModifiable {
 
 	@Override
 	public boolean isItemValid(int slot, ItemStack stack) {
-		return slot == 0 ? false : true;
+		return slot != 0;
 	}
 }

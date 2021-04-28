@@ -38,15 +38,12 @@ public class BlockDelightfulDirt extends Block {
 	}
 
 	public boolean shouldSnowCap(World world, BlockPos pos) {
-		if (world.canBlockSeeSky(pos) && (world.getDayTime() >= 13000  && world.getDayTime() <= 23000)) // standard night ticks
-			return true;
-		return false;		
+		// standard night ticks
+		return world.canBlockSeeSky(pos) && (world.getDayTime() >= 13000 && world.getDayTime() <= 23000);
 	}
 
 	public boolean shouldSpawnMob(World world, BlockPos pos) {
-		if (world.getLight(pos.up()) >= 10 && world.getBlockState(pos.up()).getMaterial() == Material.AIR)
-			return true;
-		return false;		
+		return world.getLight(pos.up()) >= 10 && world.getBlockState(pos.up()).getMaterial() == Material.AIR;
 	}
 
 	@Override
@@ -142,10 +139,8 @@ public class BlockDelightfulDirt extends Block {
 
 	@Override
     public boolean isFireSource(BlockState state, IWorldReader world, BlockPos pos, Direction side) {
-        if (side == Direction.UP)
-            return true;
-        return false;
-    }
+		return side == Direction.UP;
+	}
 
 	@Override
 	@OnlyIn(Dist.CLIENT)

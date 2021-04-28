@@ -58,14 +58,12 @@ public class BlockFan extends DirectionalBlock implements ITileEntityProvider {
 
 	@Override
 	public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
-		if (world.isRemote)
-			return ActionResultType.SUCCESS;
-		else {
+		if (!world.isRemote) {
 			TileEntity tileentity = world.getTileEntity(pos);
 			if (tileentity  instanceof TileEntityFan)
 			NetworkHooks.openGui((ServerPlayerEntity) player, (TileEntityFan)tileentity, pos);
-		return ActionResultType.SUCCESS;
 		}
+		return ActionResultType.SUCCESS;
 	}
 
 	@Override

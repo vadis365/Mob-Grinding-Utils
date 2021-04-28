@@ -28,7 +28,7 @@ public class BlockTintedGlass extends Block {
 
 	@OnlyIn(Dist.CLIENT)
 	public boolean isSideInvisible(BlockState state, BlockState adjacentBlockState, Direction side) {
-		return adjacentBlockState.isIn(this) ? true : super.isSideInvisible(state, adjacentBlockState, side);
+		return adjacentBlockState.isIn(this) || super.isSideInvisible(state, adjacentBlockState, side);
 	}
 
 	@Override

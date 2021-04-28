@@ -12,6 +12,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 
@@ -20,11 +21,11 @@ public class MGUBlockItem extends BlockItem {
         super(blockIn, builder);
         block = blockIn;
     }
-    private Block block;
+    private final Block block;
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
+    public void addInformation(@Nonnull ItemStack stack, @Nullable World worldIn, @Nonnull List<ITextComponent> tooltip, @Nonnull ITooltipFlag flagIn) {
         super.addInformation(stack, worldIn, tooltip, flagIn);
         if (I18n.hasKey(block.getTranslationKey() + ".tooltip_1")) {
             tooltip.add(new TranslationTextComponent(block.getTranslationKey() + ".tooltip_1").mergeStyle(TextFormatting.YELLOW));

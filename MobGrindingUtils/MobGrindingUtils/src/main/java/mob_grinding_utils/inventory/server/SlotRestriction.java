@@ -16,9 +16,7 @@ public class SlotRestriction extends Slot {
 
 	@Override
 	public boolean isItemValid(ItemStack stack) {
-		if (stack.getItem() == item.getItem() && stack.getDamage() == item.getDamage())
-			return true;
-		return false;
+		return stack.getItem() == item.getItem() && stack.getDamage() == item.getDamage();
 	}
 
 	@Override

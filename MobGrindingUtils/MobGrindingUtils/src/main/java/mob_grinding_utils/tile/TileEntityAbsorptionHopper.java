@@ -79,7 +79,7 @@ public class TileEntityAbsorptionHopper extends TileEntityInventoryHelper implem
 		}
 	}
 
-	public EnumStatus status[] = new EnumStatus[] { EnumStatus.STATUS_NONE, EnumStatus.STATUS_NONE, EnumStatus.STATUS_NONE, EnumStatus.STATUS_NONE, EnumStatus.STATUS_NONE, EnumStatus.STATUS_NONE };
+	public EnumStatus[] status = new EnumStatus[] { EnumStatus.STATUS_NONE, EnumStatus.STATUS_NONE, EnumStatus.STATUS_NONE, EnumStatus.STATUS_NONE, EnumStatus.STATUS_NONE, EnumStatus.STATUS_NONE };
 	public boolean showRenderBox;
 	public int offsetX, offsetY, offsetZ;
 
@@ -435,7 +435,7 @@ public class TileEntityAbsorptionHopper extends TileEntityInventoryHelper implem
 	}
 
     private static boolean canInsertItemInSlot(IInventory inventoryIn, ItemStack stack, int index, Direction side) {
-        return !inventoryIn.isItemValidForSlot(index, stack) ? false : !(inventoryIn instanceof ISidedInventory) || ((ISidedInventory)inventoryIn).canInsertItem(index, stack, side);
+        return inventoryIn.isItemValidForSlot(index, stack) && (!(inventoryIn instanceof ISidedInventory) || ((ISidedInventory) inventoryIn).canInsertItem(index, stack, side));
     }
 
 	private static ItemStack insertStack( IInventory inventory, ItemStack stack, int index, Direction side) {

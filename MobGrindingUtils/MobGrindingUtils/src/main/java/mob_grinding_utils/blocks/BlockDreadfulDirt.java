@@ -36,15 +36,12 @@ public class BlockDreadfulDirt extends Block {
 	}
 
 	public boolean shouldCatchFire(World world, BlockPos pos) {
-		if (world.canBlockSeeSky(pos) && (world.getDayTime() < 13000  || world.getDayTime() > 23000)) // standard night to day ticks
-			return true;
-		return false;		
+		// standard night to day ticks
+		return world.canBlockSeeSky(pos) && (world.getDayTime() < 13000 || world.getDayTime() > 23000);
 	}
 
 	public boolean shouldSpawnMob(World world, BlockPos pos) {
-		if (world.getLight(pos.up()) >= 10)
-			return false;
-		return true;		
+		return world.getLight(pos.up()) < 10;
 	}
 
 	@Override
@@ -115,10 +112,8 @@ public class BlockDreadfulDirt extends Block {
 
 	@Override
     public boolean isFireSource(BlockState state, IWorldReader world, BlockPos pos, Direction side) {
-        if (side == Direction.UP)
-            return true;
-        return false;
-    }
+		return side == Direction.UP;
+	}
 
 	@Override
 	@OnlyIn(Dist.CLIENT)

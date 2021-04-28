@@ -157,10 +157,7 @@ public class TileEntityMGUSpawner extends TileEntity implements ITickableTileEnt
 	}
 
 	public void toggleRenderBox() {
-		if (!showRenderBox)
-			showRenderBox = true;
-		else
-			showRenderBox = false;
+		showRenderBox = !showRenderBox;
 		markDirty();
 	}
 

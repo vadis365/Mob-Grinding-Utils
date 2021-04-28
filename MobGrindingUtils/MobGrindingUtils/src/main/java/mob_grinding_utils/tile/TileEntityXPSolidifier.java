@@ -294,7 +294,7 @@ public class TileEntityXPSolidifier extends TileEntity implements ITickableTileE
     }
 
     private static boolean canInsertItemInSlot(IInventory inventoryIn, ItemStack stack, int index, Direction side) {
-        return !inventoryIn.isItemValidForSlot(index, stack) ? false : !(inventoryIn instanceof ISidedInventory) || ((ISidedInventory)inventoryIn).canInsertItem(index, stack, side);
+        return inventoryIn.isItemValidForSlot(index, stack) && (!(inventoryIn instanceof ISidedInventory) || ((ISidedInventory) inventoryIn).canInsertItem(index, stack, side));
     }
 
 	private static ItemStack insertStack( IInventory inventory, ItemStack stack, int index, Direction side) {
