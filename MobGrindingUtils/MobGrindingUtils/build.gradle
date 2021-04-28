@@ -1,25 +1,17 @@
 buildscript {
     repositories {
-        maven { url = 'https://files.minecraftforge.net/maven' }
-        jcenter()
+        maven { url = 'https://forge.modpacks.ch/maven' }
+        maven { url = 'https://maven.minecraftforge.net' }
         mavenCentral()
     }
     dependencies {
-        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3.+', changing: true
+        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '4.1.+', changing: true
     }
 }
 apply plugin: 'net.minecraftforge.gradle'
 // Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
-
-buildscript {
-    repositories {
-        maven {
-            url "https://plugins.gradle.org/m2/"
-        }
-    }
-}
 
 repositories {
     maven {
@@ -29,7 +21,7 @@ repositories {
 
 repositories {
     maven { // JEI
-        url "http://dvs1.progwml6.com/files/maven"
+        url "https://dvs1.progwml6.com/files/maven"
     }
 }
 
@@ -106,7 +98,7 @@ dependencies {
 
     compileOnly fg.deobf("mezz.jei:jei-${jei_version}:api")
     runtimeOnly fg.deobf("mezz.jei:jei-${jei_version}")
-
+/*
     compile fg.deobf("curse.maven:top-245211:3157997")
     compile fg.deobf("curse.maven:playermobs-430513:3153298")
     compile fg.deobf("curse.maven:mek-268560:3183270")
@@ -115,6 +107,8 @@ dependencies {
     compile fg.deobf("curse.maven:XNET-260912:3140153")
     compile fg.deobf("curse.maven:RFTBASE-326041:3206945")
     compile fg.deobf("curse.maven:MCJTYLIB-233105:3236516")
+
+ */
 }
 
 // Example for how to get properties into the manifest for reading by the runtime..
