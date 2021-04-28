@@ -33,13 +33,7 @@ public class BlockAbsorptionHopper extends ContainerBlock {
 	public TileEntity createNewTileEntity(IBlockReader world) {
 		return new TileEntityAbsorptionHopper();
 	}
-/*
-	@Override
-	@SideOnly(Side.CLIENT)
-	public boolean shouldSideBeRendered(IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, Direction side) {
-		return true;
-	}
-*/
+
 	@Override
 	public BlockRenderType getRenderType(BlockState state) {
 		return BlockRenderType.MODEL;
@@ -54,22 +48,7 @@ public class BlockAbsorptionHopper extends ContainerBlock {
 	public VoxelShape getRaytraceShape(BlockState state, IBlockReader worldIn, BlockPos pos) {
 		return HOPPER_AABB;
 	}
-/*
-	@Override
-	public boolean isOpaqueCube(IBlockState state) {
-		return false;
-	}
 
-	@Override
-	public boolean isFullBlock(IBlockState state) {
-		return false;
-	}
-
-	@Override
-	public boolean isFullCube(IBlockState state) {
-		return false;
-	}
-*/
 	@Override
 	public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
 		if (world.isRemote)

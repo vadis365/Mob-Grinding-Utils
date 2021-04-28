@@ -1,9 +1,6 @@
 package mob_grinding_utils.tile;
 
 import java.util.List;
-import java.util.UUID;
-
-import com.mojang.authlib.GameProfile;
 
 import io.netty.buffer.Unpooled;
 import mob_grinding_utils.ModBlocks;
@@ -32,10 +29,7 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.server.ServerWorld;
-import net.minecraftforge.common.util.FakePlayer;
-import net.minecraftforge.common.util.FakePlayerFactory;
 
 public class TileEntitySaw extends TileEntityInventoryHelper implements ITickableTileEntity, INamedContainerProvider {
 

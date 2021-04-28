@@ -3,7 +3,6 @@ package mob_grinding_utils.tile;
 import mob_grinding_utils.MobGrindingUtils;
 import mob_grinding_utils.ModBlocks;
 import mob_grinding_utils.blocks.BlockXPTap;
-import mob_grinding_utils.datagen.MGUFluidTags;
 import mob_grinding_utils.entity.EntityXPOrbFalling;
 import mob_grinding_utils.network.MessageTapParticle;
 import net.minecraft.block.BlockState;

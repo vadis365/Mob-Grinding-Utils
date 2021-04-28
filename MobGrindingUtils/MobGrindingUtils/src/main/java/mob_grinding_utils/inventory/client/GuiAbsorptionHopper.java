@@ -157,11 +157,4 @@ public class GuiAbsorptionHopper extends ContainerScreen<ContainerAbsorptionHopp
 			return 16776960;
 		}
 	}
-/*
-	@Override
-	protected void actionPerformed(Button guibutton) {
-		if (guibutton instanceof Button)
-			MobGrindingUtils.NETWORK_WRAPPER.sendToServer(new MessageAbsorptionHopper(Minecraft.getInstance().player, guibutton.id, tile.getPos()));
-	}
-*/
 }

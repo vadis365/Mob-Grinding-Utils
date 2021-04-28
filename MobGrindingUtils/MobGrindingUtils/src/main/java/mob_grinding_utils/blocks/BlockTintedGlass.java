@@ -71,6 +71,6 @@ public class BlockTintedGlass extends Block {
 
 	private boolean isSideConnectable(IBlockReader world, BlockPos pos, Direction side) {
 		final BlockState stateConnection = world.getBlockState(pos.offset(side));
-		return (stateConnection == null) ? false : stateConnection.getBlock() == this;
+		return stateConnection != null && stateConnection.getBlock() == this;
 	}
 }
