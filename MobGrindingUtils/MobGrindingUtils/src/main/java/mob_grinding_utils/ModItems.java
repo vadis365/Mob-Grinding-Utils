@@ -26,85 +26,45 @@ import net.minecraft.item.Item;
 import net.minecraft.item.Items;
 import net.minecraft.item.SwordItem;
 import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.IForgeRegistry;
 
 // My Generic Item Registry ;)
 public class ModItems {
-	public static final List<Item> ITEMS = new LinkedList<Item>();
-
-	public static Item FAN_UPGRADE_WIDTH, FAN_UPGRADE_HEIGHT, FAN_UPGRADE_SPEED;
-	public static Item ABSORPTION_UPGRADE;
-	public static Item SAW_UPGRADE_ARTHROPOD, SAW_UPGRADE_BEHEADING, SAW_UPGRADE_FIRE, SAW_UPGRADE_LOOTING, SAW_UPGRADE_SHARPNESS, SAW_UPGRADE_SMITE;
-	public static Item MOB_SWAB, MOB_SWAB_USED;
-	public static Item GM_CHICKEN_FEED, GM_CHICKEN_FEED_CURSED, NUTRITIOUS_CHICKEN_FEED;
-	public static Item FLUID_XP_BUCKET;
-	public static SwordItem NULL_SWORD;
-	public static Item ROTTEN_EGG, GOLDEN_EGG;
-	public static Item SOLID_XP_MOULD_BLANK, SOLID_XP_MOULD_BABY; // more to be added here
-	public static Item SOLID_XP_BABY;
-	public static Item XP_SOLIDIFIER_UPGRADE, SPAWNER_UPGRADE_WIDTH, SPAWNER_UPGRADE_HEIGHT;
-	public static Item MONOCLE; // pointless shit
-	
-	public static void init() {
-		FAN_UPGRADE_WIDTH = new ItemFanUpgrade(new Item.Properties().group(MobGrindingUtils.TAB).maxStackSize(64), "width");
-		FAN_UPGRADE_HEIGHT = new ItemFanUpgrade(new Item.Properties().group(MobGrindingUtils.TAB).maxStackSize(64), "height");
-		FAN_UPGRADE_SPEED = new ItemFanUpgrade(new Item.Properties().group(MobGrindingUtils.TAB).maxStackSize(64), "speed");
-		ABSORPTION_UPGRADE = new ItemAbsorptionUpgrade(new Item.Properties().group(MobGrindingUtils.TAB).maxStackSize(64));
-		SAW_UPGRADE_ARTHROPOD = new ItemSawUpgrade(new Item.Properties().group(MobGrindingUtils.TAB).maxStackSize(64), "arthropod");
-		SAW_UPGRADE_BEHEADING = new ItemSawUpgrade(new Item.Properties().group(MobGrindingUtils.TAB).maxStackSize(64), "beheading");
-		SAW_UPGRADE_FIRE = new ItemSawUpgrade(new Item.Properties().group(MobGrindingUtils.TAB).maxStackSize(64), "fire");
-		SAW_UPGRADE_LOOTING = new ItemSawUpgrade(new Item.Properties().group(MobGrindingUtils.TAB).maxStackSize(64), "looting");
-		SAW_UPGRADE_SHARPNESS = new ItemSawUpgrade(new Item.Properties().group(MobGrindingUtils.TAB).maxStackSize(64), "sharpness");
-		SAW_UPGRADE_SMITE = new ItemSawUpgrade(new Item.Properties().group(MobGrindingUtils.TAB).maxStackSize(64), "smite");
-		MOB_SWAB = new ItemMobSwab(new Item.Properties().group(MobGrindingUtils.TAB).maxStackSize(1), false);
-		MOB_SWAB_USED = new ItemMobSwab(new Item.Properties().group(MobGrindingUtils.TAB).maxStackSize(1), true);
-		GM_CHICKEN_FEED = new ItemGMChickenFeed(new Item.Properties().group(MobGrindingUtils.TAB).maxStackSize(1), "mob");
-		GM_CHICKEN_FEED_CURSED = new ItemGMChickenFeed(new Item.Properties().group(MobGrindingUtils.TAB).maxStackSize(1), "cursed");
-		NUTRITIOUS_CHICKEN_FEED = new ItemGMChickenFeed(new Item.Properties().group(MobGrindingUtils.TAB).maxStackSize(1), "nutritious");
-		NULL_SWORD = new ItemImaginaryInvisibleNotReallyThereSword(new Item.Properties().group(MobGrindingUtils.TAB));
-		FLUID_XP_BUCKET = new BucketItem(() -> ModBlocks.FLUID_XP, new Item.Properties().containerItem(Items.BUCKET).group(MobGrindingUtils.TAB).maxStackSize(1));
-		ROTTEN_EGG = new ItemRottenEgg(new Item.Properties().group(MobGrindingUtils.TAB).maxStackSize(1));
-		GOLDEN_EGG = new ItemGoldenEgg(new Item.Properties().group(MobGrindingUtils.TAB).maxStackSize(1));
-
-		SOLID_XP_MOULD_BLANK = new ItemSolidXPMould(new Item.Properties().group(MobGrindingUtils.TAB).maxStackSize(64), "blank");
-		SOLID_XP_MOULD_BABY = new ItemSolidXPMould(new Item.Properties().group(MobGrindingUtils.TAB).maxStackSize(64), "baby");
-		SOLID_XP_BABY = new ItemSolidXP(new Item.Properties().group(MobGrindingUtils.TAB).maxStackSize(64).food((new Food.Builder()).hunger(0).saturation(0F).setAlwaysEdible().build()), 50);
-		XP_SOLIDIFIER_UPGRADE = new ItemSolidifierUpgrade(new Item.Properties().group(MobGrindingUtils.TAB).maxStackSize(64));
-
-		SPAWNER_UPGRADE_WIDTH = new ItemSpawnerUpgrade(new Item.Properties().group(MobGrindingUtils.TAB).maxStackSize(64), "width");
-		SPAWNER_UPGRADE_HEIGHT = new ItemSpawnerUpgrade(new Item.Properties().group(MobGrindingUtils.TAB).maxStackSize(64), "height");
-		
-		MONOCLE = new ItemMonocle(ArmorMaterial.CHAIN, EquipmentSlotType.HEAD, new Item.Properties().group(MobGrindingUtils.TAB).maxStackSize(1).maxDamage(256).defaultMaxDamage(ArmorMaterial.CHAIN.getDurability(EquipmentSlotType.HEAD)));
+	public static void init(IEventBus bus) {
+		ITEMS.register(bus);
 	}
-	
-	public static void initReg() {
-		try {
-			for (Field field : ModItems.class.getDeclaredFields()) {	
-				Object obj = field.get(null);
-				if (obj instanceof Item) {
-					Item item = (Item) obj;
-					ITEMS.add(item);
-					String name = field.getName().toLowerCase(Locale.ENGLISH);
-					item.setRegistryName(Reference.MOD_ID, name);
-				}
-			}
-		} catch (IllegalAccessException e) {
-			throw new RuntimeException(e);
-		}
-	}
+	public static DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, Reference.MOD_ID);
 
-	@Mod.EventBusSubscriber(modid = Reference.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
-	public static class RegistrationHandlerItems {
-
-		@SubscribeEvent
-		public static void registerItems(final RegistryEvent.Register<Item> event) {
-			init();
-			initReg();
-			final IForgeRegistry<Item> registry = event.getRegistry();
-			for (Item item : ITEMS)
-				registry.register(item);
-		}
-	}
+	public static RegistryObject<Item> FAN_UPGRADE_WIDTH = ITEMS.register("fan_upgrade_width", () -> new ItemFanUpgrade(new Item.Properties().group(MobGrindingUtils.TAB).maxStackSize(64), "width"));
+	public static RegistryObject<Item> FAN_UPGRADE_HEIGHT = ITEMS.register("fan_upgrade_height", () -> new ItemFanUpgrade(new Item.Properties().group(MobGrindingUtils.TAB).maxStackSize(64), "height"));
+	public static RegistryObject<Item> FAN_UPGRADE_SPEED = ITEMS.register("fan_upgrade_speed", () -> new ItemFanUpgrade(new Item.Properties().group(MobGrindingUtils.TAB).maxStackSize(64), "speed"));
+	public static RegistryObject<Item> ABSORPTION_UPGRADE = ITEMS.register("absorption_upgrade", () -> new ItemAbsorptionUpgrade(new Item.Properties().group(MobGrindingUtils.TAB).maxStackSize(64)));
+	public static RegistryObject<Item> SAW_UPGRADE_ARTHROPOD = ITEMS.register("saw_upgrade_arthropod", () -> new ItemSawUpgrade(new Item.Properties().group(MobGrindingUtils.TAB).maxStackSize(64), "arthropod"));
+	public static RegistryObject<Item> SAW_UPGRADE_BEHEADING = ITEMS.register("saw_upgrade_beheading", () -> new ItemSawUpgrade(new Item.Properties().group(MobGrindingUtils.TAB).maxStackSize(64), "beheading"));
+	public static RegistryObject<Item> SAW_UPGRADE_FIRE = ITEMS.register("saw_upgrade_fire", () -> new ItemSawUpgrade(new Item.Properties().group(MobGrindingUtils.TAB).maxStackSize(64), "fire"));
+	public static RegistryObject<Item> SAW_UPGRADE_LOOTING = ITEMS.register("saw_upgrade_looting", () -> new ItemSawUpgrade(new Item.Properties().group(MobGrindingUtils.TAB).maxStackSize(64), "looting"));
+	public static RegistryObject<Item> SAW_UPGRADE_SHARPNESS = ITEMS.register("saw_upgrade_sharpness", () -> new ItemSawUpgrade(new Item.Properties().group(MobGrindingUtils.TAB).maxStackSize(64), "sharpness"));
+	public static RegistryObject<Item>SAW_UPGRADE_SMITE = ITEMS.register("saw_upgrade_smite", () -> new ItemSawUpgrade(new Item.Properties().group(MobGrindingUtils.TAB).maxStackSize(64), "smite"));
+	public static RegistryObject<Item> MOB_SWAB = ITEMS.register("mob_swab", () -> new ItemMobSwab(new Item.Properties().group(MobGrindingUtils.TAB).maxStackSize(1), false));
+	public static RegistryObject<Item> MOB_SWAB_USED = ITEMS.register("mob_swab_used", () -> new ItemMobSwab(new Item.Properties().group(MobGrindingUtils.TAB).maxStackSize(1), true));
+	public static RegistryObject<Item> GM_CHICKEN_FEED = ITEMS.register("gm_chicken_feed", () -> new ItemGMChickenFeed(new Item.Properties().group(MobGrindingUtils.TAB).maxStackSize(1), "mob"));
+	public static RegistryObject<Item> GM_CHICKEN_FEED_CURSED = ITEMS.register("gm_chicken_feed_cursed", () -> new ItemGMChickenFeed(new Item.Properties().group(MobGrindingUtils.TAB).maxStackSize(1), "cursed"));
+	public static RegistryObject<Item> NUTRITIOUS_CHICKEN_FEED = ITEMS.register("nutritious_chicken_feed", () -> new ItemGMChickenFeed(new Item.Properties().group(MobGrindingUtils.TAB).maxStackSize(1), "nutritious"));
+	public static RegistryObject<Item> FLUID_XP_BUCKET = ITEMS.register("fluid_xp_bucket", () -> new BucketItem(() -> ModBlocks.FLUID_XP, new Item.Properties().containerItem(Items.BUCKET).group(MobGrindingUtils.TAB).maxStackSize(1)));
+	public static RegistryObject<Item> NULL_SWORD = ITEMS.register("null_sword", () -> new ItemImaginaryInvisibleNotReallyThereSword(new Item.Properties().group(MobGrindingUtils.TAB)));
+	public static RegistryObject<Item> ROTTEN_EGG = ITEMS.register("rotten_egg", () -> new ItemRottenEgg(new Item.Properties().group(MobGrindingUtils.TAB).maxStackSize(1)));
+	public static RegistryObject<Item> GOLDEN_EGG = ITEMS.register("golden_egg", () -> new ItemGoldenEgg(new Item.Properties().group(MobGrindingUtils.TAB).maxStackSize(1)));
+	public static RegistryObject<Item> SOLID_XP_MOULD_BLANK = ITEMS.register("solid_xp_mould_blank", () -> new ItemSolidXPMould(new Item.Properties().group(MobGrindingUtils.TAB).maxStackSize(64), "blank"));
+	public static RegistryObject<Item> SOLID_XP_MOULD_BABY = ITEMS.register("solid_xp_mould_baby", () -> new ItemSolidXPMould(new Item.Properties().group(MobGrindingUtils.TAB).maxStackSize(64), "baby"));
+	public static RegistryObject<Item> SOLID_XP_BABY = ITEMS.register("solid_xp_baby", () -> new ItemSolidXP(new Item.Properties().group(MobGrindingUtils.TAB).maxStackSize(64).food((new Food.Builder()).hunger(0).saturation(0F).setAlwaysEdible().build()), 50));
+	public static RegistryObject<Item> XP_SOLIDIFIER_UPGRADE = ITEMS.register("xp_solidifier_upgrade", () -> new ItemSolidifierUpgrade(new Item.Properties().group(MobGrindingUtils.TAB).maxStackSize(64)));
+	public static RegistryObject<Item> SPAWNER_UPGRADE_WIDTH = ITEMS.register("spawner_upgrade_width", () -> new ItemSpawnerUpgrade(new Item.Properties().group(MobGrindingUtils.TAB).maxStackSize(64), "width"));
+	public static RegistryObject<Item> SPAWNER_UPGRADE_HEIGHT = ITEMS.register("spawner_upgrade_height", () -> new ItemSpawnerUpgrade(new Item.Properties().group(MobGrindingUtils.TAB).maxStackSize(64), "height"));
+	public static RegistryObject<Item> MONOCLE = ITEMS.register("monocle", () -> new ItemMonocle(ArmorMaterial.CHAIN, EquipmentSlotType.HEAD, new Item.Properties().group(MobGrindingUtils.TAB).maxStackSize(1).maxDamage(256).defaultMaxDamage(ArmorMaterial.CHAIN.getDurability(EquipmentSlotType.HEAD)))); // pointless shit
 }

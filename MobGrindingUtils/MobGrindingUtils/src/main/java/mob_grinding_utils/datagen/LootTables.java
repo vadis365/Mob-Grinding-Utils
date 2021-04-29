@@ -41,22 +41,22 @@ public class LootTables extends LootTableProvider {
     private static class Blocks extends BlockLootTables {
         @Override
         protected void addTables() {
-            registerDropSelfLootTable(ModBlocks.ABSORPTION_HOPPER);
-            registerDropSelfLootTable(ModBlocks.DARK_OAK_STONE);
-            registerDropSelfLootTable(ModBlocks.DRAGON_MUFFLER);
-            registerDropSelfLootTable(ModBlocks.WITHER_MUFFLER);
-            registerDropSelfLootTable(ModBlocks.ENTITY_CONVEYOR);
-            registerDropSelfLootTable(ModBlocks.FAN);
-            registerDropSelfLootTable(ModBlocks.SAW);
-            registerDropSelfLootTable(ModBlocks.SPIKES);
-            registerDropSelfLootTable(ModBlocks.XP_TAP);
-            registerDropSelfLootTable(ModBlocks.ENDER_INHIBITOR_ON);
-            registerDropping(ModBlocks.ENDER_INHIBITOR_OFF, ModBlocks.ENDER_INHIBITOR_ON_ITEM);
-            registerDropSelfLootTable(ModBlocks.TINTED_GLASS);
-            registerLootTable(ModBlocks.DREADFUL_DIRT, (block) -> droppingWithSilkTouch(block, Items.DIRT));
-            registerLootTable(ModBlocks.DELIGHTFUL_DIRT, (block) -> droppingWithSilkTouch(block, Items.DIRT));
-            registerDropSelfLootTable(ModBlocks.SOLID_XP_BLOCK);
-            registerDropSelfLootTable(ModBlocks.ENTITY_SPAWNER);
+            registerDropSelfLootTable(ModBlocks.ABSORPTION_HOPPER.getBlock());
+            registerDropSelfLootTable(ModBlocks.DARK_OAK_STONE.getBlock());
+            registerDropSelfLootTable(ModBlocks.DRAGON_MUFFLER.getBlock());
+            registerDropSelfLootTable(ModBlocks.WITHER_MUFFLER.getBlock());
+            registerDropSelfLootTable(ModBlocks.ENTITY_CONVEYOR.getBlock());
+            registerDropSelfLootTable(ModBlocks.FAN.getBlock());
+            registerDropSelfLootTable(ModBlocks.SAW.getBlock());
+            registerDropSelfLootTable(ModBlocks.SPIKES.getBlock());
+            registerDropSelfLootTable(ModBlocks.XP_TAP.getBlock());
+            registerDropSelfLootTable(ModBlocks.ENDER_INHIBITOR_ON.getBlock());
+            registerDropping(ModBlocks.ENDER_INHIBITOR_OFF.getBlock(), ModBlocks.ENDER_INHIBITOR_ON.getItem());
+            registerDropSelfLootTable(ModBlocks.TINTED_GLASS.getBlock());
+            registerLootTable(ModBlocks.DREADFUL_DIRT.getBlock(), (block) -> droppingWithSilkTouch(block, Items.DIRT));
+            registerLootTable(ModBlocks.DELIGHTFUL_DIRT.getBlock(), (block) -> droppingWithSilkTouch(block, Items.DIRT));
+            registerDropSelfLootTable(ModBlocks.SOLID_XP_BLOCK.getBlock());
+            registerDropSelfLootTable(ModBlocks.ENTITY_SPAWNER.getBlock());
         }
 
         @Nonnull

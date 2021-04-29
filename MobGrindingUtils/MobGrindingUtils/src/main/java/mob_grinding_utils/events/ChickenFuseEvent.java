@@ -50,10 +50,10 @@ public class ChickenFuseEvent {
 						});
 
 						if (nbt.contains("nutritious") && nbt.getBoolean("nutritious"))
-							entity.entityDropItem(new ItemStack(ModItems.GOLDEN_EGG), 0.0F);
+							entity.entityDropItem(new ItemStack(ModItems.GOLDEN_EGG.get()), 0.0F);
 
 						if (nbt.contains("cursed") && nbt.getBoolean("cursed")) {
-							entity.entityDropItem(new ItemStack(ModItems.ROTTEN_EGG), 0.0F);
+							entity.entityDropItem(new ItemStack(ModItems.ROTTEN_EGG.get()), 0.0F);
 							entity.playSound(ModSounds.SPOOPY_CHANGE, 1F, 1F);
 						}
 						else {

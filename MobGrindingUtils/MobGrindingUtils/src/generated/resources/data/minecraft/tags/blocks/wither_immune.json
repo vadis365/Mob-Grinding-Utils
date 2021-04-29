@@ -18,8 +18,8 @@
     "mob_grinding_utils:jumbo_tank",
     "mob_grinding_utils:xpsolidifier",
     "mob_grinding_utils:dreadful_dirt",
-    "mob_grinding_utils:delightful_dirt",
     "mob_grinding_utils:solid_xp_block",
+    "mob_grinding_utils:delightful_dirt",
     "mob_grinding_utils:entity_spawner"
   ]
 }

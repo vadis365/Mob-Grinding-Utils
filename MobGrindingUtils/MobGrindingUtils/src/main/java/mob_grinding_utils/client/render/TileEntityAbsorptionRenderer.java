@@ -36,7 +36,7 @@ public class TileEntityAbsorptionRenderer extends TileEntityRenderer<TileEntityA
 
 		BlockState state = tile.getWorld().getBlockState(tile.getPos());
 
-		if(state == null || state.getBlock() != ModBlocks.ABSORPTION_HOPPER)
+		if(state == null || state.getBlock() != ModBlocks.ABSORPTION_HOPPER.getBlock())
 			return;
 
 		matrixStack.push();

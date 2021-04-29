@@ -137,6 +137,6 @@ public class BlockSaw extends DirectionalBlock implements ITileEntityProvider {
 
 	@Override
 	public boolean getWeakChanges(BlockState state, IWorldReader world, BlockPos pos) {
-		return state.isIn(ModBlocks.SAW);
+		return state.isIn(ModBlocks.SAW.getBlock());
 	}
 }

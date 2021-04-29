@@ -27,12 +27,12 @@ public class ContainerSaw extends Container {
 		saw = (TileEntitySaw) tile;
 		int i = (numRows - 4) * 18;
 
-		addSlot(new SlotRestriction((IInventory) tile, 0, 18, 18, new ItemStack(ModItems.SAW_UPGRADE_SHARPNESS, 1), 10));
-		addSlot(new SlotRestriction((IInventory) tile, 1, 43, 18, new ItemStack(ModItems.SAW_UPGRADE_LOOTING, 1), 10));
-		addSlot(new SlotRestriction((IInventory) tile, 2, 68, 18, new ItemStack(ModItems.SAW_UPGRADE_FIRE, 1), 10));
-		addSlot(new SlotRestriction((IInventory) tile, 3, 93, 18, new ItemStack(ModItems.SAW_UPGRADE_SMITE, 1), 10));
-		addSlot(new SlotRestriction((IInventory) tile, 4, 118, 18, new ItemStack(ModItems.SAW_UPGRADE_ARTHROPOD, 1), 10));
-		addSlot(new SlotRestriction((IInventory) tile, 5, 143, 18, new ItemStack(ModItems.SAW_UPGRADE_BEHEADING, 1), 10));
+		addSlot(new SlotRestriction((IInventory) tile, 0, 18, 18, new ItemStack(ModItems.SAW_UPGRADE_SHARPNESS.get(), 1), 10));
+		addSlot(new SlotRestriction((IInventory) tile, 1, 43, 18, new ItemStack(ModItems.SAW_UPGRADE_LOOTING.get(), 1), 10));
+		addSlot(new SlotRestriction((IInventory) tile, 2, 68, 18, new ItemStack(ModItems.SAW_UPGRADE_FIRE.get(), 1), 10));
+		addSlot(new SlotRestriction((IInventory) tile, 3, 93, 18, new ItemStack(ModItems.SAW_UPGRADE_SMITE.get(), 1), 10));
+		addSlot(new SlotRestriction((IInventory) tile, 4, 118, 18, new ItemStack(ModItems.SAW_UPGRADE_ARTHROPOD.get(), 1), 10));
+		addSlot(new SlotRestriction((IInventory) tile, 5, 143, 18, new ItemStack(ModItems.SAW_UPGRADE_BEHEADING.get(), 1), 10));
 
 		for (int j = 0; j < 3; j++)
 			for (int k = 0; k < 9; k++)
@@ -55,22 +55,22 @@ public class ContainerSaw extends Container {
 			ItemStack stack1 = slot.getStack();
 			stack = stack1.copy();
 			if (slotIndex > 5) {
-				if (stack1.getItem() == ModItems.SAW_UPGRADE_SHARPNESS)
+				if (stack1.getItem() == ModItems.SAW_UPGRADE_SHARPNESS.get())
 					if (!mergeItemStack(stack1, 0, 1, false))
 						return ItemStack.EMPTY;
-				if (stack1.getItem() == ModItems.SAW_UPGRADE_LOOTING)
+				if (stack1.getItem() == ModItems.SAW_UPGRADE_LOOTING.get())
 					if (!mergeItemStack(stack1, 1, 2, false))
 						return ItemStack.EMPTY;
-				if (stack1.getItem() == ModItems.SAW_UPGRADE_FIRE)
+				if (stack1.getItem() == ModItems.SAW_UPGRADE_FIRE.get())
 					if (!mergeItemStack(stack1, 2, 3, false))
 						return ItemStack.EMPTY;
-				if (stack1.getItem() == ModItems.SAW_UPGRADE_SMITE)
+				if (stack1.getItem() == ModItems.SAW_UPGRADE_SMITE.get())
 					if (!mergeItemStack(stack1, 3, 4, false))
 						return ItemStack.EMPTY;
-				if (stack1.getItem() == ModItems.SAW_UPGRADE_ARTHROPOD)
+				if (stack1.getItem() == ModItems.SAW_UPGRADE_ARTHROPOD.get())
 					if (!mergeItemStack(stack1, 4, 5, false))
 						return ItemStack.EMPTY;
-				if (stack1.getItem() == ModItems.SAW_UPGRADE_BEHEADING)
+				if (stack1.getItem() == ModItems.SAW_UPGRADE_BEHEADING.get())
 					if (!mergeItemStack(stack1, 5, 6, false))
 						return ItemStack.EMPTY;
 			} else if (!mergeItemStack(stack1, 6, inventorySlots.size(), false))

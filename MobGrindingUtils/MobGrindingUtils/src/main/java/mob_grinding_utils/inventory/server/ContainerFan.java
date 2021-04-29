@@ -26,9 +26,9 @@ public class ContainerFan extends Container {
 		fan = (TileEntityFan) tile;
 
 		int i = (numRows - 4) * 18;
-		addSlot(new SlotRestriction((IInventory) tile, 0, 44, 18, new ItemStack(ModItems.FAN_UPGRADE_WIDTH, 1), 3));
-		addSlot(new SlotRestriction((IInventory) tile, 1, 80, 18, new ItemStack(ModItems.FAN_UPGRADE_HEIGHT, 1), 3));
-		addSlot(new SlotRestriction((IInventory) tile, 2, 116, 18, new ItemStack(ModItems.FAN_UPGRADE_SPEED, 1), 10));
+		addSlot(new SlotRestriction((IInventory) tile, 0, 44, 18, new ItemStack(ModItems.FAN_UPGRADE_WIDTH.get(), 1), 3));
+		addSlot(new SlotRestriction((IInventory) tile, 1, 80, 18, new ItemStack(ModItems.FAN_UPGRADE_HEIGHT.get(), 1), 3));
+		addSlot(new SlotRestriction((IInventory) tile, 2, 116, 18, new ItemStack(ModItems.FAN_UPGRADE_SPEED.get(), 1), 10));
 
 		for (int j = 0; j < 3; j++)
 			for (int k = 0; k < 9; k++)
@@ -50,13 +50,13 @@ public class ContainerFan extends Container {
 			ItemStack stack1 = slot.getStack();
 			stack = stack1.copy();
 			if (slotIndex > 2) {
-				if (stack1.getItem() == ModItems.FAN_UPGRADE_WIDTH)
+				if (stack1.getItem() == ModItems.FAN_UPGRADE_WIDTH.get())
 					if (!mergeItemStack(stack1, 0, 1, false))
 						return ItemStack.EMPTY;
-				if (stack1.getItem() == ModItems.FAN_UPGRADE_HEIGHT)
+				if (stack1.getItem() == ModItems.FAN_UPGRADE_HEIGHT.get())
 					if (!mergeItemStack(stack1, 1, 2, false))
 						return ItemStack.EMPTY;
-				if (stack1.getItem() == ModItems.FAN_UPGRADE_SPEED)
+				if (stack1.getItem() == ModItems.FAN_UPGRADE_SPEED.get())
 					if (!mergeItemStack(stack1, 2, 3, false))
 						return ItemStack.EMPTY;
 			} else if (!mergeItemStack(stack1, 3, inventorySlots.size(), false))

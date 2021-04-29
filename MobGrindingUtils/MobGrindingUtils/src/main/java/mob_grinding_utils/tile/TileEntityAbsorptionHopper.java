@@ -56,7 +56,7 @@ public class TileEntityAbsorptionHopper extends TileEntityInventoryHelper implem
     private static final int[] SLOTS = new int[] {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16};
     public int prevTankAmount;
 	public TileEntityAbsorptionHopper() {
-		super(ModBlocks.ABSORPTION_HOPPER_TILE, 17);
+		super(ModBlocks.ABSORPTION_HOPPER.getTileEntityType(), 17);
 		itemHandler = createUnSidedHandler();
 		itemholder = LazyOptional.of(() -> itemHandler);
 	}
@@ -342,7 +342,7 @@ public class TileEntityAbsorptionHopper extends TileEntityInventoryHelper implem
 	}
 
 	private boolean hasUpgrade() {
-		return !getItems().get(0).isEmpty() && getItems().get(0).getItem() == ModItems.ABSORPTION_UPGRADE;
+		return !getItems().get(0).isEmpty() && getItems().get(0).getItem() == ModItems.ABSORPTION_UPGRADE.get();
 	}
 
 	public int getModifierAmount() {

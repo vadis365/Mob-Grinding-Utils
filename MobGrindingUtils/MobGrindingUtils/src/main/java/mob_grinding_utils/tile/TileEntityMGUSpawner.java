@@ -57,7 +57,7 @@ public class TileEntityMGUSpawner extends TileEntity implements ITickableTileEnt
     public ItemStackHandler fuelSlot = new ItemStackHandler(1) {
         @Override
         public boolean isItemValid(int slot, @Nonnull ItemStack stack) {
-            return stack.getItem() == ModItems.SOLID_XP_BABY;
+            return stack.getItem() == ModItems.SOLID_XP_BABY.get();
         }
     };
     private final LazyOptional<IItemHandler> fuelSlotCap = LazyOptional.of(() -> fuelSlot);
@@ -67,7 +67,7 @@ public class TileEntityMGUSpawner extends TileEntity implements ITickableTileEnt
 	public int offsetX, offsetY, offsetZ;
 
     public TileEntityMGUSpawner() {
-        super(ModBlocks.ENTITY_SPAWNER_TILE);
+        super(ModBlocks.ENTITY_SPAWNER.getTileEntityType());
     }
 
 	public void toggleOnOff() {
@@ -205,11 +205,11 @@ public class TileEntityMGUSpawner extends TileEntity implements ITickableTileEnt
 	}
 
 	private boolean hasFuel() {
-		return !fuelSlot.getStackInSlot(0).isEmpty() && fuelSlot.getStackInSlot(0).getItem() == ModItems.SOLID_XP_BABY;
+		return !fuelSlot.getStackInSlot(0).isEmpty() && fuelSlot.getStackInSlot(0).getItem() == ModItems.SOLID_XP_BABY.get();
 	}
 
 	private boolean hasWidthUpgrade() {
-		return !inputSlots.getStackInSlot(1).isEmpty() && inputSlots.getStackInSlot(1).getItem() == ModItems.SPAWNER_UPGRADE_WIDTH;
+		return !inputSlots.getStackInSlot(1).isEmpty() && inputSlots.getStackInSlot(1).getItem() == ModItems.SPAWNER_UPGRADE_WIDTH.get();
 	}
 
 	public int getWidthModifierAmount() {
@@ -217,7 +217,7 @@ public class TileEntityMGUSpawner extends TileEntity implements ITickableTileEnt
 	}
 
 	private boolean hasHeightUpgrade() {
-		return !inputSlots.getStackInSlot(2).isEmpty() && inputSlots.getStackInSlot(2).getItem() == ModItems.SPAWNER_UPGRADE_HEIGHT;
+		return !inputSlots.getStackInSlot(2).isEmpty() && inputSlots.getStackInSlot(2).getItem() == ModItems.SPAWNER_UPGRADE_HEIGHT.get();
 	}
 
 	public int getHeightModifierAmount() {
@@ -225,7 +225,7 @@ public class TileEntityMGUSpawner extends TileEntity implements ITickableTileEnt
 	}
 
 	private boolean hasSpeedUpgrade() {
-		return !inputSlots.getStackInSlot(3).isEmpty() && inputSlots.getStackInSlot(3).getItem() == ModItems.XP_SOLIDIFIER_UPGRADE; //TODO temp items here
+		return !inputSlots.getStackInSlot(3).isEmpty() && inputSlots.getStackInSlot(3).getItem() == ModItems.XP_SOLIDIFIER_UPGRADE.get(); //TODO temp items here
 	}
 
 	public int getSpeedModifierAmount() {

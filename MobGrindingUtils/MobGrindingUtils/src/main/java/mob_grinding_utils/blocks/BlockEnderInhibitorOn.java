@@ -169,7 +169,7 @@ public class BlockEnderInhibitorOn extends Block {
 			flag = true;
 
 		if (!flag) {
-			spawnAsEntity( world, pos, new ItemStack(ModBlocks.ENDER_INHIBITOR_OFF_ITEM, 1));
+			spawnAsEntity( world, pos, new ItemStack(ModBlocks.ENDER_INHIBITOR_OFF.getItem(), 1));
 			world.setBlockState(pos, Blocks.AIR.getDefaultState());
 		}
 
@@ -179,7 +179,7 @@ public class BlockEnderInhibitorOn extends Block {
 	@Override
 	public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
 		if (!world.isRemote) {
-			BlockState activeState = ModBlocks.ENDER_INHIBITOR_OFF.getDefaultState().with(BlockEnderInhibitorOff.TYPE, state.get(TYPE));
+			BlockState activeState = ModBlocks.ENDER_INHIBITOR_OFF.getBlock().getDefaultState().with(BlockEnderInhibitorOff.TYPE, state.get(TYPE));
 			world.setBlockState(pos, activeState, 3);
 			world.playSound(null, pos, SoundEvents.BLOCK_LEVER_CLICK, SoundCategory.BLOCKS, 0.3F, 0.6F);
 		}

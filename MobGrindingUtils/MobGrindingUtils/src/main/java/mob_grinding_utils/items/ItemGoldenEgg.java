@@ -49,7 +49,7 @@ public class ItemGoldenEgg extends Item {
 					BlockState state = world.getBlockState(pos.add(x, 0, z));
 					if (state.getBlock() == Blocks.GRASS_BLOCK || state.getBlock() == Blocks.DIRT || state.getBlock() == Blocks.MYCELIUM || state.getBlock() == Blocks.FARMLAND) {
 						world.playEvent(null, 2001, pos.add(x, 0, z), Block.getStateId(world.getBlockState(pos.add(x, 0, z))));
-						world.setBlockState(pos.add(x, 0, z), ModBlocks.DELIGHTFUL_DIRT.getDefaultState(), 3);
+						world.setBlockState(pos.add(x, 0, z), ModBlocks.DELIGHTFUL_DIRT.getBlock().getDefaultState(), 3);
 						if (!player.abilities.isCreativeMode)
 							stackHeld.shrink(1);
 					}

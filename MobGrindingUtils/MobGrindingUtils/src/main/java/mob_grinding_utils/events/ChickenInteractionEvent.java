@@ -22,7 +22,7 @@ public class ChickenInteractionEvent {
 
 			if (entity instanceof ChickenEntity && !entity.isChild()) {
 				World world = entity.getEntityWorld();
-				if (!event.getItemStack().isEmpty() && (event.getItemStack().getItem() == ModItems.GM_CHICKEN_FEED || event.getItemStack().getItem() == ModItems.GM_CHICKEN_FEED_CURSED || event.getItemStack().getItem() == ModItems.NUTRITIOUS_CHICKEN_FEED)) {
+				if (!event.getItemStack().isEmpty() && (event.getItemStack().getItem() == ModItems.GM_CHICKEN_FEED.get() || event.getItemStack().getItem() == ModItems.GM_CHICKEN_FEED_CURSED.get() || event.getItemStack().getItem() == ModItems.NUTRITIOUS_CHICKEN_FEED.get())) {
 					if (!world.isRemote) {
 						CompoundNBT nbt = new CompoundNBT();
 						nbt = entity.getPersistentData();
@@ -32,9 +32,9 @@ public class ChickenInteractionEvent {
 							nbt.putInt("countDown", 0);
 							if (event.getItemStack().hasTag() && event.getItemStack().getTag().contains("mguMobName"))
 								nbt.putString("mguMobName", event.getItemStack().getTag().getString("mguMobName"));
-							if (event.getItemStack().getItem() == ModItems.GM_CHICKEN_FEED_CURSED)
+							if (event.getItemStack().getItem() == ModItems.GM_CHICKEN_FEED_CURSED.get())
 								nbt.putBoolean("cursed", true);
-							if (event.getItemStack().getItem() == ModItems.NUTRITIOUS_CHICKEN_FEED)
+							if (event.getItemStack().getItem() == ModItems.NUTRITIOUS_CHICKEN_FEED.get())
 								nbt.putBoolean("nutritious", true);
 							if (event.getPlayer() instanceof ServerPlayerEntity) {
 								MobGrindingUtils.NETWORK_WRAPPER.send(PacketDistributor.ALL.noArg(), new MessageChickenSync(entity, nbt));

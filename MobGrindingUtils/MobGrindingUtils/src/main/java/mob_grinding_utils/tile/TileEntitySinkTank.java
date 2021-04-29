@@ -18,7 +18,7 @@ import net.minecraftforge.fml.network.PacketDistributor;
 public class TileEntitySinkTank extends TileEntityTank {
 
 	public TileEntitySinkTank() {
-		super(ModBlocks.TANK_SINK_TILE);
+		super(ModBlocks.TANK_SINK.getTileEntityType());
 	}
 
 	@Override

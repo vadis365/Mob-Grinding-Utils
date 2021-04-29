@@ -13,10 +13,4 @@ public class BlockDarkOakStone extends Block {
 	public BlockDarkOakStone(Block.Properties properties) {
 		super(properties);
 	}
-
-	@Nullable
-	public Item getItemDropped(BlockState state, Random rand, int fortune) {
-		return Item.getItemFromBlock(this);
-	}
-
 }

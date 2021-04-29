@@ -117,7 +117,7 @@ public class BlockXPTap extends DirectionalBlock implements ITileEntityProvider 
 	public void neighborChanged(BlockState state, World world, BlockPos pos, Block block, BlockPos fromPos, boolean isMoving) {
 		Direction facing = world.getBlockState(pos).get(FACING);
 		if (!canPlaceAt(world, pos.offset(facing.getOpposite()), facing)) {
-			spawnAsEntity(world, pos, new ItemStack(ModBlocks.XP_TAP_ITEM, 1));
+			spawnAsEntity(world, pos, new ItemStack(ModBlocks.XP_TAP.getItem(), 1));
 			world.setBlockState(pos, Blocks.AIR.getDefaultState());
 		}
 		super.neighborChanged(state, world, pos, block, fromPos, isMoving);

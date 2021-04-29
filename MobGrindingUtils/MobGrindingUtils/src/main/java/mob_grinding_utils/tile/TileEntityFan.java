@@ -43,7 +43,7 @@ public class TileEntityFan extends TileEntityInventoryHelper implements ITickabl
 	float xNeg, yNeg, zNeg;
 
 	public TileEntityFan() {
-		super(ModBlocks.FAN_TILE, 3);
+		super(ModBlocks.FAN.getTileEntityType(), 3);
 	}
 
 	@Override
@@ -174,15 +174,15 @@ public class TileEntityFan extends TileEntityInventoryHelper implements ITickabl
 	}
 
 	private boolean hasWidthUpgrade() {
-		return !getItems().get(0).isEmpty() && getItems().get(0).getItem() == ModItems.FAN_UPGRADE_WIDTH;
+		return !getItems().get(0).isEmpty() && getItems().get(0).getItem() == ModItems.FAN_UPGRADE_WIDTH.get();
 	}
 
 	private boolean hasHeightUpgrade() {
-		return !getItems().get(1).isEmpty() && getItems().get(1).getItem() == ModItems.FAN_UPGRADE_HEIGHT;
+		return !getItems().get(1).isEmpty() && getItems().get(1).getItem() == ModItems.FAN_UPGRADE_HEIGHT.get();
 	}
 
 	private boolean hasSpeedUpgrade() {
-		return !getItems().get(2).isEmpty() && getItems().get(2).getItem() == ModItems.FAN_UPGRADE_SPEED;
+		return !getItems().get(2).isEmpty() && getItems().get(2).getItem() == ModItems.FAN_UPGRADE_SPEED.get();
 	}
 
 	@Override

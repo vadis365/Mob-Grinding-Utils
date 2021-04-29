@@ -45,7 +45,7 @@ public class ItemMobSwab extends Item {
 	public ActionResultType itemInteractionForEntity(@Nonnull ItemStack stack, @Nonnull PlayerEntity player, @Nonnull LivingEntity target, @Nonnull Hand hand) {
 		if (!(target instanceof PlayerEntity) && !used) {
 				String mobName = Objects.requireNonNull(target.getType().getRegistryName()).toString();
-				ItemStack stack2 = new ItemStack(ModItems.MOB_SWAB_USED, 1);
+				ItemStack stack2 = new ItemStack(ModItems.MOB_SWAB_USED.get(), 1);
 				if (!stack2.hasTag())
 					stack2.setTag(new CompoundNBT());
 				if (!Objects.requireNonNull(stack2.getTag()).contains("mguMobName")) {

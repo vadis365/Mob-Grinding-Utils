@@ -29,23 +29,23 @@ public class JEIPlugin implements IModPlugin {
 
     @Override
     public void registerRecipes(@Nonnull IRecipeRegistration registration) {
-        for (BlockItem block : ModBlocks.ITEM_BLOCKS) {
-            String key = block.getTranslationKey()+".jei.info";
+        /*
+        ModItems.ITEMS.getEntries().forEach((block) -> {
+            String key = block.get().getTranslationKey()+".jei.info";
             if (I18n.hasKey(key)) {
                 String langEntry = TextFormatting.getTextWithoutFormattingCodes(I18n.format(key));
-                if (langEntry == null)
-                    continue;
-                registration.addIngredientInfo(new ItemStack(block), VanillaTypes.ITEM, StringUtils.splitByWholeSeparator(langEntry, "//n"));
+                if (langEntry != null)
+                    registration.addIngredientInfo(new ItemStack(block.get()), VanillaTypes.ITEM, StringUtils.splitByWholeSeparator(langEntry, "//n"));
             }
-        }
-        for (Item item : ModItems.ITEMS) {
-            String key = item.getTranslationKey()+".jei.info";
+        });
+*/
+        ModItems.ITEMS.getEntries().forEach((item) -> {
+            String key = item.get().getTranslationKey()+".jei.info";
             if (I18n.hasKey(key)) {
                 String langEntry = TextFormatting.getTextWithoutFormattingCodes(I18n.format(key));
-                if (langEntry == null)
-                    continue;
-                registration.addIngredientInfo(new ItemStack(item), VanillaTypes.ITEM, StringUtils.splitByWholeSeparator(langEntry, "//n"));
+                if (langEntry != null)
+                    registration.addIngredientInfo(new ItemStack(item.get()), VanillaTypes.ITEM, StringUtils.splitByWholeSeparator(langEntry, "//n"));
             }
-        }
+        });
     }
 }

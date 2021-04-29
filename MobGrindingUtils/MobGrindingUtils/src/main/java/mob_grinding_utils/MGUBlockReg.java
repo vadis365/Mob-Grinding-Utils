@@ -12,15 +12,10 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 public class MGUBlockReg<B extends Block,I extends Item, T extends TileEntity> implements Supplier<B> {
-    private final String name;
-
+    private String name;
     private RegistryObject<B> block;
     private RegistryObject<I> item;
     private RegistryObject<TileEntityType<T>> tile;
-
-    private final Supplier<B> blockSupplier;
-    private final Supplier<T> tileSupplier;
-    private final Function<B, I> ItemSupplier;
 
     @Override
     public B get() {
@@ -33,16 +28,15 @@ public class MGUBlockReg<B extends Block,I extends Item, T extends TileEntity> i
 
     public MGUBlockReg(String name, Supplier<B> blockSupplier, Function<B, I> itemSupplier, Supplier<T> tileSupplier) {
         this.name = name;
-        this.blockSupplier = blockSupplier;
-        this.tileSupplier = tileSupplier;
-        ItemSupplier = itemSupplier;
+        block = ModBlocks.BLOCKS.register(name, blockSupplier);
+        item = ModItems.ITEMS.register(name, () -> itemSupplier.apply(block.get()));
+        tile = ModBlocks.TILE_ENTITIES.register(name, () -> TileEntityType.Builder.create(tileSupplier, block.get()).build(null));
     }
 
     public MGUBlockReg(String name, Supplier<B> blockSupplier, Function<B, I> itemSupplier) {
         this.name = name;
-        this.blockSupplier = blockSupplier;
-        ItemSupplier = itemSupplier;
-        this.tileSupplier = null;
+        block = ModBlocks.BLOCKS.register(name, blockSupplier);
+        item = ModItems.ITEMS.register(name, () -> itemSupplier.apply(block.get()));
     }
 
     @Nonnull

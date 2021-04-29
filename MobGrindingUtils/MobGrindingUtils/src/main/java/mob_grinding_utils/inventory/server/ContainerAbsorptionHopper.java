@@ -27,7 +27,7 @@ public class ContainerAbsorptionHopper extends Container {
 		int i = (numRows - 4) * 18;
 		int j;
 		int k;
-		addSlot(new SlotRestriction((IInventory)tile, 0, 134, 72, new ItemStack(ModItems.ABSORPTION_UPGRADE, 1), 6)); // change to hopper upgrade
+		addSlot(new SlotRestriction((IInventory)tile, 0, 134, 72, new ItemStack(ModItems.ABSORPTION_UPGRADE.get(), 1), 6)); // change to hopper upgrade
 
 		for (j = 0; j < numRows; ++j)
 			for (k = 0; k < 8; ++k)

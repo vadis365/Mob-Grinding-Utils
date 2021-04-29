@@ -51,7 +51,7 @@ public class TileTankStackItemRenderer extends ItemStackTileEntityRenderer {
 		if (fluidLevel < 1)
 			return;
 		float tankMax = 32000F;
-		if(stack.getItem() == ModBlocks.JUMBO_TANK_ITEM)
+		if(stack.getItem() == ModBlocks.JUMBO_TANK.getItem())
 			tankMax = 1024000F;
 		float height = (0.96875F / tankMax) * fluidLevel; // volumes hardcoded until config
 		
@@ -75,7 +75,7 @@ public class TileTankStackItemRenderer extends ItemStackTileEntityRenderer {
 	}
 	
 	private ResourceLocation getTexture(Item item) {
-		return item == ModBlocks.JUMBO_TANK_ITEM ? TANK_JUMBO_TEXTURE : item == ModBlocks.TANK_SINK_ITEM ? TANK_SINK_TEXTURE : TANK_TEXTURE;
+		return item == ModBlocks.JUMBO_TANK.getItem() ? TANK_JUMBO_TEXTURE : item == ModBlocks.TANK_SINK.getItem() ? TANK_SINK_TEXTURE : TANK_TEXTURE;
 	}
 
 	private void renderCuboid(IVertexBuilder buffer, MatrixStack matrixStack, float xMax, float xMin, float yMin, float height, float zMin, float zMax, TextureAtlasSprite textureAtlasSprite, float red, float green, float blue, float alpha, int combinedLight) {

@@ -56,7 +56,7 @@ public class TileEntityXPSolidifier extends TileEntity implements ITickableTileE
 	public int animationTicks, prevAnimationTicks;
 
     public TileEntityXPSolidifier() {
-        super(ModBlocks.XPSOLIDIFIER_TILE);
+        super(ModBlocks.XPSOLIDIFIER.getTileEntityType());
     }
 
     public enum OutputDirection implements IStringSerializable {
@@ -128,7 +128,7 @@ public class TileEntityXPSolidifier extends TileEntity implements ITickableTileE
 				setProgress(getProgress() + 1 + getModifierAmount());
 				if (getProgress() >= MAX_MOULDING_TIME) {
 					setActive(false);
-					outputSlot.setStackInSlot(0, new ItemStack(ModItems.SOLID_XP_BABY, 1)); //hardcoded result for now
+					outputSlot.setStackInSlot(0, new ItemStack(ModItems.SOLID_XP_BABY.get(), 1)); //hardcoded result for now
 					tank.drain(FluidAttributes.BUCKET_VOLUME, FluidAction.EXECUTE);
 					return;
 				}
@@ -211,8 +211,8 @@ public class TileEntityXPSolidifier extends TileEntity implements ITickableTileE
 	@OnlyIn(Dist.CLIENT)
 	public ItemStack getCachedOutPutRenderStack() { // TODO this needs to be cached to NBT probably
 		if(hasMould()) {
-			if(inputSlots.getStackInSlot(0).getItem() == ModItems.SOLID_XP_MOULD_BABY)
-				return new ItemStack(ModItems.SOLID_XP_BABY, 1);
+			if(inputSlots.getStackInSlot(0).getItem() == ModItems.SOLID_XP_MOULD_BABY.get())
+				return new ItemStack(ModItems.SOLID_XP_BABY.get(), 1);
 		}
 		return ItemStack.EMPTY;
 	}
@@ -239,7 +239,7 @@ public class TileEntityXPSolidifier extends TileEntity implements ITickableTileE
 	}
 
 	private boolean hasUpgrade() {
-		return !inputSlots.getStackInSlot(1).isEmpty() && inputSlots.getStackInSlot(1).getItem() == ModItems.XP_SOLIDIFIER_UPGRADE;
+		return !inputSlots.getStackInSlot(1).isEmpty() && inputSlots.getStackInSlot(1).getItem() == ModItems.XP_SOLIDIFIER_UPGRADE.get();
 	}
 
 	public int getModifierAmount() {

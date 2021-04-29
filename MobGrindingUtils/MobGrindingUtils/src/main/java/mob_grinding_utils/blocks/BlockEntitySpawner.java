@@ -132,6 +132,6 @@ public class BlockEntitySpawner extends Block implements ITileEntityProvider {
 
 	@Override
 	public boolean getWeakChanges(BlockState state, IWorldReader world, BlockPos pos) {
-		return state.isIn(ModBlocks.ENTITY_SPAWNER);
+		return state.isIn(ModBlocks.ENTITY_SPAWNER.getBlock());
 	}
 }

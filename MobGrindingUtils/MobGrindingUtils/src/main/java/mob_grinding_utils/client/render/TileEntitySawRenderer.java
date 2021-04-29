@@ -38,7 +38,7 @@ public class TileEntitySawRenderer extends TileEntityRenderer<TileEntitySaw> {
 
 		BlockState state = tile.getWorld().getBlockState(tile.getPos());
 
-		if(state == null || state.getBlock() != ModBlocks.SAW)
+		if(state == null || state.getBlock() != ModBlocks.SAW.getBlock())
 			return;
 
 		Direction facing = state.get(BlockSaw.FACING);

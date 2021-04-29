@@ -7,6 +7,6 @@ import net.minecraftforge.fluids.capability.templates.FluidTank;
 public class TileEntityJumboTank extends TileEntityTank {
 
 	public TileEntityJumboTank() {
-		super(ModBlocks.JUMBO_TANK_TILE, new FluidTank(FluidAttributes.BUCKET_VOLUME *  1024));
+		super(ModBlocks.JUMBO_TANK.getTileEntityType(), new FluidTank(FluidAttributes.BUCKET_VOLUME *  1024));
 	}
 }

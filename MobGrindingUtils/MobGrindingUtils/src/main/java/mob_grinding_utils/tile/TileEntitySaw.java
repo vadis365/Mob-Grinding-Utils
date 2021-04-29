@@ -38,7 +38,7 @@ public class TileEntitySaw extends TileEntityInventoryHelper implements ITickabl
     private static final int[] SLOTS = new int[] {0, 1, 2, 3, 4, 5};
 
 	public TileEntitySaw() {
-		super(ModBlocks.SAW_TILE, 6);
+		super(ModBlocks.SAW.getTileEntityType(), 6);
 	}
 
 	@Override
@@ -73,7 +73,7 @@ public class TileEntitySaw extends TileEntityInventoryHelper implements ITickabl
 			if (entity != null) {
 				if (entity instanceof LivingEntity) {
 					MGUFakePlayer fakePlayer = MGUFakePlayer.get((ServerWorld)getWorld(), this.pos.getX(), -100D, this.pos.getZ()).get();
-					ItemStack tempSword = new ItemStack(ModItems.NULL_SWORD, 1);
+					ItemStack tempSword = new ItemStack(ModItems.NULL_SWORD.get(), 1);
 
 					if(!tempSword.hasTag())
 						tempSword.setTag(new CompoundNBT());
@@ -102,27 +102,27 @@ public class TileEntitySaw extends TileEntityInventoryHelper implements ITickabl
 	}
 
 	private boolean hasSharpnessUpgrade() {
-		return !getItems().get(0).isEmpty() && getItems().get(0).getItem() == ModItems.SAW_UPGRADE_SHARPNESS;
+		return !getItems().get(0).isEmpty() && getItems().get(0).getItem() == ModItems.SAW_UPGRADE_SHARPNESS.get();
 	}
 	
 	private boolean hasLootingUpgrade() {
-		return !getItems().get(1).isEmpty() && getItems().get(1).getItem() == ModItems.SAW_UPGRADE_LOOTING;
+		return !getItems().get(1).isEmpty() && getItems().get(1).getItem() == ModItems.SAW_UPGRADE_LOOTING.get();
 	}
 
 	private boolean hasFlameUpgrade() {
-		return !getItems().get(2).isEmpty() && getItems().get(2).getItem() == ModItems.SAW_UPGRADE_FIRE;
+		return !getItems().get(2).isEmpty() && getItems().get(2).getItem() == ModItems.SAW_UPGRADE_FIRE.get();
 	}
 	
 	private boolean hasSmiteUpgrade() {
-		return !getItems().get(3).isEmpty() && getItems().get(3).getItem() == ModItems.SAW_UPGRADE_SMITE;
+		return !getItems().get(3).isEmpty() && getItems().get(3).getItem() == ModItems.SAW_UPGRADE_SMITE.get();
 	}
 	
 	private boolean hasArthropodUpgrade() {
-		return !getItems().get(4).isEmpty() && getItems().get(4).getItem() == ModItems.SAW_UPGRADE_ARTHROPOD;
+		return !getItems().get(4).isEmpty() && getItems().get(4).getItem() == ModItems.SAW_UPGRADE_ARTHROPOD.get();
 	}
 
 	private boolean hasBeheadingUpgrade() {
-		return !getItems().get(5).isEmpty() && getItems().get(5).getItem() == ModItems.SAW_UPGRADE_BEHEADING;
+		return !getItems().get(5).isEmpty() && getItems().get(5).getItem() == ModItems.SAW_UPGRADE_BEHEADING.get();
 	}
 
 	@Override
@@ -165,22 +165,22 @@ public class TileEntitySaw extends TileEntityInventoryHelper implements ITickabl
 		if (stack.getItem() instanceof ItemSawUpgrade) {
 			switch (slot) {
 			case 0:
-				if (stack.getItem() == ModItems.SAW_UPGRADE_SHARPNESS)
+				if (stack.getItem() == ModItems.SAW_UPGRADE_SHARPNESS.get())
 					return true;
 			case 1:
-				if (stack.getItem() == ModItems.SAW_UPGRADE_LOOTING)
+				if (stack.getItem() == ModItems.SAW_UPGRADE_LOOTING.get())
 					return true;
 			case 2:
-				if (stack.getItem() == ModItems.SAW_UPGRADE_FIRE)
+				if (stack.getItem() == ModItems.SAW_UPGRADE_FIRE.get())
 					return true;
 			case 3:
-				if (stack.getItem() == ModItems.SAW_UPGRADE_SMITE)
+				if (stack.getItem() == ModItems.SAW_UPGRADE_SMITE.get())
 					return true;
 			case 4:
-				if (stack.getItem() == ModItems.SAW_UPGRADE_ARTHROPOD)
+				if (stack.getItem() == ModItems.SAW_UPGRADE_ARTHROPOD.get())
 					return true;
 			case 5:
-				if (stack.getItem() == ModItems.SAW_UPGRADE_BEHEADING)
+				if (stack.getItem() == ModItems.SAW_UPGRADE_BEHEADING.get())
 					return true;
 			}
 		}

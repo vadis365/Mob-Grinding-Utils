@@ -31,7 +31,7 @@ public class BlockEnderInhibitorOff extends BlockEnderInhibitorOn {
 	@Override
 	public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
 		if (!world.isRemote) {
-			BlockState activeState = ModBlocks.ENDER_INHIBITOR_ON.getDefaultState().with(BlockEnderInhibitorOn.TYPE, state.get(TYPE));
+			BlockState activeState = ModBlocks.ENDER_INHIBITOR_ON.getBlock().getDefaultState().with(BlockEnderInhibitorOn.TYPE, state.get(TYPE));
 			world.setBlockState(pos, activeState, 3);
 			world.playSound(null, pos, SoundEvents.BLOCK_LEVER_CLICK, SoundCategory.BLOCKS, 0.3F, 0.6F);
 		}

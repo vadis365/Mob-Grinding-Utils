@@ -18,9 +18,9 @@ public class MGUBlockTags extends BlockTagsProvider {
         Builder<Block> witherTag = this.getOrCreateBuilder(BlockTags.WITHER_IMMUNE);
         Builder<Block> dragonTag = this.getOrCreateBuilder(BlockTags.DRAGON_IMMUNE);
 
-        for (Block block : ModBlocks.BLOCKS) {
-            witherTag.add(block);
-            dragonTag.add(block);
-        }
+        ModBlocks.BLOCKS.getEntries().forEach((block) -> {
+            witherTag.add(block.get());
+            dragonTag.add(block.get());
+        });
     }
 }

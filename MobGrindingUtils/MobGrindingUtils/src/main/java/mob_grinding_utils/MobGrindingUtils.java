@@ -87,13 +87,15 @@ public class MobGrindingUtils {
 		@Nonnull
 		@Override
 		public ItemStack createIcon() {
-			return new ItemStack(ModBlocks.SPIKES_ITEM);
+			return new ItemStack(ModBlocks.SPIKES.getItem());
 		}
 	};
 	public static MGUNetProxyCommon NETPROXY;
 
 	public MobGrindingUtils() {
 		IEventBus modBus = FMLJavaModLoadingContext.get().getModEventBus();
+		ModBlocks.init(modBus);
+		ModItems.init(modBus);
 		ModContainers.init(modBus);
 		PARTICLES.register(modBus);
 		RECIPES.register(modBus);
@@ -132,14 +134,14 @@ public class MobGrindingUtils {
 		MinecraftForge.EVENT_BUS.register(new BossBarHidingEvent());
 		MinecraftForge.EVENT_BUS.addListener(this::worldUnload);
 
-		ClientRegistry.bindTileEntityRenderer(ModBlocks.FAN_TILE, TileEntityFanRenderer::new);
-		ClientRegistry.bindTileEntityRenderer(ModBlocks.SAW_TILE, TileEntitySawRenderer::new);
-		ClientRegistry.bindTileEntityRenderer(ModBlocks.ABSORPTION_HOPPER_TILE, TileEntityAbsorptionRenderer::new);
-		ClientRegistry.bindTileEntityRenderer(ModBlocks.TANK_TILE, TileEntityTankRenderer::new);
-		ClientRegistry.bindTileEntityRenderer(ModBlocks.TANK_SINK_TILE, TileEntityTankRenderer::new);
-		ClientRegistry.bindTileEntityRenderer(ModBlocks.JUMBO_TANK_TILE, TileEntityTankRenderer::new);
-		ClientRegistry.bindTileEntityRenderer(ModBlocks.XPSOLIDIFIER_TILE, TileEntityXPSolidifierRenderer::new);
-		ClientRegistry.bindTileEntityRenderer(ModBlocks.ENTITY_SPAWNER_TILE, TileEntityMGUSpawnerRenderer::new);
+		ClientRegistry.bindTileEntityRenderer(ModBlocks.FAN.getTileEntityType(), TileEntityFanRenderer::new);
+		ClientRegistry.bindTileEntityRenderer(ModBlocks.SAW.getTileEntityType(), TileEntitySawRenderer::new);
+		ClientRegistry.bindTileEntityRenderer(ModBlocks.ABSORPTION_HOPPER.getTileEntityType(), TileEntityAbsorptionRenderer::new);
+		ClientRegistry.bindTileEntityRenderer(ModBlocks.TANK.getTileEntityType(), TileEntityTankRenderer::new);
+		ClientRegistry.bindTileEntityRenderer(ModBlocks.TANK_SINK.getTileEntityType(), TileEntityTankRenderer::new);
+		ClientRegistry.bindTileEntityRenderer(ModBlocks.JUMBO_TANK.getTileEntityType(), TileEntityTankRenderer::new);
+		ClientRegistry.bindTileEntityRenderer(ModBlocks.XPSOLIDIFIER.getTileEntityType(), TileEntityXPSolidifierRenderer::new);
+		ClientRegistry.bindTileEntityRenderer(ModBlocks.ENTITY_SPAWNER.getTileEntityType(), TileEntityMGUSpawnerRenderer::new);
 
 		ScreenManager.registerFactory(ModContainers.ABSORPTION_HOPPER.get(), GuiAbsorptionHopper::new);
 		ScreenManager.registerFactory(ModContainers.SOLIDIFIER.get(), GuiXPSolidifier::new);
@@ -147,21 +149,21 @@ public class MobGrindingUtils {
 		ScreenManager.registerFactory(ModContainers.SAW.get(), GuiSaw::new);
 		ScreenManager.registerFactory(ModContainers.ENTITY_SPAWNER.get(), GuiMGUSpawner::new);
 		
-		 RenderTypeLookup.setRenderLayer(ModBlocks.TANK, RenderType.getCutout());
-		 RenderTypeLookup.setRenderLayer(ModBlocks.TANK_SINK, RenderType.getCutout());
-		 RenderTypeLookup.setRenderLayer(ModBlocks.XP_TAP, RenderType.getCutout());
-		 RenderTypeLookup.setRenderLayer(ModBlocks.ENDER_INHIBITOR_ON, RenderType.getCutout());
-		 RenderTypeLookup.setRenderLayer(ModBlocks.ENDER_INHIBITOR_OFF, RenderType.getCutout());
-		 RenderTypeLookup.setRenderLayer(ModBlocks.SAW, RenderType.getCutout());
-		 RenderTypeLookup.setRenderLayer(ModBlocks.SPIKES, RenderType.getCutout());
-		 RenderTypeLookup.setRenderLayer(ModBlocks.ABSORPTION_HOPPER, RenderType.getCutout());
-		 RenderTypeLookup.setRenderLayer(ModBlocks.TINTED_GLASS, RenderType.getTranslucent());
-		 RenderTypeLookup.setRenderLayer(ModBlocks.JUMBO_TANK, RenderType.getCutout());
-		 RenderTypeLookup.setRenderLayer(ModBlocks.DREADFUL_DIRT, RenderType.getCutout());
-		 RenderTypeLookup.setRenderLayer(ModBlocks.DELIGHTFUL_DIRT, RenderType.getCutout());
-		 RenderTypeLookup.setRenderLayer(ModBlocks.XPSOLIDIFIER, RenderType.getCutout());
-		 RenderTypeLookup.setRenderLayer(ModBlocks.SOLID_XP_BLOCK, RenderType.getTranslucent());
-		 RenderTypeLookup.setRenderLayer(ModBlocks.ENTITY_SPAWNER, RenderType.getCutout());
+		 RenderTypeLookup.setRenderLayer(ModBlocks.TANK.getBlock(), RenderType.getCutout());
+		 RenderTypeLookup.setRenderLayer(ModBlocks.TANK_SINK.getBlock(), RenderType.getCutout());
+		 RenderTypeLookup.setRenderLayer(ModBlocks.XP_TAP.getBlock(), RenderType.getCutout());
+		 RenderTypeLookup.setRenderLayer(ModBlocks.ENDER_INHIBITOR_ON.getBlock(), RenderType.getCutout());
+		 RenderTypeLookup.setRenderLayer(ModBlocks.ENDER_INHIBITOR_OFF.getBlock(), RenderType.getCutout());
+		 RenderTypeLookup.setRenderLayer(ModBlocks.SAW.getBlock(), RenderType.getCutout());
+		 RenderTypeLookup.setRenderLayer(ModBlocks.SPIKES.getBlock(), RenderType.getCutout());
+		 RenderTypeLookup.setRenderLayer(ModBlocks.ABSORPTION_HOPPER.getBlock(), RenderType.getCutout());
+		 RenderTypeLookup.setRenderLayer(ModBlocks.TINTED_GLASS.getBlock(), RenderType.getTranslucent());
+		 RenderTypeLookup.setRenderLayer(ModBlocks.JUMBO_TANK.getBlock(), RenderType.getCutout());
+		 RenderTypeLookup.setRenderLayer(ModBlocks.DREADFUL_DIRT.getBlock(), RenderType.getCutout());
+		 RenderTypeLookup.setRenderLayer(ModBlocks.DELIGHTFUL_DIRT.getBlock(), RenderType.getCutout());
+		 RenderTypeLookup.setRenderLayer(ModBlocks.XPSOLIDIFIER.getBlock(), RenderType.getCutout());
+		 RenderTypeLookup.setRenderLayer(ModBlocks.SOLID_XP_BLOCK.getBlock(), RenderType.getTranslucent());
+		 RenderTypeLookup.setRenderLayer(ModBlocks.ENTITY_SPAWNER.getBlock(), RenderType.getCutout());
 
 		 ModColourManager.registerColourHandlers();
 	}

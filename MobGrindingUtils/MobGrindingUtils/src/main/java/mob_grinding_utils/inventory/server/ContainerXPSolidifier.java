@@ -38,9 +38,9 @@ public class ContainerXPSolidifier extends Container {
         int originY = 103;
         
         //Mould
-        this.addSlot(new RestrictedHandlerSlot(tile.inputSlots, 0, 62, 36, ModItems.SOLID_XP_MOULD_BABY, 1 ));
+        this.addSlot(new RestrictedHandlerSlot(tile.inputSlots, 0, 62, 36, ModItems.SOLID_XP_MOULD_BABY.get(), 1 ));
         //Upgrade
-        this.addSlot(new RestrictedHandlerSlot(tile.inputSlots, 1, 26, 72, ModItems.XP_SOLIDIFIER_UPGRADE, 9));
+        this.addSlot(new RestrictedHandlerSlot(tile.inputSlots, 1, 26, 72, ModItems.XP_SOLIDIFIER_UPGRADE.get(), 9));
         //Output
         this.addSlot(new SlotSolidifierOutput(tile.outputSlot, 0, 130, 36, this));
 
@@ -73,11 +73,11 @@ public class ContainerXPSolidifier extends Container {
 			stack = stack1.copy();
 
 			if (index > 2) {
-				if (stack1.getItem() == ModItems.SOLID_XP_MOULD_BABY)
+				if (stack1.getItem() == ModItems.SOLID_XP_MOULD_BABY.get())
 					if (!this.mergeItemStack(stack1, 0, 1, false))
 						return ItemStack.EMPTY;
 
-				if (stack1.getItem() == ModItems.XP_SOLIDIFIER_UPGRADE)
+				if (stack1.getItem() == ModItems.XP_SOLIDIFIER_UPGRADE.get())
 					if (!this.mergeItemStack(stack1, 1, 2, false))
 						return ItemStack.EMPTY;
 

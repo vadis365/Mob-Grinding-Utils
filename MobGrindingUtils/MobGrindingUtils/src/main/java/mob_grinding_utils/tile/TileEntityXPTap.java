@@ -22,7 +22,7 @@ import net.minecraftforge.fml.network.PacketDistributor;
 public class TileEntityXPTap extends TileEntity implements ITickableTileEntity {
 	
 	public TileEntityXPTap() {
-		super(ModBlocks.XP_TAP_TILE);
+		super(ModBlocks.XP_TAP.getTileEntityType());
 	}
 
 	public boolean active;

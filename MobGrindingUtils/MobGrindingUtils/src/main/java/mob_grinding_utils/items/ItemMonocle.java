@@ -34,7 +34,7 @@ public class ItemMonocle extends ArmorItem {
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public String getArmorTexture(ItemStack is, Entity entity, EquipmentSlotType slot, String type) {
-		if (is.getItem() == ModItems.MONOCLE)
+		if (is.getItem() == ModItems.MONOCLE.get())
 			return "mob_grinding_utils:textures/items/monocle_armour.png";
 		else
 			return null;

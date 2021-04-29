@@ -45,7 +45,7 @@ public class TileEntityXPSolidifierRenderer extends TileEntityRenderer<TileEntit
 
 		BlockState state = tile.getWorld().getBlockState(tile.getPos());
 
-		if(state == null || state.getBlock() != ModBlocks.XPSOLIDIFIER)
+		if(state == null || state.getBlock() != ModBlocks.XPSOLIDIFIER.getBlock())
 			return;
 
 		Direction facing = state.get(BlockXPSolidifier.FACING);

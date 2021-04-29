@@ -36,8 +36,8 @@ public class ModColourManager {
 			return new Color(190, 255, 0).getRGB() & 0x00ffffff;
 		};
 
-		blockColors.register(dreadfulDirtColour, ModBlocks.DREADFUL_DIRT);
-		blockColors.register(delightfulDirtColour, ModBlocks.DELIGHTFUL_DIRT);
+		blockColors.register(dreadfulDirtColour, ModBlocks.DREADFUL_DIRT.getBlock());
+		blockColors.register(delightfulDirtColour, ModBlocks.DELIGHTFUL_DIRT.getBlock());
 	}
 
 	private static void registerItemColourHandlers(final BlockColors blockColors, final ItemColors itemColors) {
@@ -51,8 +51,8 @@ public class ModColourManager {
 			return -1;
 		};
 
-		itemColors.register(itemBlockColourHandler, ModBlocks.DREADFUL_DIRT_ITEM);
-		itemColors.register(itemBlockColourHandler, ModBlocks.DELIGHTFUL_DIRT_ITEM);
+		itemColors.register(itemBlockColourHandler, ModBlocks.DREADFUL_DIRT.getItem());
+		itemColors.register(itemBlockColourHandler, ModBlocks.DELIGHTFUL_DIRT.getItem());
 	}
 }
 
