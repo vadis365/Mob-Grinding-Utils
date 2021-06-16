@@ -10,7 +10,7 @@ import mob_grinding_utils.client.render.TileEntityXPSolidifierRenderer;
 import mob_grinding_utils.datagen.Generator;
 import mob_grinding_utils.events.BossBarHidingEvent;
 import mob_grinding_utils.events.ChickenFuseEvent;
-import mob_grinding_utils.events.ChickenInteractionEvent;
+import mob_grinding_utils.events.EntityInteractionEvent;
 import mob_grinding_utils.events.EntityHeadDropEvent;
 import mob_grinding_utils.events.FillXPBottleEvent;
 import mob_grinding_utils.events.FluidTextureStitchEvent;
@@ -35,6 +35,7 @@ import mob_grinding_utils.recipe.RecipeChickenFeed;
 import net.minecraft.client.gui.ScreenManager;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.RenderTypeLookup;
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.item.ItemGroup;
@@ -44,6 +45,7 @@ import net.minecraft.item.crafting.SpecialRecipeSerializer;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.particles.BasicParticleType;
 import net.minecraft.particles.ParticleType;
+import net.minecraft.tags.EntityTypeTags;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.tags.ITag;
 import net.minecraft.util.DamageSource;
@@ -73,8 +75,10 @@ public class MobGrindingUtils {
 	public static SimpleChannel NETWORK_WRAPPER;
 	public static DamageSource SPIKE_DAMAGE;
 
+	//Tags
 	public static final ITag.INamedTag<Fluid> EXPERIENCE = FluidTags.makeWrapperTag(new ResourceLocation("forge", "experience").toString());
 	public static final ITag.INamedTag<Fluid> XPJUICE = FluidTags.makeWrapperTag(new ResourceLocation("forge", "xpjuice").toString());
+	public static final ITag.INamedTag<EntityType<?>> NOSWAB = EntityTypeTags.createOptional(new ResourceLocation(Reference.MOD_NAME, "noswab"));
 
 	public static final DeferredRegister<ParticleType<?>> PARTICLES = DeferredRegister.create(ForgeRegistries.PARTICLE_TYPES, Reference.MOD_ID);
 	public static final DeferredRegister<IRecipeSerializer<?>> RECIPES = DeferredRegister.create(ForgeRegistries.RECIPE_SERIALIZERS, Reference.MOD_ID);
@@ -115,7 +119,7 @@ public class MobGrindingUtils {
 		NETWORK_WRAPPER = MGUNetwork.getNetworkChannel();
 		
 		MinecraftForge.EVENT_BUS.addListener(BlockSpikes::dropXP);
-		MinecraftForge.EVENT_BUS.register(new ChickenInteractionEvent());
+		MinecraftForge.EVENT_BUS.register(new EntityInteractionEvent());
 		MinecraftForge.EVENT_BUS.register(new ChickenFuseEvent());
 		MinecraftForge.EVENT_BUS.register(new LocalWitherSoundEvent());
 		MinecraftForge.EVENT_BUS.register(new LocalDragonSoundEvent());

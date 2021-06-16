@@ -28,8 +28,7 @@ public class ChickenFuseEvent {
 		if (entity instanceof ChickenEntity) {
 			World world = entity.getEntityWorld();
 			if (!world.isRemote) {
-				CompoundNBT nbt = new CompoundNBT();
-				nbt = entity.getPersistentData();
+				CompoundNBT nbt = entity.getPersistentData();
 				if (nbt.contains("shouldExplode")) {
 					int startTime = event.getEntity().getPersistentData().getInt("countDown");
 

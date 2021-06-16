@@ -28,6 +28,8 @@ import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 
+import javax.annotation.Nonnull;
+
 public class BlockXPTap extends DirectionalBlock implements ITileEntityProvider {
 
 	public static final VoxelShape XP_TAP_WEST_AABB = Block.makeCuboidShape(7D, 6D, 4D, 16D, 16D, 12D);
@@ -57,7 +59,7 @@ public class BlockXPTap extends DirectionalBlock implements ITileEntityProvider 
 	}
 
 	@Override
-	public VoxelShape getRaytraceShape(BlockState state, IBlockReader worldIn, BlockPos pos) {
+	public VoxelShape getRaytraceShape(BlockState state, @Nonnull IBlockReader worldIn, @Nonnull BlockPos pos) {
 		switch (state.get(FACING)) {
 		default:
 		case EAST:
