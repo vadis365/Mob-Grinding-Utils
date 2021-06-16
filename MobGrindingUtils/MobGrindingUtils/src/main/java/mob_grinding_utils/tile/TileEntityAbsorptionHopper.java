@@ -202,16 +202,16 @@ public class TileEntityAbsorptionHopper extends TileEntityInventoryHelper implem
 
 	@Override
 	public void tick() {
-		if (getWorld().isRemote)
+		if (world == null || world.isRemote)
 			return;
 		prevTankAmount = tank.getFluidAmount();
 		for (Direction facing : Direction.values()) {
 			if (status[facing.ordinal()] == EnumStatus.STATUS_OUTPUT_ITEM) {
-				TileEntity tile = getWorld().getTileEntity(pos.offset(facing));
+				TileEntity tile = world.getTileEntity(pos.offset(facing));
 				if (tile != null && tile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, facing.getOpposite()).isPresent()) {
 					LazyOptional<IItemHandler> tileOptional = tile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, facing.getOpposite());
 					tileOptional.ifPresent((handler) -> {
-						if (getWorld().getGameTime() % 8 == 0) {
+						if (world.getGameTime() % 8 == 0) {
 							for (int i = 0; i < this.getSizeInventory(); ++i) {
 								if (!getStackInSlot(i).isEmpty() && i != 0) {
 									ItemStack stack = getStackInSlot(i).copy();
@@ -230,7 +230,7 @@ public class TileEntityAbsorptionHopper extends TileEntityInventoryHelper implem
 					IInventory iinventory = (IInventory) tile;
 					if (isInventoryFull(iinventory, facing))
 						break;
-					else if (getWorld().getGameTime() % 8 == 0) {
+					else if (world.getGameTime() % 8 == 0) {
 						for (int i = 0; i < this.getSizeInventory(); ++i) {
 							if (!getStackInSlot(i).isEmpty() && i != 0) {
 								ItemStack stack = getStackInSlot(i).copy();
@@ -246,7 +246,7 @@ public class TileEntityAbsorptionHopper extends TileEntityInventoryHelper implem
 			}
 
 			if (status[facing.ordinal()] == EnumStatus.STATUS_OUTPUT_FLUID) {
-				TileEntity tile = getWorld().getTileEntity(pos.offset(facing));
+				TileEntity tile = world.getTileEntity(pos.offset(facing));
 				if (tile != null) {
 					LazyOptional<IFluidHandler> tileOptional = tile.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, facing.getOpposite());
 					tileOptional.ifPresent((receptacle) -> {
@@ -267,7 +267,7 @@ public class TileEntityAbsorptionHopper extends TileEntityInventoryHelper implem
 			}
 		}
 
-		if (getWorld().getGameTime() % 3 == 0) {
+		if (world.getGameTime() % 3 == 0 && !world.isBlockPowered(pos)) {
 			if(!isInventoryFull(this, null))
 				captureDroppedItems();
 			if(tank.getFluid().isEmpty() || tank.getFluid().containsFluid(new FluidStack(ModBlocks.FLUID_XP, 1)))
