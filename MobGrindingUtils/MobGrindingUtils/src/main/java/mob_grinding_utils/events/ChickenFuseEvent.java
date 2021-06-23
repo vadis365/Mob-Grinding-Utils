@@ -10,17 +10,34 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.passive.ChickenEntity;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.item.SpawnEggItem;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.world.World;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.network.PacketDistributor;
+import net.minecraftforge.registries.ForgeRegistries;
+
+import javax.annotation.Nonnull;
 
 public class ChickenFuseEvent {
+
+	@Nonnull
+	public static ItemStack getSpawnEgg(@Nonnull EntityType<?> entityType) {
+		//Check the spawn egg array
+		for (SpawnEggItem eggItem : SpawnEggItem.getEggs()) {
+			if (eggItem.getType(null).equals(entityType)) {
+				return new ItemStack(eggItem);
+			}
+		}
+		//It wasnt there, try grabbing the common naming convention from the item registry.
+		return new ItemStack(ForgeRegistries.ITEMS.getValue(new ResourceLocation(entityType.getRegistryName() + "_spawn_egg")));
+	}
 
 	@SubscribeEvent
 	public void startChickenFuse(LivingEvent event) {
@@ -40,12 +57,9 @@ public class ChickenFuseEvent {
 					if (startTime >= 20) {
 						Optional<EntityType<?>> entityMob = EntityType.byKey(event.getEntity().getPersistentData().getString("mguMobName"));
 						entityMob.ifPresent((mob) -> {
-							for (SpawnEggItem eggItem : SpawnEggItem.getEggs()) {
-								if (eggItem.getType(null).equals(mob)) {
-									entity.entityDropItem(new ItemStack(eggItem), 0.0F);
-									break;
-								}
-							}
+							ItemStack eggItem = getSpawnEgg(mob);
+							if (eggItem != ItemStack.EMPTY)
+								entity.entityDropItem(eggItem, 0.0F);
 						});
 
 						if (nbt.contains("nutritious") && nbt.getBoolean("nutritious"))

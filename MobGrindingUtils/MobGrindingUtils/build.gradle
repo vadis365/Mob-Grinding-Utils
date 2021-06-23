@@ -99,6 +99,8 @@ dependencies {
     compile fg.deobf("curse.maven:XNET-260912:3140153")
     compile fg.deobf("curse.maven:RFTBASE-326041:3206945")
     compile fg.deobf("curse.maven:MCJTYLIB-233105:3236516")
+    compile fg.deobf("curse.maven:COFHCORE-69162:3249453")
+    compile fg.deobf("curse.maven:TF-222880:3248150")
 }
 
 jar {
