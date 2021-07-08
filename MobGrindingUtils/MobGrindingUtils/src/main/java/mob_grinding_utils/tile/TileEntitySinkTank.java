@@ -25,7 +25,7 @@ public class TileEntitySinkTank extends TileEntityTank {
 	public void tick() {
 		if (getWorld().isRemote)
 			return;
-		if (tank.getFluid().isEmpty() || tank.getFluid().containsFluid(new FluidStack(ModBlocks.FLUID_XP, 1)))
+		if (tank.getFluid().isEmpty() || tank.getFluid().containsFluid(new FluidStack(ModBlocks.FLUID_XP.get(), 1)))
 			captureDroppedXP();
 		super.tick();
 	}
@@ -36,7 +36,7 @@ public class TileEntitySinkTank extends TileEntityTank {
 			if (xpAmount <= 0)
 				return false;
 			if (tank.getFluidAmount() < tank.getCapacity()) {
-				tank.fill(new FluidStack(ModBlocks.FLUID_XP, 20), FluidAction.EXECUTE);
+				tank.fill(new FluidStack(ModBlocks.FLUID_XP.get(), 20), FluidAction.EXECUTE);
 				addPlayerXP(player, -1);
 				getWorld().playSound(null, player.getPosX(), player.getPosY(), player.getPosZ(), SoundEvents.ITEM_BOTTLE_FILL, SoundCategory.NEUTRAL , 0.1F, 0.5F * ((getWorld().rand.nextFloat() - getWorld().rand.nextFloat()) * 0.7F + 1.8F));
 				MobGrindingUtils.NETWORK_WRAPPER.send(PacketDistributor.ALL.noArg(), new MessageTapParticle(getPos().up()));

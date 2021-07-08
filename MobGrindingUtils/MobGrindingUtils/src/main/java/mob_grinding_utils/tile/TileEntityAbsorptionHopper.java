@@ -270,7 +270,7 @@ public class TileEntityAbsorptionHopper extends TileEntityInventoryHelper implem
 		if (world.getGameTime() % 3 == 0 && !world.isBlockPowered(pos)) {
 			if(!isInventoryFull(this, null))
 				captureDroppedItems();
-			if(tank.getFluid().isEmpty() || tank.getFluid().containsFluid(new FluidStack(ModBlocks.FLUID_XP, 1)))
+			if(tank.getFluid().isEmpty() || tank.getFluid().containsFluid(new FluidStack(ModBlocks.FLUID_XP.get(), 1)))
 				captureDroppedXP();
 		}
 		
@@ -299,7 +299,7 @@ public class TileEntityAbsorptionHopper extends TileEntityInventoryHelper implem
 		for (ExperienceOrbEntity entity : getCaptureXP()) {
 			int xpAmount = entity.getXpValue();
 			if (tank.getFluidAmount() < tank.getCapacity() - xpAmount * 20) {
-				tank.fill(new FluidStack(ModBlocks.FLUID_XP, xpAmount * 20), FluidAction.EXECUTE);
+				tank.fill(new FluidStack(ModBlocks.FLUID_XP.get(), xpAmount * 20), FluidAction.EXECUTE);
 				entity.remove();
 			}
 			return true;

@@ -20,6 +20,7 @@
     "mob_grinding_utils:dreadful_dirt",
     "mob_grinding_utils:solid_xp_block",
     "mob_grinding_utils:delightful_dirt",
-    "mob_grinding_utils:entity_spawner"
+    "mob_grinding_utils:entity_spawner",
+    "mob_grinding_utils:fluid_xp"
   ]
 }

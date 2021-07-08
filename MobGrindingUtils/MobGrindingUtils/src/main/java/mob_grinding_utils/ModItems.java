@@ -1,10 +1,5 @@
 package mob_grinding_utils;
 
-import java.lang.reflect.Field;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Locale;
-
 import mob_grinding_utils.items.ItemAbsorptionUpgrade;
 import mob_grinding_utils.items.ItemFanUpgrade;
 import mob_grinding_utils.items.ItemGMChickenFeed;
@@ -19,20 +14,11 @@ import mob_grinding_utils.items.ItemSolidXPMould;
 import mob_grinding_utils.items.ItemSolidifierUpgrade;
 import mob_grinding_utils.items.ItemSpawnerUpgrade;
 import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.ArmorMaterial;
-import net.minecraft.item.BucketItem;
-import net.minecraft.item.Food;
-import net.minecraft.item.Item;
-import net.minecraft.item.Items;
-import net.minecraft.item.SwordItem;
-import net.minecraftforge.event.RegistryEvent;
+import net.minecraft.item.*;
 import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.RegistryObject;
-import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.IForgeRegistry;
 
 // My Generic Item Registry ;)
 public class ModItems {
@@ -50,13 +36,13 @@ public class ModItems {
 	public static RegistryObject<Item> SAW_UPGRADE_FIRE = ITEMS.register("saw_upgrade_fire", () -> new ItemSawUpgrade(new Item.Properties().group(MobGrindingUtils.TAB).maxStackSize(64), "fire"));
 	public static RegistryObject<Item> SAW_UPGRADE_LOOTING = ITEMS.register("saw_upgrade_looting", () -> new ItemSawUpgrade(new Item.Properties().group(MobGrindingUtils.TAB).maxStackSize(64), "looting"));
 	public static RegistryObject<Item> SAW_UPGRADE_SHARPNESS = ITEMS.register("saw_upgrade_sharpness", () -> new ItemSawUpgrade(new Item.Properties().group(MobGrindingUtils.TAB).maxStackSize(64), "sharpness"));
-	public static RegistryObject<Item>SAW_UPGRADE_SMITE = ITEMS.register("saw_upgrade_smite", () -> new ItemSawUpgrade(new Item.Properties().group(MobGrindingUtils.TAB).maxStackSize(64), "smite"));
+	public static RegistryObject<Item> SAW_UPGRADE_SMITE = ITEMS.register("saw_upgrade_smite", () -> new ItemSawUpgrade(new Item.Properties().group(MobGrindingUtils.TAB).maxStackSize(64), "smite"));
 	public static RegistryObject<Item> MOB_SWAB = ITEMS.register("mob_swab", () -> new ItemMobSwab(new Item.Properties().group(MobGrindingUtils.TAB).maxStackSize(1), false));
 	public static RegistryObject<Item> MOB_SWAB_USED = ITEMS.register("mob_swab_used", () -> new ItemMobSwab(new Item.Properties().group(MobGrindingUtils.TAB).maxStackSize(1), true));
 	public static RegistryObject<Item> GM_CHICKEN_FEED = ITEMS.register("gm_chicken_feed", () -> new ItemGMChickenFeed(new Item.Properties().group(MobGrindingUtils.TAB).maxStackSize(1), "mob"));
 	public static RegistryObject<Item> GM_CHICKEN_FEED_CURSED = ITEMS.register("gm_chicken_feed_cursed", () -> new ItemGMChickenFeed(new Item.Properties().group(MobGrindingUtils.TAB).maxStackSize(1), "cursed"));
 	public static RegistryObject<Item> NUTRITIOUS_CHICKEN_FEED = ITEMS.register("nutritious_chicken_feed", () -> new ItemGMChickenFeed(new Item.Properties().group(MobGrindingUtils.TAB).maxStackSize(1), "nutritious"));
-	public static RegistryObject<Item> FLUID_XP_BUCKET = ITEMS.register("fluid_xp_bucket", () -> new BucketItem(() -> ModBlocks.FLUID_XP, new Item.Properties().containerItem(Items.BUCKET).group(MobGrindingUtils.TAB).maxStackSize(1)));
+	public static RegistryObject<Item> FLUID_XP_BUCKET = ITEMS.register("fluid_xp_bucket", () -> new BucketItem(() -> ModBlocks.FLUID_XP.get(), new Item.Properties().containerItem(Items.BUCKET).group(MobGrindingUtils.TAB).maxStackSize(1)));
 	public static RegistryObject<Item> NULL_SWORD = ITEMS.register("null_sword", () -> new ItemImaginaryInvisibleNotReallyThereSword(new Item.Properties().group(MobGrindingUtils.TAB)));
 	public static RegistryObject<Item> ROTTEN_EGG = ITEMS.register("rotten_egg", () -> new ItemRottenEgg(new Item.Properties().group(MobGrindingUtils.TAB).maxStackSize(1)));
 	public static RegistryObject<Item> GOLDEN_EGG = ITEMS.register("golden_egg", () -> new ItemGoldenEgg(new Item.Properties().group(MobGrindingUtils.TAB).maxStackSize(1)));
@@ -67,4 +53,5 @@ public class ModItems {
 	public static RegistryObject<Item> SPAWNER_UPGRADE_WIDTH = ITEMS.register("spawner_upgrade_width", () -> new ItemSpawnerUpgrade(new Item.Properties().group(MobGrindingUtils.TAB).maxStackSize(64), "width"));
 	public static RegistryObject<Item> SPAWNER_UPGRADE_HEIGHT = ITEMS.register("spawner_upgrade_height", () -> new ItemSpawnerUpgrade(new Item.Properties().group(MobGrindingUtils.TAB).maxStackSize(64), "height"));
 	public static RegistryObject<Item> MONOCLE = ITEMS.register("monocle", () -> new ItemMonocle(ArmorMaterial.CHAIN, EquipmentSlotType.HEAD, new Item.Properties().group(MobGrindingUtils.TAB).maxStackSize(1).maxDamage(256).defaultMaxDamage(ArmorMaterial.CHAIN.getDurability(EquipmentSlotType.HEAD)))); // pointless shit
+	//public static RegistryObject<Item> SPAWNEGG = ITEMS.register("witheregg", () -> new SpawnEggItem(EntityType.WITHER, 0x0, 0xffffff, new Item.Properties().group(MobGrindingUtils.TAB)));
 }

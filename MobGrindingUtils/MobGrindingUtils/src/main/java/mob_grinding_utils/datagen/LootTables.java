@@ -68,6 +68,7 @@ public class LootTables extends LootTableProvider {
                     .filter(b -> !b.getRegistryName().getPath().equals("tank_sink"))
                     .filter(b -> !b.getRegistryName().getPath().equals("jumbo_tank"))
                     .filter(b -> !b.getRegistryName().getPath().equals("xpsolidifier"))
+                    .filter(b -> !b.getRegistryName().getPath().equals("fluid_xp"))
                     .collect(Collectors.toList());
         }
     }

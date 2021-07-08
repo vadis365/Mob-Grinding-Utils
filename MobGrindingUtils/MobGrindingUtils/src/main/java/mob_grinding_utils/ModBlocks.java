@@ -38,6 +38,7 @@ import mob_grinding_utils.tile.TileEntityTank;
 import mob_grinding_utils.tile.TileEntityXPSolidifier;
 import mob_grinding_utils.tile.TileEntityXPTap;
 import net.minecraft.block.Block;
+import net.minecraft.block.FlowingFluidBlock;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.material.MaterialColor;
@@ -53,6 +54,7 @@ import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.ForgeFlowingFluid;
+import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -60,6 +62,7 @@ import net.minecraftforge.registries.IForgeRegistry;
 
 public class ModBlocks {
 	public static DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, Reference.MOD_ID);
+	public static DeferredRegister<Fluid> FLUIDS = DeferredRegister.create(ForgeRegistries.FLUIDS, Reference.MOD_ID);
 	public static DeferredRegister<TileEntityType<?>> TILE_ENTITIES = DeferredRegister.create(ForgeRegistries.TILE_ENTITIES, Reference.MOD_ID);
 
 	public static MGUBlockReg<BlockFan, MGUBlockItem, TileEntityFan> FAN = new MGUBlockReg<>("fan",
@@ -114,8 +117,6 @@ public class ModBlocks {
 			() -> new BlockEnderInhibitorOff(Block.Properties.create(Material.REDSTONE_LIGHT, MaterialColor.STONE).hardnessAndResistance(0.2F, 2000F).sound(SoundType.METAL).notSolid()),
 			(b) -> new MGUBlockItem(b, new Item.Properties().group(MobGrindingUtils.TAB)));
 
-	public static Fluid FLUID_XP;
-
 	public static MGUBlockReg<BlockTintedGlass, MGUBlockItem, ?> TINTED_GLASS = new MGUBlockReg<>("tinted_glass",
 			() -> new BlockTintedGlass(Block.Properties.create(Material.GLASS, MaterialColor.BLACK).hardnessAndResistance(1.0F, 2000.0F).sound(SoundType.GLASS).notSolid()),
 			(b) -> new MGUBlockItem(b, new Item.Properties().group(MobGrindingUtils.TAB)));
@@ -149,27 +150,24 @@ public class ModBlocks {
 			() -> new BlockEntitySpawner(Block.Properties.create(Material.IRON, MaterialColor.STONE).hardnessAndResistance(10.0F, 2000.0F).sound(SoundType.METAL).notSolid().tickRandomly()),
 			(b) -> new MGUBlockItem(b, new Item.Properties().group(MobGrindingUtils.TAB)), TileEntityMGUSpawner::new);
 
-	@Mod.EventBusSubscriber(modid = Reference.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
-	public static class FluidReg {
-		@SubscribeEvent
-		public static void registerFluids(final RegistryEvent.Register<Fluid> evt) {
-			final IForgeRegistry<Fluid> registry = evt.getRegistry();
-			registry.register(FLUID_XP);
-		}
-	}
+
+	public static RegistryObject<ForgeFlowingFluid> FLUID_XP = FLUIDS.register("fluid_xp",
+		() -> new ForgeFlowingFluid.Source(ModBlocks.xp_properties) );
+	public static RegistryObject<ForgeFlowingFluid> FLUID_XP_FLOWING = FLUIDS.register("fluid_xp_flowing",
+		() -> new ForgeFlowingFluid.Flowing(ModBlocks.xp_properties) );
+	public static RegistryObject<FlowingFluidBlock> FLUID_XP_BLOCK = BLOCKS.register("fluid_xp",
+		() -> new FlowingFluidBlock(FLUID_XP,Block.Properties.create(Material.WATER)));
+
+	private static final ForgeFlowingFluid.Properties xp_properties = new ForgeFlowingFluid.Properties(() -> FLUID_XP.get(), () -> FLUID_XP_FLOWING.get(), FluidAttributes.builder(new ResourceLocation(Reference.MOD_ID, "fluids/fluid_xp"), new ResourceLocation(Reference.MOD_ID, "fluids/fluid_xp"))
+		.luminosity(10)
+		.density(800)
+		.viscosity(1500)
+		.translationKey("mob_grinding_utils.fluid_xp")
+		.sound(SoundEvents.ENTITY_PLAYER_LEVELUP, SoundEvents.ENTITY_EXPERIENCE_ORB_PICKUP)).bucket(() -> ModItems.FLUID_XP_BUCKET.get()).block(FLUID_XP_BLOCK);
 
 	public static void init(IEventBus evt) {
 		BLOCKS.register(evt);
 		TILE_ENTITIES.register(evt);
-		FLUID_XP = new ForgeFlowingFluid.Source(
-				new ForgeFlowingFluid.Properties(() -> FLUID_XP, () -> FLUID_XP,
-						FluidAttributes.builder(new ResourceLocation(Reference.MOD_ID, "fluids/fluid_xp"), new ResourceLocation(Reference.MOD_ID, "fluids/fluid_xp"))
-								.luminosity(10)
-								.density(800)
-								.viscosity(1500)
-								.translationKey("mob_grinding_utils.fluid_xp")
-								.sound(SoundEvents.ENTITY_PLAYER_LEVELUP, SoundEvents.ENTITY_EXPERIENCE_ORB_PICKUP)
-				).bucket(() -> ModItems.FLUID_XP_BUCKET.get()))
-				.setRegistryName(Reference.MOD_ID, "fluid_xp");
+		FLUIDS.register(evt);
 	}
 }

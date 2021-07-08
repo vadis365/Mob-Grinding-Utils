@@ -25,7 +25,7 @@ public class FillXPBottleEvent {
 					if (event.getWorld().getBlockState(event.getPos()).getBlock() instanceof BlockTank) {
 						TileEntityTank tileentity = (TileEntityTank) event.getWorld().getTileEntity(event.getPos());
 						if (tileentity != null) {
-							if (tileentity.tank.getFluid() != null && tileentity.tank.getFluid().containsFluid(new FluidStack(ModBlocks.FLUID_XP, 220))) {
+							if (tileentity.tank.getFluid() != null && tileentity.tank.getFluid().containsFluid(new FluidStack(ModBlocks.FLUID_XP.get(), 220))) {
 								if (tileentity.tank.getFluidAmount() >= 200) {
 									tileentity.tank.drain(new FluidStack(tileentity.tank.getFluid(), 200), FluidAction.EXECUTE);
 									event.getWorld().playSound(null, player.getPosX(), player.getPosY(), player.getPosZ(), SoundEvents.ITEM_BOTTLE_FILL, SoundCategory.NEUTRAL, 1.0F, 1.0F);
