@@ -1,26 +1,7 @@
 package mob_grinding_utils;
 
 
-import mob_grinding_utils.blocks.BlockAbsorptionHopper;
-import mob_grinding_utils.blocks.BlockDarkOakStone;
-import mob_grinding_utils.blocks.BlockDelightfulDirt;
-import mob_grinding_utils.blocks.BlockDragonMuffler;
-import mob_grinding_utils.blocks.BlockDreadfulDirt;
-import mob_grinding_utils.blocks.BlockEnderInhibitorOff;
-import mob_grinding_utils.blocks.BlockEnderInhibitorOn;
-import mob_grinding_utils.blocks.BlockEntityConveyor;
-import mob_grinding_utils.blocks.BlockEntitySpawner;
-import mob_grinding_utils.blocks.BlockFan;
-import mob_grinding_utils.blocks.BlockSaw;
-import mob_grinding_utils.blocks.BlockSolidXP;
-import mob_grinding_utils.blocks.BlockSpikes;
-import mob_grinding_utils.blocks.BlockTank;
-import mob_grinding_utils.blocks.BlockTankJumbo;
-import mob_grinding_utils.blocks.BlockTankSink;
-import mob_grinding_utils.blocks.BlockTintedGlass;
-import mob_grinding_utils.blocks.BlockWitherMuffler;
-import mob_grinding_utils.blocks.BlockXPSolidifier;
-import mob_grinding_utils.blocks.BlockXPTap;
+import mob_grinding_utils.blocks.*;
 import mob_grinding_utils.client.render.TileSawStackItemRenderer;
 import mob_grinding_utils.client.render.TileTankStackItemRenderer;
 import mob_grinding_utils.client.render.TileXPSolidifierStackItemRenderer;
@@ -152,7 +133,7 @@ public class ModBlocks {
 	public static RegistryObject<ForgeFlowingFluid> FLUID_XP_FLOWING = FLUIDS.register("fluid_xp_flowing",
 		() -> new ForgeFlowingFluid.Flowing(ModBlocks.xp_properties) );
 	public static RegistryObject<FlowingFluidBlock> FLUID_XP_BLOCK = BLOCKS.register("fluid_xp",
-		() -> new FlowingFluidBlock(FLUID_XP,Block.Properties.create(Material.WATER)));
+		() -> new MGUFlowingFluidBlock(FLUID_XP,Block.Properties.create(Material.WATER)));
 
 	private static final ForgeFlowingFluid.Properties xp_properties = new ForgeFlowingFluid.Properties(() -> FLUID_XP.get(), () -> FLUID_XP_FLOWING.get(), FluidAttributes.builder(new ResourceLocation(Reference.MOD_ID, "fluids/fluid_xp"), new ResourceLocation(Reference.MOD_ID, "fluids/fluid_xp"))
 		.luminosity(10)
