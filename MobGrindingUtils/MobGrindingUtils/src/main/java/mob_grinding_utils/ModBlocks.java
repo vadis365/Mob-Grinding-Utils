@@ -131,9 +131,7 @@ public class ModBlocks {
 
 	public static Material MATERIAL_DREADFUL_DIRT = new Material(MaterialColor.DIRT, false, true, false, true, true, false, null);
 	public static MGUBlockReg<BlockDreadfulDirt, MGUBlockItem, ?> DREADFUL_DIRT = new MGUBlockReg<>("dreadful_dirt",
-			() -> new BlockDreadfulDirt(Block.Properties.create(MATERIAL_DREADFUL_DIRT, MaterialColor.PURPLE).hardnessAndResistance(1.0F, 2000.0F).sound(SoundType.GROUND).tickRandomly().setAllowsSpawn((state, reader, pos, entitytype) -> {
-				return entitytype.getClassification() == EntityClassification.MONSTER;
-			})),
+			() -> new BlockDreadfulDirt(Block.Properties.create(MATERIAL_DREADFUL_DIRT, MaterialColor.PURPLE).hardnessAndResistance(1.0F, 2000.0F).sound(SoundType.GROUND).tickRandomly().setAllowsSpawn((state, reader, pos, entitytype) -> entitytype.getClassification() == EntityClassification.MONSTER)),
 			(b) -> new MGUBlockItem(b, new Item.Properties().group(MobGrindingUtils.TAB)));
 
 	public static MGUBlockReg<BlockSolidXP, MGUBlockItem, ?> SOLID_XP_BLOCK = new MGUBlockReg<>("solid_xp_block",
@@ -141,9 +139,7 @@ public class ModBlocks {
 			(b) -> new MGUBlockItem(b, new Item.Properties().group(MobGrindingUtils.TAB)));
 
 	public static MGUBlockReg<BlockDelightfulDirt, MGUBlockItem, ?> DELIGHTFUL_DIRT = new MGUBlockReg<>("delightful_dirt",
-			() -> new BlockDelightfulDirt(Block.Properties.create(Material.EARTH, MaterialColor.PURPLE).hardnessAndResistance(1.0F, 2000.0F).sound(SoundType.GROUND).tickRandomly().setAllowsSpawn((state, reader, pos, entitytype) -> {
-				return entitytype.getClassification() == EntityClassification.CREATURE;
-			})),
+			() -> new BlockDelightfulDirt(Block.Properties.create(Material.EARTH, MaterialColor.PURPLE).hardnessAndResistance(1.0F, 2000.0F).sound(SoundType.GROUND).tickRandomly().setAllowsSpawn((state, reader, pos, entitytype) -> entitytype.getClassification() == EntityClassification.CREATURE)),
 			(b) -> new MGUBlockItem(b, new Item.Properties().group(MobGrindingUtils.TAB)));
 
 	public static MGUBlockReg<BlockEntitySpawner, MGUBlockItem, TileEntityMGUSpawner> ENTITY_SPAWNER = new MGUBlockReg<>("entity_spawner",
