@@ -162,7 +162,6 @@ public class ModBlocks {
 		.luminosity(10)
 		.density(800)
 		.viscosity(1500)
-		.color(0xFFFFFF80) // not working?
 		.translationKey("mob_grinding_utils.fluid_xp")
 		.sound(SoundEvents.ENTITY_PLAYER_LEVELUP, SoundEvents.ENTITY_EXPERIENCE_ORB_PICKUP)).bucket(() -> ModItems.FLUID_XP_BUCKET.get()).block(FLUID_XP_BLOCK);
 
