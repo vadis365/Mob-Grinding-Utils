@@ -11,13 +11,12 @@ import net.minecraft.entity.passive.ChickenEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.ActionResultType;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.EntityInteract;
-import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.network.PacketDistributor;
+import net.minecraftforge.fml.network.PacketDistributor.TargetPoint;
 
 public class EntityInteractionEvent {
 
@@ -48,7 +47,8 @@ public class EntityInteractionEvent {
 							if (eventItem.getItem() == ModItems.NUTRITIOUS_CHICKEN_FEED.get())
 								nbt.putBoolean("nutritious", true);
 							if (event.getPlayer() instanceof ServerPlayerEntity) {
-								MobGrindingUtils.NETWORK_WRAPPER.send(PacketDistributor.ALL.noArg(), new MessageChickenSync(entity, nbt));
+								TargetPoint target = new TargetPoint(entity.getPosX(), entity.getPosY(), entity.getPosZ(), 32, entity.getEntityWorld().getDimensionKey());
+								MobGrindingUtils.NETWORK_WRAPPER.send(PacketDistributor.NEAR.with(()->target), new MessageChickenSync(entity, nbt));
 							}
 						}
 						Vector3d vec3d = entity.getMotion();
