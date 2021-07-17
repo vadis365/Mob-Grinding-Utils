@@ -10,6 +10,7 @@ import mob_grinding_utils.ModItems;
 import mob_grinding_utils.blocks.BlockFan;
 import mob_grinding_utils.inventory.server.ContainerFan;
 import mob_grinding_utils.items.ItemFanUpgrade;
+import net.minecraft.block.AirBlock;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.material.Material;
@@ -25,6 +26,7 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -34,6 +36,7 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.common.Tags;
 
 public class TileEntityFan extends TileEntityInventoryHelper implements ITickableTileEntity, INamedContainerProvider {
 
@@ -75,7 +78,7 @@ public class TileEntityFan extends TileEntityInventoryHelper implements ITickabl
 		int distance;
 		for (distance = 1; distance < 5 + getSpeedModifier(); distance++) {
 			BlockState state2 = getWorld().getBlockState(getPos().offset(facing, distance));
-			if (state2 != Blocks.AIR.getDefaultState() && state2.getMaterial() != Material.TALL_PLANTS)
+			if (!(state2.getBlock() instanceof AirBlock) && state2.getMaterial() != Material.TALL_PLANTS)
 				break;
 		}
 
