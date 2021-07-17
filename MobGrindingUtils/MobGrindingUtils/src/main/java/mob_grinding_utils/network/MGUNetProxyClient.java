@@ -33,7 +33,7 @@ public class MGUNetProxyClient extends MGUNetProxyCommon {
                     }
                 }
             } else {
-                LogManager.getLogger().info("WHY THE FUCK IS THE CHICKEN NULL!!!!?");
+               // LogManager.getLogger().info("WHY THE CLUCK IS THE CHICKEN NULL!!!!?");
             }
         }
     }

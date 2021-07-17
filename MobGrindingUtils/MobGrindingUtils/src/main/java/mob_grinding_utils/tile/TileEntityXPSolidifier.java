@@ -122,7 +122,7 @@ public class TileEntityXPSolidifier extends TileEntity implements ITickableTileE
 	
 			if (getWorld().isRemote && !active)
 				prevAnimationTicks = animationTicks = 0;
-	
+
 			if (hasfluid() && canOperate()) {
 				setActive(true);
 				setProgress(getProgress() + 1 + getModifierAmount());
