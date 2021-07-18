@@ -2,6 +2,8 @@ package mob_grinding_utils.events;
 
 import java.util.Optional;
 
+import javax.annotation.Nonnull;
+
 import mob_grinding_utils.MobGrindingUtils;
 import mob_grinding_utils.ModItems;
 import mob_grinding_utils.ModSounds;
@@ -10,7 +12,6 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.passive.ChickenEntity;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.item.SpawnEggItem;
@@ -22,8 +23,6 @@ import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.network.PacketDistributor;
 import net.minecraftforge.registries.ForgeRegistries;
-
-import javax.annotation.Nonnull;
 
 public class ChickenFuseEvent {
 

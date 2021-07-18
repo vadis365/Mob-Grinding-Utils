@@ -1,9 +1,10 @@
 package mob_grinding_utils;
 
-import com.mojang.authlib.GameProfile;
-import net.minecraft.util.text.TranslationTextComponent;
-
 import java.util.UUID;
+
+import com.mojang.authlib.GameProfile;
+
+import net.minecraft.util.text.TranslationTextComponent;
 
 public class Reference {
 	public static final String MOD_ID = "mob_grinding_utils";

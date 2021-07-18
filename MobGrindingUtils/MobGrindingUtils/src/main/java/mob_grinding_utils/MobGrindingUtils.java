@@ -1,5 +1,7 @@
 package mob_grinding_utils;
 
+import javax.annotation.Nonnull;
+
 import mob_grinding_utils.blocks.BlockSpikes;
 import mob_grinding_utils.client.render.TileEntityAbsorptionRenderer;
 import mob_grinding_utils.client.render.TileEntityFanRenderer;
@@ -10,8 +12,8 @@ import mob_grinding_utils.client.render.TileEntityXPSolidifierRenderer;
 import mob_grinding_utils.datagen.Generator;
 import mob_grinding_utils.events.BossBarHidingEvent;
 import mob_grinding_utils.events.ChickenFuseEvent;
-import mob_grinding_utils.events.EntityInteractionEvent;
 import mob_grinding_utils.events.EntityHeadDropEvent;
+import mob_grinding_utils.events.EntityInteractionEvent;
 import mob_grinding_utils.events.FillXPBottleEvent;
 import mob_grinding_utils.events.FluidTextureStitchEvent;
 import mob_grinding_utils.events.GlobalDragonSoundEvent;
@@ -66,8 +68,6 @@ import net.minecraftforge.fml.network.PacketDistributor;
 import net.minecraftforge.fml.network.simple.SimpleChannel;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
-
-import javax.annotation.Nonnull;
 
 
 @Mod(Reference.MOD_ID)

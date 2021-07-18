@@ -1,5 +1,7 @@
 package mob_grinding_utils.network;
 
+import java.util.function.Supplier;
+
 import mob_grinding_utils.tile.TileEntityXPSolidifier;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -7,8 +9,6 @@ import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.fml.network.NetworkEvent;
-
-import java.util.function.Supplier;
 
 public class MessageSolidifier {
     public int buttonID;

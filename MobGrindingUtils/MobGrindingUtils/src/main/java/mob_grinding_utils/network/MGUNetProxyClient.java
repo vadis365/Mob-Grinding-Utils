@@ -7,7 +7,6 @@ import net.minecraft.entity.passive.ChickenEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.world.World;
-import org.apache.logging.log4j.LogManager;
 
 public class MGUNetProxyClient extends MGUNetProxyCommon {
     public void HandleChickenSync(MessageChickenSync message) {

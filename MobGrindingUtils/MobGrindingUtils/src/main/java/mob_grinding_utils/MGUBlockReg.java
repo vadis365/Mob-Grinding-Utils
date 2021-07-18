@@ -1,15 +1,16 @@
 package mob_grinding_utils;
 
+import java.util.Objects;
+import java.util.function.Function;
+import java.util.function.Supplier;
+
+import javax.annotation.Nonnull;
+
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraftforge.fml.RegistryObject;
-
-import javax.annotation.Nonnull;
-import java.util.Objects;
-import java.util.function.Function;
-import java.util.function.Supplier;
 
 public class MGUBlockReg<B extends Block,I extends Item, T extends TileEntity> implements Supplier<B> {
     private String name;

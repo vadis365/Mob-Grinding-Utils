@@ -1,5 +1,7 @@
 package mob_grinding_utils.blocks;
 
+import javax.annotation.Nonnull;
+
 import mob_grinding_utils.ModBlocks;
 import mob_grinding_utils.ModSounds;
 import mob_grinding_utils.tile.TileEntityXPTap;
@@ -27,8 +29,6 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
-
-import javax.annotation.Nonnull;
 
 public class BlockXPTap extends DirectionalBlock implements ITileEntityProvider {
 

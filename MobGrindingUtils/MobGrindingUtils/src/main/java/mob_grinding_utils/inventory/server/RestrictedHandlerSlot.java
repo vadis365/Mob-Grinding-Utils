@@ -1,11 +1,11 @@
 package mob_grinding_utils.inventory.server;
 
+import javax.annotation.Nonnull;
+
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
-
-import javax.annotation.Nonnull;
 
 public class RestrictedHandlerSlot extends SlotItemHandler {
     Item item;

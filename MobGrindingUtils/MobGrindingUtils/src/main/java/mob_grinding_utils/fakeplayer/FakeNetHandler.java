@@ -1,5 +1,11 @@
 package mob_grinding_utils.fakeplayer;
 
+import java.net.SocketAddress;
+import java.util.Set;
+
+import javax.annotation.Nullable;
+import javax.crypto.Cipher;
+
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.util.concurrent.Future;
@@ -10,15 +16,54 @@ import net.minecraft.network.NetworkManager;
 import net.minecraft.network.PacketDirection;
 import net.minecraft.network.ProtocolType;
 import net.minecraft.network.play.ServerPlayNetHandler;
-import net.minecraft.network.play.client.*;
+import net.minecraft.network.play.client.CAnimateHandPacket;
+import net.minecraft.network.play.client.CChatMessagePacket;
+import net.minecraft.network.play.client.CClickWindowPacket;
+import net.minecraft.network.play.client.CClientSettingsPacket;
+import net.minecraft.network.play.client.CClientStatusPacket;
+import net.minecraft.network.play.client.CCloseWindowPacket;
+import net.minecraft.network.play.client.CConfirmTeleportPacket;
+import net.minecraft.network.play.client.CConfirmTransactionPacket;
+import net.minecraft.network.play.client.CCreativeInventoryActionPacket;
+import net.minecraft.network.play.client.CCustomPayloadPacket;
+import net.minecraft.network.play.client.CEditBookPacket;
+import net.minecraft.network.play.client.CEnchantItemPacket;
+import net.minecraft.network.play.client.CEntityActionPacket;
+import net.minecraft.network.play.client.CHeldItemChangePacket;
+import net.minecraft.network.play.client.CInputPacket;
+import net.minecraft.network.play.client.CJigsawBlockGeneratePacket;
+import net.minecraft.network.play.client.CKeepAlivePacket;
+import net.minecraft.network.play.client.CLockDifficultyPacket;
+import net.minecraft.network.play.client.CMarkRecipeSeenPacket;
+import net.minecraft.network.play.client.CMoveVehiclePacket;
+import net.minecraft.network.play.client.CPickItemPacket;
+import net.minecraft.network.play.client.CPlaceRecipePacket;
+import net.minecraft.network.play.client.CPlayerAbilitiesPacket;
+import net.minecraft.network.play.client.CPlayerDiggingPacket;
+import net.minecraft.network.play.client.CPlayerPacket;
+import net.minecraft.network.play.client.CPlayerTryUseItemOnBlockPacket;
+import net.minecraft.network.play.client.CPlayerTryUseItemPacket;
+import net.minecraft.network.play.client.CQueryEntityNBTPacket;
+import net.minecraft.network.play.client.CQueryTileEntityNBTPacket;
+import net.minecraft.network.play.client.CRenameItemPacket;
+import net.minecraft.network.play.client.CResourcePackStatusPacket;
+import net.minecraft.network.play.client.CSeenAdvancementsPacket;
+import net.minecraft.network.play.client.CSelectTradePacket;
+import net.minecraft.network.play.client.CSetDifficultyPacket;
+import net.minecraft.network.play.client.CSpectatePacket;
+import net.minecraft.network.play.client.CSteerBoatPacket;
+import net.minecraft.network.play.client.CTabCompletePacket;
+import net.minecraft.network.play.client.CUpdateBeaconPacket;
+import net.minecraft.network.play.client.CUpdateCommandBlockPacket;
+import net.minecraft.network.play.client.CUpdateJigsawBlockPacket;
+import net.minecraft.network.play.client.CUpdateMinecartCommandBlockPacket;
+import net.minecraft.network.play.client.CUpdateRecipeBookStatusPacket;
+import net.minecraft.network.play.client.CUpdateSignPacket;
+import net.minecraft.network.play.client.CUpdateStructureBlockPacket;
+import net.minecraft.network.play.client.CUseEntityPacket;
 import net.minecraft.network.play.server.SPlayerPositionLookPacket;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.text.ITextComponent;
-
-import javax.annotation.Nullable;
-import javax.crypto.Cipher;
-import java.net.SocketAddress;
-import java.util.Set;
 
 public class FakeNetHandler extends ServerPlayNetHandler {
     public FakeNetHandler(MinecraftServer server, ServerPlayerEntity playerIn) {

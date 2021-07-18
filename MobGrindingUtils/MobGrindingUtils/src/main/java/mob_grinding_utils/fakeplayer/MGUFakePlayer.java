@@ -1,13 +1,14 @@
 package mob_grinding_utils.fakeplayer;
 
+import java.lang.ref.WeakReference;
+
 import com.mojang.authlib.GameProfile;
+
 import mob_grinding_utils.Reference;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.util.FakePlayer;
-
-import java.lang.ref.WeakReference;
 
 public class MGUFakePlayer extends FakePlayer {
     public MGUFakePlayer(ServerWorld world, GameProfile name) {
