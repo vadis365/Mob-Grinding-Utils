@@ -153,8 +153,10 @@ public class TileEntityFan extends TileEntityInventoryHelper implements ITickabl
 		markDirty();
 	}
 
-	protected Entity activateBlock() {
+	protected void activateBlock() {
 		BlockState state = getWorld().getBlockState(getPos());
+		if (!(state.getBlock() instanceof BlockFan))
+			return;
 		Direction facing = state.get(BlockFan.FACING);
 		List<LivingEntity> list = getWorld().getEntitiesWithinAABB(LivingEntity.class, getAABBWithModifiers());
 		for (Entity entity : list) {
@@ -173,7 +175,7 @@ public class TileEntityFan extends TileEntityInventoryHelper implements ITickabl
 				}
 			}
 		}
-		return null;
+		return;
 	}
 
 	private boolean hasWidthUpgrade() {
