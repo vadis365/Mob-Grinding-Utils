@@ -129,6 +129,8 @@ public class MobGrindingUtils {
 		MinecraftForge.EVENT_BUS.register(new MGUEndermanInhibitEvent());
 		MinecraftForge.EVENT_BUS.addListener(this::playerConnected);
 		MinecraftForge.EVENT_BUS.addListener(this::changedDimension);
+		MinecraftForge.EVENT_BUS.addListener(this::playerRespawn);
+		MinecraftForge.EVENT_BUS.addListener(this::cloneEvent);
 	}
 	
 	private void doClientStuff(final FMLClientSetupEvent event) {
@@ -186,11 +188,25 @@ public class MobGrindingUtils {
 			sendPersistentData((ServerPlayerEntity) event.getPlayer());
 		}
 	}
+	private void playerRespawn(final PlayerEvent.PlayerRespawnEvent event) {
+		if (event.getPlayer() instanceof ServerPlayerEntity) {
+			sendPersistentData((ServerPlayerEntity) event.getPlayer());
+		}
+	}
 
 	private void sendPersistentData(ServerPlayerEntity playerEntity) {
 		CompoundNBT nbt = playerEntity.getPersistentData();
 		if (nbt.contains("MGU_WitherMuffle") || nbt.contains("MGU_DragonMuffle")) {
 			NETWORK_WRAPPER.send(PacketDistributor.PLAYER.with(() -> playerEntity), new MessageFlagSync(nbt.getBoolean("MGU_WitherMuffle"), nbt.getBoolean("MGU_DragonMuffle")));
+		}
+	}
+
+	private void cloneEvent(PlayerEvent.Clone event) {
+		CompoundNBT nbt = event.getOriginal().getPersistentData();
+		if (nbt.contains("MGU_WitherMuffle") || nbt.contains("MGU_DragonMuffle")) {
+			CompoundNBT newNBT = event.getPlayer().getPersistentData();
+			newNBT.putBoolean("MGU_WitherMuffle", nbt.getBoolean("MGU_WitherMuffle"));
+			newNBT.putBoolean("MGU_DragonMuffle", nbt.getBoolean("MGU_DragonMuffle"));
 		}
 	}
 
