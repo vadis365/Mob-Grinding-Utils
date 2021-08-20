@@ -29,7 +29,7 @@ public class MGUFlowingFluidBlock extends FlowingFluidBlock {
 		if (!world.isRemote)
 			if (entity instanceof PlayerEntity) {
 				PlayerEntity player = (PlayerEntity) entity;
-				if (world.getGameTime() % 20 == 0) {
+				if (world.getGameTime() % 20 == 0 && player.getFoodStats().getFoodLevel() > 0) {
 					player.getFoodStats().setFoodLevel(player.getFoodStats().getFoodLevel() - 1);
 					EntityXPOrbFalling orb = new EntityXPOrbFalling(world, pos.getX() + 0.5D, pos.getY() - 0.125D, pos.getZ() + 0.5D, 1);
 					world.addEntity(orb);
