@@ -8,14 +8,15 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.event.entity.living.EnderTeleportEvent;
+import net.minecraftforge.event.entity.living.EntityTeleportEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class MGUEndermanInhibitEvent {
 
 	@SubscribeEvent(priority = EventPriority.LOWEST)
-	public void teleportEvent(EnderTeleportEvent event) {
-		if (event.getEntity().getEntityWorld().isRemote)
+	public void teleportEvent(EntityTeleportEvent event) {
+		if (event.getEntity().getEntityWorld().isRemote || event instanceof EntityTeleportEvent.TeleportCommand || event instanceof EntityTeleportEvent.SpreadPlayersCommand)
 			return;
 		if (event.getEntity() instanceof LivingEntity) {
 			LivingEntity entity = (LivingEntity) event.getEntity();
