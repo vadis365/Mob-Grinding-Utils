@@ -300,6 +300,7 @@ public class TileEntityAbsorptionHopper extends TileEntityInventoryHelper implem
 			int xpAmount = entity.getXpValue();
 			if (tank.getFluidAmount() < tank.getCapacity() - xpAmount * 20) {
 				tank.fill(new FluidStack(ModBlocks.FLUID_XP.get(), xpAmount * 20), FluidAction.EXECUTE);
+				entity.xpValue = 0;
 				entity.remove();
 			}
 			return true;
