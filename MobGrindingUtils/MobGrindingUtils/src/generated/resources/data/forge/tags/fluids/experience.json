@@ -3,10 +3,6 @@
   "values": [
     "mob_grinding_utils:fluid_xp",
     {
-      "id": "industrialforegoing:essence",
-      "required": false
-    },
-    {
       "id": "pneumaticcraft:memory_essence",
       "required": false
     },

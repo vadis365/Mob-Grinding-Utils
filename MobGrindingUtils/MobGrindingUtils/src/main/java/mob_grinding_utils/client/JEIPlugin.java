@@ -2,6 +2,7 @@ package mob_grinding_utils.client;
 
 import javax.annotation.Nonnull;
 
+import mezz.jei.api.registration.IModIngredientRegistration;
 import org.apache.commons.lang3.StringUtils;
 
 import mezz.jei.api.IModPlugin;
@@ -26,16 +27,6 @@ public class JEIPlugin implements IModPlugin {
 
     @Override
     public void registerRecipes(@Nonnull IRecipeRegistration registration) {
-        /*
-        ModItems.ITEMS.getEntries().forEach((block) -> {
-            String key = block.get().getTranslationKey()+".jei.info";
-            if (I18n.hasKey(key)) {
-                String langEntry = TextFormatting.getTextWithoutFormattingCodes(I18n.format(key));
-                if (langEntry != null)
-                    registration.addIngredientInfo(new ItemStack(block.get()), VanillaTypes.ITEM, StringUtils.splitByWholeSeparator(langEntry, "//n"));
-            }
-        });
-*/
         ModItems.ITEMS.getEntries().forEach((item) -> {
             String key = item.get().getTranslationKey()+".jei.info";
             if (I18n.hasKey(key)) {

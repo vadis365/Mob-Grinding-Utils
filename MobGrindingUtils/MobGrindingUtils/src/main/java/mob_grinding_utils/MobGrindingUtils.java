@@ -33,7 +33,8 @@ import mob_grinding_utils.network.MGUNetProxyClient;
 import mob_grinding_utils.network.MGUNetProxyCommon;
 import mob_grinding_utils.network.MGUNetwork;
 import mob_grinding_utils.network.MessageFlagSync;
-import mob_grinding_utils.recipe.RecipeChickenFeed;
+import mob_grinding_utils.recipe.ChickenFeedRecipe;
+import mob_grinding_utils.recipe.FluidIngredient;
 import net.minecraft.client.gui.ScreenManager;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.RenderTypeLookup;
@@ -54,9 +55,11 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.fml.DeferredWorkQueue;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
@@ -85,7 +88,7 @@ public class MobGrindingUtils {
 
 	public static final RegistryObject<BasicParticleType> PARTICLE_FLUID_XP = PARTICLES.register("fluid_xp_particles", () -> new BasicParticleType(true));
 
-	public static final RegistryObject<IRecipeSerializer<RecipeChickenFeed>> RECIPE_CHICKEN_FEED = RECIPES.register("chicken_feed_recipe", () ->  new SpecialRecipeSerializer<RecipeChickenFeed>(RecipeChickenFeed::new));
+	public static final RegistryObject<IRecipeSerializer<?>> CHICKEN_FEED = RECIPES.register(ChickenFeedRecipe.NAME, ChickenFeedRecipe.Serializer::new);
 
 	public static final ItemGroup TAB = new ItemGroup(Reference.MOD_ID) {
 		@Nonnull
@@ -114,6 +117,8 @@ public class MobGrindingUtils {
 	}
 
 	public void setup(FMLCommonSetupEvent event) {
+		event.enqueueWork(() -> CraftingHelper.register(FluidIngredient.Serializer.NAME, FluidIngredient.SERIALIZER));
+
 		SPIKE_DAMAGE = new DamageSource("spikes").setDamageBypassesArmor();
 
 		NETWORK_WRAPPER = MGUNetwork.getNetworkChannel();

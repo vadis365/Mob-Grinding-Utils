@@ -94,14 +94,16 @@ dependencies {
     compile fg.deobf("curse.maven:top-245211:3157997")
     compile fg.deobf("curse.maven:playermobs-430513:3153298")
     compile fg.deobf("curse.maven:mek-268560:3183270")
-    compile fg.deobf("curse.maven:IF-266515:3223241")
+    compile fg.deobf("curse.maven:IF-266515:3261176")
     compile fg.deobf("curse.maven:TITANIUM-287342:3223141")
     compile fg.deobf("curse.maven:XNET-260912:3140153")
     compile fg.deobf("curse.maven:RFTBASE-326041:3206945")
     compile fg.deobf("curse.maven:MCJTYLIB-233105:3236516")
     compile fg.deobf("curse.maven:COFHCORE-69162:3249453")
+    compile fg.deobf("curse.maven:TE-69163:3247000")
     compile fg.deobf("curse.maven:TF-222880:3248150")
     compile fg.deobf("curse.maven:CLUMPS-256717:3481298")
+    compile fg.deobf("curse.maven:CYCLIC-239286:3525767")
 }
 
 jar {

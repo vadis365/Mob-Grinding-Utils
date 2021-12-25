@@ -5,16 +5,22 @@ import java.util.function.Consumer;
 
 import com.google.gson.JsonObject;
 
+import mob_grinding_utils.MobGrindingUtils;
 import mob_grinding_utils.ModBlocks;
 import mob_grinding_utils.ModItems;
 import mob_grinding_utils.Reference;
+import mob_grinding_utils.recipe.FluidIngredient;
+import mob_grinding_utils.recipe.WrappedRecipe;
+import net.minecraft.advancements.criterion.InventoryChangeTrigger;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.DirectoryCache;
 import net.minecraft.data.IFinishedRecipe;
 import net.minecraft.data.RecipeProvider;
 import net.minecraft.data.ShapedRecipeBuilder;
 import net.minecraft.data.ShapelessRecipeBuilder;
+import net.minecraft.fluid.Fluids;
 import net.minecraft.item.Items;
+import net.minecraft.tags.FluidTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.Tags;
@@ -40,6 +46,7 @@ public class Recipes extends RecipeProvider {
 
 
         //Absorbtion Hopper
+        InventoryChangeTrigger.Instance noneItem = hasItem(Items.AIR);
         ShapedRecipeBuilder.shapedRecipe(ModBlocks.ABSORPTION_HOPPER.getItem())
                 .patternLine(" E ")
                 .patternLine(" O ")
@@ -47,7 +54,7 @@ public class Recipes extends RecipeProvider {
                 .key('E', Items.ENDER_EYE)
                 .key('O', Tags.Items.OBSIDIAN)
                 .key('H', Items.HOPPER)
-                .addCriterion("", hasItem(Items.AIR))
+                .addCriterion("", noneItem)
                 .build(consumer, new ResourceLocation(Reference.MOD_ID, "recipe_absorbtion_hopper"));
 
         // Absorption Hopper Upgrade
@@ -59,7 +66,7 @@ public class Recipes extends RecipeProvider {
                 .key('O', Tags.Items.OBSIDIAN)
                 .key('R', Tags.Items.DUSTS_REDSTONE)
                 .key('H', Items.HOPPER)
-                .addCriterion("", hasItem(Items.AIR))
+                .addCriterion("", noneItem)
                 .build(consumer, new ResourceLocation(Reference.MOD_ID, "recipe_absorbtion_upgrade"));
 
         // Spikes
@@ -68,7 +75,7 @@ public class Recipes extends RecipeProvider {
                 .patternLine("SIS")
                 .key('S', Items.IRON_SWORD)
                 .key('I', Tags.Items.STORAGE_BLOCKS_IRON)
-                .addCriterion("", hasItem(Items.AIR))
+                .addCriterion("", noneItem)
                 .build(consumer, new ResourceLocation(Reference.MOD_ID, "recipe_spikes"));
 
         // Tank
@@ -78,11 +85,11 @@ public class Recipes extends RecipeProvider {
                 .patternLine("IGI")
                 .key('I', Tags.Items.INGOTS_IRON)
                 .key('G', Tags.Items.GLASS)
-                .addCriterion("", hasItem(Items.AIR))
+                .addCriterion("", noneItem)
                 .build(consumer, new ResourceLocation(Reference.MOD_ID, "recipe_tank"));
 
         ShapelessRecipeBuilder.shapelessRecipe(ModBlocks.TANK.getItem()).addIngredient(ModBlocks.TANK.getItem(),1)
-                .addCriterion("", hasItem(Items.AIR))
+                .addCriterion("", noneItem)
                 .build(consumer, new ResourceLocation(Reference.MOD_ID, "recipe_tank_reset"));
 
         // Tank Sink
@@ -94,11 +101,11 @@ public class Recipes extends RecipeProvider {
                 .key('E', Items.ENDER_EYE)
                 .key('H', Items.HOPPER)
                 .key('T', ModBlocks.TANK.getItem())
-                .addCriterion("", hasItem(Items.AIR))
+                .addCriterion("", noneItem)
                 .build(consumer, new ResourceLocation(Reference.MOD_ID, "recipe_tank_sink"));
 
         ShapelessRecipeBuilder.shapelessRecipe(ModBlocks.TANK_SINK.getItem()).addIngredient(ModBlocks.TANK_SINK.getItem(),1)
-                .addCriterion("", hasItem(Items.AIR))
+                .addCriterion("", noneItem)
                 .build(consumer, new ResourceLocation(Reference.MOD_ID, "recipe_tank_sink_reset"));
 
         // XP TAP
@@ -108,7 +115,7 @@ public class Recipes extends RecipeProvider {
                 .patternLine("I ")
                 .key('O', Tags.Items.OBSIDIAN)
                 .key('I', Tags.Items.INGOTS_IRON)
-                .addCriterion("", hasItem(Items.AIR))
+                .addCriterion("", noneItem)
                 .build(consumer, new ResourceLocation(Reference.MOD_ID, "recipe_xp_tap"));
 
         // Fan
@@ -119,7 +126,7 @@ public class Recipes extends RecipeProvider {
                 .key('S', Items.STONE_SLAB)
                 .key('I', Tags.Items.INGOTS_IRON)
                 .key('R', Tags.Items.STORAGE_BLOCKS_REDSTONE)
-                .addCriterion("", hasItem(Items.AIR))
+                .addCriterion("", noneItem)
                 .build(consumer, new ResourceLocation(Reference.MOD_ID, "recipe_fan"));
 
         // Fan Upgrades
@@ -129,7 +136,7 @@ public class Recipes extends RecipeProvider {
                 .patternLine("I I")
                 .key('I', Tags.Items.INGOTS_IRON)
                 .key('F', Tags.Items.FEATHERS)
-                .addCriterion("", hasItem(Items.AIR))
+                .addCriterion("", noneItem)
                 .build(consumer, new ResourceLocation(Reference.MOD_ID, "recipe_fan_upgrade_width"));
 
         ShapedRecipeBuilder.shapedRecipe(ModItems.FAN_UPGRADE_HEIGHT.get())
@@ -138,7 +145,7 @@ public class Recipes extends RecipeProvider {
                 .patternLine("IFI")
                 .key('I', Tags.Items.INGOTS_IRON)
                 .key('F', Tags.Items.FEATHERS)
-                .addCriterion("", hasItem(Items.AIR))
+                .addCriterion("", noneItem)
                 .build(consumer, new ResourceLocation(Reference.MOD_ID, "recipe_fan_upgrade_height"));
 
         ShapedRecipeBuilder.shapedRecipe(ModItems.FAN_UPGRADE_SPEED.get())
@@ -148,7 +155,7 @@ public class Recipes extends RecipeProvider {
                 .key('I', Tags.Items.INGOTS_IRON)
                 .key('F', Tags.Items.FEATHERS)
                 .key('R', Tags.Items.DUSTS_REDSTONE)
-                .addCriterion("", hasItem(Items.AIR))
+                .addCriterion("", noneItem)
                 .build(consumer, new ResourceLocation(Reference.MOD_ID, "recipe_fan_upgrade_speed"));
 
         // Mob Swab
@@ -158,7 +165,7 @@ public class Recipes extends RecipeProvider {
                 .patternLine("W  ")
                 .key('W', ItemTags.WOOL)
                 .key('S', Tags.Items.RODS_WOODEN)
-                .addCriterion("", hasItem(Items.AIR))
+                .addCriterion("", noneItem)
                 .build(consumer, new ResourceLocation(Reference.MOD_ID, "recipe_mob_swab"));
 
         // Wither Muffler
@@ -168,7 +175,7 @@ public class Recipes extends RecipeProvider {
                 .patternLine("WWW")
                 .key('W', ItemTags.WOOL)
                 .key('S', Items.WITHER_SKELETON_SKULL)
-                .addCriterion("", hasItem(Items.AIR))
+                .addCriterion("", noneItem)
                 .build(consumer, new ResourceLocation(Reference.MOD_ID, "recipe_wither_muffler"));
 
         // Dragon Muffler
@@ -178,7 +185,7 @@ public class Recipes extends RecipeProvider {
                 .patternLine("WWW")
                 .key('W', ItemTags.WOOL)
                 .key('E', Items.DRAGON_EGG)
-                .addCriterion("", hasItem(Items.AIR))
+                .addCriterion("", noneItem)
                 .build(consumer, new ResourceLocation(Reference.MOD_ID, "recipe_dragon_muffler"));
 
         // Mob Masher
@@ -191,7 +198,7 @@ public class Recipes extends RecipeProvider {
                 .key('V', ModBlocks.SPIKES.getItem())
                 .key('R', Tags.Items.STORAGE_BLOCKS_REDSTONE)
                 .key('I', Tags.Items.STORAGE_BLOCKS_IRON)
-                .addCriterion("", hasItem(Items.AIR))
+                .addCriterion("", noneItem)
                 .build(consumer, new ResourceLocation(Reference.MOD_ID, "recipe_saw"));
 
         // Mob Masher Upgrades
@@ -202,7 +209,7 @@ public class Recipes extends RecipeProvider {
                 .key('G', Tags.Items.NUGGETS_GOLD)
                 .key('S', Items.IRON_SWORD)
                 .key('R', Tags.Items.DUSTS_REDSTONE)
-                .addCriterion("", hasItem(Items.AIR))
+                .addCriterion("", noneItem)
                 .build(consumer, new ResourceLocation(Reference.MOD_ID, "recipe_saw_upgrade_sharpness"));
 
         ShapedRecipeBuilder.shapedRecipe(ModItems.SAW_UPGRADE_LOOTING.get())
@@ -212,7 +219,7 @@ public class Recipes extends RecipeProvider {
                 .key('G', Tags.Items.NUGGETS_GOLD)
                 .key('L', Tags.Items.DYES_BLUE)
                 .key('R', Tags.Items.DUSTS_REDSTONE)
-                .addCriterion("", hasItem(Items.AIR))
+                .addCriterion("", noneItem)
                 .build(consumer, new ResourceLocation(Reference.MOD_ID, "recipe_saw_upgrade_looting"));
 
         ShapedRecipeBuilder.shapedRecipe(ModItems.SAW_UPGRADE_FIRE.get())
@@ -222,7 +229,7 @@ public class Recipes extends RecipeProvider {
                 .key('G', Tags.Items.NUGGETS_GOLD)
                 .key('F', Items.FLINT_AND_STEEL)
                 .key('R', Tags.Items.DUSTS_REDSTONE)
-                .addCriterion("", hasItem(Items.AIR))
+                .addCriterion("", noneItem)
                 .build(consumer, new ResourceLocation(Reference.MOD_ID, "recipe_saw_upgrade_fire"));
 
         ShapedRecipeBuilder.shapedRecipe(ModItems.SAW_UPGRADE_SMITE.get())
@@ -232,7 +239,7 @@ public class Recipes extends RecipeProvider {
                 .key('G', Tags.Items.NUGGETS_GOLD)
                 .key('F', Items.ROTTEN_FLESH)
                 .key('R', Tags.Items.DUSTS_REDSTONE)
-                .addCriterion("", hasItem(Items.AIR))
+                .addCriterion("", noneItem)
                 .build(consumer, new ResourceLocation(Reference.MOD_ID, "recipe_saw_upgrade_smite"));
 
         ShapedRecipeBuilder.shapedRecipe(ModItems.SAW_UPGRADE_ARTHROPOD.get())
@@ -242,7 +249,7 @@ public class Recipes extends RecipeProvider {
                 .key('G', Tags.Items.NUGGETS_GOLD)
                 .key('S', Items.SPIDER_EYE)
                 .key('R', Tags.Items.DUSTS_REDSTONE)
-                .addCriterion("", hasItem(Items.AIR))
+                .addCriterion("", noneItem)
                 .build(consumer, new ResourceLocation(Reference.MOD_ID, "recipe_saw_upgrade_arthropod"));
 
         ShapedRecipeBuilder.shapedRecipe(ModItems.SAW_UPGRADE_BEHEADING.get())
@@ -253,7 +260,7 @@ public class Recipes extends RecipeProvider {
                 .key('H', Items.GOLDEN_HELMET)
                 .key('I', Items.IRON_HELMET)
                 .key('R', Tags.Items.DUSTS_REDSTONE)
-                .addCriterion("", hasItem(Items.AIR))
+                .addCriterion("", noneItem)
                 .build(consumer, new ResourceLocation(Reference.MOD_ID, "recipe_saw_upgrade_beheading"));
 
         // Entity Conveyor
@@ -264,7 +271,7 @@ public class Recipes extends RecipeProvider {
                 .key('I', Tags.Items.INGOTS_IRON)
                 .key('S', Tags.Items.SLIMEBALLS)
                 .key('R', Tags.Items.DUSTS_REDSTONE)
-                .addCriterion("", hasItem(Items.AIR))
+                .addCriterion("", noneItem)
                 .build(consumer, new ResourceLocation(Reference.MOD_ID, "recipe_entity_conveyor"));
 
         // Ender Inhibitor
@@ -276,7 +283,7 @@ public class Recipes extends RecipeProvider {
                 .key('E', Items.ENDER_EYE)
                 .key('R', Tags.Items.DUSTS_REDSTONE)
                 .key('G', Tags.Items.DUSTS_GLOWSTONE)
-                .addCriterion("", hasItem(Items.AIR))
+                .addCriterion("", noneItem)
                 .build(consumer, new ResourceLocation(Reference.MOD_ID, "recipe_ender_inhibitor"));
 
         //Jumbo Tank
@@ -286,11 +293,11 @@ public class Recipes extends RecipeProvider {
                 .patternLine("ITI")
                 .key('I', Tags.Items.INGOTS_IRON)
                 .key('T', ModBlocks.TANK.getItem())
-                .addCriterion("", hasItem(Items.AIR))
+                .addCriterion("", noneItem)
                 .build(consumer, new ResourceLocation(Reference.MOD_ID, "recipe_jumbotank"));
 
         ShapelessRecipeBuilder.shapelessRecipe(ModBlocks.JUMBO_TANK.getItem()).addIngredient(ModBlocks.JUMBO_TANK.getItem(),1)
-                .addCriterion("", hasItem(Items.AIR))
+                .addCriterion("", noneItem)
                 .build(consumer, new ResourceLocation(Reference.MOD_ID, "recipe_jumbo_tank_reset"));
 
         //Tinted Glass
@@ -300,7 +307,7 @@ public class Recipes extends RecipeProvider {
                 .patternLine("CGC")
                 .key('C', ItemTags.COALS)
                 .key('G', Tags.Items.GLASS)
-                .addCriterion("", hasItem(Items.AIR))
+                .addCriterion("", noneItem)
                 .build(consumer, new ResourceLocation(Reference.MOD_ID, "recipe_tintedglass"));
 
         ShapedRecipeBuilder.shapedRecipe(ModItems.GM_CHICKEN_FEED_CURSED.get())
@@ -313,7 +320,7 @@ public class Recipes extends RecipeProvider {
                 .key('S', Tags.Items.SEEDS)
                 .key('X', Tags.Items.BONES)
                 .key('G', Tags.Items.GUNPOWDER)
-                .addCriterion("", hasItem(Items.AIR))
+                .addCriterion("", noneItem)
                 .build(consumer, new ResourceLocation(Reference.MOD_ID, "recipe_cursed_feed"));
 
         ShapedRecipeBuilder.shapedRecipe(ModBlocks.XPSOLIDIFIER.getItem())
@@ -324,11 +331,11 @@ public class Recipes extends RecipeProvider {
                 .key('C', ModBlocks.ENTITY_CONVEYOR.getItem())
                 .key('H', Items.HOPPER)
                 .key('T', ModBlocks.TANK.getItem())
-                .addCriterion("", hasItem(Items.AIR))
+                .addCriterion("", noneItem)
                 .build(consumer, new ResourceLocation(Reference.MOD_ID, "recipe_solidifier"));
 
         ShapelessRecipeBuilder.shapelessRecipe(ModBlocks.XPSOLIDIFIER.getItem()).addIngredient(ModBlocks.XPSOLIDIFIER.getItem(),1)
-                .addCriterion("", hasItem(Items.AIR))
+                .addCriterion("", noneItem)
                 .build(consumer, new ResourceLocation(Reference.MOD_ID, "recipe_solidifier_reset"));
         
         ShapedRecipeBuilder.shapedRecipe(ModBlocks.ENTITY_SPAWNER.getItem())
@@ -340,7 +347,7 @@ public class Recipes extends RecipeProvider {
 		        .key('R', Tags.Items.STORAGE_BLOCKS_REDSTONE)
 		        .key('X', ModBlocks.SOLID_XP_BLOCK.getItem())
 		        .key('E', Items.ENDER_EYE)
-		        .addCriterion("", hasItem(Items.AIR))
+		        .addCriterion("", noneItem)
 		        .build(consumer, new ResourceLocation(Reference.MOD_ID, "recipe_entity_spawner"));
 
         //Blank Mould
@@ -350,30 +357,30 @@ public class Recipes extends RecipeProvider {
                 .patternLine("XXX")
                 .key('X', Tags.Items.NUGGETS_GOLD)
                 .key('B', ModItems.FLUID_XP_BUCKET.get())
-                .addCriterion("", hasItem(Items.AIR))
+                .addCriterion("", noneItem)
                 .build(consumer, new ResourceLocation(Reference.MOD_ID, "recipe_mould_blank"));
 
         //Mould upgrade chain, starting with blank
         ShapelessRecipeBuilder.shapelessRecipe(ModItems.SOLID_XP_MOULD_BABY.get())
                 .addIngredient(ModItems.SOLID_XP_MOULD_BLANK.get())
-                .addCriterion("", hasItem(Items.AIR))
+                .addCriterion("", noneItem)
                 .build(consumer, new ResourceLocation(Reference.MOD_ID, "recipe_mould_baby_upgrade"));
 
         //Last one in the chain should reset to blank
         ShapelessRecipeBuilder.shapelessRecipe(ModItems.SOLID_XP_MOULD_BLANK.get())
                 .addIngredient(ModItems.SOLID_XP_MOULD_BABY.get())
-                .addCriterion("", hasItem(Items.AIR))
+                .addCriterion("", noneItem)
                 .build(consumer, new ResourceLocation(Reference.MOD_ID, "recipe_mould_reset"));
 
         //Solid XP Block
         ShapelessRecipeBuilder.shapelessRecipe(ModBlocks.SOLID_XP_BLOCK.getItem())
                 .addIngredient(ModItems.SOLID_XP_BABY.get(), 9)
-                .addCriterion("", hasItem(Items.AIR))
+                .addCriterion("", noneItem)
                 .build(consumer, new ResourceLocation(Reference.MOD_ID, "recipe_xp_block"));
         //Uncraft
         ShapelessRecipeBuilder.shapelessRecipe(ModItems.SOLID_XP_BABY.get(), 9)
                 .addIngredient(ModBlocks.SOLID_XP_BLOCK.getItem())
-                .addCriterion("", hasItem(Items.AIR))
+                .addCriterion("", noneItem)
                 .build(consumer, new ResourceLocation(Reference.MOD_ID, "recipe_xp_block_uncraft"));
 
         //Solidifier upgrade
@@ -385,7 +392,7 @@ public class Recipes extends RecipeProvider {
                 .key('R', Tags.Items.DUSTS_REDSTONE)
                 .key('B', Items.BLAZE_POWDER)
                 .key('X', ModItems.FLUID_XP_BUCKET.get())
-                .addCriterion("", hasItem(Items.AIR))
+                .addCriterion("", noneItem)
                 .build(consumer, new ResourceLocation(Reference.MOD_ID, "recipe_xpsolidifier_upgrade"));
 
         ShapedRecipeBuilder.shapedRecipe(ModItems.NUTRITIOUS_CHICKEN_FEED.get())
@@ -398,7 +405,7 @@ public class Recipes extends RecipeProvider {
 	        .key('S', Tags.Items.SEEDS)
 	        .key('X', Items.BEETROOT)
 	        .key('W', Items.WHEAT)
-	        .addCriterion("", hasItem(Items.AIR))
+	        .addCriterion("", noneItem)
 	        .build(consumer, new ResourceLocation(Reference.MOD_ID, "recipe_nutritious_feed"));
 
         //Spawner width upgrade
@@ -409,7 +416,7 @@ public class Recipes extends RecipeProvider {
                 .key('E', Items.EGG)
                 .key('B', Items.BLAZE_POWDER)
                 .key('X', ModItems.FLUID_XP_BUCKET.get())
-                .addCriterion("", hasItem(Items.AIR))
+                .addCriterion("", noneItem)
                 .build(consumer, new ResourceLocation(Reference.MOD_ID, "recipe_spawner_upgrade_width"));
         
         //Spawner height upgrade
@@ -420,9 +427,15 @@ public class Recipes extends RecipeProvider {
                 .key('E', Items.EGG)
                 .key('B', Items.BLAZE_POWDER)
                 .key('X', ModItems.FLUID_XP_BUCKET.get())
-                .addCriterion("", hasItem(Items.AIR))
+                .addCriterion("", noneItem)
                 .build(consumer, new ResourceLocation(Reference.MOD_ID, "recipe_spawner_upgrade_height"));
 
+        ShapelessRecipeBuilder.shapelessRecipe(ModItems.GM_CHICKEN_FEED.get())
+            .addIngredient(Tags.Items.SEEDS)
+            .addIngredient(ModItems.MOB_SWAB_USED.get())
+            .addIngredient(new FluidIngredient(MobGrindingUtils.EXPERIENCE, false))
+            .addCriterion("", noneItem)
+            .build(WrappedRecipe.Inject(consumer, MobGrindingUtils.CHICKEN_FEED.get()), new ResourceLocation(Reference.MOD_ID, "gm_chicken_feed"));
     }
 
     @Override
