@@ -2,7 +2,6 @@ package mob_grinding_utils.tile;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.swing.text.html.Option;
 
 import io.netty.buffer.Unpooled;
 import mob_grinding_utils.MobGrindingUtils;
@@ -11,6 +10,7 @@ import mob_grinding_utils.ModItems;
 import mob_grinding_utils.inventory.server.ContainerXPSolidifier;
 import mob_grinding_utils.recipe.SolidifyRecipe;
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.player.Inventory;
@@ -70,8 +70,8 @@ public class TileEntityXPSolidifier extends BlockEntity implements MenuProvider 
 		SOUTH("south"),
 		WEST("west");
 
-		String name;
-		OutputDirection(String nameIn) {name = nameIn;}
+		final String name;
+		OutputDirection(String nameIn) { name = nameIn; }
 
 		@Override
 		public String getSerializedName() { return name; }
@@ -102,88 +102,88 @@ public class TileEntityXPSolidifier extends BlockEntity implements MenuProvider 
 		isOn = !isOn;
 	}
 
-	@Override
-	public void tick() {
-		if(isOn) {
-			if (getLevel().isClientSide && active) {
-				prevAnimationTicks = animationTicks;
-				if (animationTicks < MAX_MOULDING_TIME)
-					animationTicks += 1 + getModifierAmount();
-				if (animationTicks >= MAX_MOULDING_TIME) {
-					animationTicks -= MAX_MOULDING_TIME;
-					prevAnimationTicks -= MAX_MOULDING_TIME;
+	public static <T extends BlockEntity> void tick(Level level, BlockPos worldPosition, BlockState blockState, T t) {
+		if(t instanceof TileEntityXPSolidifier tile) {
+			if(tile.isOn) {
+				if (level.isClientSide && tile.active) {
+					tile.prevAnimationTicks = tile.animationTicks;
+					if (tile.animationTicks < tile.MAX_MOULDING_TIME)
+						tile.animationTicks += 1 + tile.getModifierAmount();
+					if (tile.animationTicks >= tile.MAX_MOULDING_TIME) {
+						tile.animationTicks -= tile.MAX_MOULDING_TIME;
+						tile.prevAnimationTicks -= tile.MAX_MOULDING_TIME;
+					}
 				}
-			}
 
-			if (getLevel().isClientSide && !active)
-				prevAnimationTicks = animationTicks = 0;
+				if (level.isClientSide && !tile.active)
+					tile.prevAnimationTicks = tile.animationTicks = 0;
 
-			if (currentRecipe != null) {
-				if (!currentRecipe.matches(inputSlots.getStackInSlot(0)))
-					currentRecipe = null;
-			} else
-				currentRecipe = getRecipeForMould(inputSlots.getStackInSlot(0));
+				if (tile.currentRecipe != null) {
+					if (!tile.currentRecipe.matches(tile.inputSlots.getStackInSlot(0)))
+						tile.currentRecipe = null;
+				} else
+					tile.currentRecipe = getRecipeForMould(tile.inputSlots.getStackInSlot(0));
 
 
-			if (hasfluid() && canOperate()) {
-				setActive(true);
-				setProgress(getProgress() + 1 + getModifierAmount());
-				if (getProgress() >= MAX_MOULDING_TIME) {
-					setActive(false);
-					outputSlot.setStackInSlot(0, currentRecipe.getResult());
-					tank.drain(currentRecipe.getFluidAmount(), FluidAction.EXECUTE);
-					return;
-				}
-			} else {
-				if (getProgress() > 0) {
-					setProgress(0);
-					setActive(false);
-				}
-			}
-
-			if (outputDirection != OutputDirection.NONE && getOutputFacing() != null) {
-				BlockEntity tile = getLevel().getBlockEntity(worldPosition.relative(getOutputFacing()));
-				if (tile != null && tile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, getOutputFacing().getOpposite()).isPresent()) {
-					LazyOptional<IItemHandler> tileOptional = tile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, getOutputFacing().getOpposite());
-					tileOptional.ifPresent((handler) -> {
-						if (!outputSlot.getStackInSlot(0).isEmpty()) {
-							ItemStack stack = outputSlot.getStackInSlot(0).copy();
-							stack.setCount(1);
-							ItemStack stack1 = ItemHandlerHelper.insertItem(handler, stack, true);
-							if (stack1.isEmpty()) {
-								ItemHandlerHelper.insertItem(handler, outputSlot.extractItem(0, 1, false), false);
-								this.setChanged();
-							}
-						}
-					});
-				} else if (tile != null && tile instanceof Container) {
-					Container iinventory = (Container) tile;
-					if (isInventoryFull(iinventory, getOutputFacing()))
+				if (tile.hasfluid() && tile.canOperate()) {
+					tile.setActive(true);
+					tile.setProgress(tile.getProgress() + 1 + tile.getModifierAmount());
+					if (tile.getProgress() >= tile.MAX_MOULDING_TIME) {
+						tile.setActive(false);
+						tile.outputSlot.setStackInSlot(0, tile.currentRecipe.getResult());
+						tile.tank.drain(tile.currentRecipe.getFluidAmount(), FluidAction.EXECUTE);
 						return;
-					if (!outputSlot.getStackInSlot(0).isEmpty()) {
-						ItemStack stack = outputSlot.getStackInSlot(0).copy();
-						ItemStack stack1 = putStackInInventoryAllSlots(iinventory, outputSlot.extractItem(0, 1, false), getOutputFacing().getOpposite());
-						if (stack1.isEmpty() || stack1.getCount() == 0)
-							iinventory.setChanged();
-						else
-							outputSlot.setStackInSlot(0, stack);
+					}
+				} else {
+					if (tile.getProgress() > 0) {
+						tile.setProgress(0);
+						tile.setActive(false);
+					}
+				}
+
+				if (tile.outputDirection != OutputDirection.NONE && tile.getOutputFacing() != null) {
+					BlockEntity otherTile = level.getBlockEntity(worldPosition.relative(tile.getOutputFacing()));
+					if (otherTile != null && otherTile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, tile.getOutputFacing().getOpposite()).isPresent()) {
+						LazyOptional<IItemHandler> tileOptional = otherTile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, tile.getOutputFacing().getOpposite());
+						tileOptional.ifPresent((handler) -> {
+							if (!tile.outputSlot.getStackInSlot(0).isEmpty()) {
+								ItemStack stack = tile.outputSlot.getStackInSlot(0).copy();
+								stack.setCount(1);
+								ItemStack stack1 = ItemHandlerHelper.insertItem(handler, stack, true);
+								if (stack1.isEmpty()) {
+									ItemHandlerHelper.insertItem(handler, tile.outputSlot.extractItem(0, 1, false), false);
+									tile.setChanged();
+								}
+							}
+						});
+					} else if (otherTile instanceof Container iinventory) {
+						if (tile.isInventoryFull(iinventory, tile.getOutputFacing()))
+							return;
+						if (!tile.outputSlot.getStackInSlot(0).isEmpty()) {
+							ItemStack stack = tile.outputSlot.getStackInSlot(0).copy();
+							ItemStack stack1 = putStackInInventoryAllSlots(iinventory, tile.outputSlot.extractItem(0, 1, false), tile.getOutputFacing().getOpposite());
+							if (stack1.isEmpty() || stack1.getCount() == 0)
+								iinventory.setChanged();
+							else
+								tile.outputSlot.setStackInSlot(0, stack);
+						}
 					}
 				}
 			}
-		}
-		else {
-			if (getLevel().isClientSide)
-				prevAnimationTicks = animationTicks = 0;
+			else {
+				if (level.isClientSide)
+					tile.prevAnimationTicks = tile.animationTicks = 0;
 
-			if (getProgress() > 0) {
-				setActive(false);
-				setProgress(0);
+				if (tile.getProgress() > 0) {
+					tile.setActive(false);
+					tile.setProgress(0);
+				}
 			}
-		}
 
-		if (prevFluidLevel != tank.getFluidAmount()){
-			updateBlock();
-			prevFluidLevel = tank.getFluidAmount();
+			if (tile.prevFluidLevel != tile.tank.getFluidAmount()){
+				tile.updateBlock();
+				tile.prevFluidLevel = tile.tank.getFluidAmount();
+			}
 		}
 	}
 
@@ -264,8 +264,7 @@ public class TileEntityXPSolidifier extends BlockEntity implements MenuProvider 
 	}
 
 	private boolean isInventoryFull(Container inventoryIn, Direction side) {
-		if (inventoryIn instanceof WorldlyContainer) {
-			WorldlyContainer isidedinventory = (WorldlyContainer) inventoryIn;
+		if (inventoryIn instanceof WorldlyContainer isidedinventory) {
 			int[] aint = isidedinventory.getSlotsForFace(side);
 
 			for (int k : aint) {
@@ -289,8 +288,7 @@ public class TileEntityXPSolidifier extends BlockEntity implements MenuProvider 
 	}
 
 	public static ItemStack putStackInInventoryAllSlots(Container inventory, ItemStack stack, @Nullable Direction facing) {
-		if (inventory instanceof WorldlyContainer && facing != null && !(inventory instanceof TileEntityXPSolidifier) && inventory.canPlaceItem(0, stack.copy())) {
-			WorldlyContainer isidedinventory = (WorldlyContainer)inventory;
+		if (inventory instanceof WorldlyContainer isidedinventory && facing != null && !(inventory instanceof TileEntityXPSolidifier) && inventory.canPlaceItem(0, stack.copy())) {
 			int[] aint = isidedinventory.getSlotsForFace(facing);
 			for (int k = 0; k < aint.length && !stack.isEmpty(); ++k)
 				stack = insertStack(inventory, stack, aint[k], facing);
@@ -328,8 +326,8 @@ public class TileEntityXPSolidifier extends BlockEntity implements MenuProvider 
 	}
 
 	@Override
-	public void load(BlockState state, CompoundTag nbt) {
-		super.load(state, nbt);
+	public void load(@Nonnull CompoundTag nbt) {
+		super.load(nbt);
 		tank.readFromNBT(nbt);
 		inputSlots.deserializeNBT(nbt.getCompound("inputSlots"));
 		outputSlot.deserializeNBT(nbt.getCompound("outputSlot"));
@@ -349,8 +347,7 @@ public class TileEntityXPSolidifier extends BlockEntity implements MenuProvider 
 	}
 
 	@Override
-	public CompoundTag save(CompoundTag nbt) {
-		super.save(nbt);
+	public void saveAdditional(@Nonnull CompoundTag nbt) {
 		tank.writeToNBT(nbt);
 		nbt.put("inputSlots", inputSlots.serializeNBT());
 		nbt.put("outputSlot", outputSlot.serializeNBT());
@@ -360,8 +357,8 @@ public class TileEntityXPSolidifier extends BlockEntity implements MenuProvider 
 		nbt.putInt("moulding_progress", moulding_progress);
 		if (currentRecipe != null)
 			nbt.putString("currentRecipe", currentRecipe.getId().toString());
-		return nbt;
 	}
+	@Nonnull
 	@Override
 	public CompoundTag getUpdateTag() {
 		CompoundTag nbt = new CompoundTag();
@@ -372,12 +369,12 @@ public class TileEntityXPSolidifier extends BlockEntity implements MenuProvider 
 	public ClientboundBlockEntityDataPacket getUpdatePacket() {
 		CompoundTag nbt = new CompoundTag();
 		save(nbt);
-		return new ClientboundBlockEntityDataPacket(getBlockPos(), 0, nbt);
+		return ClientboundBlockEntityDataPacket.create(this);
 	}
 
 	@Override
 	public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket packet) {
-		load(getBlockState(), packet.getTag());
+		load(packet.getTag());
 		onContentsChanged();
 	}
 
@@ -386,9 +383,9 @@ public class TileEntityXPSolidifier extends BlockEntity implements MenuProvider 
 	}
 
 	public void onContentsChanged() {
-		if (this != null && !getLevel().isClientSide) {
-			final BlockState state = getLevel().getBlockState(getBlockPos());
-			getLevel().sendBlockUpdated(getBlockPos(), state, state, 8);
+		if (this.level != null && level.isClientSide) {
+			final BlockState state = level.getBlockState(getBlockPos());
+			level.sendBlockUpdated(getBlockPos(), state, state, 8);
 			setChanged();
 		}
 	}
@@ -397,6 +394,7 @@ public class TileEntityXPSolidifier extends BlockEntity implements MenuProvider 
 		return tank.getFluid() != null ? (int) ((float) tank.getFluid().getAmount() / (float) tank.getCapacity() * scale) : 0;
 	}
 
+	@Nonnull
 	@Override
 	public Component getDisplayName() {
 		return new TextComponent("block.mob_grinding_utils.xpsolidifier");
