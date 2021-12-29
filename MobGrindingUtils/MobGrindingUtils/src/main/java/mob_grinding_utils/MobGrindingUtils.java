@@ -35,6 +35,7 @@ import mob_grinding_utils.network.MGUNetwork;
 import mob_grinding_utils.network.MessageFlagSync;
 import mob_grinding_utils.recipe.ChickenFeedRecipe;
 import mob_grinding_utils.recipe.FluidIngredient;
+import mob_grinding_utils.recipe.SolidifyRecipe;
 import net.minecraft.client.gui.ScreenManager;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.RenderTypeLookup;
@@ -44,7 +45,7 @@ import net.minecraft.fluid.Fluid;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipeSerializer;
-import net.minecraft.item.crafting.SpecialRecipeSerializer;
+import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.particles.BasicParticleType;
 import net.minecraft.particles.ParticleType;
@@ -54,12 +55,13 @@ import net.minecraft.tags.ITag;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.server.ServerWorld;
+import net.minecraftforge.client.event.RecipesUpdatedEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.crafting.CraftingHelper;
+import net.minecraftforge.event.AddReloadListenerEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.fml.DeferredWorkQueue;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
@@ -71,6 +73,9 @@ import net.minecraftforge.fml.network.PacketDistributor;
 import net.minecraftforge.fml.network.simple.SimpleChannel;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Mod(Reference.MOD_ID)
@@ -89,6 +94,10 @@ public class MobGrindingUtils {
 	public static final RegistryObject<BasicParticleType> PARTICLE_FLUID_XP = PARTICLES.register("fluid_xp_particles", () -> new BasicParticleType(true));
 
 	public static final RegistryObject<IRecipeSerializer<?>> CHICKEN_FEED = RECIPES.register(ChickenFeedRecipe.NAME, ChickenFeedRecipe.Serializer::new);
+
+	public static final List<SolidifyRecipe> SOLIDIFIER_RECIPES = new ArrayList<>();
+	public static final RegistryObject<IRecipeSerializer<?>> SOLIDIFIER_RECIPE = RECIPES.register(SolidifyRecipe.NAME, SolidifyRecipe.Serializer::new);
+	public static final IRecipeType<SolidifyRecipe> SOLIDIFIER_TYPE = IRecipeType.register(Reference.MOD_ID + ":solidify");
 
 	public static final ItemGroup TAB = new ItemGroup(Reference.MOD_ID) {
 		@Nonnull
@@ -122,7 +131,7 @@ public class MobGrindingUtils {
 		SPIKE_DAMAGE = new DamageSource("spikes").setDamageBypassesArmor();
 
 		NETWORK_WRAPPER = MGUNetwork.getNetworkChannel();
-		
+
 		MinecraftForge.EVENT_BUS.addListener(BlockSpikes::dropXP);
 		MinecraftForge.EVENT_BUS.register(new EntityInteractionEvent());
 		MinecraftForge.EVENT_BUS.register(new ChickenFuseEvent());
@@ -136,8 +145,10 @@ public class MobGrindingUtils {
 		MinecraftForge.EVENT_BUS.addListener(this::changedDimension);
 		MinecraftForge.EVENT_BUS.addListener(this::playerRespawn);
 		MinecraftForge.EVENT_BUS.addListener(this::cloneEvent);
+		MinecraftForge.EVENT_BUS.addListener(this::serverReloadListener);
+		MinecraftForge.EVENT_BUS.addListener(this::clientRecipeReload);
 	}
-	
+
 	private void doClientStuff(final FMLClientSetupEvent event) {
 		MinecraftForge.EVENT_BUS.register(new FluidTextureStitchEvent());
 		MinecraftForge.EVENT_BUS.register(new RenderChickenSwell());
@@ -160,26 +171,34 @@ public class MobGrindingUtils {
 		ScreenManager.registerFactory(ModContainers.FAN.get(), GuiFan::new);
 		ScreenManager.registerFactory(ModContainers.SAW.get(), GuiSaw::new);
 		ScreenManager.registerFactory(ModContainers.ENTITY_SPAWNER.get(), GuiMGUSpawner::new);
-		
-		 RenderTypeLookup.setRenderLayer(ModBlocks.TANK.getBlock(), RenderType.getCutout());
-		 RenderTypeLookup.setRenderLayer(ModBlocks.TANK_SINK.getBlock(), RenderType.getCutout());
-		 RenderTypeLookup.setRenderLayer(ModBlocks.XP_TAP.getBlock(), RenderType.getCutout());
-		 RenderTypeLookup.setRenderLayer(ModBlocks.ENDER_INHIBITOR_ON.getBlock(), RenderType.getCutout());
-		 RenderTypeLookup.setRenderLayer(ModBlocks.ENDER_INHIBITOR_OFF.getBlock(), RenderType.getCutout());
-		 RenderTypeLookup.setRenderLayer(ModBlocks.SAW.getBlock(), RenderType.getCutout());
-		 RenderTypeLookup.setRenderLayer(ModBlocks.SPIKES.getBlock(), RenderType.getCutout());
-		 RenderTypeLookup.setRenderLayer(ModBlocks.ABSORPTION_HOPPER.getBlock(), RenderType.getCutout());
-		 RenderTypeLookup.setRenderLayer(ModBlocks.TINTED_GLASS.getBlock(), RenderType.getTranslucent());
-		 RenderTypeLookup.setRenderLayer(ModBlocks.JUMBO_TANK.getBlock(), RenderType.getCutout());
-		 RenderTypeLookup.setRenderLayer(ModBlocks.DREADFUL_DIRT.getBlock(), RenderType.getCutout());
-		 RenderTypeLookup.setRenderLayer(ModBlocks.DELIGHTFUL_DIRT.getBlock(), RenderType.getCutout());
-		 RenderTypeLookup.setRenderLayer(ModBlocks.XPSOLIDIFIER.getBlock(), RenderType.getCutout());
-		 RenderTypeLookup.setRenderLayer(ModBlocks.SOLID_XP_BLOCK.getBlock(), RenderType.getTranslucent());
-		 RenderTypeLookup.setRenderLayer(ModBlocks.FLUID_XP_FLOWING.get(), RenderType.getTranslucent());
-		 RenderTypeLookup.setRenderLayer(ModBlocks.FLUID_XP.get(), RenderType.getTranslucent());
-		 RenderTypeLookup.setRenderLayer(ModBlocks.ENTITY_SPAWNER.getBlock(), RenderType.getCutout());
 
-		 ModColourManager.registerColourHandlers();
+		RenderTypeLookup.setRenderLayer(ModBlocks.TANK.getBlock(), RenderType.getCutout());
+		RenderTypeLookup.setRenderLayer(ModBlocks.TANK_SINK.getBlock(), RenderType.getCutout());
+		RenderTypeLookup.setRenderLayer(ModBlocks.XP_TAP.getBlock(), RenderType.getCutout());
+		RenderTypeLookup.setRenderLayer(ModBlocks.ENDER_INHIBITOR_ON.getBlock(), RenderType.getCutout());
+		RenderTypeLookup.setRenderLayer(ModBlocks.ENDER_INHIBITOR_OFF.getBlock(), RenderType.getCutout());
+		RenderTypeLookup.setRenderLayer(ModBlocks.SAW.getBlock(), RenderType.getCutout());
+		RenderTypeLookup.setRenderLayer(ModBlocks.SPIKES.getBlock(), RenderType.getCutout());
+		RenderTypeLookup.setRenderLayer(ModBlocks.ABSORPTION_HOPPER.getBlock(), RenderType.getCutout());
+		RenderTypeLookup.setRenderLayer(ModBlocks.TINTED_GLASS.getBlock(), RenderType.getTranslucent());
+		RenderTypeLookup.setRenderLayer(ModBlocks.JUMBO_TANK.getBlock(), RenderType.getCutout());
+		RenderTypeLookup.setRenderLayer(ModBlocks.DREADFUL_DIRT.getBlock(), RenderType.getCutout());
+		RenderTypeLookup.setRenderLayer(ModBlocks.DELIGHTFUL_DIRT.getBlock(), RenderType.getCutout());
+		RenderTypeLookup.setRenderLayer(ModBlocks.XPSOLIDIFIER.getBlock(), RenderType.getCutout());
+		RenderTypeLookup.setRenderLayer(ModBlocks.SOLID_XP_BLOCK.getBlock(), RenderType.getTranslucent());
+		RenderTypeLookup.setRenderLayer(ModBlocks.FLUID_XP_FLOWING.get(), RenderType.getTranslucent());
+		RenderTypeLookup.setRenderLayer(ModBlocks.FLUID_XP.get(), RenderType.getTranslucent());
+		RenderTypeLookup.setRenderLayer(ModBlocks.ENTITY_SPAWNER.getBlock(), RenderType.getCutout());
+
+		ModColourManager.registerColourHandlers();
+	}
+
+	private void serverReloadListener(final AddReloadListenerEvent event) {
+		event.addListener(new ServerResourceReloader(event.getDataPackRegistries()));
+	}
+	private void clientRecipeReload(final RecipesUpdatedEvent event) {
+		SOLIDIFIER_RECIPES.clear();
+		SOLIDIFIER_RECIPES.addAll(event.getRecipeManager().getRecipesForType(SOLIDIFIER_TYPE));
 	}
 
 	private void playerConnected(final PlayerEvent.PlayerLoggedInEvent event) {

@@ -7,19 +7,21 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
 
+import java.util.function.Predicate;
+
 public class RestrictedHandlerSlot extends SlotItemHandler {
-    Item item;
+    Predicate<ItemStack> item;
     int maxItems;
 
-    public RestrictedHandlerSlot(IItemHandler itemHandler, int index, int xPosition, int yPosition, Item targetItem, int max) {
+    public RestrictedHandlerSlot(IItemHandler itemHandler, int index, int xPosition, int yPosition, Predicate<ItemStack> itemStackPredicate, int max) {
         super(itemHandler, index, xPosition, yPosition);
-        item = targetItem;
+        item = itemStackPredicate;
         maxItems = max;
     }
 
     @Override
     public boolean isItemValid(@Nonnull ItemStack stack) {
-        return stack.getItem() == item;
+        return item.test(stack);
     }
 
     @Override

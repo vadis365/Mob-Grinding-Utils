@@ -40,13 +40,13 @@ public class ContainerMGUSpawner extends Container {
         //Egg
         this.addSlot(new SlotRestrictSizeOnly(tile.inputSlots, 0, 44, 22, 1));
         //Fuel
-        this.addSlot(new RestrictedHandlerSlot(tile.fuelSlot, 0, 44, 76, ModItems.SOLID_XP_BABY.get(), 64));
+        this.addSlot(new RestrictedHandlerSlot(tile.fuelSlot, 0, 44, 76, i -> i.getItem() == ModItems.SOLID_XP_BABY.get(), 64));
         ////Upgrade Area Width
-        this.addSlot(new RestrictedHandlerSlot(tile.inputSlots, 1, 8, 112, ModItems.SPAWNER_UPGRADE_WIDTH.get(), 5));
+        this.addSlot(new RestrictedHandlerSlot(tile.inputSlots, 1, 8, 112, i -> i.getItem() == ModItems.SPAWNER_UPGRADE_WIDTH.get(), 5));
         //Upgrade Area Height
-        this.addSlot(new RestrictedHandlerSlot(tile.inputSlots, 2, 44, 112, ModItems.SPAWNER_UPGRADE_HEIGHT.get(), 5));
+        this.addSlot(new RestrictedHandlerSlot(tile.inputSlots, 2, 44, 112, i -> i.getItem() == ModItems.SPAWNER_UPGRADE_HEIGHT.get(), 5));
         //Upgrade Speed
-        this.addSlot(new RestrictedHandlerSlot(tile.inputSlots, 3, 80, 112, ModItems.XP_SOLIDIFIER_UPGRADE.get(), 5));
+        this.addSlot(new RestrictedHandlerSlot(tile.inputSlots, 3, 80, 112, i -> i.getItem() == ModItems.XP_SOLIDIFIER_UPGRADE.get(), 5));
 
         //Player Inventory
         for (int row = 0; row < 3; row++) {
@@ -66,47 +66,47 @@ public class ContainerMGUSpawner extends Container {
         }
     }
 
-	@Override
-	public ItemStack transferStackInSlot(PlayerEntity player, int index) {
-		ItemStack stack = ItemStack.EMPTY;
-		Slot slot = (Slot) inventorySlots.get(index);
+    @Override
+    public ItemStack transferStackInSlot(PlayerEntity player, int index) {
+        ItemStack stack = ItemStack.EMPTY;
+        Slot slot = (Slot) inventorySlots.get(index);
 
-		if (slot != null && slot.getHasStack()) {
-			ItemStack stack1 = slot.getStack();
-			stack = stack1.copy();
+        if (slot != null && slot.getHasStack()) {
+            ItemStack stack1 = slot.getStack();
+            stack = stack1.copy();
 
-			if (index > 4) {
-				if (stack1.getItem() instanceof SpawnEggItem)
-					if (!this.mergeItemStack(stack1, 0, 1, false))
-						return ItemStack.EMPTY;
+            if (index > 4) {
+                if (stack1.getItem() instanceof SpawnEggItem)
+                    if (!this.mergeItemStack(stack1, 0, 1, false))
+                        return ItemStack.EMPTY;
 
-				if (stack1.getItem() == ModItems.SOLID_XP_BABY.get())
-					if (!this.mergeItemStack(stack1, 1, 2, false))
-						return ItemStack.EMPTY;
+                if (stack1.getItem() == ModItems.SOLID_XP_BABY.get())
+                    if (!this.mergeItemStack(stack1, 1, 2, false))
+                        return ItemStack.EMPTY;
 
-				if (stack1.getItem() == ModItems.SPAWNER_UPGRADE_WIDTH.get())//temp as new items need to be made
-					if (!this.mergeItemStack(stack1, 2, 3, false))
-						return ItemStack.EMPTY;
+                if (stack1.getItem() == ModItems.SPAWNER_UPGRADE_WIDTH.get())//temp as new items need to be made
+                    if (!this.mergeItemStack(stack1, 2, 3, false))
+                        return ItemStack.EMPTY;
 
-				if (stack1.getItem() == ModItems.SPAWNER_UPGRADE_HEIGHT.get())
-					if (!this.mergeItemStack(stack1, 3, 4, false))
-						return ItemStack.EMPTY;
+                if (stack1.getItem() == ModItems.SPAWNER_UPGRADE_HEIGHT.get())
+                    if (!this.mergeItemStack(stack1, 3, 4, false))
+                        return ItemStack.EMPTY;
 
-				if (stack1.getItem() == ModItems.XP_SOLIDIFIER_UPGRADE.get())
-					if (!this.mergeItemStack(stack1, 4, 5, false))
-						return ItemStack.EMPTY;
+                if (stack1.getItem() == ModItems.XP_SOLIDIFIER_UPGRADE.get())
+                    if (!this.mergeItemStack(stack1, 4, 5, false))
+                        return ItemStack.EMPTY;
 
-			} else if (!mergeItemStack(stack1, 5, inventorySlots.size(), false))
-				return ItemStack.EMPTY;
+            } else if (!mergeItemStack(stack1, 5, inventorySlots.size(), false))
+                return ItemStack.EMPTY;
 
-			if (stack1.isEmpty())
-				slot.putStack(ItemStack.EMPTY);
-			else
-				slot.onSlotChanged();
-	
-			if (stack1.getCount() == stack.getCount())
-				return ItemStack.EMPTY;
-		}
-		return stack;
-	}
+            if (stack1.isEmpty())
+                slot.putStack(ItemStack.EMPTY);
+            else
+                slot.onSlotChanged();
+
+            if (stack1.getCount() == stack.getCount())
+                return ItemStack.EMPTY;
+        }
+        return stack;
+    }
 }

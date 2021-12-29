@@ -1,7 +1,9 @@
 package mob_grinding_utils.inventory.server;
 
+import mob_grinding_utils.MobGrindingUtils;
 import mob_grinding_utils.ModContainers;
 import mob_grinding_utils.ModItems;
+import mob_grinding_utils.recipe.SolidifyRecipe;
 import mob_grinding_utils.tile.TileEntityXPSolidifier;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -11,6 +13,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
+
+import java.util.function.Predicate;
 
 
 public class ContainerXPSolidifier extends Container {
@@ -36,11 +40,17 @@ public class ContainerXPSolidifier extends Container {
     private void addPlayerSlots(PlayerInventory playerInventory) {
         int originX = 7;
         int originY = 103;
-        
+        Predicate<ItemStack> mouldPredicate = stack -> {
+            for (SolidifyRecipe recipe : MobGrindingUtils.SOLIDIFIER_RECIPES) {
+                if(recipe.matches(stack))
+                    return true;
+            }
+            return false;
+        };
         //Mould
-        this.addSlot(new RestrictedHandlerSlot(tile.inputSlots, 0, 62, 36, ModItems.SOLID_XP_MOULD_BABY.get(), 1 ));
+        this.addSlot(new RestrictedHandlerSlot(tile.inputSlots, 0, 62, 36, mouldPredicate, 1 ));
         //Upgrade
-        this.addSlot(new RestrictedHandlerSlot(tile.inputSlots, 1, 26, 72, ModItems.XP_SOLIDIFIER_UPGRADE.get(), 9));
+        this.addSlot(new RestrictedHandlerSlot(tile.inputSlots, 1, 26, 72, i -> i.getItem() == ModItems.XP_SOLIDIFIER_UPGRADE.get(), 9));
         //Output
         this.addSlot(new SlotSolidifierOutput(tile.outputSlot, 0, 130, 36, this));
 
@@ -63,44 +73,44 @@ public class ContainerXPSolidifier extends Container {
 
     }
 
-	@Override
-	public ItemStack transferStackInSlot(PlayerEntity player, int index) {
-		ItemStack stack = ItemStack.EMPTY;
-		Slot slot = (Slot) inventorySlots.get(index);
+    @Override
+    public ItemStack transferStackInSlot(PlayerEntity player, int index) {
+        ItemStack stack = ItemStack.EMPTY;
+        Slot slot = (Slot) inventorySlots.get(index);
 
-		if (slot != null && slot.getHasStack()) {
-			ItemStack stack1 = slot.getStack();
-			stack = stack1.copy();
+        if (slot != null && slot.getHasStack()) {
+            ItemStack stack1 = slot.getStack();
+            stack = stack1.copy();
 
-			if (index > 2) {
-				if (stack1.getItem() == ModItems.SOLID_XP_MOULD_BABY.get())
-					if (!this.mergeItemStack(stack1, 0, 1, false))
-						return ItemStack.EMPTY;
+            if (index > 2) {
+                if (stack1.getItem() == ModItems.SOLID_XP_MOULD_BABY.get())
+                    if (!this.mergeItemStack(stack1, 0, 1, false))
+                        return ItemStack.EMPTY;
 
-				if (stack1.getItem() == ModItems.XP_SOLIDIFIER_UPGRADE.get())
-					if (!this.mergeItemStack(stack1, 1, 2, false))
-						return ItemStack.EMPTY;
+                if (stack1.getItem() == ModItems.XP_SOLIDIFIER_UPGRADE.get())
+                    if (!this.mergeItemStack(stack1, 1, 2, false))
+                        return ItemStack.EMPTY;
 
-				if (!this.mergeItemStack(stack1, 2, 3, false))
-					return ItemStack.EMPTY;
+                if (!this.mergeItemStack(stack1, 2, 3, false))
+                    return ItemStack.EMPTY;
 
-			} else if (!mergeItemStack(stack1, 3, inventorySlots.size(), false))
-				return ItemStack.EMPTY;
+            } else if (!mergeItemStack(stack1, 3, inventorySlots.size(), false))
+                return ItemStack.EMPTY;
 
-			if (stack1.isEmpty())
-				slot.putStack(ItemStack.EMPTY);
-			else
-				slot.onSlotChanged();
+            if (stack1.isEmpty())
+                slot.putStack(ItemStack.EMPTY);
+            else
+                slot.onSlotChanged();
 
-			if (stack1.getCount() == stack.getCount())
-				return ItemStack.EMPTY;
+            if (stack1.getCount() == stack.getCount())
+                return ItemStack.EMPTY;
 
-			ItemStack stack2 = slot.onTake(player, stack1);
+            ItemStack stack2 = slot.onTake(player, stack1);
 
-			if (index == 2)
-				player.dropItem(stack2, false);
-		}
+            if (index == 2)
+                player.dropItem(stack2, false);
+        }
 
-		return stack;
-	}
+        return stack;
+    }
 }
