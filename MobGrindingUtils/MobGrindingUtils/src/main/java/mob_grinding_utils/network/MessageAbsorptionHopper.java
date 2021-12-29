@@ -1,7 +1,5 @@
 package mob_grinding_utils.network;
 
-import java.util.function.Supplier;
-
 import mob_grinding_utils.tile.TileEntityAbsorptionHopper;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.entity.player.Player;
@@ -14,7 +12,9 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
 import net.minecraft.world.level.Level;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraftforge.network.NetworkEvent;
+
+import java.util.function.Supplier;
 
 public class MessageAbsorptionHopper {
 	public ResourceKey<Level> dimension;

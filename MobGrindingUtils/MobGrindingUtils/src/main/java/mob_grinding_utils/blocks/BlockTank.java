@@ -3,6 +3,8 @@ package mob_grinding_utils.blocks;
 import mob_grinding_utils.tile.TileEntityTank;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.RenderShape;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.entity.LivingEntity;
@@ -27,6 +29,7 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class BlockTank extends BaseEntityBlock {
 	public BlockTank(Block.Properties properties) {
@@ -35,7 +38,13 @@ public class BlockTank extends BaseEntityBlock {
 
 	@Override
 	public BlockEntity newBlockEntity(@Nonnull BlockPos pos, @Nonnull BlockState state) {
-		return new TileEntityTank();
+		return new TileEntityTank(pos, state);
+	}
+
+	@Nullable
+	@Override
+	public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level pLevel, BlockState pState, BlockEntityType<T> pBlockEntityType) {
+		return pLevel.isClientSide ? null : TileEntityTank::serverTick;
 	}
 
 	@Override

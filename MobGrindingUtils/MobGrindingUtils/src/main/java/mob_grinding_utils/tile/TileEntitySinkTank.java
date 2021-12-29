@@ -5,29 +5,31 @@ import java.util.List;
 import mob_grinding_utils.MobGrindingUtils;
 import mob_grinding_utils.ModBlocks;
 import mob_grinding_utils.network.MessageTapParticle;
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
-import net.minecraftforge.fml.network.PacketDistributor;
+import net.minecraftforge.network.PacketDistributor;
 
 public class TileEntitySinkTank extends TileEntityTank {
 
-	public TileEntitySinkTank() {
-		super(ModBlocks.TANK_SINK.getTileEntityType());
+	public TileEntitySinkTank(BlockPos pos, BlockState state) {
+		super(ModBlocks.TANK_SINK.getTileEntityType(), pos, state);
 	}
 
-	@Override
-	public void tick() {
-		if (getLevel().isClientSide)
-			return;
-		if (tank.getFluid().isEmpty() || tank.getFluid().containsFluid(new FluidStack(ModBlocks.FLUID_XP.get(), 1)))
-			captureDroppedXP();
-		super.tick();
+	public static <T extends BlockEntity> void serverTick(Level world, BlockPos worldPosition, BlockState blockState, T t) {
+		if (t instanceof TileEntitySinkTank tile) {
+			if (tile.tank.getFluid().isEmpty() || tile.tank.getFluid().containsFluid(new FluidStack(ModBlocks.FLUID_XP.get(), 1)))
+				tile.captureDroppedXP();
+			TileEntityTank.serverTick(world, worldPosition, blockState, t);
+		}
 	}
 
 	public boolean captureDroppedXP() {
@@ -47,8 +49,8 @@ public class TileEntitySinkTank extends TileEntityTank {
 	}
 
 	public List<Player> getCaptureXP(Level world, double x, double y, double z) {
-        return world.<Player>getEntitiesOfClass(Player.class, new AABB(x - 0.45D, y - 0.5D, z - 0.45D, x + 0.45D, y + 1.03D, z + 0.45D), EntitySelector.ENTITY_STILL_ALIVE);
-    }
+		return world.<Player>getEntitiesOfClass(Player.class, new AABB(x - 0.45D, y - 0.5D, z - 0.45D, x + 0.45D, y + 1.03D, z + 0.45D), EntitySelector.ENTITY_STILL_ALIVE);
+	}
 
 	public static void addPlayerXP(Player player, int amount) {
 		int experience = getPlayerXP(player) + amount;
