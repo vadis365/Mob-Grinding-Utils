@@ -9,7 +9,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
-import net.minecraft.world.level.block.entity.TickableBlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
@@ -17,28 +16,27 @@ import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
-import net.minecraftforge.fml.network.PacketDistributor;
+import net.minecraftforge.network.PacketDistributor;
 
-public class TileEntityXPTap extends BlockEntity implements TickableBlockEntity {
+public class TileEntityXPTap extends BlockEntity {
 	
-	public TileEntityXPTap() {
-		super(ModBlocks.XP_TAP.getTileEntityType());
+	public TileEntityXPTap(BlockPos pos, BlockState state) {
+		super(ModBlocks.XP_TAP.getTileEntityType(), pos, state);
 	}
 
 	public boolean active;
 
-	@Override
-	public void tick() {
-		if (!getLevel().isClientSide && active) {
-			BlockEntity tileentity = getLevel().getBlockEntity(worldPosition.relative(getLevel().getBlockState(worldPosition).getValue(BlockXPTap.FACING).getOpposite()));
+	public static <T extends BlockEntity> void serverTick(Level world, BlockPos worldPosition, BlockState blockState, T t) {
+		if (t instanceof TileEntityXPTap tileEntityXPTap && tileEntityXPTap.active) {
+			BlockEntity tileentity = world.getBlockEntity(worldPosition.relative(world.getBlockState(worldPosition).getValue(BlockXPTap.FACING).getOpposite()));
 			if (tileentity != null) {
-				LazyOptional<IFluidHandler> fluidHandler = tileentity.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, getLevel().getBlockState(worldPosition).getValue(BlockXPTap.FACING));
+				LazyOptional<IFluidHandler> fluidHandler = tileentity.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, world.getBlockState(worldPosition).getValue(BlockXPTap.FACING));
 				fluidHandler.ifPresent((handler) -> {
-					if (handler.getFluidInTank(0).getAmount() >= 20 && handler.getFluidInTank(0).getFluid().is(MobGrindingUtils.EXPERIENCE) && getLevel().getGameTime() % 3 == 0) {
+					if (handler.getFluidInTank(0).getAmount() >= 20 && handler.getFluidInTank(0).getFluid().is(MobGrindingUtils.EXPERIENCE) && world.getGameTime() % 3 == 0) {
 						int xpAmount = EntityXPOrbFalling.getExperienceValue(Math.min(20, handler.getFluidInTank(0).getAmount() / 20));
 						if (!handler.drain(xpAmount * 20, FluidAction.EXECUTE).isEmpty()) {
-							spawnXP(getLevel(), worldPosition, xpAmount, tileentity);
-							MobGrindingUtils.NETWORK_WRAPPER.send(PacketDistributor.ALL.noArg(), new MessageTapParticle(getBlockPos()));
+							tileEntityXPTap.spawnXP(world, worldPosition, xpAmount, tileentity);
+							MobGrindingUtils.NETWORK_WRAPPER.send(PacketDistributor.ALL.noArg(), new MessageTapParticle(worldPosition));
 						}
 					}
 				});
@@ -58,33 +56,32 @@ public class TileEntityXPTap extends BlockEntity implements TickableBlockEntity 
 	}
 
 	@Override
-	public CompoundTag save(CompoundTag nbt) {
-		super.save(nbt);
+	public void saveAdditional(CompoundTag nbt) {
 		nbt.putBoolean("active", active);
-		return nbt;
 	}
 
 	@Override
-	public void load(BlockState state, CompoundTag nbt) {
-		super.load(state, nbt);
+	public void load(CompoundTag nbt) {
+		super.load(nbt);
 		active = nbt.getBoolean("active");
 	}
 
 	@Override
-    public CompoundTag getUpdateTag() {
+	public CompoundTag getUpdateTag() {
 		CompoundTag nbt = new CompoundTag();
-        return save(nbt);
-    }
+		return save(nbt);
+	}
 
 	@Override
 	public ClientboundBlockEntityDataPacket getUpdatePacket() {
 		CompoundTag nbt = new CompoundTag();
 		save(nbt);
-		return new ClientboundBlockEntityDataPacket(getBlockPos(), 0, nbt);
+		return ClientboundBlockEntityDataPacket.create(this);
 	}
 
 	@Override
 	public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket packet) {
-		load(getBlockState(), packet.getTag());
+		if (packet.getTag() != null)
+			load(packet.getTag());
 	}
 }

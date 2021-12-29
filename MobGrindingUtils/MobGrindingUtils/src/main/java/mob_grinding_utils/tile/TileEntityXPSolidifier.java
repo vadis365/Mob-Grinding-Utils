@@ -10,6 +10,7 @@ import mob_grinding_utils.ModBlocks;
 import mob_grinding_utils.ModItems;
 import mob_grinding_utils.inventory.server.ContainerXPSolidifier;
 import mob_grinding_utils.recipe.SolidifyRecipe;
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.player.Inventory;
@@ -22,7 +23,6 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
-import net.minecraft.world.level.block.entity.TickableBlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.core.Direction;
 import net.minecraft.util.StringRepresentable;
@@ -43,7 +43,7 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.ItemStackHandler;
 
-public class TileEntityXPSolidifier extends BlockEntity implements TickableBlockEntity, MenuProvider {
+public class TileEntityXPSolidifier extends BlockEntity implements MenuProvider {
 	public FluidTank tank = new FluidTank(FluidAttributes.BUCKET_VOLUME *  16);
 	private final LazyOptional<IFluidHandler> tank_holder = LazyOptional.of(() -> tank);
 	private int prevFluidLevel = 0;
@@ -59,8 +59,8 @@ public class TileEntityXPSolidifier extends BlockEntity implements TickableBlock
 	public boolean active;
 	public int animationTicks, prevAnimationTicks;
 
-	public TileEntityXPSolidifier() {
-		super(ModBlocks.XPSOLIDIFIER.getTileEntityType());
+	public TileEntityXPSolidifier(BlockPos pos, BlockState state) {
+		super(ModBlocks.XPSOLIDIFIER.getTileEntityType(), pos, state);
 	}
 
 	public enum OutputDirection implements StringRepresentable {
@@ -87,22 +87,12 @@ public class TileEntityXPSolidifier extends BlockEntity implements TickableBlock
 	public OutputDirection outputDirection = OutputDirection.NONE;
 
 	public OutputDirection toggleOutput() {
-		switch(outputDirection) {
-			case WEST:
-				outputDirection = OutputDirection.NONE;
-				break;
-			case SOUTH:
-				outputDirection = OutputDirection.WEST;
-				break;
-			case EAST:
-				outputDirection = OutputDirection.SOUTH;
-				break;
-			case NORTH:
-				outputDirection = OutputDirection.EAST;
-				break;
-			case NONE:
-				outputDirection = OutputDirection.NORTH;
-				break;
+		switch (outputDirection) {
+			case WEST -> outputDirection = OutputDirection.NONE;
+			case SOUTH -> outputDirection = OutputDirection.WEST;
+			case EAST -> outputDirection = OutputDirection.SOUTH;
+			case NORTH -> outputDirection = OutputDirection.EAST;
+			case NONE -> outputDirection = OutputDirection.NORTH;
 		}
 		setChanged();
 		return outputDirection;
@@ -211,8 +201,6 @@ public class TileEntityXPSolidifier extends BlockEntity implements TickableBlock
 				return Direction.EAST;
 			case NORTH:
 				return Direction.NORTH;
-			case NONE:
-				break;
 			default:
 				break;
 		}
