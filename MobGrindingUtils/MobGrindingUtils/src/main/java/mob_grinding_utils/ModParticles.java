@@ -10,6 +10,6 @@ import net.minecraftforge.fml.common.Mod;
 public class ModParticles {
     @SubscribeEvent
 	public static void registerParticleFactory(ParticleFactoryRegisterEvent event) {
-		Minecraft.getInstance().particles.registerFactory(MobGrindingUtils.PARTICLE_FLUID_XP.get(), sprite -> new ParticleFluidXP.Factory(sprite));
+		Minecraft.getInstance().particleEngine.register(MobGrindingUtils.PARTICLE_FLUID_XP.get(), sprite -> new ParticleFluidXP.Factory(sprite));
 	}
 }

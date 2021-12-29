@@ -2,31 +2,31 @@ package mob_grinding_utils.events;
 
 import mob_grinding_utils.ModSounds;
 import mob_grinding_utils.blocks.BlockDragonMuffler;
-import net.minecraft.entity.boss.dragon.EnderDragonEntity;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.boss.enderdragon.EnderDragon;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class LocalDragonSoundEvent {
 	@SubscribeEvent
 	public void onDragonDeath(LivingDeathEvent event) {
-		if (event.getEntity() instanceof EnderDragonEntity) {
-			EnderDragonEntity dragon = (EnderDragonEntity) event.getEntity();
-			World world = dragon.getEntityWorld();
-			BlockPos.Mutable mutablePos = new BlockPos.Mutable();
+		if (event.getEntity() instanceof EnderDragon) {
+			EnderDragon dragon = (EnderDragon) event.getEntity();
+			Level world = dragon.getCommandSenderWorld();
+			BlockPos.MutableBlockPos mutablePos = new BlockPos.MutableBlockPos();
 			boolean playsound = true;
-			if (!world.isRemote) {
+			if (!world.isClientSide) {
 				for (int x = -32; x < 32; x++)
 					for (int y = -32; y < 32; y++)
 						for (int z = -32; z < 32; z++)
-							if ((world.getBlockState(mutablePos.setPos(dragon.getPosX() + x, dragon.getPosY() + y, dragon.getPosZ() + z)).getBlock() instanceof BlockDragonMuffler)) {
+							if ((world.getBlockState(mutablePos.set(dragon.getX() + x, dragon.getY() + y, dragon.getZ() + z)).getBlock() instanceof BlockDragonMuffler)) {
 								playsound = false;
 								break;
 							}
 				if (playsound) {
-					world.playSound(null, dragon.getPosX(), dragon.getPosY(), dragon.getPosZ(), ModSounds.ENTITY_DRAGON_DEATH_LOCAL, SoundCategory.HOSTILE, 5.0F, 1.0F);
+					world.playSound(null, dragon.getX(), dragon.getY(), dragon.getZ(), ModSounds.ENTITY_DRAGON_DEATH_LOCAL, SoundSource.HOSTILE, 5.0F, 1.0F);
 				}
 			}
 		}

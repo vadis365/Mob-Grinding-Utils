@@ -1,75 +1,75 @@
 package mob_grinding_utils.blocks;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.HorizontalBlock;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.MobEntity;
-import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.state.DirectionProperty;
-import net.minecraft.state.StateContainer;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.shapes.ISelectionContext;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.math.shapes.VoxelShapes;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.HorizontalDirectionalBlock;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.core.Direction;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
 
 public class BlockEntityConveyor extends Block {
-	public static final DirectionProperty FACING = HorizontalBlock.HORIZONTAL_FACING;
-	public static final VoxelShape CONVEYOR_AABB = Block.makeCuboidShape(0D, 0D, 0D, 16D, 14D, 16D);
+	public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
+	public static final VoxelShape CONVEYOR_AABB = Block.box(0D, 0D, 0D, 16D, 14D, 16D);
 
 	public BlockEntityConveyor(Block.Properties properties) {
 		super(properties);
 	}
 
 	@Override
-	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
+	public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
 		return CONVEYOR_AABB;
 	}
 	
 	@Override
-	public VoxelShape getRaytraceShape(BlockState state, IBlockReader worldIn, BlockPos pos) {
-		return VoxelShapes.fullCube();
+	public VoxelShape getInteractionShape(BlockState state, BlockGetter worldIn, BlockPos pos) {
+		return Shapes.block();
 	}
 
 	@Override
-	public BlockState getStateForPlacement(BlockItemUseContext context) {
-		Direction direction = context.getPlacementHorizontalFacing().getOpposite();
-		return this.getDefaultState().with(FACING, direction);
+	public BlockState getStateForPlacement(BlockPlaceContext context) {
+		Direction direction = context.getHorizontalDirection().getOpposite();
+		return this.defaultBlockState().setValue(FACING, direction);
 	}
 	
 	@Override
-	protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
+	protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
 		builder.add(FACING);
 	}
 
 	@Override
-	public void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity) {
-		if (entity.isSneaking())
+	public void entityInside(BlockState state, Level world, BlockPos pos, Entity entity) {
+		if (entity.isShiftKeyDown())
 			return;
 
-		if (entity instanceof MobEntity)
-			((MobEntity) entity).enablePersistence();
+		if (entity instanceof Mob)
+			((Mob) entity).setPersistenceRequired();
 		else if (entity instanceof ItemEntity)
-			((ItemEntity) entity).setNoDespawn();
+			((ItemEntity) entity).setExtendedLifetime();
 
 		double speed = speed();
-		int meta = state.get(FACING).getIndex() - 2;
+		int meta = state.getValue(FACING).get3DDataValue() - 2;
 		int[] factorX = { 0, 0, -1, 1 };
 		int[] factorZ = { -1, 1, 0, 0 };
 
-		if (entity.getPosY() > pos.getY() + 0.5D) {
-			Vector3d vec3d = entity.getMotion();
-			if (factorX[meta] == 0 && Math.abs(pos.getX() + 0.5D - entity.getPosX()) < 0.5D && Math.abs(pos.getX() + 0.5D - entity.getPosX()) > 0.1D)
-				entity.setMotion(vec3d.x + Math.signum(pos.getX() + 0.5D - entity.getPosX()) * Math.min(speed, Math.abs(pos.getX() + 0.5D - entity.getPosX())) / 1.2D, vec3d.y, vec3d.z);
-			if (factorZ[meta] == 0 && Math.abs(pos.getZ() + 0.5D - entity.getPosZ()) < 0.5D && Math.abs(pos.getZ() + 0.5D - entity.getPosZ()) > 0.1D)
-				entity.setMotion(vec3d.x, vec3d.y, vec3d.z + Math.signum(pos.getZ() + 0.5D - entity.getPosZ()) * Math.min(speed, Math.abs(pos.getZ() + 0.5D - entity.getPosZ())) / 1.2D);
+		if (entity.getY() > pos.getY() + 0.5D) {
+			Vec3 vec3d = entity.getDeltaMovement();
+			if (factorX[meta] == 0 && Math.abs(pos.getX() + 0.5D - entity.getX()) < 0.5D && Math.abs(pos.getX() + 0.5D - entity.getX()) > 0.1D)
+				entity.setDeltaMovement(vec3d.x + Math.signum(pos.getX() + 0.5D - entity.getX()) * Math.min(speed, Math.abs(pos.getX() + 0.5D - entity.getX())) / 1.2D, vec3d.y, vec3d.z);
+			if (factorZ[meta] == 0 && Math.abs(pos.getZ() + 0.5D - entity.getZ()) < 0.5D && Math.abs(pos.getZ() + 0.5D - entity.getZ()) > 0.1D)
+				entity.setDeltaMovement(vec3d.x, vec3d.y, vec3d.z + Math.signum(pos.getZ() + 0.5D - entity.getZ()) * Math.min(speed, Math.abs(pos.getZ() + 0.5D - entity.getZ())) / 1.2D);
 
-			entity.setMotion(vec3d.x + factorX[meta] * speed, vec3d.y, vec3d.z + factorZ[meta] * speed);
+			entity.setDeltaMovement(vec3d.x + factorX[meta] * speed, vec3d.y, vec3d.z + factorZ[meta] * speed);
 
 		}
 	}

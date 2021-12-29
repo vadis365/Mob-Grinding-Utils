@@ -2,15 +2,19 @@ buildscript {
     repositories {
         maven { url = 'https://maven.creeperhost.net/' }
         maven { url = 'https://maven.minecraftforge.net' }
+        maven { url = 'https://maven.parchmentmc.org' }
         mavenCentral()
     }
     dependencies {
-        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '4.1.+', changing: true
+        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.+', changing: true
+        classpath 'org.parchmentmc:librarian:1.+'
     }
 }
 apply plugin: 'net.minecraftforge.gradle'
+apply plugin: 'org.parchmentmc.librarian.forgegradle'
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
+apply from: 'https://raw.githubusercontent.com/SizableShrimp/Forge-Class-Remapper/main/classremapper.gradle'
 
 repositories {
     maven { url "https://www.cursemaven.com" }
@@ -21,11 +25,11 @@ version = "${modversion}"
 group = 'com.vadis365.mob_grinding_utils' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = 'mob_grinding_utils'
 
-sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
+java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
 println('Java: ' + System.getProperty('java.version') + ' JVM: ' + System.getProperty('java.vm.version') + '(' + System.getProperty('java.vendor') + ') Arch: ' + System.getProperty('os.arch'))
 minecraft {
-    mappings channel: 'snapshot', version: "$mappings_version"
+    mappings channel: 'parchment', version: "$mappings_version"
     accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
 
     runs {
@@ -73,19 +77,19 @@ dependencies {
     compileOnly fg.deobf("mezz.jei:jei-${jei_version}:api")
     runtimeOnly fg.deobf("mezz.jei:jei-${jei_version}")
 
-    compile fg.deobf("curse.maven:top-245211:3157997")
-    compile fg.deobf("curse.maven:playermobs-430513:3153298")
-    compile fg.deobf("curse.maven:mek-268560:3183270")
-    compile fg.deobf("curse.maven:IF-266515:3261176")
-    compile fg.deobf("curse.maven:TITANIUM-287342:3223141")
-    compile fg.deobf("curse.maven:XNET-260912:3140153")
-    compile fg.deobf("curse.maven:RFTBASE-326041:3206945")
-    compile fg.deobf("curse.maven:MCJTYLIB-233105:3236516")
-    compile fg.deobf("curse.maven:COFHCORE-69162:3249453")
-    compile fg.deobf("curse.maven:TE-69163:3247000")
-    compile fg.deobf("curse.maven:TF-222880:3248150")
-    compile fg.deobf("curse.maven:CLUMPS-256717:3481298")
-    compile fg.deobf("curse.maven:CYCLIC-239286:3525767")
+    runtimeOnly fg.deobf("curse.maven:top-245211:3157997")
+    runtimeOnly fg.deobf("curse.maven:playermobs-430513:3153298")
+    runtimeOnly fg.deobf("curse.maven:mek-268560:3183270")
+    runtimeOnly fg.deobf("curse.maven:IF-266515:3261176")
+    runtimeOnly fg.deobf("curse.maven:TITANIUM-287342:3223141")
+    runtimeOnly fg.deobf("curse.maven:XNET-260912:3140153")
+    runtimeOnly fg.deobf("curse.maven:RFTBASE-326041:3206945")
+    runtimeOnly fg.deobf("curse.maven:MCJTYLIB-233105:3236516")
+    runtimeOnly fg.deobf("curse.maven:COFHCORE-69162:3249453")
+    runtimeOnly fg.deobf("curse.maven:TE-69163:3247000")
+    runtimeOnly fg.deobf("curse.maven:TF-222880:3248150")
+    runtimeOnly fg.deobf("curse.maven:CLUMPS-256717:3481298")
+    runtimeOnly fg.deobf("curse.maven:CYCLIC-239286:3525767")
 }
 
 jar {

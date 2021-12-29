@@ -11,10 +11,10 @@ import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.registration.IRecipeRegistration;
 import mob_grinding_utils.ModItems;
 import mob_grinding_utils.Reference;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.TextFormatting;
+import net.minecraft.client.resources.language.I18n;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.ChatFormatting;
 
 @JeiPlugin
 public class JEIPlugin implements IModPlugin {
@@ -28,9 +28,9 @@ public class JEIPlugin implements IModPlugin {
     @Override
     public void registerRecipes(@Nonnull IRecipeRegistration registration) {
         ModItems.ITEMS.getEntries().forEach((item) -> {
-            String key = item.get().getTranslationKey()+".jei.info";
-            if (I18n.hasKey(key)) {
-                String langEntry = TextFormatting.getTextWithoutFormattingCodes(I18n.format(key));
+            String key = item.get().getDescriptionId()+".jei.info";
+            if (I18n.exists(key)) {
+                String langEntry = ChatFormatting.stripFormatting(I18n.get(key));
                 if (langEntry != null)
                     registration.addIngredientInfo(new ItemStack(item.get()), VanillaTypes.ITEM, StringUtils.splitByWholeSeparator(langEntry, "//n"));
             }

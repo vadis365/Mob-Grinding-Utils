@@ -1,66 +1,66 @@
 package mob_grinding_utils.recipe;
 
 import com.google.gson.JsonObject;
-import net.minecraft.data.IFinishedRecipe;
-import net.minecraft.item.crafting.IRecipeSerializer;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.data.recipes.FinishedRecipe;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.resources.ResourceLocation;
 
 import javax.annotation.Nullable;
 import java.util.function.Consumer;
 
-public class WrappedRecipe implements IFinishedRecipe {
-    IFinishedRecipe inner;
-    IRecipeSerializer<?> serializerOverride;
+public class WrappedRecipe implements FinishedRecipe {
+    FinishedRecipe inner;
+    RecipeSerializer<?> serializerOverride;
 
-    public WrappedRecipe(IFinishedRecipe innerIn) {
+    public WrappedRecipe(FinishedRecipe innerIn) {
         inner = innerIn;
     }
 
-    public WrappedRecipe(IFinishedRecipe innerIn, IRecipeSerializer<?> serializerOverrideIn) {
+    public WrappedRecipe(FinishedRecipe innerIn, RecipeSerializer<?> serializerOverrideIn) {
         inner = innerIn;
         serializerOverride = serializerOverrideIn;
     }
 
-    public static Consumer<IFinishedRecipe> Inject(Consumer<IFinishedRecipe> consumer, IRecipeSerializer<?> serializer) {
+    public static Consumer<FinishedRecipe> Inject(Consumer<FinishedRecipe> consumer, RecipeSerializer<?> serializer) {
         return iFinishedRecipe -> consumer.accept(new WrappedRecipe(iFinishedRecipe, serializer));
     }
 
     @Override
-    public void serialize(JsonObject json) {
-        inner.serialize(json);
+    public void serializeRecipeData(JsonObject json) {
+        inner.serializeRecipeData(json);
     }
 
     @Override
-    public JsonObject getRecipeJson() {
+    public JsonObject serializeRecipe() {
         JsonObject jsonObject = new JsonObject();
 
         if (serializerOverride != null)
             jsonObject.addProperty("type", serializerOverride.getRegistryName().toString());
         else
-            jsonObject.addProperty("type", inner.getSerializer().getRegistryName().toString());
-        serialize(jsonObject);
+            jsonObject.addProperty("type", inner.getType().getRegistryName().toString());
+        serializeRecipeData(jsonObject);
         return jsonObject;
     }
 
     @Override
-    public ResourceLocation getID() {
-        return inner.getID();
+    public ResourceLocation getId() {
+        return inner.getId();
     }
 
     @Override
-    public IRecipeSerializer<?> getSerializer() {
-        return serializerOverride != null? serializerOverride:inner.getSerializer();
-    }
-
-    @Nullable
-    @Override
-    public JsonObject getAdvancementJson() {
-        return inner.getAdvancementJson();
+    public RecipeSerializer<?> getType() {
+        return serializerOverride != null? serializerOverride:inner.getType();
     }
 
     @Nullable
     @Override
-    public ResourceLocation getAdvancementID() {
-        return inner.getAdvancementID();
+    public JsonObject serializeAdvancement() {
+        return inner.serializeAdvancement();
+    }
+
+    @Nullable
+    @Override
+    public ResourceLocation getAdvancementId() {
+        return inner.getAdvancementId();
     }
 }

@@ -2,8 +2,7 @@ package mob_grinding_utils.inventory.server;
 
 import javax.annotation.Nonnull;
 
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
 
@@ -20,17 +19,17 @@ public class RestrictedHandlerSlot extends SlotItemHandler {
     }
 
     @Override
-    public boolean isItemValid(@Nonnull ItemStack stack) {
+    public boolean mayPlace(@Nonnull ItemStack stack) {
         return item.test(stack);
     }
 
     @Override
-    public int getItemStackLimit(@Nonnull ItemStack stack) {
+    public int getMaxStackSize(@Nonnull ItemStack stack) {
         return maxItems;
     }
 
     @Override
-    public int getSlotStackLimit() {
+    public int getMaxStackSize() {
         return maxItems;
     }
 }

@@ -10,25 +10,25 @@ import mob_grinding_utils.ModBlocks;
 import mob_grinding_utils.ModItems;
 import mob_grinding_utils.inventory.server.ContainerXPSolidifier;
 import mob_grinding_utils.recipe.SolidifyRecipe;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.ISidedInventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.INamedContainerProvider;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.NetworkManager;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.network.play.server.SUpdateTileEntityPacket;
-import net.minecraft.tileentity.ITickableTileEntity;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.IStringSerializable;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.Container;
+import net.minecraft.world.WorldlyContainer;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.Connection;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.world.level.block.entity.TickableBlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.core.Direction;
+import net.minecraft.util.StringRepresentable;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.capabilities.Capability;
@@ -43,7 +43,7 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.ItemStackHandler;
 
-public class TileEntityXPSolidifier extends TileEntity implements ITickableTileEntity, INamedContainerProvider {
+public class TileEntityXPSolidifier extends BlockEntity implements TickableBlockEntity, MenuProvider {
 	public FluidTank tank = new FluidTank(FluidAttributes.BUCKET_VOLUME *  16);
 	private final LazyOptional<IFluidHandler> tank_holder = LazyOptional.of(() -> tank);
 	private int prevFluidLevel = 0;
@@ -63,7 +63,7 @@ public class TileEntityXPSolidifier extends TileEntity implements ITickableTileE
 		super(ModBlocks.XPSOLIDIFIER.getTileEntityType());
 	}
 
-	public enum OutputDirection implements IStringSerializable {
+	public enum OutputDirection implements StringRepresentable {
 		NONE("none"),
 		NORTH("north"),
 		EAST("east"),
@@ -74,7 +74,7 @@ public class TileEntityXPSolidifier extends TileEntity implements ITickableTileE
 		OutputDirection(String nameIn) {name = nameIn;}
 
 		@Override
-		public String getString() { return name; }
+		public String getSerializedName() { return name; }
 
 		public static OutputDirection fromString(String string) {
 			for (OutputDirection direction : OutputDirection.values())
@@ -104,7 +104,7 @@ public class TileEntityXPSolidifier extends TileEntity implements ITickableTileE
 				outputDirection = OutputDirection.NORTH;
 				break;
 		}
-		markDirty();
+		setChanged();
 		return outputDirection;
 	}
 
@@ -115,7 +115,7 @@ public class TileEntityXPSolidifier extends TileEntity implements ITickableTileE
 	@Override
 	public void tick() {
 		if(isOn) {
-			if (getWorld().isRemote && active) {
+			if (getLevel().isClientSide && active) {
 				prevAnimationTicks = animationTicks;
 				if (animationTicks < MAX_MOULDING_TIME)
 					animationTicks += 1 + getModifierAmount();
@@ -125,7 +125,7 @@ public class TileEntityXPSolidifier extends TileEntity implements ITickableTileE
 				}
 			}
 
-			if (getWorld().isRemote && !active)
+			if (getLevel().isClientSide && !active)
 				prevAnimationTicks = animationTicks = 0;
 
 			if (currentRecipe != null) {
@@ -152,7 +152,7 @@ public class TileEntityXPSolidifier extends TileEntity implements ITickableTileE
 			}
 
 			if (outputDirection != OutputDirection.NONE && getOutputFacing() != null) {
-				TileEntity tile = getWorld().getTileEntity(pos.offset(getOutputFacing()));
+				BlockEntity tile = getLevel().getBlockEntity(worldPosition.relative(getOutputFacing()));
 				if (tile != null && tile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, getOutputFacing().getOpposite()).isPresent()) {
 					LazyOptional<IItemHandler> tileOptional = tile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, getOutputFacing().getOpposite());
 					tileOptional.ifPresent((handler) -> {
@@ -162,19 +162,19 @@ public class TileEntityXPSolidifier extends TileEntity implements ITickableTileE
 							ItemStack stack1 = ItemHandlerHelper.insertItem(handler, stack, true);
 							if (stack1.isEmpty()) {
 								ItemHandlerHelper.insertItem(handler, outputSlot.extractItem(0, 1, false), false);
-								this.markDirty();
+								this.setChanged();
 							}
 						}
 					});
-				} else if (tile != null && tile instanceof IInventory) {
-					IInventory iinventory = (IInventory) tile;
+				} else if (tile != null && tile instanceof Container) {
+					Container iinventory = (Container) tile;
 					if (isInventoryFull(iinventory, getOutputFacing()))
 						return;
 					if (!outputSlot.getStackInSlot(0).isEmpty()) {
 						ItemStack stack = outputSlot.getStackInSlot(0).copy();
 						ItemStack stack1 = putStackInInventoryAllSlots(iinventory, outputSlot.extractItem(0, 1, false), getOutputFacing().getOpposite());
 						if (stack1.isEmpty() || stack1.getCount() == 0)
-							iinventory.markDirty();
+							iinventory.setChanged();
 						else
 							outputSlot.setStackInSlot(0, stack);
 					}
@@ -182,7 +182,7 @@ public class TileEntityXPSolidifier extends TileEntity implements ITickableTileE
 			}
 		}
 		else {
-			if (getWorld().isRemote)
+			if (getLevel().isClientSide)
 				prevAnimationTicks = animationTicks = 0;
 
 			if (getProgress() > 0) {
@@ -235,7 +235,7 @@ public class TileEntityXPSolidifier extends TileEntity implements ITickableTileE
 	}
 
 	private boolean hasfluid() {
-		return currentRecipe != null && !tank.getFluid().isEmpty() && tank.getFluid().getAmount() >= currentRecipe.getFluidAmount() && tank.getFluidInTank(0).getFluid().isIn(MobGrindingUtils.EXPERIENCE);
+		return currentRecipe != null && !tank.getFluid().isEmpty() && tank.getFluid().getAmount() >= currentRecipe.getFluidAmount() && tank.getFluidInTank(0).getFluid().is(MobGrindingUtils.EXPERIENCE);
 	}
 
 	private boolean canOperate() {
@@ -275,22 +275,22 @@ public class TileEntityXPSolidifier extends TileEntity implements ITickableTileE
 		return moulding_progress;
 	}
 
-	private boolean isInventoryFull(IInventory inventoryIn, Direction side) {
-		if (inventoryIn instanceof ISidedInventory) {
-			ISidedInventory isidedinventory = (ISidedInventory) inventoryIn;
+	private boolean isInventoryFull(Container inventoryIn, Direction side) {
+		if (inventoryIn instanceof WorldlyContainer) {
+			WorldlyContainer isidedinventory = (WorldlyContainer) inventoryIn;
 			int[] aint = isidedinventory.getSlotsForFace(side);
 
 			for (int k : aint) {
-				ItemStack itemstack1 = isidedinventory.getStackInSlot(k);
+				ItemStack itemstack1 = isidedinventory.getItem(k);
 
 				if (itemstack1.isEmpty() || itemstack1.getCount() != itemstack1.getMaxStackSize())
 					return false;
 			}
 		} else {
-			int i = inventoryIn.getSizeInventory();
+			int i = inventoryIn.getContainerSize();
 
 			for (int j = 0; j < i; ++j) {
-				ItemStack itemstack = inventoryIn.getStackInSlot(j);
+				ItemStack itemstack = inventoryIn.getItem(j);
 
 				if (itemstack.isEmpty() || itemstack.getCount() != itemstack.getMaxStackSize())
 					return false;
@@ -300,29 +300,29 @@ public class TileEntityXPSolidifier extends TileEntity implements ITickableTileE
 		return true;
 	}
 
-	public static ItemStack putStackInInventoryAllSlots(IInventory inventory, ItemStack stack, @Nullable Direction facing) {
-		if (inventory instanceof ISidedInventory && facing != null && !(inventory instanceof TileEntityXPSolidifier) && inventory.isItemValidForSlot(0, stack.copy())) {
-			ISidedInventory isidedinventory = (ISidedInventory)inventory;
+	public static ItemStack putStackInInventoryAllSlots(Container inventory, ItemStack stack, @Nullable Direction facing) {
+		if (inventory instanceof WorldlyContainer && facing != null && !(inventory instanceof TileEntityXPSolidifier) && inventory.canPlaceItem(0, stack.copy())) {
+			WorldlyContainer isidedinventory = (WorldlyContainer)inventory;
 			int[] aint = isidedinventory.getSlotsForFace(facing);
 			for (int k = 0; k < aint.length && !stack.isEmpty(); ++k)
 				stack = insertStack(inventory, stack, aint[k], facing);
 		} else {
-			int i = inventory.getSizeInventory();
+			int i = inventory.getContainerSize();
 			for (int j = 0; j < i && !stack.isEmpty(); ++j)
 				stack = insertStack(inventory, stack, j, facing);
 		}
 		return stack;
 	}
 
-	private static boolean canInsertItemInSlot(IInventory inventoryIn, ItemStack stack, int index, Direction side) {
-		return inventoryIn.isItemValidForSlot(index, stack) && (!(inventoryIn instanceof ISidedInventory) || ((ISidedInventory) inventoryIn).canInsertItem(index, stack, side));
+	private static boolean canInsertItemInSlot(Container inventoryIn, ItemStack stack, int index, Direction side) {
+		return inventoryIn.canPlaceItem(index, stack) && (!(inventoryIn instanceof WorldlyContainer) || ((WorldlyContainer) inventoryIn).canPlaceItemThroughFace(index, stack, side));
 	}
 
-	private static ItemStack insertStack( IInventory inventory, ItemStack stack, int index, Direction side) {
-		ItemStack itemstack = inventory.getStackInSlot(index);
+	private static ItemStack insertStack( Container inventory, ItemStack stack, int index, Direction side) {
+		ItemStack itemstack = inventory.getItem(index);
 		if (canInsertItemInSlot(inventory, stack, index, side)) {
 			if (itemstack.isEmpty()) {
-				inventory.setInventorySlotContents(index, stack);
+				inventory.setItem(index, stack);
 				stack = ItemStack.EMPTY;
 			}
 			else if (canCombine(itemstack, stack)) {
@@ -336,12 +336,12 @@ public class TileEntityXPSolidifier extends TileEntity implements ITickableTileE
 	}
 
 	private static boolean canCombine(ItemStack stack1, ItemStack stack2) {
-		return stack1.getItem() != stack2.getItem() ? false : (stack1.getDamage() != stack2.getDamage() ? false : (stack1.getCount() > stack1.getMaxStackSize() ? false : ItemStack.areItemStackTagsEqual(stack1, stack2)));
+		return stack1.getItem() != stack2.getItem() ? false : (stack1.getDamageValue() != stack2.getDamageValue() ? false : (stack1.getCount() > stack1.getMaxStackSize() ? false : ItemStack.tagMatches(stack1, stack2)));
 	}
 
 	@Override
-	public void read(BlockState state, CompoundNBT nbt) {
-		super.read(state, nbt);
+	public void load(BlockState state, CompoundTag nbt) {
+		super.load(state, nbt);
 		tank.readFromNBT(nbt);
 		inputSlots.deserializeNBT(nbt.getCompound("inputSlots"));
 		outputSlot.deserializeNBT(nbt.getCompound("outputSlot"));
@@ -361,12 +361,12 @@ public class TileEntityXPSolidifier extends TileEntity implements ITickableTileE
 	}
 
 	@Override
-	public CompoundNBT write(CompoundNBT nbt) {
-		super.write(nbt);
+	public CompoundTag save(CompoundTag nbt) {
+		super.save(nbt);
 		tank.writeToNBT(nbt);
 		nbt.put("inputSlots", inputSlots.serializeNBT());
 		nbt.put("outputSlot", outputSlot.serializeNBT());
-		nbt.putString("outputDirection", outputDirection.getString());
+		nbt.putString("outputDirection", outputDirection.getSerializedName());
 		nbt.putBoolean("isOn", isOn);
 		nbt.putBoolean("active", active);
 		nbt.putInt("moulding_progress", moulding_progress);
@@ -375,33 +375,33 @@ public class TileEntityXPSolidifier extends TileEntity implements ITickableTileE
 		return nbt;
 	}
 	@Override
-	public CompoundNBT getUpdateTag() {
-		CompoundNBT nbt = new CompoundNBT();
-		return write(nbt);
+	public CompoundTag getUpdateTag() {
+		CompoundTag nbt = new CompoundTag();
+		return save(nbt);
 	}
 
 	@Override
-	public SUpdateTileEntityPacket getUpdatePacket() {
-		CompoundNBT nbt = new CompoundNBT();
-		write(nbt);
-		return new SUpdateTileEntityPacket(getPos(), 0, nbt);
+	public ClientboundBlockEntityDataPacket getUpdatePacket() {
+		CompoundTag nbt = new CompoundTag();
+		save(nbt);
+		return new ClientboundBlockEntityDataPacket(getBlockPos(), 0, nbt);
 	}
 
 	@Override
-	public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket packet) {
-		read(getBlockState(), packet.getNbtCompound());
+	public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket packet) {
+		load(getBlockState(), packet.getTag());
 		onContentsChanged();
 	}
 
 	public void updateBlock() {
-		getWorld().notifyBlockUpdate(pos, getWorld().getBlockState(pos), getWorld().getBlockState(pos), 3);
+		getLevel().sendBlockUpdated(worldPosition, getLevel().getBlockState(worldPosition), getLevel().getBlockState(worldPosition), 3);
 	}
 
 	public void onContentsChanged() {
-		if (this != null && !getWorld().isRemote) {
-			final BlockState state = getWorld().getBlockState(getPos());
-			getWorld().notifyBlockUpdate(getPos(), state, state, 8);
-			markDirty();
+		if (this != null && !getLevel().isClientSide) {
+			final BlockState state = getLevel().getBlockState(getBlockPos());
+			getLevel().sendBlockUpdated(getBlockPos(), state, state, 8);
+			setChanged();
 		}
 	}
 
@@ -410,14 +410,14 @@ public class TileEntityXPSolidifier extends TileEntity implements ITickableTileE
 	}
 
 	@Override
-	public ITextComponent getDisplayName() {
-		return new StringTextComponent("block.mob_grinding_utils.xpsolidifier");
+	public Component getDisplayName() {
+		return new TextComponent("block.mob_grinding_utils.xpsolidifier");
 	}
 
 	@Nullable
 	@Override
-	public Container createMenu(int windowID, PlayerInventory playerInventory, PlayerEntity player) {
-		return new ContainerXPSolidifier(windowID, playerInventory, new PacketBuffer(Unpooled.buffer()).writeBlockPos(pos));
+	public AbstractContainerMenu createMenu(int windowID, Inventory playerInventory, Player player) {
+		return new ContainerXPSolidifier(windowID, playerInventory, new FriendlyByteBuf(Unpooled.buffer()).writeBlockPos(worldPosition));
 	}
 
 	@Nonnull

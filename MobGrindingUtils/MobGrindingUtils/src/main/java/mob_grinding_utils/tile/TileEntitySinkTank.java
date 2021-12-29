@@ -5,12 +5,12 @@ import java.util.List;
 import mob_grinding_utils.MobGrindingUtils;
 import mob_grinding_utils.ModBlocks;
 import mob_grinding_utils.network.MessageTapParticle;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.EntityPredicates;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.EntitySelector;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import net.minecraftforge.fml.network.PacketDistributor;
@@ -23,7 +23,7 @@ public class TileEntitySinkTank extends TileEntityTank {
 
 	@Override
 	public void tick() {
-		if (getWorld().isRemote)
+		if (getLevel().isClientSide)
 			return;
 		if (tank.getFluid().isEmpty() || tank.getFluid().containsFluid(new FluidStack(ModBlocks.FLUID_XP.get(), 1)))
 			captureDroppedXP();
@@ -31,35 +31,35 @@ public class TileEntitySinkTank extends TileEntityTank {
 	}
 
 	public boolean captureDroppedXP() {
-		for (PlayerEntity player : getCaptureXP(getWorld(), getPos().getX() + 0.5D, getPos().getY() + 0.5D, getPos().getZ() + 0.5D)) {
+		for (Player player : getCaptureXP(getLevel(), getBlockPos().getX() + 0.5D, getBlockPos().getY() + 0.5D, getBlockPos().getZ() + 0.5D)) {
 			int xpAmount = getPlayerXP(player);
 			if (xpAmount <= 0)
 				return false;
 			if (tank.getFluidAmount() < tank.getCapacity()) {
 				tank.fill(new FluidStack(ModBlocks.FLUID_XP.get(), 20), FluidAction.EXECUTE);
 				addPlayerXP(player, -1);
-				getWorld().playSound(null, player.getPosX(), player.getPosY(), player.getPosZ(), SoundEvents.ITEM_BOTTLE_FILL, SoundCategory.NEUTRAL , 0.1F, 0.5F * ((getWorld().rand.nextFloat() - getWorld().rand.nextFloat()) * 0.7F + 1.8F));
-				MobGrindingUtils.NETWORK_WRAPPER.send(PacketDistributor.ALL.noArg(), new MessageTapParticle(getPos().up()));
+				getLevel().playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.BOTTLE_FILL, SoundSource.NEUTRAL , 0.1F, 0.5F * ((getLevel().random.nextFloat() - getLevel().random.nextFloat()) * 0.7F + 1.8F));
+				MobGrindingUtils.NETWORK_WRAPPER.send(PacketDistributor.ALL.noArg(), new MessageTapParticle(getBlockPos().above()));
 			}
 			return true;
 		}
 		return false;
 	}
 
-	public List<PlayerEntity> getCaptureXP(World world, double x, double y, double z) {
-        return world.<PlayerEntity>getEntitiesWithinAABB(PlayerEntity.class, new AxisAlignedBB(x - 0.45D, y - 0.5D, z - 0.45D, x + 0.45D, y + 1.03D, z + 0.45D), EntityPredicates.IS_ALIVE);
+	public List<Player> getCaptureXP(Level world, double x, double y, double z) {
+        return world.<Player>getEntitiesOfClass(Player.class, new AABB(x - 0.45D, y - 0.5D, z - 0.45D, x + 0.45D, y + 1.03D, z + 0.45D), EntitySelector.ENTITY_STILL_ALIVE);
     }
 
-	public static void addPlayerXP(PlayerEntity player, int amount) {
+	public static void addPlayerXP(Player player, int amount) {
 		int experience = getPlayerXP(player) + amount;
-		player.experienceTotal = experience;
+		player.totalExperience = experience;
 		player.experienceLevel = getLevelForExperience(experience);
 		int expForLevel = getExperienceForLevel(player.experienceLevel);
-		player.experience = (float)(experience - expForLevel) / (float)player.xpBarCap();
+		player.experienceProgress = (float)(experience - expForLevel) / (float)player.getXpNeededForNextLevel();
 	}
 
-	public static int getPlayerXP(PlayerEntity player) {
-		return (int)(getExperienceForLevel(player.experienceLevel) + (player.experience * player.xpBarCap()));
+	public static int getPlayerXP(Player player) {
+		return (int)(getExperienceForLevel(player.experienceLevel) + (player.experienceProgress * player.getXpNeededForNextLevel()));
 	}
 
 	public static int getLevelForExperience(int experience) {

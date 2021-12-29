@@ -5,133 +5,133 @@ import javax.annotation.Nonnull;
 import mob_grinding_utils.ModBlocks;
 import mob_grinding_utils.ModSounds;
 import mob_grinding_utils.tile.TileEntityXPTap;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockRenderType;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.DirectionalBlock;
-import net.minecraft.block.ITileEntityProvider;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.item.ItemStack;
-import net.minecraft.state.BooleanProperty;
-import net.minecraft.state.StateContainer;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Hand;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.shapes.ISelectionContext;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.IWorldReader;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.RenderShape;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.DirectionalBlock;
+import net.minecraft.world.level.block.EntityBlock;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.core.Direction;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 
-public class BlockXPTap extends DirectionalBlock implements ITileEntityProvider {
+public class BlockXPTap extends DirectionalBlock implements EntityBlock {
 
-	public static final VoxelShape XP_TAP_WEST_AABB = Block.makeCuboidShape(7D, 6D, 4D, 16D, 16D, 12D);
-	public static final VoxelShape XP_TAP_EAST_AABB = Block.makeCuboidShape(0D, 6D, 4D, 9D, 16D, 12D);
-	public static final VoxelShape XP_TAP_SOUTH_AABB = Block.makeCuboidShape(4D, 6D, 0D, 12D, 16D, 9D);
-	public static final VoxelShape XP_TAP_NORTH_AABB = Block.makeCuboidShape(4D, 6D, 7D, 12D, 16D, 16D);
+	public static final VoxelShape XP_TAP_WEST_AABB = Block.box(7D, 6D, 4D, 16D, 16D, 12D);
+	public static final VoxelShape XP_TAP_EAST_AABB = Block.box(0D, 6D, 4D, 9D, 16D, 12D);
+	public static final VoxelShape XP_TAP_SOUTH_AABB = Block.box(4D, 6D, 0D, 12D, 16D, 9D);
+	public static final VoxelShape XP_TAP_NORTH_AABB = Block.box(4D, 6D, 7D, 12D, 16D, 16D);
 	public static final BooleanProperty POWERED = BooleanProperty.create("powered");
 
 	public BlockXPTap(Block.Properties properties) {
 		super(properties);
-		setDefaultState(this.stateContainer.getBaseState().with(POWERED, false));
+		registerDefaultState(this.stateDefinition.any().setValue(POWERED, false));
 	}
 
 	@Override
-	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
-		switch (state.get(FACING)) {
-		default:
-		case EAST:
-			return XP_TAP_EAST_AABB;
-		case WEST:
-			return XP_TAP_WEST_AABB;
-		case SOUTH:
-			return XP_TAP_SOUTH_AABB;
-		case NORTH:
-			return  XP_TAP_NORTH_AABB;
+	public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
+		switch (state.getValue(FACING)) {
+			default:
+			case EAST:
+				return XP_TAP_EAST_AABB;
+			case WEST:
+				return XP_TAP_WEST_AABB;
+			case SOUTH:
+				return XP_TAP_SOUTH_AABB;
+			case NORTH:
+				return  XP_TAP_NORTH_AABB;
 		}
 	}
 
 	@Override
-	public VoxelShape getRaytraceShape(BlockState state, @Nonnull IBlockReader worldIn, @Nonnull BlockPos pos) {
-		switch (state.get(FACING)) {
-		default:
-		case EAST:
-			return XP_TAP_EAST_AABB;
-		case WEST:
-			return XP_TAP_WEST_AABB;
-		case SOUTH:
-			return XP_TAP_SOUTH_AABB;
-		case NORTH:
-			return  XP_TAP_NORTH_AABB;
+	public VoxelShape getInteractionShape(BlockState state, @Nonnull BlockGetter worldIn, @Nonnull BlockPos pos) {
+		switch (state.getValue(FACING)) {
+			default:
+			case EAST:
+				return XP_TAP_EAST_AABB;
+			case WEST:
+				return XP_TAP_WEST_AABB;
+			case SOUTH:
+				return XP_TAP_SOUTH_AABB;
+			case NORTH:
+				return  XP_TAP_NORTH_AABB;
 		}
 	}
 
 	@Override
-	public BlockRenderType getRenderType(BlockState state) {
-		return BlockRenderType.MODEL;
+	public RenderShape getRenderShape(BlockState state) {
+		return RenderShape.MODEL;
 	}
 
 	@Override
-	public BlockState getStateForPlacement(BlockItemUseContext context) {
-		Direction direction = context.getFace();
-		return this.getDefaultState().with(FACING, direction).with(POWERED, false);
+	public BlockState getStateForPlacement(BlockPlaceContext context) {
+		Direction direction = context.getClickedFace();
+		return this.defaultBlockState().setValue(FACING, direction).setValue(POWERED, false);
 	}
 	
 	@Override
-	public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
-		if (!world.isRemote) {
-			boolean swap = state.get(POWERED);
-			world.setBlockState(pos, state.with(POWERED, !swap), 3);
-			float f = state.get(POWERED) ? 0.6F : 0.5F;
-			world.playSound(null, pos, ModSounds.TAP_SQUEAK, SoundCategory.BLOCKS, 0.3F, f);
-			TileEntityXPTap tileentity = (TileEntityXPTap) world.getTileEntity(pos);
+	public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+		if (!world.isClientSide) {
+			boolean swap = state.getValue(POWERED);
+			world.setBlock(pos, state.setValue(POWERED, !swap), 3);
+			float f = state.getValue(POWERED) ? 0.6F : 0.5F;
+			world.playSound(null, pos, ModSounds.TAP_SQUEAK, SoundSource.BLOCKS, 0.3F, f);
+			TileEntityXPTap tileentity = (TileEntityXPTap) world.getBlockEntity(pos);
 			tileentity.setActive(!swap);
 		}
-		return ActionResultType.SUCCESS;
+		return InteractionResult.SUCCESS;
 	}
 
 	@Override
-	public boolean isValidPosition(BlockState state, IWorldReader world, BlockPos pos) {
+	public boolean canSurvive(BlockState state, LevelReader world, BlockPos pos) {
 		for (Direction enumfacing : Direction.values()) {
-			if (canPlaceAt(world, pos.offset(enumfacing.getOpposite()), enumfacing))
+			if (canPlaceAt(world, pos.relative(enumfacing.getOpposite()), enumfacing))
 				return true;
 		}
 		return false;
 	}
 
-	private boolean canPlaceAt(IWorldReader world, BlockPos pos, Direction facing) {
+	private boolean canPlaceAt(LevelReader world, BlockPos pos, Direction facing) {
 		BlockState blockstate = world.getBlockState(pos);
 		boolean isSide = facing.getAxis().isHorizontal();
-		TileEntity te = world.getTileEntity(pos);
+		BlockEntity te = world.getBlockEntity(pos);
 		if (te != null && te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY).isPresent() && isSide)
 			return true;
 		return isSide && blockstate.getBlock() instanceof BlockTank;
 	}
 
 	@Override
-	public void neighborChanged(BlockState state, World world, BlockPos pos, Block block, BlockPos fromPos, boolean isMoving) {
-		Direction facing = world.getBlockState(pos).get(FACING);
-		if (!canPlaceAt(world, pos.offset(facing.getOpposite()), facing)) {
-			spawnAsEntity(world, pos, new ItemStack(ModBlocks.XP_TAP.getItem(), 1));
-			world.setBlockState(pos, Blocks.AIR.getDefaultState());
+	public void neighborChanged(BlockState state, Level world, BlockPos pos, Block block, BlockPos fromPos, boolean isMoving) {
+		Direction facing = world.getBlockState(pos).getValue(FACING);
+		if (!canPlaceAt(world, pos.relative(facing.getOpposite()), facing)) {
+			popResource(world, pos, new ItemStack(ModBlocks.XP_TAP.getItem(), 1));
+			world.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
 		}
 		super.neighborChanged(state, world, pos, block, fromPos, isMoving);
 	}
 
 	@Override
-	protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
+	protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
 		builder.add(FACING, POWERED);
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(IBlockReader world) {
+	public BlockEntity newBlockEntity(@Nonnull BlockPos pos, @Nonnull BlockState state) {
 		return new TileEntityXPTap();
 	}
 }

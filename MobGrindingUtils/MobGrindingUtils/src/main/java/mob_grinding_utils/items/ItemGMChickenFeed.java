@@ -6,15 +6,17 @@ import java.util.Objects;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.network.chat.Component;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+
+import net.minecraft.world.item.Item.Properties;
 
 public class ItemGMChickenFeed extends Item {
 	public String type;
@@ -25,19 +27,19 @@ public class ItemGMChickenFeed extends Item {
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void addInformation(@Nonnull ItemStack stack, @Nullable World world, List<ITextComponent> list, @Nonnull ITooltipFlag flag) {
-		list.add(new TranslationTextComponent("tooltip.chickenfeed_1").mergeStyle(TextFormatting.YELLOW));
-		list.add(new TranslationTextComponent("tooltip.chickenfeed_2").mergeStyle(TextFormatting.YELLOW));
+	public void appendHoverText(@Nonnull ItemStack stack, @Nullable Level world, List<Component> list, @Nonnull TooltipFlag flag) {
+		list.add(new TranslatableComponent("tooltip.chickenfeed_1").withStyle(ChatFormatting.YELLOW));
+		list.add(new TranslatableComponent("tooltip.chickenfeed_2").withStyle(ChatFormatting.YELLOW));
 
 		if (type.equals("mob"))
 			if (stack.hasTag() && Objects.requireNonNull(stack.getTag()).contains("mguMobName"))
-				list.add(new TranslationTextComponent("tooltip.chickenfeed_3").mergeStyle(TextFormatting.GREEN).appendString(" " + stack.getTag().get("mguMobName") + " 'DNA'."));
+				list.add(new TranslatableComponent("tooltip.chickenfeed_3").withStyle(ChatFormatting.GREEN).append(" " + stack.getTag().get("mguMobName") + " 'DNA'."));
 
 		if (type.equals("cursed"))
-			list.add(new TranslationTextComponent("tooltip.chickenfeed_4").mergeStyle(TextFormatting.YELLOW));
+			list.add(new TranslatableComponent("tooltip.chickenfeed_4").withStyle(ChatFormatting.YELLOW));
 
 		if (type.equals("nutritious"))
-			list.add(new TranslationTextComponent("tooltip.chickenfeed_5").mergeStyle(TextFormatting.YELLOW));
+			list.add(new TranslatableComponent("tooltip.chickenfeed_5").withStyle(ChatFormatting.YELLOW));
 	}
 
 }

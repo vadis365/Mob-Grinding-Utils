@@ -1,31 +1,31 @@
 package mob_grinding_utils.inventory.server;
 
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.container.Slot;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.Container;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
 
 public class SlotRestriction extends Slot {
 	ItemStack item;
 	int maxItems;
 
-	public SlotRestriction(IInventory inventory, int slotIndex, int x, int y, ItemStack item, int maxItems) {
+	public SlotRestriction(Container inventory, int slotIndex, int x, int y, ItemStack item, int maxItems) {
 		super(inventory, slotIndex, x, y);
 		this.item = item;
 		this.maxItems = maxItems;
 	}
 
 	@Override
-	public boolean isItemValid(ItemStack stack) {
-		return stack.getItem() == item.getItem() && stack.getDamage() == item.getDamage();
+	public boolean mayPlace(ItemStack stack) {
+		return stack.getItem() == item.getItem() && stack.getDamageValue() == item.getDamageValue();
 	}
 
 	@Override
-    public int getSlotStackLimit() {
+    public int getMaxStackSize() {
         return maxItems;
     }
 
 	@Override	
-    public int getItemStackLimit(ItemStack stack) {
-        return this.getSlotStackLimit();
+    public int getMaxStackSize(ItemStack stack) {
+        return this.getMaxStackSize();
     }
 }

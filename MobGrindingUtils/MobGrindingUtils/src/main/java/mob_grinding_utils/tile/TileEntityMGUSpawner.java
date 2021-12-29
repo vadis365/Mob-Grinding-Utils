@@ -11,34 +11,34 @@ import io.netty.buffer.Unpooled;
 import mob_grinding_utils.ModBlocks;
 import mob_grinding_utils.ModItems;
 import mob_grinding_utils.inventory.server.ContainerMGUSpawner;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntitySpawnPlacementRegistry;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.MobEntity;
-import net.minecraft.entity.SpawnReason;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.INamedContainerProvider;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.SpawnEggItem;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.NetworkManager;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.network.play.server.SUpdateTileEntityPacket;
-import net.minecraft.tileentity.ITickableTileEntity;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.EntityPredicates;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.world.IServerWorld;
-import net.minecraft.world.World;
-import net.minecraft.world.spawner.WorldEntitySpawner;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.SpawnPlacements;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.SpawnEggItem;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.Connection;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.world.level.block.entity.TickableBlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.core.Direction;
+import net.minecraft.world.entity.EntitySelector;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.core.BlockPos;
+import net.minecraft.util.Mth;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.world.level.ServerLevelAccessor;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.NaturalSpawner;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.capabilities.Capability;
@@ -47,7 +47,7 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 
-public class TileEntityMGUSpawner extends TileEntity implements ITickableTileEntity, INamedContainerProvider {
+public class TileEntityMGUSpawner extends BlockEntity implements TickableBlockEntity, MenuProvider {
 
     public int spawning_progress = 0;
     public int MAX_SPAWNING_TIME = 100;
@@ -77,7 +77,7 @@ public class TileEntityMGUSpawner extends TileEntity implements ITickableTileEnt
     @Override
     public void tick() {
     	if(isOn) {
-			if (getWorld().isRemote) {
+			if (getLevel().isClientSide) {
 				prevAnimationTicks = animationTicks;
 				if (animationTicks < 360)
 					animationTicks += 9;
@@ -86,7 +86,7 @@ public class TileEntityMGUSpawner extends TileEntity implements ITickableTileEnt
 					prevAnimationTicks -= 360;
 				}
 			}
-			if (!getWorld().isRemote) {
+			if (!getLevel().isClientSide) {
 				if (canOperate()) {
 					setProgress(getProgress() + 1 + getSpeedModifierAmount());
 					if (getProgress() >= MAX_SPAWNING_TIME) {
@@ -102,10 +102,10 @@ public class TileEntityMGUSpawner extends TileEntity implements ITickableTileEnt
 			}
 		}
 		else {
-			if (getWorld().isRemote)
+			if (getLevel().isClientSide)
 				prevAnimationTicks = animationTicks = 0;
 
-			if (!getWorld().isRemote)
+			if (!getLevel().isClientSide)
 				if (getProgress() > 0)
 					setProgress(0);
 		}
@@ -118,23 +118,23 @@ public class TileEntityMGUSpawner extends TileEntity implements ITickableTileEnt
 			type = eggItem.getType(null);
 
 			if (type != null) {
-				AxisAlignedBB axisalignedbb = getAABBWithModifiers();
-				int minX = MathHelper.floor(axisalignedbb.minX);
-				int maxX = MathHelper.floor(axisalignedbb.maxX);
-				int minY = MathHelper.floor(axisalignedbb.minY);
-				int maxY = MathHelper.floor(axisalignedbb.maxY);
-				int minZ = MathHelper.floor(axisalignedbb.minZ);
-				int maxZ = MathHelper.floor(axisalignedbb.maxZ);
-				BlockPos.Mutable mutablePos = new BlockPos.Mutable();
-				MobEntity entity = (MobEntity) type.create(getWorld());
+				AABB axisalignedbb = getAABBWithModifiers();
+				int minX = Mth.floor(axisalignedbb.minX);
+				int maxX = Mth.floor(axisalignedbb.maxX);
+				int minY = Mth.floor(axisalignedbb.minY);
+				int maxY = Mth.floor(axisalignedbb.maxY);
+				int minZ = Mth.floor(axisalignedbb.minZ);
+				int maxZ = Mth.floor(axisalignedbb.maxZ);
+				BlockPos.MutableBlockPos mutablePos = new BlockPos.MutableBlockPos();
+				Mob entity = (Mob) type.create(getLevel());
 				List<BlockPos> posArrayList = new ArrayList<BlockPos>();
 			if (entity != null) {
 				for (int x = minX; x < maxX; x++) {
 					for (int y = minY; y < maxY; y++) {
 						for (int z = minZ; z < maxZ; z++) {
 							BlockPos posList = new BlockPos(x, y, z);
-							entity.setPosition(posList.getX() + 0.5D, posList.getY(), posList.getZ() + 0.5D);
-							if (isValidSpawnLocation(getWorld(), type, entity, posList)) {
+							entity.setPos(posList.getX() + 0.5D, posList.getY(), posList.getZ() + 0.5D);
+							if (isValidSpawnLocation(getLevel(), type, entity, posList)) {
 								posArrayList.add(posList);
 							}
 						}
@@ -142,9 +142,9 @@ public class TileEntityMGUSpawner extends TileEntity implements ITickableTileEnt
 				}
 				if (!posArrayList.isEmpty()) {
 					Collections.shuffle(posArrayList);
-					entity.setPosition(posArrayList.get(0).getX() + 0.5D, posArrayList.get(0).getY(), posArrayList.get(0).getZ() + 0.5D);
-					entity.onInitialSpawn((IServerWorld) getWorld(), getWorld().getDifficultyForLocation(posArrayList.get(0)), SpawnReason.NATURAL, null, null);
-					getWorld().addEntity(entity);
+					entity.setPos(posArrayList.get(0).getX() + 0.5D, posArrayList.get(0).getY(), posArrayList.get(0).getZ() + 0.5D);
+					entity.finalizeSpawn((ServerLevelAccessor) getLevel(), getLevel().getCurrentDifficultyAt(posArrayList.get(0)), MobSpawnType.NATURAL, null, null);
+					getLevel().addFreshEntity(entity);
 					return true;
 				}
 			}
@@ -152,13 +152,13 @@ public class TileEntityMGUSpawner extends TileEntity implements ITickableTileEnt
 		return false;
 	}
 
-	public boolean isValidSpawnLocation(World world, EntityType<?> type, Entity entity, BlockPos pos) {
-		return WorldEntitySpawner.canCreatureTypeSpawnAtLocation(EntitySpawnPlacementRegistry.getPlacementType(type), world, pos, type) && world.getEntitiesWithinAABB(entity.getType(), entity.getBoundingBox(), EntityPredicates.IS_ALIVE).isEmpty() && getWorld().hasNoCollisions(entity);
+	public boolean isValidSpawnLocation(Level world, EntityType<?> type, Entity entity, BlockPos pos) {
+		return NaturalSpawner.isSpawnPositionOk(SpawnPlacements.getPlacementType(type), world, pos, type) && world.getEntities(entity.getType(), entity.getBoundingBox(), EntitySelector.ENTITY_STILL_ALIVE).isEmpty() && getLevel().noCollision(entity);
 	}
 
 	public void toggleRenderBox() {
 		showRenderBox = !showRenderBox;
-		markDirty();
+		setChanged();
 	}
 
 	public void toggleOffset(int direction) {
@@ -188,7 +188,7 @@ public class TileEntityMGUSpawner extends TileEntity implements ITickableTileEnt
 				offsetX = getoffsetX() + 1;
 			break;
 		}
-		markDirty();
+		setChanged();
 	}
 
 	@OnlyIn(Dist.CLIENT)
@@ -232,21 +232,21 @@ public class TileEntityMGUSpawner extends TileEntity implements ITickableTileEnt
 		return hasSpeedUpgrade() ? inputSlots.getStackInSlot(3).getCount() : 0;
 	}
 
-	public AxisAlignedBB getAABBWithModifiers() {
-		double x = getPos().getX() + 0.5D;
-		double y = getPos().getY() + 0.5D;
-		double z = getPos().getZ() + 0.5D;
-		return new AxisAlignedBB(x - 1.5D - getWidthModifierAmount(), y - 0.5D - getHeightModifierAmount(), z - 1.5D - getWidthModifierAmount(), x + 1.5D + getWidthModifierAmount(), y + 0.5D + getHeightModifierAmount(), z + 1.5D + getWidthModifierAmount()).offset(getoffsetX(), getoffsetY(), getoffsetZ());
+	public AABB getAABBWithModifiers() {
+		double x = getBlockPos().getX() + 0.5D;
+		double y = getBlockPos().getY() + 0.5D;
+		double z = getBlockPos().getZ() + 0.5D;
+		return new AABB(x - 1.5D - getWidthModifierAmount(), y - 0.5D - getHeightModifierAmount(), z - 1.5D - getWidthModifierAmount(), x + 1.5D + getWidthModifierAmount(), y + 0.5D + getHeightModifierAmount(), z + 1.5D + getWidthModifierAmount()).move(getoffsetX(), getoffsetY(), getoffsetZ());
 	}
 
 	@OnlyIn(Dist.CLIENT)
-	public AxisAlignedBB getAABBForRender() {
-		return new AxisAlignedBB(- 1D - getWidthModifierAmount(), - 0D - getHeightModifierAmount(), - 1D - getWidthModifierAmount(), 2D + getWidthModifierAmount(), 1D + getHeightModifierAmount(), 2D + getWidthModifierAmount()).offset(getoffsetX(), getoffsetY(), getoffsetZ());
+	public AABB getAABBForRender() {
+		return new AABB(- 1D - getWidthModifierAmount(), - 0D - getHeightModifierAmount(), - 1D - getWidthModifierAmount(), 2D + getWidthModifierAmount(), 1D + getHeightModifierAmount(), 2D + getWidthModifierAmount()).move(getoffsetX(), getoffsetY(), getoffsetZ());
 	}
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public AxisAlignedBB getRenderBoundingBox() {
+	public AABB getRenderBoundingBox() {
 		return getAABBWithModifiers();
 	}
 
@@ -272,8 +272,8 @@ public class TileEntityMGUSpawner extends TileEntity implements ITickableTileEnt
 	}
 
     @Override
-    public void read(BlockState state, CompoundNBT nbt) {
-        super.read(state, nbt);
+    public void load(BlockState state, CompoundTag nbt) {
+        super.load(state, nbt);
         inputSlots.deserializeNBT(nbt.getCompound("inputSlots"));
         fuelSlot.deserializeNBT(nbt.getCompound("fuelSlot"));
         isOn = nbt.getBoolean("isOn");
@@ -285,8 +285,8 @@ public class TileEntityMGUSpawner extends TileEntity implements ITickableTileEnt
     }
 
     @Override
-    public CompoundNBT write(CompoundNBT nbt) {
-        super.write(nbt);
+    public CompoundTag save(CompoundTag nbt) {
+        super.save(nbt);
         nbt.put("inputSlots", inputSlots.serializeNBT());
         nbt.put("fuelSlot", fuelSlot.serializeNBT());
         nbt.putBoolean("isOn", isOn);
@@ -299,36 +299,36 @@ public class TileEntityMGUSpawner extends TileEntity implements ITickableTileEnt
     }
 
     @Override
-    public CompoundNBT getUpdateTag() {
-        CompoundNBT nbt = new CompoundNBT();
-        return write(nbt);
+    public CompoundTag getUpdateTag() {
+        CompoundTag nbt = new CompoundTag();
+        return save(nbt);
     }
 
     @Override
-    public SUpdateTileEntityPacket getUpdatePacket() {
-        CompoundNBT nbt = new CompoundNBT();
-        write(nbt);
-        return new SUpdateTileEntityPacket(getPos(), 0, nbt);
+    public ClientboundBlockEntityDataPacket getUpdatePacket() {
+        CompoundTag nbt = new CompoundTag();
+        save(nbt);
+        return new ClientboundBlockEntityDataPacket(getBlockPos(), 0, nbt);
     }
 
     @Override
-    public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket packet) {
-        read(getBlockState(), packet.getNbtCompound());
+    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket packet) {
+        load(getBlockState(), packet.getTag());
     }
 
     public void updateBlock() {
-        getWorld().notifyBlockUpdate(pos, getWorld().getBlockState(pos), getWorld().getBlockState(pos), 3);
+        getLevel().sendBlockUpdated(worldPosition, getLevel().getBlockState(worldPosition), getLevel().getBlockState(worldPosition), 3);
     }
 
     @Override
-    public ITextComponent getDisplayName() {
-        return new StringTextComponent("block.mob_grinding_utils.entity_spawner");
+    public Component getDisplayName() {
+        return new TextComponent("block.mob_grinding_utils.entity_spawner");
     }
 
     @Nullable
 	@Override
-	public Container createMenu(int windowID, PlayerInventory playerInventory, PlayerEntity player) {
-        return new ContainerMGUSpawner(windowID, playerInventory, new PacketBuffer(Unpooled.buffer()).writeBlockPos(pos));
+	public AbstractContainerMenu createMenu(int windowID, Inventory playerInventory, Player player) {
+        return new ContainerMGUSpawner(windowID, playerInventory, new FriendlyByteBuf(Unpooled.buffer()).writeBlockPos(worldPosition));
     }
 
 	@OnlyIn(Dist.CLIENT)
@@ -337,7 +337,7 @@ public class TileEntityMGUSpawner extends TileEntity implements ITickableTileEnt
 		if (hasSpawnEggItem()) {
 			ItemStack eggStack = inputSlots.getStackInSlot(0);
 			SpawnEggItem eggItem = (SpawnEggItem) eggStack.getItem();
-			entity = eggItem.getType(null).create(getWorld());
+			entity = eggItem.getType(null).create(getLevel());
 		}
 		return entity;
 	}

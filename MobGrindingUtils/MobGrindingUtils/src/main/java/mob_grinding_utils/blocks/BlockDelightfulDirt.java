@@ -4,29 +4,28 @@ import java.util.List;
 import java.util.Random;
 
 import mob_grinding_utils.MobGrindingUtils;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.material.Material;
-import net.minecraft.entity.EntityClassification;
-import net.minecraft.entity.EntitySpawnPlacementRegistry;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.MobEntity;
-import net.minecraft.entity.SpawnReason;
-import net.minecraft.util.Direction;
-import net.minecraft.util.EntityPredicates;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.IWorld;
-import net.minecraft.world.IWorldReader;
-import net.minecraft.world.World;
-import net.minecraft.world.biome.MobSpawnInfo.Spawners;
-import net.minecraft.world.gen.feature.ConfiguredFeature;
-import net.minecraft.world.gen.feature.FlowersFeature;
-import net.minecraft.world.server.ServerWorld;
-import net.minecraft.world.spawner.WorldEntitySpawner;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.entity.MobCategory;
+import net.minecraft.world.entity.SpawnPlacements;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.core.Direction;
+import net.minecraft.world.entity.EntitySelector;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.core.BlockPos;
+import net.minecraft.util.Mth;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.biome.MobSpawnSettings.SpawnerData;
+import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.NaturalSpawner;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.IPlantable;
@@ -37,55 +36,55 @@ public class BlockDelightfulDirt extends Block {
 		super(properties);
 	}
 
-	public boolean shouldSnowCap(World world, BlockPos pos) {
+	public boolean shouldSnowCap(Level world, BlockPos pos) {
 		// standard night ticks
-		return world.canBlockSeeSky(pos) && (world.getDayTime() >= 13000 && world.getDayTime() <= 23000);
+		return world.canSeeSkyFromBelowWater(pos) && (world.getDayTime() >= 13000 && world.getDayTime() <= 23000);
 	}
 
-	public boolean shouldSpawnMob(World world, BlockPos pos) {
-		return world.getLight(pos.up()) >= 10 && world.getBlockState(pos.up()).getMaterial() == Material.AIR;
+	public boolean shouldSpawnMob(Level world, BlockPos pos) {
+		return world.getMaxLocalRawBrightness(pos.above()) >= 10 && world.getBlockState(pos.above()).getMaterial() == Material.AIR;
 	}
 
 	@Override
-	public void onBlockAdded(BlockState state, World world, BlockPos pos, BlockState oldState, boolean isMoving) {
+	public void onPlace(BlockState state, Level world, BlockPos pos, BlockState oldState, boolean isMoving) {
 		if (shouldSnowCap(world, pos) || shouldSpawnMob(world, pos))
-			world.getPendingBlockTicks().scheduleTick(pos, this, MathHelper.nextInt(RANDOM, 20,60));
+			world.getBlockTicks().scheduleTick(pos, this, Mth.nextInt(RANDOM, 20,60));
 	}
 
 	@SuppressWarnings("deprecation")
 	@Override
-	public BlockState updatePostPlacement(BlockState stateIn, Direction facing, BlockState facingState, IWorld world, BlockPos pos, BlockPos facingPos) {
-		if (shouldSnowCap((World) world, pos) || shouldSpawnMob((World) world, pos))
-			world.getPendingBlockTicks().scheduleTick(pos, this, MathHelper.nextInt(RANDOM, 20, 60));
-		return super.updatePostPlacement(stateIn, facing, facingState, world, pos, facingPos);
+	public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, LevelAccessor world, BlockPos pos, BlockPos facingPos) {
+		if (shouldSnowCap((Level) world, pos) || shouldSpawnMob((Level) world, pos))
+			world.getBlockTicks().scheduleTick(pos, this, Mth.nextInt(RANDOM, 20, 60));
+		return super.updateShape(stateIn, facing, facingState, world, pos, facingPos);
 	}
 
 	@Override
-	public void neighborChanged(BlockState state, World world, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving) {
-		if (shouldSnowCap((World) world, pos) || shouldSpawnMob((World) world, pos))
-			world.getPendingBlockTicks().scheduleTick(pos, this, MathHelper.nextInt(RANDOM, 20, 60));
+	public void neighborChanged(BlockState state, Level world, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving) {
+		if (shouldSnowCap((Level) world, pos) || shouldSpawnMob((Level) world, pos))
+			world.getBlockTicks().scheduleTick(pos, this, Mth.nextInt(RANDOM, 20, 60));
 	}
 
 	@SuppressWarnings("unchecked")
 	@Deprecated
 	@Override
-	public void tick(BlockState state, ServerWorld world, BlockPos pos, Random rand) {
+	public void tick(BlockState state, ServerLevel world, BlockPos pos, Random rand) {
 		if (shouldSnowCap(world, pos)) {
-			BlockPos posUp = pos.up();
-			BlockState blockstate = Blocks.SNOW.getDefaultState();
-			if (world.getBlockState(posUp).getMaterial() == Material.AIR && blockstate.isValidPosition(world, posUp))
-				world.setBlockState(posUp, blockstate, 11);
+			BlockPos posUp = pos.above();
+			BlockState blockstate = Blocks.SNOW.defaultBlockState();
+			if (world.getBlockState(posUp).getMaterial() == Material.AIR && blockstate.canSurvive(world, posUp))
+				world.setBlock(posUp, blockstate, 11);
 		}
 		if (!shouldSnowCap(world, pos) && shouldSpawnMob(world, pos)) {
-			AxisAlignedBB areaToCheck = new AxisAlignedBB(pos).grow(5, 2, 5);
-			int entityCount = world.getEntitiesWithinAABB(MobEntity.class, areaToCheck, entity -> entity != null && entity.getType().getClassification() == EntityClassification.CREATURE).size();
+			AABB areaToCheck = new AABB(pos).inflate(5, 2, 5);
+			int entityCount = world.getEntitiesOfClass(Mob.class, areaToCheck, entity -> entity != null && entity.getType().getCategory() == MobCategory.CREATURE).size();
 
 			if (entityCount < 8)
 				spawnMob(world, pos);
 
 			if (world.getGameTime() % 20 == 0) {
-				BlockPos posUp = pos.up();
-				BlockState blockstate = Blocks.GRASS.getDefaultState();
+				BlockPos posUp = pos.above();
+				BlockState blockstate = Blocks.GRASS.defaultBlockState();
 				if (world.getBlockState(posUp).getMaterial() == Material.AIR) {
 					if (rand.nextInt(8) == 0) {
 						List<ConfiguredFeature<?, ?>> list = world.getBiome(posUp).getGenerationSettings().getFlowerFeatures();
@@ -93,59 +92,59 @@ public class BlockDelightfulDirt extends Block {
 							return;
 						ConfiguredFeature<?, ?> configuredfeature = list.get(0);
 						@SuppressWarnings("rawtypes")
-						FlowersFeature flowersfeature = (FlowersFeature) configuredfeature.feature;
-						blockstate = flowersfeature.getFlowerToPlace(rand, posUp, configuredfeature.config);
+						AbstractFlowerFeature flowersfeature = (AbstractFlowerFeature) configuredfeature.feature;
+						blockstate = flowersfeature.getRandomFlower(rand, posUp, configuredfeature.config);
 					}
-					if (blockstate.isValidPosition(world, posUp))
-						world.setBlockState(posUp, blockstate, 3);
+					if (blockstate.canSurvive(world, posUp))
+						world.setBlock(posUp, blockstate, 3);
 				}
 
 			}
 		}
 	}
 
-	public void spawnMob(ServerWorld world, BlockPos pos) {
-		List<Spawners> spawns = world.getBiome(pos).getMobSpawnInfo().getSpawners(EntityClassification.CREATURE);
+	public void spawnMob(ServerLevel world, BlockPos pos) {
+		List<SpawnerData> spawns = world.getBiome(pos).getMobSettings().getMobs(MobCategory.CREATURE);
 		if (!spawns.isEmpty()) {
 			int indexSize = spawns.size();
 			EntityType<?> type = spawns.get(RANDOM.nextInt(indexSize)).type;
-			if (type == null || !WorldEntitySpawner.canCreatureTypeSpawnAtLocation(EntitySpawnPlacementRegistry.getPlacementType(type), world, pos.up(), type))
+			if (type == null || !NaturalSpawner.isSpawnPositionOk(SpawnPlacements.getPlacementType(type), world, pos.above(), type))
 				return;
-			MobEntity entity = (MobEntity) type.create(world);
+			Mob entity = (Mob) type.create(world);
 			if (entity != null) {
-				entity.setPosition(pos.getX() + 0.5D, pos.getY() + 1D, pos.getZ() + 0.5D);
-				if (world.getEntitiesWithinAABB(entity.getType(), entity.getBoundingBox(), EntityPredicates.IS_ALIVE).isEmpty() && world.hasNoCollisions(entity)) {
-					entity.onInitialSpawn(world, world.getDifficultyForLocation(pos), SpawnReason.NATURAL, null, null);
-					world.addEntity(entity);
+				entity.setPos(pos.getX() + 0.5D, pos.getY() + 1D, pos.getZ() + 0.5D);
+				if (world.getEntities(entity.getType(), entity.getBoundingBox(), EntitySelector.ENTITY_STILL_ALIVE).isEmpty() && world.noCollision(entity)) {
+					entity.finalizeSpawn(world, world.getCurrentDifficultyAt(pos), MobSpawnType.NATURAL, null, null);
+					world.addFreshEntity(entity);
 				 }
 			}
 		}
 	}
 
 	@Override
-	public boolean canSustainPlant(BlockState state, IBlockReader world, BlockPos pos, Direction facing, IPlantable plantable) {
+	public boolean canSustainPlant(BlockState state, BlockGetter world, BlockPos pos, Direction facing, IPlantable plantable) {
 		return true;
 	}
 
 	@Override
-    public  boolean isFlammable(BlockState state, IBlockReader world, BlockPos pos, Direction face) {
+    public  boolean isFlammable(BlockState state, BlockGetter world, BlockPos pos, Direction face) {
         return true;
     }
 
 	@Override
-	public int getFlammability(BlockState state, IBlockReader world, BlockPos pos, Direction face) {
+	public int getFlammability(BlockState state, BlockGetter world, BlockPos pos, Direction face) {
         return 200;
     }
 
 	@Override
-    public boolean isFireSource(BlockState state, IWorldReader world, BlockPos pos, Direction side) {
+    public boolean isFireSource(BlockState state, LevelReader world, BlockPos pos, Direction side) {
 		return side == Direction.UP;
 	}
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void animateTick(BlockState stateIn, World world, BlockPos pos, Random rand) {
-		if(world.getGameTime()%3 == 0 && world.getBlockState(pos.up()).getMaterial() == Material.AIR) {
+	public void animateTick(BlockState stateIn, Level world, BlockPos pos, Random rand) {
+		if(world.getGameTime()%3 == 0 && world.getBlockState(pos.above()).getMaterial() == Material.AIR) {
 			for (int i = 0; i < 4; ++i) {
 				double d0 = (double) ((float) pos.getX( ));
 				double d1 = (double) ((float) pos.getY() + 1D);

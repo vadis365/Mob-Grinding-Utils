@@ -1,18 +1,18 @@
 package mob_grinding_utils.blocks;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.state.BooleanProperty;
-import net.minecraft.state.StateContainer;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.world.level.Level;
 
 public class BlockDragonMuffler extends Block {
 
@@ -20,27 +20,27 @@ public class BlockDragonMuffler extends Block {
 
 	public BlockDragonMuffler(Block.Properties properties) {
 		super(properties);
-		setDefaultState(this.stateContainer.getBaseState().with(MODE, false));
+		registerDefaultState(this.stateDefinition.any().setValue(MODE, false));
 	}
 
 	@Override
-	protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
+	protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
 		builder.add(MODE);
 	}
 
 	@Override
-	public BlockState getStateForPlacement(BlockItemUseContext context) {
-		return this.getDefaultState().with(MODE, false);
+	public BlockState getStateForPlacement(BlockPlaceContext context) {
+		return this.defaultBlockState().setValue(MODE, false);
 	}
 
 	@Override
-	public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
-			boolean swap = !state.get(MODE);
-			if (!world.isRemote)
-				world.setBlockState(pos, state.with(MODE, swap), 3);
-			CompoundNBT nbt = player.getPersistentData();
-			nbt.putBoolean("MGU_DragonMuffle" , swap);
-			player.sendStatusMessage(new StringTextComponent(swap ? "Now hiding Dragon boss bars.":"Now showing Dragon boss bars."), true);
-			return ActionResultType.SUCCESS;
+	public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+		boolean swap = !state.getValue(MODE);
+		if (!world.isClientSide)
+			world.setBlock(pos, state.setValue(MODE, swap), 3);
+		CompoundTag nbt = player.getPersistentData();
+		nbt.putBoolean("MGU_DragonMuffle" , swap);
+		player.displayClientMessage(new TextComponent(swap ? "Now hiding Dragon boss bars.":"Now showing Dragon boss bars."), true);
+		return InteractionResult.SUCCESS;
 	}
 }

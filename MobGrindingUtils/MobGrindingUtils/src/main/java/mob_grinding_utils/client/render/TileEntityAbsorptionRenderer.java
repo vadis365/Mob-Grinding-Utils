@@ -1,93 +1,93 @@
 package mob_grinding_utils.client.render;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 
 import mob_grinding_utils.ModBlocks;
 import mob_grinding_utils.models.ModelAHConnect;
 import mob_grinding_utils.tile.TileEntityAbsorptionHopper;
 import mob_grinding_utils.tile.TileEntityAbsorptionHopper.EnumStatus;
-import net.minecraft.block.BlockState;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.WorldRenderer;
+import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
-import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
-import net.minecraft.util.Direction;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.vector.Vector3f;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
+import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceLocation;
+import com.mojang.math.Vector3f;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
-public class TileEntityAbsorptionRenderer extends TileEntityRenderer<TileEntityAbsorptionHopper> {
+public class TileEntityAbsorptionRenderer extends BlockEntityRenderer<TileEntityAbsorptionHopper> {
 	private static final ResourceLocation ITEM_TEXTURE = new ResourceLocation("mob_grinding_utils:textures/tiles/absorption_hopper_connects_items.png");
 	private static final ResourceLocation FLUID_TEXTURE = new ResourceLocation("mob_grinding_utils:textures/tiles/absorption_hopper_connects_fluids.png");
 	private final ModelAHConnect connectionModel = new ModelAHConnect();
 
-	public TileEntityAbsorptionRenderer(TileEntityRendererDispatcher rendererDispatcherIn) {
+	public TileEntityAbsorptionRenderer(BlockEntityRenderDispatcher rendererDispatcherIn) {
 		super(rendererDispatcherIn);
 	}
 
 	@Override
-	public void render(TileEntityAbsorptionHopper tile, float partialTicks, MatrixStack matrixStack, IRenderTypeBuffer buffer, int combinedLight, int combinedOverlay) {
-		if (tile == null || !tile.hasWorld())
+	public void render(TileEntityAbsorptionHopper tile, float partialTicks, PoseStack matrixStack, MultiBufferSource buffer, int combinedLight, int combinedOverlay) {
+		if (tile == null || !tile.hasLevel())
 			return;
 
-		BlockState state = tile.getWorld().getBlockState(tile.getPos());
+		BlockState state = tile.getLevel().getBlockState(tile.getBlockPos());
 
 		if(state == null || state.getBlock() != ModBlocks.ABSORPTION_HOPPER.getBlock())
 			return;
 
-		matrixStack.push();
+		matrixStack.pushPose();
 		matrixStack.translate(0.5D, 0.5D, 0.5D);
 		for (Direction facing : Direction.values()) {
 			if (tile.status[facing.ordinal()] == EnumStatus.STATUS_OUTPUT_ITEM) {
-				matrixStack.push();
+				matrixStack.pushPose();
 				getRotTranslation(matrixStack, facing);
-				connectionModel.render(matrixStack, buffer.getBuffer(RenderType.getEntitySolid(ITEM_TEXTURE)), combinedLight, OverlayTexture.NO_OVERLAY, 0.5F, 0.5F, 0.5F, 1.0F);
-				matrixStack.pop();
+				connectionModel.renderToBuffer(matrixStack, buffer.getBuffer(RenderType.entitySolid(ITEM_TEXTURE)), combinedLight, OverlayTexture.NO_OVERLAY, 0.5F, 0.5F, 0.5F, 1.0F);
+				matrixStack.popPose();
 			}
 			if (tile.status[facing.ordinal()] == EnumStatus.STATUS_OUTPUT_FLUID) {
-				matrixStack.push();
+				matrixStack.pushPose();
 				getRotTranslation(matrixStack, facing);
-				connectionModel.render(matrixStack, buffer.getBuffer(RenderType.getEntitySolid(FLUID_TEXTURE)), combinedLight, OverlayTexture.NO_OVERLAY, 0.5F, 0.5F, 0.5F, 1.0F);
-				matrixStack.pop();
+				connectionModel.renderToBuffer(matrixStack, buffer.getBuffer(RenderType.entitySolid(FLUID_TEXTURE)), combinedLight, OverlayTexture.NO_OVERLAY, 0.5F, 0.5F, 0.5F, 1.0F);
+				matrixStack.popPose();
 			}
 		}
-		matrixStack.pop();
+		matrixStack.popPose();
 
 		if (!tile.showRenderBox)
 			return;
-		matrixStack.push();
+		matrixStack.pushPose();
 		matrixStack.translate(-0.0005D, -0.0005D, -0.0005D);
 		matrixStack.scale(0.999F, 0.999F, 0.999F);
 
 		// TODO could be this now?
 		//DebugRenderer.renderBox(tile.getAABBForRender(), 0F, 0F, 1F, 0.75F);
 
-		WorldRenderer.drawBoundingBox(matrixStack, buffer.getBuffer(RenderType.getLines()), tile.getAABBForRender(), 1F, 1F, 0F, 1F);
-		matrixStack.pop();
+		LevelRenderer.renderLineBox(matrixStack, buffer.getBuffer(RenderType.lines()), tile.getAABBForRender(), 1F, 1F, 0F, 1F);
+		matrixStack.popPose();
 	}
 
-	public void getRotTranslation(MatrixStack matrixStack, Direction facing) {
+	public void getRotTranslation(PoseStack matrixStack, Direction facing) {
 		switch (facing) {
 		case UP:
-			matrixStack.rotate(Vector3f.XP.rotationDegrees(180F));
+			matrixStack.mulPose(Vector3f.XP.rotationDegrees(180F));
 			break;
 		case DOWN:
 			break;
 		case NORTH:
-			matrixStack.rotate(Vector3f.XP.rotationDegrees(90F));
+			matrixStack.mulPose(Vector3f.XP.rotationDegrees(90F));
 			break;
 		case SOUTH:
-			matrixStack.rotate(Vector3f.XN.rotationDegrees(90F));
+			matrixStack.mulPose(Vector3f.XN.rotationDegrees(90F));
 			break;
 		case WEST:
-			matrixStack.rotate(Vector3f.ZN.rotationDegrees(90F));
+			matrixStack.mulPose(Vector3f.ZN.rotationDegrees(90F));
 			break;
 		case EAST:
-			matrixStack.rotate(Vector3f.ZP.rotationDegrees(90F));
+			matrixStack.mulPose(Vector3f.ZP.rotationDegrees(90F));
 			break;
 		}
 	}

@@ -8,16 +8,16 @@ import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntComparators;
 import it.unimi.dsi.fastutil.ints.IntList;
 import mob_grinding_utils.Reference;
-import net.minecraft.fluid.Fluid;
-import net.minecraft.item.BucketItem;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.item.crafting.RecipeItemHelper;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.tags.ITag;
-import net.minecraft.tags.TagCollectionManager;
-import net.minecraft.util.JSONUtils;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.item.BucketItem;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.entity.player.StackedContents;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.tags.Tag;
+import net.minecraft.tags.SerializationTags;
+import net.minecraft.util.GsonHelper;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.crafting.IIngredientSerializer;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
@@ -36,7 +36,7 @@ public class FluidIngredient extends Ingredient {
 
     private final Boolean advanced;
     private final List<Fluid> matchingFluids = new ArrayList<>();
-    private final ITag<Fluid> fluidTag;
+    private final Tag<Fluid> fluidTag;
 
     private ItemStack[] bucketCache = null;
     private IntList matchingStacksPacked;
@@ -46,13 +46,13 @@ public class FluidIngredient extends Ingredient {
             return matchingFluids;
 
         if (fluidTag != null)
-            matchingFluids.addAll(fluidTag.getAllElements());
+            matchingFluids.addAll(fluidTag.getValues());
 
         return matchingFluids;
     }
 
 
-    public FluidIngredient(ITag<Fluid> tagIn, boolean advancedIn) {
+    public FluidIngredient(Tag<Fluid> tagIn, boolean advancedIn) {
         super(Stream.empty());
 
         advanced = advancedIn;
@@ -78,16 +78,16 @@ public class FluidIngredient extends Ingredient {
     }
 
     @Override
-    public boolean hasNoMatchingItems() {
+    public boolean isEmpty() {
         return false;
     }
 
     @Override
-    public IntList getValidItemStacksPacked() {
+    public IntList getStackingIds() {
         if (this.matchingStacksPacked == null) {
-            this.matchingStacksPacked = new IntArrayList(this.getMatchingStacks().length);
+            this.matchingStacksPacked = new IntArrayList(this.getItems().length);
             for(ItemStack itemstack : this.bucketCache) {
-                this.matchingStacksPacked.add(RecipeItemHelper.pack(itemstack));
+                this.matchingStacksPacked.add(StackedContents.getStackingIndex(itemstack));
             }
             this.matchingStacksPacked.sort(IntComparators.NATURAL_COMPARATOR);
         }
@@ -95,14 +95,14 @@ public class FluidIngredient extends Ingredient {
     }
 
     @Override
-    public JsonElement serialize() {
+    public JsonElement toJson() {
         JsonObject json = new JsonObject();
 
         json.addProperty("type", Serializer.NAME.toString());
 
         json.addProperty("advanced", advanced);
         if (fluidTag != null) {
-            json.addProperty("tag", TagCollectionManager.getManager().getFluidTags().getValidatedIdFromTag(fluidTag).toString());
+            json.addProperty("tag", SerializationTags.getInstance().getFluids().getIdOrThrow(fluidTag).toString());
         }
         else {
             json.addProperty("fluid", getMatchingFluids().get(0).getRegistryName().toString());
@@ -113,7 +113,7 @@ public class FluidIngredient extends Ingredient {
 
     @Nonnull
     @Override
-    public ItemStack[] getMatchingStacks() {
+    public ItemStack[] getItems() {
         if (bucketCache == null) {
             List<ItemStack> tmp = new ArrayList<>();
             getMatchingFluids().forEach((fluid -> {
@@ -134,14 +134,14 @@ public class FluidIngredient extends Ingredient {
     public static class Serializer implements IIngredientSerializer<FluidIngredient> {
         public static ResourceLocation NAME = new ResourceLocation(Reference.MOD_ID, "fluid");
         @Override
-        public FluidIngredient parse(PacketBuffer buffer) {
+        public FluidIngredient parse(FriendlyByteBuf buffer) {
             boolean buckets = buffer.readBoolean();
             int fluidCount = buffer.readVarInt();
 
             List<Fluid> fluids = new ArrayList<>();
 
             for (int i = 0; i < fluidCount; i++) {
-                fluids.add(ForgeRegistries.FLUIDS.getValue(new ResourceLocation(buffer.readString())));
+                fluids.add(ForgeRegistries.FLUIDS.getValue(new ResourceLocation(buffer.readUtf())));
             }
 
             return new FluidIngredient(fluids, buckets);
@@ -149,17 +149,17 @@ public class FluidIngredient extends Ingredient {
 
         @Override
         public FluidIngredient parse(JsonObject json) {
-            boolean advanced = json.has("advanced") && JSONUtils.getBoolean(json, "advanced");
+            boolean advanced = json.has("advanced") && GsonHelper.getAsBoolean(json, "advanced");
             if (json.has("tag")) {
-                ResourceLocation tagRes = new ResourceLocation(JSONUtils.getString(json, "tag"));
-                ITag<Fluid> fluidTag = TagCollectionManager.getManager().getFluidTags().get(tagRes);
+                ResourceLocation tagRes = new ResourceLocation(GsonHelper.getAsString(json, "tag"));
+                Tag<Fluid> fluidTag = SerializationTags.getInstance().getFluids().getTag(tagRes);
                 if (fluidTag != null)
                     return new FluidIngredient(fluidTag, advanced);
                 else
                     throw new JsonSyntaxException("invalid fluid tag: " + tagRes);
             }
             else if (json.has("fluid")) {
-                ResourceLocation fluidRes = new ResourceLocation(JSONUtils.getString(json, "fluid"));
+                ResourceLocation fluidRes = new ResourceLocation(GsonHelper.getAsString(json, "fluid"));
                 Fluid fluid = ForgeRegistries.FLUIDS.getValue(fluidRes);
                 if (fluid != null) {
                     return new FluidIngredient(fluid, advanced);
@@ -172,10 +172,10 @@ public class FluidIngredient extends Ingredient {
         }
 
         @Override
-        public void write(PacketBuffer buffer, FluidIngredient ingredient) {
+        public void write(FriendlyByteBuf buffer, FluidIngredient ingredient) {
             buffer.writeBoolean(ingredient.advanced);
             buffer.writeVarInt(ingredient.getMatchingFluids().size());
-            ingredient.getMatchingFluids().forEach((fluid -> buffer.writeString(fluid.getRegistryName().toString())));
+            ingredient.getMatchingFluids().forEach((fluid -> buffer.writeUtf(fluid.getRegistryName().toString())));
         }
     }
 

@@ -6,19 +6,21 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import mob_grinding_utils.tile.TileEntitySinkTank;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.network.chat.Component;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+
+import net.minecraft.world.item.Item.Properties;
 
 public class ItemSolidXP extends Item {
 	public int xpValue;
@@ -30,27 +32,27 @@ public class ItemSolidXP extends Item {
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void addInformation(ItemStack stack, @Nullable World world, List<ITextComponent> list, @Nonnull ITooltipFlag flag) {
-		list.add(new TranslationTextComponent("tooltip.solid_xp").appendString(Integer.toString(xpValue)).mergeStyle(TextFormatting.YELLOW));
+	public void appendHoverText(ItemStack stack, @Nullable Level world, List<Component> list, @Nonnull TooltipFlag flag) {
+		list.add(new TranslatableComponent("tooltip.solid_xp").append(Integer.toString(xpValue)).withStyle(ChatFormatting.YELLOW));
 		if (stack.getCount() > 1)
-			list.add(new TranslationTextComponent("tooltip.solid_xp2").appendString(Integer.toString(xpValue * stack.getCount())).mergeStyle(TextFormatting.YELLOW));
+			list.add(new TranslatableComponent("tooltip.solid_xp2").append(Integer.toString(xpValue * stack.getCount())).withStyle(ChatFormatting.YELLOW));
 	}
 
 	@Nonnull
 	@Override
-	public ItemStack onItemUseFinish(@Nonnull ItemStack stack, @Nonnull World world, @Nonnull LivingEntity entity) {
-		if (entity instanceof PlayerEntity) {
-			PlayerEntity player = (PlayerEntity) entity;
+	public ItemStack finishUsingItem(@Nonnull ItemStack stack, @Nonnull Level world, @Nonnull LivingEntity entity) {
+		if (entity instanceof Player) {
+			Player player = (Player) entity;
 			if (xpValue > 0)
-				if (!world.isRemote) {
-					if (stack.getCount() > 1 && entity.isSneaking()) {
+				if (!world.isClientSide) {
+					if (stack.getCount() > 1 && entity.isShiftKeyDown()) {
 						TileEntitySinkTank.addPlayerXP(player, xpValue * stack.getCount());
 						stack.shrink(stack.getCount()-1);
 					} else
 						TileEntitySinkTank.addPlayerXP(player, xpValue);
-					world.playSound(null, player.getPosition(), SoundEvents.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.PLAYERS, 0.5F, 0.8F + world.rand.nextFloat() * 0.4F);
+					world.playSound(null, player.blockPosition(), SoundEvents.EXPERIENCE_ORB_PICKUP, SoundSource.PLAYERS, 0.5F, 0.8F + world.random.nextFloat() * 0.4F);
 				}
 		}
-		return super.onItemUseFinish(stack, world, entity);
+		return super.finishUsingItem(stack, world, entity);
 	}
 }

@@ -9,29 +9,29 @@ import mob_grinding_utils.blocks.BlockSaw;
 import mob_grinding_utils.fakeplayer.MGUFakePlayer;
 import mob_grinding_utils.inventory.server.ContainerSaw;
 import mob_grinding_utils.items.ItemSawUpgrade;
-import net.minecraft.block.BlockState;
-import net.minecraft.enchantment.Enchantments;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.ItemStackHelper;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.INamedContainerProvider;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.NetworkManager;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.network.play.server.SUpdateTileEntityPacket;
-import net.minecraft.tileentity.ITickableTileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.item.enchantment.Enchantments;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.ContainerHelper;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.Connection;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.world.level.block.entity.TickableBlockEntity;
+import net.minecraft.core.Direction;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.server.level.ServerLevel;
 
-public class TileEntitySaw extends TileEntityInventoryHelper implements ITickableTileEntity, INamedContainerProvider {
+public class TileEntitySaw extends TileEntityInventoryHelper implements TickableBlockEntity, MenuProvider {
 
 	public boolean active;
 	public int animationTicks, prevAnimationTicks;
@@ -43,7 +43,7 @@ public class TileEntitySaw extends TileEntityInventoryHelper implements ITickabl
 
 	@Override
 	public void tick() {
-		if (getWorld().isRemote && active) {
+		if (getLevel().isClientSide && active) {
 			prevAnimationTicks = animationTicks;
 			if (animationTicks < 360)
 				animationTicks += 18;
@@ -53,48 +53,48 @@ public class TileEntitySaw extends TileEntityInventoryHelper implements ITickabl
 			}
 		}
 
-		if (getWorld().isRemote && !active)
+		if (getLevel().isClientSide && !active)
 			prevAnimationTicks = animationTicks = 0;
 
-		if (!getWorld().isRemote && getWorld().getGameTime() % 10 == 0 && getWorld().getBlockState(pos).getBlock() instanceof BlockSaw)
-			if (getWorld().getBlockState(pos).get(BlockSaw.POWERED))
+		if (!getLevel().isClientSide && getLevel().getGameTime() % 10 == 0 && getLevel().getBlockState(worldPosition).getBlock() instanceof BlockSaw)
+			if (getLevel().getBlockState(worldPosition).getValue(BlockSaw.POWERED))
 				activateBlock();
 	}
 
 	public void setActive(boolean isActive) {
 		active = isActive;
-		getWorld().notifyBlockUpdate(pos, getWorld().getBlockState(pos), getWorld().getBlockState(pos), 3);
+		getLevel().sendBlockUpdated(worldPosition, getLevel().getBlockState(worldPosition), getLevel().getBlockState(worldPosition), 3);
 	}
 
 	protected Entity activateBlock() {
-		List<LivingEntity> list = getWorld().getEntitiesWithinAABB(LivingEntity.class, new AxisAlignedBB(pos.getX(), pos.getY(), pos.getZ(), pos.getX() + 1D, pos.getY() + 1D, pos.getZ() + 1D).grow(0.0625D, 0.0625D, 0.0625D));
+		List<LivingEntity> list = getLevel().getEntitiesOfClass(LivingEntity.class, new AABB(worldPosition.getX(), worldPosition.getY(), worldPosition.getZ(), worldPosition.getX() + 1D, worldPosition.getY() + 1D, worldPosition.getZ() + 1D).inflate(0.0625D, 0.0625D, 0.0625D));
 		for (int i = 0; i < list.size(); i++) {
 			Entity entity = list.get(i);
 			if (entity != null) {
 				if (entity instanceof LivingEntity) {
-					MGUFakePlayer fakePlayer = MGUFakePlayer.get((ServerWorld)getWorld(), this.pos.getX(), -100D, this.pos.getZ()).get();
+					MGUFakePlayer fakePlayer = MGUFakePlayer.get((ServerLevel)getLevel(), this.worldPosition.getX(), -100D, this.worldPosition.getZ()).get();
 					ItemStack tempSword = new ItemStack(ModItems.NULL_SWORD.get(), 1);
 
 					if(!tempSword.hasTag())
-						tempSword.setTag(new CompoundNBT());
+						tempSword.setTag(new CompoundTag());
 
 					if(hasSharpnessUpgrade())
-						tempSword.addEnchantment(Enchantments.SHARPNESS, getItems().get(0).getCount() * 10);
+						tempSword.enchant(Enchantments.SHARPNESS, getItems().get(0).getCount() * 10);
 					if(hasLootingUpgrade())
-						tempSword.addEnchantment(Enchantments.LOOTING, getItems().get(1).getCount());
+						tempSword.enchant(Enchantments.MOB_LOOTING, getItems().get(1).getCount());
 					if(hasFlameUpgrade())
-						tempSword.addEnchantment(Enchantments.FIRE_ASPECT, getItems().get(2).getCount());
+						tempSword.enchant(Enchantments.FIRE_ASPECT, getItems().get(2).getCount());
 					if(hasSmiteUpgrade())
-						tempSword.addEnchantment(Enchantments.SMITE, getItems().get(3).getCount() * 10);
+						tempSword.enchant(Enchantments.SMITE, getItems().get(3).getCount() * 10);
 					if(hasArthropodUpgrade())
-						tempSword.addEnchantment(Enchantments.BANE_OF_ARTHROPODS, getItems().get(4).getCount() * 10);
+						tempSword.enchant(Enchantments.BANE_OF_ARTHROPODS, getItems().get(4).getCount() * 10);
 					if(hasBeheadingUpgrade())
 						tempSword.getTag().putInt("beheadingValue", getItems().get(5).getCount());
 
-					fakePlayer.setHeldItem(Hand.MAIN_HAND, tempSword);
-					fakePlayer.attackTargetEntityWithCurrentItem(entity);
-					fakePlayer.resetCooldown();
-					fakePlayer.setHeldItem(Hand.MAIN_HAND, ItemStack.EMPTY);
+					fakePlayer.setItemInHand(InteractionHand.MAIN_HAND, tempSword);
+					fakePlayer.attack(entity);
+					fakePlayer.resetAttackStrengthTicker();
+					fakePlayer.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
 				}
 			}
 		}
@@ -126,42 +126,42 @@ public class TileEntitySaw extends TileEntityInventoryHelper implements ITickabl
 	}
 
 	@Override
-	public CompoundNBT write(CompoundNBT nbt) {
-		super.write(nbt);
+	public CompoundTag save(CompoundTag nbt) {
+		super.save(nbt);
 		nbt.putBoolean("active", active);
 		return nbt;
 	}
 
 	@Override
-	public void read(BlockState state, CompoundNBT nbt) {
-		super.read(state, nbt);
+	public void load(BlockState state, CompoundTag nbt) {
+		super.load(state, nbt);
 		active = nbt.getBoolean("active");
 	}
 
 	@Override
-    public CompoundNBT getUpdateTag() {
-		CompoundNBT tag = new CompoundNBT();
-        return write(tag);
+    public CompoundTag getUpdateTag() {
+		CompoundTag tag = new CompoundTag();
+        return save(tag);
     }
 
 	@Override
-	public SUpdateTileEntityPacket getUpdatePacket() {
-		CompoundNBT tag = new CompoundNBT();
-		write(tag);
-		return new SUpdateTileEntityPacket(getPos(), 0, tag);
+	public ClientboundBlockEntityDataPacket getUpdatePacket() {
+		CompoundTag tag = new CompoundTag();
+		save(tag);
+		return new ClientboundBlockEntityDataPacket(getBlockPos(), 0, tag);
 	}
 
 	@Override
-	public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket packet) {
+	public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket packet) {
 		super.onDataPacket(net, packet);
-		read(getBlockState(), packet.getNbtCompound());
-		if(!getWorld().isRemote)
-			getWorld().notifyBlockUpdate(pos, getWorld().getBlockState(pos), getWorld().getBlockState(pos), 3);
+		load(getBlockState(), packet.getTag());
+		if(!getLevel().isClientSide)
+			getLevel().sendBlockUpdated(worldPosition, getLevel().getBlockState(worldPosition), getLevel().getBlockState(worldPosition), 3);
 		return;
 	}
 
 	@Override
-	public boolean isItemValidForSlot(int slot, ItemStack stack) {
+	public boolean canPlaceItem(int slot, ItemStack stack) {
 		if (stack.getItem() instanceof ItemSawUpgrade) {
 			switch (slot) {
 			case 0:
@@ -188,12 +188,12 @@ public class TileEntitySaw extends TileEntityInventoryHelper implements ITickabl
 	}
 
 	@Override
-	public ItemStack removeStackFromSlot(int index) {
-		return ItemStackHelper.getAndRemove(getItems(), index);
+	public ItemStack removeItemNoUpdate(int index) {
+		return ContainerHelper.takeItem(getItems(), index);
 	}
 
 	@Override
-	public int getInventoryStackLimit() {
+	public int getMaxStackSize() {
 		return 10;
 	}
 
@@ -203,22 +203,22 @@ public class TileEntitySaw extends TileEntityInventoryHelper implements ITickabl
 	}
 
 	@Override
-	public boolean canInsertItem(int slot, ItemStack stack, Direction direction) {
-		return isItemValidForSlot(slot, stack);
+	public boolean canPlaceItemThroughFace(int slot, ItemStack stack, Direction direction) {
+		return canPlaceItem(slot, stack);
 	}
 
 	@Override
-	public boolean canExtractItem(int index, ItemStack stack, Direction direction) {
+	public boolean canTakeItemThroughFace(int index, ItemStack stack, Direction direction) {
 		return true;
 	}
 
 	@Override
-	public Container createMenu(int windowID, PlayerInventory playerInventory, PlayerEntity player) {
-		return new ContainerSaw(windowID, playerInventory, new PacketBuffer(Unpooled.buffer()).writeBlockPos(pos));
+	public AbstractContainerMenu createMenu(int windowID, Inventory playerInventory, Player player) {
+		return new ContainerSaw(windowID, playerInventory, new FriendlyByteBuf(Unpooled.buffer()).writeBlockPos(worldPosition));
 	}
 
 	@Override
-	public ITextComponent getDisplayName() {
-		return new StringTextComponent("Mob Masher"); //TODO localise
+	public Component getDisplayName() {
+		return new TextComponent("Mob Masher"); //TODO localise
 	}
 }

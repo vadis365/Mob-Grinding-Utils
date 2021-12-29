@@ -1,91 +1,93 @@
 package mob_grinding_utils.blocks;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import mob_grinding_utils.tile.TileEntityXPSolidifier;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockRenderType;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.ContainerBlock;
-import net.minecraft.block.HorizontalBlock;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.inventory.InventoryHelper;
-import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.item.BucketItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.state.DirectionProperty;
-import net.minecraft.state.StateContainer;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.RenderShape;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.BaseEntityBlock;
+import net.minecraft.world.level.block.HorizontalDirectionalBlock;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.Containers;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.item.BucketItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.core.Direction;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
-import net.minecraftforge.fml.network.NetworkHooks;
+import net.minecraftforge.network.NetworkHooks;
 
-public class BlockXPSolidifier extends ContainerBlock {
-	public static final DirectionProperty FACING = HorizontalBlock.HORIZONTAL_FACING;
+
+public class BlockXPSolidifier extends BaseEntityBlock {
+	public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
     public BlockXPSolidifier(Properties properties) {
         super(properties);
     }
 
     @Nullable
     @Override
-    public TileEntity createNewTileEntity(IBlockReader worldIn) {
+    public BlockEntity newBlockEntity(@Nonnull BlockPos pos, @Nonnull BlockState state) {
         return new TileEntityXPSolidifier();
     }
 
     @Override
-    public BlockRenderType getRenderType(BlockState state) {
-        return BlockRenderType.MODEL;
+    public RenderShape getRenderShape(BlockState state) {
+        return RenderShape.MODEL;
     }
 
 	@Override
-	public BlockState getStateForPlacement(BlockItemUseContext context) {
-		Direction direction = context.getPlacementHorizontalFacing().getOpposite();
-		return this.getDefaultState().with(FACING, direction);
+	public BlockState getStateForPlacement(BlockPlaceContext context) {
+		Direction direction = context.getHorizontalDirection().getOpposite();
+		return this.defaultBlockState().setValue(FACING, direction);
 	}
 
 	@Override
-	public void onBlockHarvested(World world, BlockPos pos, BlockState state, PlayerEntity player) {
-		if (!world.isRemote && !player.abilities.isCreativeMode) {
-			TileEntityXPSolidifier tile = (TileEntityXPSolidifier) world.getTileEntity(pos);
+	public void playerWillDestroy(Level world, BlockPos pos, BlockState state, Player player) {
+		if (!world.isClientSide && !player.getAbilities().instabuild) {
+			TileEntityXPSolidifier tile = (TileEntityXPSolidifier) world.getBlockEntity(pos);
 			if (tile != null) {
-				CompoundNBT nbt = new CompoundNBT();
-				tile.write(nbt);
-				ItemStack stack = new ItemStack(Item.getItemFromBlock(this), 1);
+				CompoundTag nbt = new CompoundTag();
+				tile.save(nbt);
+				ItemStack stack = new ItemStack(Item.byBlock(this), 1);
 				if (tile.tank.getFluidAmount() > 0)
 					stack.setTag(nbt);
-				InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), stack);
+				Containers.dropItemStack(world, pos.getX(), pos.getY(), pos.getZ(), stack);
 				if(!tile.inputSlots.getStackInSlot(0).isEmpty())
-					InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), tile.inputSlots.getStackInSlot(0));
+					Containers.dropItemStack(world, pos.getX(), pos.getY(), pos.getZ(), tile.inputSlots.getStackInSlot(0));
 				if(!tile.inputSlots.getStackInSlot(1).isEmpty())
-					InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), tile.inputSlots.getStackInSlot(1));
+					Containers.dropItemStack(world, pos.getX(), pos.getY(), pos.getZ(), tile.inputSlots.getStackInSlot(1));
 				if(!tile.outputSlot.getStackInSlot(0).isEmpty())
-					InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), tile.outputSlot.getStackInSlot(0));
-				world.removeTileEntity(pos);
+					Containers.dropItemStack(world, pos.getX(), pos.getY(), pos.getZ(), tile.outputSlot.getStackInSlot(0));
+				world.removeBlockEntity(pos);
 			}
 		}
 	}
 
 	@Override
-	public void onBlockPlacedBy(World world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
-		super.onBlockPlacedBy(world, pos, state, placer, stack);
-		if (!world.isRemote && stack.hasTag()) {
-			TileEntity tileentity = world.getTileEntity(pos);
+	public void setPlacedBy(Level world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
+		super.setPlacedBy(world, pos, state, placer, stack);
+		if (!world.isClientSide && stack.hasTag()) {
+			BlockEntity tileentity = world.getBlockEntity(pos);
 			if (tileentity instanceof TileEntityXPSolidifier) {
 				if (!stack.getTag().contains("Empty")) {
 					FluidStack fluid = FluidStack.loadFluidStackFromNBT(stack.getTag());
@@ -96,33 +98,33 @@ public class BlockXPSolidifier extends ContainerBlock {
 	}
 
 	@Override
-	protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
+	protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
 		builder.add(FACING);
 	}
 
     @Override
-    public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
-		if (world.isRemote) {
-			return ActionResultType.SUCCESS;
+    public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+		if (world.isClientSide) {
+			return InteractionResult.SUCCESS;
 		} else {
-			TileEntity tileentity = world.getTileEntity(pos);
+			BlockEntity tileentity = world.getBlockEntity(pos);
 			if (tileentity instanceof TileEntityXPSolidifier) {
-				if (!player.getHeldItem(hand).isEmpty() && player.getHeldItem(hand).getItem() instanceof BucketItem) { // fixy later
-					LazyOptional<IFluidHandler> fluidHandler = tileentity.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, hit.getFace());
+				if (!player.getItemInHand(hand).isEmpty() && player.getItemInHand(hand).getItem() instanceof BucketItem) { // fixy later
+					LazyOptional<IFluidHandler> fluidHandler = tileentity.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, hit.getDirection());
 					fluidHandler.ifPresent((handler) -> {
-						if (player.getHeldItem(hand).isEmpty() && !handler.getFluidInTank(0).isEmpty())
-							player.sendStatusMessage(new TranslationTextComponent(handler.getFluidInTank(0).getDisplayName().getString() + ": "+ handler.getFluidInTank(0).getAmount()+"/"+handler.getTankCapacity(0)), true);
+						if (player.getItemInHand(hand).isEmpty() && !handler.getFluidInTank(0).isEmpty())
+							player.displayClientMessage(new TranslatableComponent(handler.getFluidInTank(0).getDisplayName().getString() + ": "+ handler.getFluidInTank(0).getAmount()+"/"+handler.getTankCapacity(0)), true);
 						else
-							FluidUtil.interactWithFluidHandler(player, hand, world, pos, hit.getFace());
+							FluidUtil.interactWithFluidHandler(player, hand, world, pos, hit.getDirection());
 					});
-					return ActionResultType.SUCCESS;
+					return InteractionResult.SUCCESS;
 				}
 				else {
-					NetworkHooks.openGui((ServerPlayerEntity) player, (TileEntityXPSolidifier) tileentity, pos);
-					return ActionResultType.SUCCESS;
+					NetworkHooks.openGui((ServerPlayer) player, (TileEntityXPSolidifier) tileentity, pos);
+					return InteractionResult.SUCCESS;
 				}
 			}
 		}
-		return ActionResultType.PASS;
+		return InteractionResult.PASS;
     }
 }

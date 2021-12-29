@@ -5,23 +5,25 @@ import java.util.List;
 import javax.annotation.Nullable;
 
 import mob_grinding_utils.ModBlocks;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemUseContext;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+
+import net.minecraft.world.item.Item.Properties;
 
 public class ItemRottenEgg extends Item {
 
@@ -31,34 +33,34 @@ public class ItemRottenEgg extends Item {
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void addInformation(ItemStack stack, @Nullable World world, List<ITextComponent> list, ITooltipFlag flag) {
-		list.add(new TranslationTextComponent("tooltip.rotten_egg_1").mergeStyle(TextFormatting.YELLOW));
-		list.add(new TranslationTextComponent("tooltip.rotten_egg_2").mergeStyle(TextFormatting.YELLOW));
+	public void appendHoverText(ItemStack stack, @Nullable Level world, List<Component> list, TooltipFlag flag) {
+		list.add(new TranslatableComponent("tooltip.rotten_egg_1").withStyle(ChatFormatting.YELLOW));
+		list.add(new TranslatableComponent("tooltip.rotten_egg_2").withStyle(ChatFormatting.YELLOW));
 	}
 
 	@Override
-	   public ActionResultType onItemUse(ItemUseContext context) {
-		World world = context.getWorld();
-		PlayerEntity player = context.getPlayer();
-		Hand hand = context.getHand();
-		BlockPos pos = context.getPos();
-		ItemStack stackHeld = player.getHeldItem(hand);
-		if (!world.isRemote) {
+	   public InteractionResult useOn(UseOnContext context) {
+		Level world = context.getLevel();
+		Player player = context.getPlayer();
+		InteractionHand hand = context.getHand();
+		BlockPos pos = context.getClickedPos();
+		ItemStack stackHeld = player.getItemInHand(hand);
+		if (!world.isClientSide) {
 			for (int x = -2; x <= 2; x++)
 				for (int z = -2; z <= 2; z++) {
-					BlockState state = world.getBlockState(pos.add(x, 0, z));
+					BlockState state = world.getBlockState(pos.offset(x, 0, z));
 					if (state.getBlock() == Blocks.GRASS_BLOCK || state.getBlock() == Blocks.DIRT || state.getBlock() == Blocks.MYCELIUM || state.getBlock() == Blocks.FARMLAND) {
-						world.playEvent(null, 2001, pos.add(x, 0, z), Block.getStateId(world.getBlockState(pos.add(x, 0, z))));
-						world.setBlockState(pos.add(x, 0, z), ModBlocks.DREADFUL_DIRT.getBlock().getDefaultState(), 3);
-						if (!player.abilities.isCreativeMode)
+						world.levelEvent(null, 2001, pos.offset(x, 0, z), Block.getId(world.getBlockState(pos.offset(x, 0, z))));
+						world.setBlock(pos.offset(x, 0, z), ModBlocks.DREADFUL_DIRT.getBlock().defaultBlockState(), 3);
+						if (!player.abilities.instabuild)
 							stackHeld.shrink(1);
 					}
 				}
-			return ActionResultType.SUCCESS;
+			return InteractionResult.SUCCESS;
 		}
 		else
-			player.swingArm(hand);
+			player.swing(hand);
 
-		return ActionResultType.PASS;
+		return InteractionResult.PASS;
 	}
 }

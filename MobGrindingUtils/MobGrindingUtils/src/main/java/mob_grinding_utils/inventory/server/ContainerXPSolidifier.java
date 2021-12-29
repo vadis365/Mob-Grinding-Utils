@@ -5,25 +5,25 @@ import mob_grinding_utils.ModContainers;
 import mob_grinding_utils.ModItems;
 import mob_grinding_utils.recipe.SolidifyRecipe;
 import mob_grinding_utils.tile.TileEntityXPSolidifier;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.Slot;
-import net.minecraft.item.ItemStack;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.core.BlockPos;
 
 import java.util.function.Predicate;
 
 
-public class ContainerXPSolidifier extends Container {
+public class ContainerXPSolidifier extends AbstractContainerMenu {
     public TileEntityXPSolidifier tile;
 
-    public ContainerXPSolidifier(final int windowId, final PlayerInventory playerInventory, PacketBuffer extra) {
+    public ContainerXPSolidifier(final int windowId, final Inventory playerInventory, FriendlyByteBuf extra) {
         super(ModContainers.SOLIDIFIER.get(), windowId);
         BlockPos tilePos = extra.readBlockPos();
-        TileEntity tile = playerInventory.player.getEntityWorld().getTileEntity(tilePos);
+        BlockEntity tile = playerInventory.player.getCommandSenderWorld().getBlockEntity(tilePos);
         if (!(tile instanceof TileEntityXPSolidifier))
             return;
         this.tile = (TileEntityXPSolidifier) tile;
@@ -33,11 +33,11 @@ public class ContainerXPSolidifier extends Container {
     }
 
     @Override
-    public boolean canInteractWith(PlayerEntity playerIn) {
+    public boolean stillValid(Player playerIn) {
         return true;
     }
 
-    private void addPlayerSlots(PlayerInventory playerInventory) {
+    private void addPlayerSlots(Inventory playerInventory) {
         int originX = 7;
         int originY = 103;
         Predicate<ItemStack> mouldPredicate = stack -> {
@@ -74,41 +74,41 @@ public class ContainerXPSolidifier extends Container {
     }
 
     @Override
-    public ItemStack transferStackInSlot(PlayerEntity player, int index) {
+    public ItemStack quickMoveStack(Player player, int index) {
         ItemStack stack = ItemStack.EMPTY;
-        Slot slot = (Slot) inventorySlots.get(index);
+        Slot slot = (Slot) slots.get(index);
 
-        if (slot != null && slot.getHasStack()) {
-            ItemStack stack1 = slot.getStack();
+        if (slot != null && slot.hasItem()) {
+            ItemStack stack1 = slot.getItem();
             stack = stack1.copy();
 
             if (index > 2) {
                 if (stack1.getItem() == ModItems.SOLID_XP_MOULD_BABY.get())
-                    if (!this.mergeItemStack(stack1, 0, 1, false))
+                    if (!this.moveItemStackTo(stack1, 0, 1, false))
                         return ItemStack.EMPTY;
 
                 if (stack1.getItem() == ModItems.XP_SOLIDIFIER_UPGRADE.get())
-                    if (!this.mergeItemStack(stack1, 1, 2, false))
+                    if (!this.moveItemStackTo(stack1, 1, 2, false))
                         return ItemStack.EMPTY;
 
-                if (!this.mergeItemStack(stack1, 2, 3, false))
+                if (!this.moveItemStackTo(stack1, 2, 3, false))
                     return ItemStack.EMPTY;
 
-            } else if (!mergeItemStack(stack1, 3, inventorySlots.size(), false))
+            } else if (!moveItemStackTo(stack1, 3, slots.size(), false))
                 return ItemStack.EMPTY;
 
             if (stack1.isEmpty())
-                slot.putStack(ItemStack.EMPTY);
+                slot.set(ItemStack.EMPTY);
             else
-                slot.onSlotChanged();
+                slot.setChanged();
 
             if (stack1.getCount() == stack.getCount())
                 return ItemStack.EMPTY;
 
-            ItemStack stack2 = slot.onTake(player, stack1);
+            ItemStack stack2 = slot.onTake(player, stack1); //TODO huh?
 
             if (index == 2)
-                player.dropItem(stack2, false);
+                player.drop(stack2, false);
         }
 
         return stack;

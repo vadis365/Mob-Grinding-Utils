@@ -8,17 +8,17 @@ import mob_grinding_utils.MobGrindingUtils;
 import mob_grinding_utils.ModItems;
 import mob_grinding_utils.ModSounds;
 import mob_grinding_utils.network.MessageChickenSync;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.entity.passive.ChickenEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.item.SpawnEggItem;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.animal.Chicken;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.SpawnEggItem;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.network.PacketDistributor;
@@ -29,7 +29,7 @@ public class ChickenFuseEvent {
 	@Nonnull
 	public static ItemStack getSpawnEgg(@Nonnull EntityType<?> entityType) {
 		//Check the spawn egg array
-		for (SpawnEggItem eggItem : SpawnEggItem.getEggs()) {
+		for (SpawnEggItem eggItem : SpawnEggItem.eggs()) {
 			if (eggItem.getType(null).equals(entityType)) {
 				return new ItemStack(eggItem);
 			}
@@ -41,10 +41,10 @@ public class ChickenFuseEvent {
 	@SubscribeEvent
 	public void startChickenFuse(LivingEvent event) {
 		LivingEntity entity = (LivingEntity) event.getEntity();
-		if (entity instanceof ChickenEntity) {
-			World world = entity.getEntityWorld();
-			if (!world.isRemote) {
-				CompoundNBT nbt = entity.getPersistentData();
+		if (entity instanceof Chicken) {
+			Level world = entity.getCommandSenderWorld();
+			if (!world.isClientSide) {
+				CompoundTag nbt = entity.getPersistentData();
 				if (nbt.contains("shouldExplode")) {
 					int startTime = event.getEntity().getPersistentData().getInt("countDown");
 
@@ -54,29 +54,29 @@ public class ChickenFuseEvent {
 					}
 
 					if (startTime >= 20) {
-						Optional<EntityType<?>> entityMob = EntityType.byKey(event.getEntity().getPersistentData().getString("mguMobName"));
+						Optional<EntityType<?>> entityMob = EntityType.byString(event.getEntity().getPersistentData().getString("mguMobName"));
 						entityMob.ifPresent((mob) -> {
 							ItemStack eggItem = getSpawnEgg(mob);
 							if (eggItem != ItemStack.EMPTY)
-								entity.entityDropItem(eggItem, 0.0F);
+								entity.spawnAtLocation(eggItem, 0.0F);
 						});
 
 						if (nbt.contains("nutritious") && nbt.getBoolean("nutritious"))
-							entity.entityDropItem(new ItemStack(ModItems.GOLDEN_EGG.get()), 0.0F);
+							entity.spawnAtLocation(new ItemStack(ModItems.GOLDEN_EGG.get()), 0.0F);
 
 						if (nbt.contains("cursed") && nbt.getBoolean("cursed")) {
-							entity.entityDropItem(new ItemStack(ModItems.ROTTEN_EGG.get()), 0.0F);
+							entity.spawnAtLocation(new ItemStack(ModItems.ROTTEN_EGG.get()), 0.0F);
 							entity.playSound(ModSounds.SPOOPY_CHANGE, 1F, 1F);
 						}
 						else {
-							entity.playSound(SoundEvents.ENTITY_CHICKEN_DEATH, 1F, 1F);
+							entity.playSound(SoundEvents.CHICKEN_DEATH, 1F, 1F);
 							entity.playSound(ModSounds.CHICKEN_RISE, 0.5F, 1F);
 						}
 
 						for (int k = 0; k < 4; ++k) {
 							ItemStack stack = new ItemStack(Items.FEATHER);
-							ItemEntity feather = new ItemEntity(world, entity.getPosX() + (double) (world.rand.nextFloat() * entity.getWidth() * 2.0F) - (double) entity.getWidth(), entity.getPosY() + (double) (world.rand.nextFloat() * entity.getHeight()), entity.getPosZ() + (double) (world.rand.nextFloat() * entity.getWidth() * 2.0F) - (double) entity.getWidth(), stack);
-							world.addEntity(feather);
+							ItemEntity feather = new ItemEntity(world, entity.getX() + (double) (world.random.nextFloat() * entity.getBbWidth() * 2.0F) - (double) entity.getBbWidth(), entity.getY() + (double) (world.random.nextFloat() * entity.getBbHeight()), entity.getZ() + (double) (world.random.nextFloat() * entity.getBbWidth() * 2.0F) - (double) entity.getBbWidth(), stack);
+							world.addFreshEntity(feather);
 						}
 						entity.remove();
 					}

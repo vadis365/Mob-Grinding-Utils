@@ -6,22 +6,22 @@ import java.util.Optional;
 import com.mojang.authlib.GameProfile;
 
 import mob_grinding_utils.items.ItemImaginaryInvisibleNotReallyThereSword;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.MobEntity;
-import net.minecraft.entity.boss.dragon.EnderDragonEntity;
-import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.entity.monster.CreeperEntity;
-import net.minecraft.entity.monster.SkeletonEntity;
-import net.minecraft.entity.monster.WitherSkeletonEntity;
-import net.minecraft.entity.monster.ZombieEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.NBTUtil;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.boss.enderdragon.EnderDragon;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.monster.Creeper;
+import net.minecraft.world.entity.monster.Skeleton;
+import net.minecraft.world.entity.monster.WitherSkeleton;
+import net.minecraft.world.entity.monster.Zombie;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtUtils;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
@@ -32,19 +32,19 @@ public class EntityHeadDropEvent {
 
 	@SubscribeEvent(priority = EventPriority.LOWEST)
 	public void dropEvent(LivingDropsEvent event) {
-		if (event.getEntityLiving().getEntityWorld().isRemote)
+		if (event.getEntityLiving().getCommandSenderWorld().isClientSide)
 			return;
 		if (event.getEntityLiving().getHealth() > 0.0F)
 			return;
 		int beheadingLevel = 0;
-		if (event.getSource().getTrueSource() instanceof FakePlayer) {
-			FakePlayer fakePlayer = (FakePlayer) event.getSource().getTrueSource();
-			if (fakePlayer.getDisplayName().getString().matches(new TranslationTextComponent("fakeplayer.mob_masher").getString())) {
-				if (fakePlayer.getHeldItemMainhand().getItem() instanceof ItemImaginaryInvisibleNotReallyThereSword) {
-					ItemStack tempSword = fakePlayer.getHeldItemMainhand();
+		if (event.getSource().getEntity() instanceof FakePlayer) {
+			FakePlayer fakePlayer = (FakePlayer) event.getSource().getEntity();
+			if (fakePlayer.getDisplayName().getString().matches(new TranslatableComponent("fakeplayer.mob_masher").getString())) {
+				if (fakePlayer.getMainHandItem().getItem() instanceof ItemImaginaryInvisibleNotReallyThereSword) {
+					ItemStack tempSword = fakePlayer.getMainHandItem();
 					if (tempSword.hasTag() && tempSword.getTag().contains("beheadingValue"))
 						beheadingLevel = tempSword.getTag().getInt("beheadingValue");
-					int dropChance = event.getEntityLiving().getEntityWorld().rand.nextInt(10);
+					int dropChance = event.getEntityLiving().getCommandSenderWorld().random.nextInt(10);
 					if (dropChance < beheadingLevel) {
 						ItemStack stack = getHeadfromEntity(event.getEntityLiving());
 						if (!stack.isEmpty())
@@ -56,7 +56,7 @@ public class EntityHeadDropEvent {
 	}
 
 	public static ItemStack getHeadfromEntity(LivingEntity target) {
-		if (target.isChild())
+		if (target.isBaby())
 			return ItemStack.EMPTY;
 		
 		/*TODO enable this and fix EndeIO compat 
@@ -65,31 +65,31 @@ public class EntityHeadDropEvent {
 				return new ItemStack(Item.REGISTRY.getObject(new ResourceLocation("enderio:block_enderman_skull")), 1);
  		*/		
 		
-		if (target instanceof MobEntity) {
+		if (target instanceof Mob) {
 			if (ModList.get().isLoaded("player_mobs"))
 				if (isPlayerMob(target))
 				return createHeadFor(getPlayerByUsername(target.getName().getString()));
 		}
 		
 		
-		if (target instanceof CreeperEntity)
+		if (target instanceof Creeper)
 			return new ItemStack(Items.CREEPER_HEAD, 1);
-		if (target instanceof SkeletonEntity)
+		if (target instanceof Skeleton)
 			return new ItemStack(Items.SKELETON_SKULL, 1);
-		if (target instanceof WitherSkeletonEntity)
+		if (target instanceof WitherSkeleton)
 			return new ItemStack(Items.WITHER_SKELETON_SKULL, 1);
-		if (target instanceof ZombieEntity)// && !(target instanceof PigZombieEntity)) whatever these are now
+		if (target instanceof Zombie)// && !(target instanceof PigZombieEntity)) whatever these are now
 			return new ItemStack(Items.ZOMBIE_HEAD, 1);
-		if (target instanceof PlayerEntity)
-			return createHeadFor((PlayerEntity) target);
-		if (target instanceof EnderDragonEntity)
+		if (target instanceof Player)
+			return createHeadFor((Player) target);
+		if (target instanceof EnderDragon)
 			return new ItemStack(Items.DRAGON_HEAD, 1);
 		return ItemStack.EMPTY;
 	}
 	
 
 	public static boolean isPlayerMob(Entity entity) {
-		Optional<EntityType<?>> entityMob = EntityType.byKey("player_mobs:player_mob");
+		Optional<EntityType<?>> entityMob = EntityType.byString("player_mobs:player_mob");
 		return entityMob.isPresent() && entityMob.get().equals(entity.getType());
 	}
 
@@ -97,15 +97,15 @@ public class EntityHeadDropEvent {
 		return new GameProfile(null, name);
 	}
 
-	public static ItemStack createHeadFor(PlayerEntity player) {
+	public static ItemStack createHeadFor(Player player) {
 		return createHeadFor(player.getGameProfile());
 	}
 
 	public static ItemStack createHeadFor(GameProfile profile) {
 		ItemStack stack = new ItemStack(Items.PLAYER_HEAD, 1);
-		stack.setTag(new CompoundNBT());
-		CompoundNBT profileData = new CompoundNBT();
-		NBTUtil.writeGameProfile(profileData, profile);
+		stack.setTag(new CompoundTag());
+		CompoundTag profileData = new CompoundTag();
+		NbtUtils.writeGameProfile(profileData, profile);
 		stack.getTag().put("SkullOwner", profileData);
 		return stack;
 	}
@@ -113,8 +113,8 @@ public class EntityHeadDropEvent {
 	private void addDrop(ItemStack stack, LivingEntity entity, Collection<ItemEntity> collection) {
 		if (stack.getCount() <= 0)
 			return;
-		ItemEntity entityItem = new ItemEntity(entity.getEntityWorld(), entity.getPosX(), entity.getPosY(), entity.getPosZ(), stack);
-		entityItem.setDefaultPickupDelay();
+		ItemEntity entityItem = new ItemEntity(entity.getCommandSenderWorld(), entity.getX(), entity.getY(), entity.getZ(), stack);
+		entityItem.setDefaultPickUpDelay();
 		collection.add(entityItem);
 	}
 }

@@ -5,14 +5,14 @@ import mob_grinding_utils.ModItems;
 import mob_grinding_utils.items.ItemGMChickenFeed;
 import mob_grinding_utils.items.ItemMobSwab;
 import mob_grinding_utils.network.MessageChickenSync;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.merchant.villager.WanderingTraderEntity;
-import net.minecraft.entity.passive.ChickenEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.npc.WanderingTrader;
+import net.minecraft.world.entity.animal.Chicken;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.EntityInteract;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.network.PacketDistributor;
@@ -25,17 +25,17 @@ public class EntityInteractionEvent {
 		if (event.getTarget() instanceof LivingEntity) {
 			LivingEntity entity = (LivingEntity) event.getTarget();
 
-			if (entity instanceof WanderingTraderEntity && !event.getItemStack().isEmpty() && event.getItemStack().getItem() instanceof ItemMobSwab) {
-				event.getItemStack().interactWithEntity(event.getPlayer(), entity, event.getHand());
+			if (entity instanceof WanderingTrader && !event.getItemStack().isEmpty() && event.getItemStack().getItem() instanceof ItemMobSwab) {
+				event.getItemStack().interactLivingEntity(event.getPlayer(), entity, event.getHand());
 				return;
 			}
 
-			if (entity instanceof ChickenEntity && !entity.isChild()) {
-				World world = entity.getEntityWorld();
+			if (entity instanceof Chicken && !entity.isBaby()) {
+				Level world = entity.getCommandSenderWorld();
 				ItemStack eventItem = event.getItemStack();
 				if (!eventItem.isEmpty() && eventItem.getItem() instanceof ItemGMChickenFeed) {
-					if (!world.isRemote) {
-						CompoundNBT nbt = entity.getPersistentData();
+					if (!world.isClientSide) {
+						CompoundTag nbt = entity.getPersistentData();
 						if (!nbt.contains("shouldExplode")) {
 							entity.setInvulnerable(true);
 							nbt.putBoolean("shouldExplode", true);
@@ -46,16 +46,16 @@ public class EntityInteractionEvent {
 								nbt.putBoolean("cursed", true);
 							if (eventItem.getItem() == ModItems.NUTRITIOUS_CHICKEN_FEED.get())
 								nbt.putBoolean("nutritious", true);
-							if (event.getPlayer() instanceof ServerPlayerEntity) {
-								TargetPoint target = new TargetPoint(entity.getPosX(), entity.getPosY(), entity.getPosZ(), 32, entity.getEntityWorld().getDimensionKey());
+							if (event.getPlayer() instanceof ServerPlayer) {
+								TargetPoint target = new TargetPoint(entity.getX(), entity.getY(), entity.getZ(), 32, entity.getCommandSenderWorld().dimension());
 								MobGrindingUtils.NETWORK_WRAPPER.send(PacketDistributor.NEAR.with(()->target), new MessageChickenSync(entity, nbt));
 							}
 						}
-						Vector3d vec3d = entity.getMotion();
-						entity.setMotion(vec3d.x, 0.06D, vec3d.z);
+						Vec3 vec3d = entity.getDeltaMovement();
+						entity.setDeltaMovement(vec3d.x, 0.06D, vec3d.z);
 						entity.setNoGravity(true);
 
-						if (!event.getPlayer().abilities.isCreativeMode)
+						if (!event.getPlayer().abilities.instabuild)
 							event.getItemStack().shrink(1);
 					}
 				}

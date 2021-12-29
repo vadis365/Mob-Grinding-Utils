@@ -2,15 +2,15 @@ package mob_grinding_utils.inventory.server;
 
 import javax.annotation.Nonnull;
 
-import net.minecraft.inventory.IInventory;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.Container;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemHandlerHelper;
 
 public class InventoryWrapperAH implements IItemHandlerModifiable {
-	private final IInventory inv;
+	private final Container inv;
 
-	public InventoryWrapperAH(IInventory inv) {
+	public InventoryWrapperAH(Container inv) {
 		this.inv = inv;
 	}
 
@@ -34,13 +34,13 @@ public class InventoryWrapperAH implements IItemHandlerModifiable {
 
 	@Override
 	public int getSlots() {
-		return getInv().getSizeInventory();
+		return getInv().getContainerSize();
 	}
 
 	@Override
 	@Nonnull
 	public ItemStack getStackInSlot(int slot) {
-		return getInv().getStackInSlot(slot);
+		return getInv().getItem(slot);
 	}
 
 	@Override
@@ -49,14 +49,14 @@ public class InventoryWrapperAH implements IItemHandlerModifiable {
 		if (stack.isEmpty())
 			return ItemStack.EMPTY;
 
-		ItemStack stackInSlot = getInv().getStackInSlot(slot);
+		ItemStack stackInSlot = getInv().getItem(slot);
 
 		int m;
 		if (!stackInSlot.isEmpty()) {
 			if (!ItemHandlerHelper.canItemStacksStack(stack, stackInSlot))
 				return stack;
 
-			if (!getInv().isItemValidForSlot(slot, stack))
+			if (!getInv().canPlaceItem(slot, stack))
 				return stack;
 
 			m = Math.min(stack.getMaxStackSize(), getSlotLimit(slot)) - stackInSlot.getCount();
@@ -65,8 +65,8 @@ public class InventoryWrapperAH implements IItemHandlerModifiable {
 				if (!simulate) {
 					ItemStack copy = stack.copy();
 					copy.grow(stackInSlot.getCount());
-					getInv().setInventorySlotContents(slot, copy);
-					getInv().markDirty();
+					getInv().setItem(slot, copy);
+					getInv().setChanged();
 				}
 
 				return ItemStack.EMPTY;
@@ -76,15 +76,15 @@ public class InventoryWrapperAH implements IItemHandlerModifiable {
 				if (!simulate) {
 					ItemStack copy = stack.split(m);
 					copy.grow(stackInSlot.getCount());
-					getInv().setInventorySlotContents(slot, copy);
-					getInv().markDirty();
+					getInv().setItem(slot, copy);
+					getInv().setChanged();
 				} else {
 					stack.shrink(m);
 				}
 				return stack;
 			}
 		} else {
-			if (!getInv().isItemValidForSlot(slot, stack))
+			if (!getInv().canPlaceItem(slot, stack))
 				return stack;
 
 			m = Math.min(stack.getMaxStackSize(), getSlotLimit(slot));
@@ -92,16 +92,16 @@ public class InventoryWrapperAH implements IItemHandlerModifiable {
 				// copy the stack to not modify the original one
 				stack = stack.copy();
 				if (!simulate) {
-					getInv().setInventorySlotContents(slot, stack.split(m));
-					getInv().markDirty();
+					getInv().setItem(slot, stack.split(m));
+					getInv().setChanged();
 				} else {
 					stack.shrink(m);
 				}
 				return stack;
 			} else {
 				if (!simulate) {
-					getInv().setInventorySlotContents(slot, stack);
-					getInv().markDirty();
+					getInv().setItem(slot, stack);
+					getInv().setChanged();
 				}
 				return ItemStack.EMPTY;
 			}
@@ -115,7 +115,7 @@ public class InventoryWrapperAH implements IItemHandlerModifiable {
 		if (amount == 0)
 			return ItemStack.EMPTY;
 
-		ItemStack stackInSlot = getInv().getStackInSlot(slot);
+		ItemStack stackInSlot = getInv().getItem(slot);
 
 		if (stackInSlot.isEmpty())
 			return ItemStack.EMPTY;
@@ -134,23 +134,23 @@ public class InventoryWrapperAH implements IItemHandlerModifiable {
 		} else {
 			int m = Math.min(stackInSlot.getCount(), amount);
 
-			ItemStack decrStackSize = getInv().decrStackSize(slot, m);
-			getInv().markDirty();
+			ItemStack decrStackSize = getInv().removeItem(slot, m);
+			getInv().setChanged();
 			return decrStackSize;
 		}
 	}
 
 	@Override
 	public void setStackInSlot(int slot, @Nonnull ItemStack stack) {
-		getInv().setInventorySlotContents(slot, stack);
+		getInv().setItem(slot, stack);
 	}
 
 	@Override
 	public int getSlotLimit(int slot) {
-		return getInv().getInventoryStackLimit();
+		return getInv().getMaxStackSize();
 	}
 
-	public IInventory getInv() {
+	public Container getInv() {
 		return inv;
 	}
 

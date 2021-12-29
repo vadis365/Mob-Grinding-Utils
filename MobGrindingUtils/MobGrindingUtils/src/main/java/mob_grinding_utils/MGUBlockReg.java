@@ -6,17 +6,18 @@ import java.util.function.Supplier;
 
 import javax.annotation.Nonnull;
 
-import net.minecraft.block.Block;
-import net.minecraft.item.Item;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraftforge.fml.RegistryObject;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraftforge.registries.RegistryObject;
 
-public class MGUBlockReg<B extends Block,I extends Item, T extends TileEntity> implements Supplier<B> {
+
+public class MGUBlockReg<B extends Block,I extends Item, T extends BlockEntity> implements Supplier<B> {
     private String name;
     private RegistryObject<B> block;
     private RegistryObject<I> item;
-    private RegistryObject<TileEntityType<T>> tile;
+    private RegistryObject<BlockEntityType<T>> tile;
 
     @Override
     public B get() {
@@ -27,11 +28,11 @@ public class MGUBlockReg<B extends Block,I extends Item, T extends TileEntity> i
         return name;
     }
 
-    public MGUBlockReg(String name, Supplier<B> blockSupplier, Function<B, I> itemSupplier, Supplier<T> tileSupplier) {
+    public MGUBlockReg(String name, Supplier<B> blockSupplier, Function<B, I> itemSupplier, BlockEntityType.BlockEntitySupplier<T> tileSupplier) {
         this.name = name;
         block = ModBlocks.BLOCKS.register(name, blockSupplier);
         item = ModItems.ITEMS.register(name, () -> itemSupplier.apply(block.get()));
-        tile = ModBlocks.TILE_ENTITIES.register(name, () -> TileEntityType.Builder.create(tileSupplier, block.get()).build(null));
+        tile = ModBlocks.TILE_ENTITIES.register(name, () -> BlockEntityType.Builder.of(tileSupplier, block.get()).build(null));
     }
 
     public MGUBlockReg(String name, Supplier<B> blockSupplier, Function<B, I> itemSupplier) {
@@ -51,7 +52,7 @@ public class MGUBlockReg<B extends Block,I extends Item, T extends TileEntity> i
     }
 
     @Nonnull
-    public TileEntityType<T> getTileEntityType() {
+    public BlockEntityType<T> getTileEntityType() {
         //just in case...
         return Objects.requireNonNull(tile).get();
     }

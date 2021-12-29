@@ -5,8 +5,8 @@ import javax.annotation.Nullable;
 import mob_grinding_utils.MobGrindingUtils;
 import mob_grinding_utils.Reference;
 import net.minecraft.data.DataGenerator;
-import net.minecraft.data.EntityTypeTagsProvider;
-import net.minecraft.entity.EntityType;
+import net.minecraft.data.tags.EntityTypeTagsProvider;
+import net.minecraft.world.entity.EntityType;
 import net.minecraftforge.common.data.ExistingFileHelper;
 
 public class MGUEntityTypeTags extends EntityTypeTagsProvider {
@@ -15,8 +15,8 @@ public class MGUEntityTypeTags extends EntityTypeTagsProvider {
     }
 
     @Override
-    protected void registerTags() {
-        this.getOrCreateBuilder(MobGrindingUtils.NOSWAB).add(EntityType.WITHER);
-        this.getOrCreateBuilder(MobGrindingUtils.NOSWAB).add(EntityType.ENDER_DRAGON);
+    protected void addTags() {
+        this.tag(MobGrindingUtils.NOSWAB).add(EntityType.WITHER);
+        this.tag(MobGrindingUtils.NOSWAB).add(EntityType.ENDER_DRAGON);
     }
 }

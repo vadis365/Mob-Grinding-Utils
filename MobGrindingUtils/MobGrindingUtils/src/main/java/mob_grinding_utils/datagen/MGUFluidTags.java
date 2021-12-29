@@ -4,8 +4,8 @@ import mob_grinding_utils.MobGrindingUtils;
 import mob_grinding_utils.ModBlocks;
 import mob_grinding_utils.Reference;
 import net.minecraft.data.DataGenerator;
-import net.minecraft.data.FluidTagsProvider;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.data.tags.FluidTagsProvider;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.data.ExistingFileHelper;
 
 public class MGUFluidTags extends FluidTagsProvider {
@@ -14,11 +14,11 @@ public class MGUFluidTags extends FluidTagsProvider {
     }
 
     @Override
-    protected void registerTags() {
-        getOrCreateBuilder(MobGrindingUtils.EXPERIENCE).add(ModBlocks.FLUID_XP.get());
-        getOrCreateBuilder(MobGrindingUtils.XPJUICE).add(ModBlocks.FLUID_XP.get());
+    protected void addTags() {
+        tag(MobGrindingUtils.EXPERIENCE).add(ModBlocks.FLUID_XP.get());
+        tag(MobGrindingUtils.XPJUICE).add(ModBlocks.FLUID_XP.get());
 
-        getOrCreateBuilder(MobGrindingUtils.EXPERIENCE).addOptional(new ResourceLocation("pneumaticcraft","memory_essence"));
-        getOrCreateBuilder(MobGrindingUtils.EXPERIENCE).addOptional(new ResourceLocation("cofh_core","experience"));
+        tag(MobGrindingUtils.EXPERIENCE).addOptional(new ResourceLocation("pneumaticcraft","memory_essence"));
+        tag(MobGrindingUtils.EXPERIENCE).addOptional(new ResourceLocation("cofh_core","experience"));
     }
 }

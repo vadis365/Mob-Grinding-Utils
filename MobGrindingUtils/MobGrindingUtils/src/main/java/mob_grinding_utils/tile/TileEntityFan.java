@@ -10,35 +10,35 @@ import mob_grinding_utils.ModItems;
 import mob_grinding_utils.blocks.BlockFan;
 import mob_grinding_utils.inventory.server.ContainerFan;
 import mob_grinding_utils.items.ItemFanUpgrade;
-import net.minecraft.block.AirBlock;
-import net.minecraft.block.BlockState;
+import net.minecraft.world.level.block.AirBlock;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.block.Blocks;
-import net.minecraft.block.material.Material;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.ItemStackHelper;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.INamedContainerProvider;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.NetworkManager;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.network.play.server.SUpdateTileEntityPacket;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.ContainerHelper;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.Connection;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.tags.BlockTags;
-import net.minecraft.tileentity.ITickableTileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.level.block.entity.TickableBlockEntity;
+import net.minecraft.core.Direction;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.util.Mth;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.Tags;
 
-public class TileEntityFan extends TileEntityInventoryHelper implements ITickableTileEntity, INamedContainerProvider {
+public class TileEntityFan extends TileEntityInventoryHelper implements TickableBlockEntity, MenuProvider {
 
 	private static final int[] SLOTS = new int[] {0, 1, 2};
 	public boolean showRenderBox;
@@ -51,11 +51,11 @@ public class TileEntityFan extends TileEntityInventoryHelper implements ITickabl
 
 	@Override
 	public void tick() {
-		if (getWorld().getGameTime()%2==0 && getWorld().getBlockState(getPos()).getBlock() instanceof BlockFan)
-			if (getWorld().getBlockState(getPos()).get(BlockFan.POWERED)) {
+		if (getLevel().getGameTime()%2==0 && getLevel().getBlockState(getBlockPos()).getBlock() instanceof BlockFan)
+			if (getLevel().getBlockState(getBlockPos()).getValue(BlockFan.POWERED)) {
 				activateBlock();
 		}
-		if (!getWorld().isRemote)
+		if (!getLevel().isClientSide)
 			setAABBWithModifiers();
 	}
 
@@ -72,13 +72,13 @@ public class TileEntityFan extends TileEntityInventoryHelper implements ITickabl
 	}
 	
 	public void setAABBWithModifiers() {
-		BlockState state = getWorld().getBlockState(getPos());
-		Direction facing = state.get(BlockFan.FACING);
+		BlockState state = getLevel().getBlockState(getBlockPos());
+		Direction facing = state.getValue(BlockFan.FACING);
 
 		int distance;
 		for (distance = 1; distance < 5 + getSpeedModifier(); distance++) {
-			BlockState state2 = getWorld().getBlockState(getPos().offset(facing, distance));
-			if (!(state2.getBlock() instanceof AirBlock) && state2.getMaterial() != Material.TALL_PLANTS)
+			BlockState state2 = getLevel().getBlockState(getBlockPos().relative(facing, distance));
+			if (!(state2.getBlock() instanceof AirBlock) && state2.getMaterial() != Material.REPLACEABLE_PLANT)
 				break;
 		}
 
@@ -130,48 +130,48 @@ public class TileEntityFan extends TileEntityInventoryHelper implements ITickabl
 			yPos = getHeightModifier();
 			yNeg = getHeightModifier();
 		}
-		getWorld().notifyBlockUpdate(getPos(), state, state, 8);
+		getLevel().sendBlockUpdated(getBlockPos(), state, state, 8);
 	}
 
-	public AxisAlignedBB getAABBWithModifiers() {
-		return new AxisAlignedBB(getPos().getX() - xNeg, getPos().getY() - yNeg, getPos().getZ() - zNeg, getPos().getX() + 1D + xPos, getPos().getY() + 1D + yPos, getPos().getZ() + 1D + zPos);
+	public AABB getAABBWithModifiers() {
+		return new AABB(getBlockPos().getX() - xNeg, getBlockPos().getY() - yNeg, getBlockPos().getZ() - zNeg, getBlockPos().getX() + 1D + xPos, getBlockPos().getY() + 1D + yPos, getBlockPos().getZ() + 1D + zPos);
 	}
 
 	@OnlyIn(Dist.CLIENT)
-	public AxisAlignedBB getAABBForRender() {
-		return new AxisAlignedBB(- xNeg, - yNeg, - zNeg, 1D + xPos, 1D + yPos, 1D + zPos);
+	public AABB getAABBForRender() {
+		return new AABB(- xNeg, - yNeg, - zNeg, 1D + xPos, 1D + yPos, 1D + zPos);
 	}
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public AxisAlignedBB getRenderBoundingBox() {
-		return new AxisAlignedBB(getPos().getX() - xNeg, getPos().getY() - yNeg, getPos().getZ() - zNeg, getPos().getX() + 1D + xPos, getPos().getY() + 1D + yPos, getPos().getZ() + 1D + zPos);
+	public AABB getRenderBoundingBox() {
+		return new AABB(getBlockPos().getX() - xNeg, getBlockPos().getY() - yNeg, getBlockPos().getZ() - zNeg, getBlockPos().getX() + 1D + xPos, getBlockPos().getY() + 1D + yPos, getBlockPos().getZ() + 1D + zPos);
 	}
 
 	public void toggleRenderBox() {
 		showRenderBox = !showRenderBox;
-		markDirty();
+		setChanged();
 	}
 
 	protected void activateBlock() {
-		BlockState state = getWorld().getBlockState(getPos());
+		BlockState state = getLevel().getBlockState(getBlockPos());
 		if (!(state.getBlock() instanceof BlockFan))
 			return;
-		Direction facing = state.get(BlockFan.FACING);
-		List<LivingEntity> list = getWorld().getEntitiesWithinAABB(LivingEntity.class, getAABBWithModifiers());
+		Direction facing = state.getValue(BlockFan.FACING);
+		List<LivingEntity> list = getLevel().getEntitiesOfClass(LivingEntity.class, getAABBWithModifiers());
 		for (Entity entity : list) {
 			if (entity != null) {
 				if (entity instanceof LivingEntity) {
 					if (facing != Direction.UP && facing != Direction.DOWN) {
-						entity.addVelocity(MathHelper.sin(facing.getOpposite().getHorizontalAngle() * 3.141593F / 180.0F) * 0.5D, 0D, -MathHelper.cos(facing.getOpposite().getHorizontalAngle() * 3.141593F / 180.0F) * 0.5D);
+						entity.push(Mth.sin(facing.getOpposite().toYRot() * 3.141593F / 180.0F) * 0.5D, 0D, -Mth.cos(facing.getOpposite().toYRot() * 3.141593F / 180.0F) * 0.5D);
 					} else if (facing == Direction.UP) {
 						//entity.motionY += 0.125D;
 						float f = 0.125F;
-						Vector3d vec3d = entity.getMotion();
-						entity.setMotion(vec3d.x, (double) f, vec3d.z);
-						entity.addVelocity(0D, 0.25D, 0D);
+						Vec3 vec3d = entity.getDeltaMovement();
+						entity.setDeltaMovement(vec3d.x, (double) f, vec3d.z);
+						entity.push(0D, 0.25D, 0D);
 						entity.fallDistance = 0;
-					} else entity.addVelocity(0D, -0.2D, 0D);
+					} else entity.push(0D, -0.2D, 0D);
 				}
 			}
 		}
@@ -191,8 +191,8 @@ public class TileEntityFan extends TileEntityInventoryHelper implements ITickabl
 	}
 
 	@Override
-	public CompoundNBT write(CompoundNBT nbt) {
-		super.write(nbt);
+	public CompoundTag save(CompoundTag nbt) {
+		super.save(nbt);
 		nbt.putBoolean("showRenderBox", showRenderBox);
 		nbt.putFloat("xPos", xPos);
 		nbt.putFloat("yPos", yPos);
@@ -204,8 +204,8 @@ public class TileEntityFan extends TileEntityInventoryHelper implements ITickabl
 	}
 
 	@Override
-	public void read(BlockState state, CompoundNBT nbt) {
-		super.read(state, nbt);
+	public void load(BlockState state, CompoundTag nbt) {
+		super.load(state, nbt);
 		showRenderBox = nbt.getBoolean("showRenderBox");
 		xPos = nbt.getFloat("xPos");
 		yPos = nbt.getFloat("yPos");
@@ -217,46 +217,46 @@ public class TileEntityFan extends TileEntityInventoryHelper implements ITickabl
 
 	@Nonnull
 	@Override
-    public CompoundNBT getUpdateTag() {
-		CompoundNBT nbt = new CompoundNBT();
-        return write(nbt);
+    public CompoundTag getUpdateTag() {
+		CompoundTag nbt = new CompoundTag();
+        return save(nbt);
     }
 
 	@Override
-	public SUpdateTileEntityPacket getUpdatePacket() {
-		CompoundNBT nbt = new CompoundNBT();
-		write(nbt);
-		return new SUpdateTileEntityPacket(getPos(), 0, nbt);
+	public ClientboundBlockEntityDataPacket getUpdatePacket() {
+		CompoundTag nbt = new CompoundTag();
+		save(nbt);
+		return new ClientboundBlockEntityDataPacket(getBlockPos(), 0, nbt);
 	}
 
 	@Override
-	public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket packet) {
-		read(getBlockState(), packet.getNbtCompound());
+	public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket packet) {
+		load(getBlockState(), packet.getTag());
 		onContentsChanged();
 	}
 
 	public void onContentsChanged() {
-		if (!getWorld().isRemote) {
-			final BlockState state = getWorld().getBlockState(getPos());
+		if (!getLevel().isClientSide) {
+			final BlockState state = getLevel().getBlockState(getBlockPos());
 			setAABBWithModifiers();
-			getWorld().notifyBlockUpdate(getPos(), state, state, 8);
-			markDirty();
+			getLevel().sendBlockUpdated(getBlockPos(), state, state, 8);
+			setChanged();
 		}
 	}
 
 	@Override
-	public boolean isItemValidForSlot(int slot, ItemStack stack) {
+	public boolean canPlaceItem(int slot, ItemStack stack) {
 		return stack.getItem() instanceof ItemFanUpgrade;
 	}
 
 	@Nonnull
 	@Override
-	public ItemStack removeStackFromSlot(int index) {
-		return ItemStackHelper.getAndRemove(getItems(), index);
+	public ItemStack removeItemNoUpdate(int index) {
+		return ContainerHelper.takeItem(getItems(), index);
 	}
 
 	@Override
-	public int getInventoryStackLimit() {
+	public int getMaxStackSize() {
 		return 64;
 	}
 
@@ -267,23 +267,23 @@ public class TileEntityFan extends TileEntityInventoryHelper implements ITickabl
 	}
 
 	@Override
-	public boolean canInsertItem(int index, ItemStack itemStackIn, Direction direction) {
+	public boolean canPlaceItemThroughFace(int index, ItemStack itemStackIn, Direction direction) {
 		return false;
 	}
 
 	@Override
-	public boolean canExtractItem(int index, ItemStack stack, Direction direction) {
+	public boolean canTakeItemThroughFace(int index, ItemStack stack, Direction direction) {
 		return false;
 	}
 	
 	@Override
-	public Container createMenu(int windowID, PlayerInventory playerInventory, PlayerEntity player) {
-		return new ContainerFan(windowID, playerInventory, new PacketBuffer(Unpooled.buffer()).writeBlockPos(pos));
+	public AbstractContainerMenu createMenu(int windowID, Inventory playerInventory, Player player) {
+		return new ContainerFan(windowID, playerInventory, new FriendlyByteBuf(Unpooled.buffer()).writeBlockPos(worldPosition));
 	}
 
 	@Nonnull
 	@Override
-	public ITextComponent getDisplayName() {
-		return new TranslationTextComponent("block.mob_grinding_utils.fan");
+	public Component getDisplayName() {
+		return new TranslatableComponent("block.mob_grinding_utils.fan");
 	}
 }

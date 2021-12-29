@@ -2,11 +2,13 @@ package mob_grinding_utils.datagen;
 
 import mob_grinding_utils.ModBlocks;
 import mob_grinding_utils.Reference;
-import net.minecraft.block.Block;
-import net.minecraft.data.BlockTagsProvider;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.data.tags.BlockTagsProvider;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.tags.BlockTags;
 import net.minecraftforge.common.data.ExistingFileHelper;
+
+import net.minecraft.data.tags.TagsProvider.TagAppender;
 
 public class MGUBlockTags extends BlockTagsProvider {
     public MGUBlockTags(DataGenerator generatorIn, ExistingFileHelper existingFileHelper) {
@@ -14,9 +16,9 @@ public class MGUBlockTags extends BlockTagsProvider {
     }
 
     @Override
-    protected void registerTags() {
-        Builder<Block> witherTag = this.getOrCreateBuilder(BlockTags.WITHER_IMMUNE);
-        Builder<Block> dragonTag = this.getOrCreateBuilder(BlockTags.DRAGON_IMMUNE);
+    protected void addTags() {
+        TagAppender<Block> witherTag = this.tag(BlockTags.WITHER_IMMUNE);
+        TagAppender<Block> dragonTag = this.tag(BlockTags.DRAGON_IMMUNE);
 
         ModBlocks.BLOCKS.getEntries().forEach((block) -> {
             witherTag.add(block.get());

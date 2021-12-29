@@ -4,8 +4,8 @@ package mob_grinding_utils.network;
 import java.util.function.Supplier;
 
 import mob_grinding_utils.MobGrindingUtils;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.core.BlockPos;
 import net.minecraftforge.fml.network.NetworkEvent;
 
 public class MessageTapParticle {
@@ -20,11 +20,11 @@ public class MessageTapParticle {
 		tilePos = new BlockPos(x, y, z);
 	}
 
-	public static void encode(final MessageTapParticle message, PacketBuffer buf) {
+	public static void encode(final MessageTapParticle message, FriendlyByteBuf buf) {
 		buf.writeBlockPos(message.tilePos);
 	}
 
-	public static MessageTapParticle decode(PacketBuffer buf) {
+	public static MessageTapParticle decode(FriendlyByteBuf buf) {
 		return new MessageTapParticle(buf.readBlockPos());
 	}
 

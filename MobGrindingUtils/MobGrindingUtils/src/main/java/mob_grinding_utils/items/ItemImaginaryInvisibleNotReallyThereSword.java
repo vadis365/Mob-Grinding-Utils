@@ -4,34 +4,36 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemTier;
-import net.minecraft.item.SwordItem;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Tiers;
+import net.minecraft.world.item.SwordItem;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
+import net.minecraft.world.item.Item.Properties;
+
 public class ItemImaginaryInvisibleNotReallyThereSword extends SwordItem {
 	public ItemImaginaryInvisibleNotReallyThereSword(Properties properties) {
-		super(ItemTier.DIAMOND, 3, -2.4F, properties);
+		super(Tiers.DIAMOND, 3, -2.4F, properties);
 	}
 
 	@Override
-    public boolean hitEntity(ItemStack stack, LivingEntity target, LivingEntity attacker) {
-		target.attackEntityFrom(DamageSource.causePlayerDamage((PlayerEntity) attacker), getAttackDamage() + EnchantmentHelper.getModifierForCreature(stack, ((LivingEntity)target).getCreatureAttribute()));
+    public boolean hurtEnemy(ItemStack stack, LivingEntity target, LivingEntity attacker) {
+		target.hurt(DamageSource.playerAttack((Player) attacker), getDamage() + EnchantmentHelper.getDamageBonus(stack, ((LivingEntity)target).getMobType()));
 		return true;
     }
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void addInformation(ItemStack stack, @Nullable World world, List<ITextComponent> list, ITooltipFlag flag) {
-		list.add(new TranslationTextComponent("Nothing to see here - Move along."));
+	public void appendHoverText(ItemStack stack, @Nullable Level world, List<Component> list, TooltipFlag flag) {
+		list.add(new TranslatableComponent("Nothing to see here - Move along."));
 	}
 }

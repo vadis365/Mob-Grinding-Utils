@@ -4,14 +4,14 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import mob_grinding_utils.ModBlocks;
-import net.minecraft.block.BlockState;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.NetworkManager;
-import net.minecraft.network.play.server.SUpdateTileEntityPacket;
-import net.minecraft.tileentity.ITickableTileEntity;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.Connection;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.world.level.block.entity.TickableBlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.core.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidAttributes;
@@ -19,7 +19,7 @@ import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
 
-public class TileEntityTank extends TileEntity  implements ITickableTileEntity {
+public class TileEntityTank extends BlockEntity  implements TickableBlockEntity {
 	public FluidTank tank = new FluidTank(FluidAttributes.BUCKET_VOLUME *  32);
     private final LazyOptional<IFluidHandler> tank_holder = LazyOptional.of(() -> tank);
 	public int prevTankAmount;
@@ -28,18 +28,18 @@ public class TileEntityTank extends TileEntity  implements ITickableTileEntity {
 		super(ModBlocks.TANK.getTileEntityType());
 	}
 
-	public TileEntityTank(TileEntityType<TileEntitySinkTank> TANK_SINK_TILE) {
+	public TileEntityTank(BlockEntityType<TileEntitySinkTank> TANK_SINK_TILE) {
 		super(TANK_SINK_TILE);
 	}
 
-	public TileEntityTank(TileEntityType<TileEntityJumboTank> JUMBO_TANK_TILE, FluidTank tankIn) {
+	public TileEntityTank(BlockEntityType<TileEntityJumboTank> JUMBO_TANK_TILE, FluidTank tankIn) {
 		super(JUMBO_TANK_TILE);
 		this.tank = tankIn;
 	}
 
 	@Override
 	public void tick() {
-		if (getWorld().isRemote)
+		if (getLevel().isClientSide)
 			return;
 		if(prevTankAmount != tank.getFluidAmount())
 			updateBlock();
@@ -47,38 +47,38 @@ public class TileEntityTank extends TileEntity  implements ITickableTileEntity {
 	}
 
 	public void updateBlock() {
-		getWorld().notifyBlockUpdate(pos, getWorld().getBlockState(pos), getWorld().getBlockState(pos), 3);
+		getLevel().sendBlockUpdated(worldPosition, getLevel().getBlockState(worldPosition), getLevel().getBlockState(worldPosition), 3);
 	}
 
 	@Override
-	public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket packet) {
+	public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket packet) {
 		super.onDataPacket(net, packet);
-		read(getBlockState(), packet.getNbtCompound());
+		load(getBlockState(), packet.getTag());
 		return;
 	}
 
 	@Override
-	public SUpdateTileEntityPacket getUpdatePacket() {
-		CompoundNBT nbt = new CompoundNBT();
-		write(nbt);
-		return new SUpdateTileEntityPacket(getPos(), 0, nbt);
+	public ClientboundBlockEntityDataPacket getUpdatePacket() {
+		CompoundTag nbt = new CompoundTag();
+		save(nbt);
+		return new ClientboundBlockEntityDataPacket(getBlockPos(), 0, nbt);
 	}
 
 	@Override
-    public CompoundNBT getUpdateTag() {
-		CompoundNBT nbt = new CompoundNBT();
-        return write(nbt);
+    public CompoundTag getUpdateTag() {
+		CompoundTag nbt = new CompoundTag();
+        return save(nbt);
     }
 
 	@Override
-	public void read(BlockState state, CompoundNBT tagCompound) {
-		super.read(state, tagCompound);
+	public void load(BlockState state, CompoundTag tagCompound) {
+		super.load(state, tagCompound);
 		tank.readFromNBT(tagCompound);
 	}
 
 	@Override
-	public CompoundNBT write(CompoundNBT tagCompound) {
-		super.write(tagCompound);
+	public CompoundTag save(CompoundTag tagCompound) {
+		super.save(tagCompound);
 		tank.writeToNBT(tagCompound);
 		return tagCompound;
 	}

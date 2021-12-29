@@ -4,12 +4,12 @@ package mob_grinding_utils.recipe;
 import com.google.gson.JsonObject;
 import mob_grinding_utils.MobGrindingUtils;
 import mob_grinding_utils.ModItems;
-import net.minecraft.inventory.CraftingInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipeSerializer;
-import net.minecraft.item.crafting.ShapelessRecipe;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.inventory.CraftingContainer;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.ShapelessRecipe;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 import org.apache.logging.log4j.LogManager;
 
@@ -20,18 +20,18 @@ import javax.annotation.Nullable;
 public class ChickenFeedRecipe extends ShapelessRecipe {
     public static final String NAME = "chicken_feed";
     public ChickenFeedRecipe(ShapelessRecipe recipe) {
-        super(recipe.getId(), recipe.getGroup(), recipe.getRecipeOutput(), recipe.getIngredients());
+        super(recipe.getId(), recipe.getGroup(), recipe.getResultItem(), recipe.getIngredients());
     }
 
     @Nonnull
     @Override
-    public ItemStack getCraftingResult(@Nonnull CraftingInventory inv) {
-        ItemStack result = super.getCraftingResult(inv);
+    public ItemStack assemble(@Nonnull CraftingContainer inv) {
+        ItemStack result = super.assemble(inv);
 
         ItemStack swabItem = ItemStack.EMPTY;
 
-        for (int i = 0; i < inv.getSizeInventory(); i++) {
-            ItemStack stack = inv.getStackInSlot(i);
+        for (int i = 0; i < inv.getContainerSize(); i++) {
+            ItemStack stack = inv.getItem(i);
             if (!stack.isEmpty()) {
                 if (stack.getItem() == ModItems.MOB_SWAB_USED.get())
                     swabItem = stack;
@@ -49,22 +49,22 @@ public class ChickenFeedRecipe extends ShapelessRecipe {
 
     @Nonnull
     @Override
-    public IRecipeSerializer<?> getSerializer() {
+    public RecipeSerializer<?> getSerializer() {
         return MobGrindingUtils.CHICKEN_FEED.get();
     }
 
-    public static class Serializer extends ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<ChickenFeedRecipe> {
+    public static class Serializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<ChickenFeedRecipe> {
         @Nullable
         @Override
-        public ChickenFeedRecipe read(@Nonnull ResourceLocation recipeId, @Nonnull PacketBuffer buffer) {
-            return new ChickenFeedRecipe(IRecipeSerializer.CRAFTING_SHAPELESS.read(recipeId, buffer));
+        public ChickenFeedRecipe fromNetwork(@Nonnull ResourceLocation recipeId, @Nonnull FriendlyByteBuf buffer) {
+            return new ChickenFeedRecipe(RecipeSerializer.SHAPELESS_RECIPE.fromNetwork(recipeId, buffer));
         }
 
         @Nonnull
         @Override
-        public ChickenFeedRecipe read(@Nonnull ResourceLocation recipeId, @Nonnull JsonObject json) {
+        public ChickenFeedRecipe fromJson(@Nonnull ResourceLocation recipeId, @Nonnull JsonObject json) {
             try {
-                return new ChickenFeedRecipe(IRecipeSerializer.CRAFTING_SHAPELESS.read(recipeId, json));
+                return new ChickenFeedRecipe(RecipeSerializer.SHAPELESS_RECIPE.fromJson(recipeId, json));
             }
             catch (Exception exception) {
                 LogManager.getLogger().info("Error reading "+ NAME +" Recipe from packet: ", exception);
@@ -73,9 +73,9 @@ public class ChickenFeedRecipe extends ShapelessRecipe {
         }
 
         @Override
-        public void write(@Nonnull PacketBuffer buffer, @Nonnull ChickenFeedRecipe recipe) {
+        public void toNetwork(@Nonnull FriendlyByteBuf buffer, @Nonnull ChickenFeedRecipe recipe) {
             try {
-                IRecipeSerializer.CRAFTING_SHAPELESS.write(buffer, recipe);
+                RecipeSerializer.SHAPELESS_RECIPE.toNetwork(buffer, recipe);
             }
             catch (Exception exception) {
                 LogManager.getLogger().info("Error writing "+ NAME +" Recipe to packet: ", exception);

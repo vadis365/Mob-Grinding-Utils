@@ -2,33 +2,33 @@ package mob_grinding_utils.network;
 
 import mob_grinding_utils.MobGrindingUtils;
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.passive.ChickenEntity;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.particles.ParticleTypes;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.animal.Chicken;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.world.level.Level;
 
 public class MGUNetProxyClient extends MGUNetProxyCommon {
     public void HandleChickenSync(MessageChickenSync message) {
-        World world = Minecraft.getInstance().world;
+        Level world = Minecraft.getInstance().level;
 
         if (world == null)
             return;
 
-        else if (world.isRemote) {
-            LivingEntity chicken = (ChickenEntity) world.getEntityByID(message.chickenID);
+        else if (world.isClientSide) {
+            LivingEntity chicken = (Chicken) world.getEntity(message.chickenID);
             if (chicken != null) {
-                CompoundNBT nbt = new CompoundNBT();
+                CompoundTag nbt = new CompoundTag();
                 nbt = chicken.getPersistentData();
                 nbt.putBoolean("shouldExplode", message.nbt.getBoolean("shouldExplode"));
                 nbt.putInt("countDown", message.nbt.getInt("countDown"));
                 if (message.nbt.getInt("countDown") >= 20) {
                     for (int k = 0; k < 20; ++k) {
-							double xSpeed = world.rand.nextGaussian() * 0.02D;
-							double ySpeed = world.rand.nextGaussian() * 0.02D;
-							double zSpeed = world.rand.nextGaussian() * 0.02D;
-							world.addParticle(ParticleTypes.EXPLOSION, chicken.getPosX() + (double) (world.rand.nextFloat() * chicken.getWidth() * 2.0F) - (double) chicken.getWidth(), chicken.getPosY() + (double) (world.rand.nextFloat() * chicken.getHeight()), chicken.getPosZ() + (double) (world.rand.nextFloat() * chicken.getWidth() * 2.0F) - (double) chicken.getWidth(), xSpeed, ySpeed, zSpeed);
-							world.addParticle(ParticleTypes.LAVA, chicken.getPosX() + (double) (world.rand.nextFloat() * chicken.getWidth() * 2.0F) - (double) chicken.getWidth(), chicken.getPosY() + (double) (world.rand.nextFloat() * chicken.getHeight()), chicken.getPosZ() + (double) (world.rand.nextFloat() * chicken.getWidth() * 2.0F) - (double) chicken.getWidth(), xSpeed, ySpeed, zSpeed);
+							double xSpeed = world.random.nextGaussian() * 0.02D;
+							double ySpeed = world.random.nextGaussian() * 0.02D;
+							double zSpeed = world.random.nextGaussian() * 0.02D;
+							world.addParticle(ParticleTypes.EXPLOSION, chicken.getX() + (double) (world.random.nextFloat() * chicken.getBbWidth() * 2.0F) - (double) chicken.getBbWidth(), chicken.getY() + (double) (world.random.nextFloat() * chicken.getBbHeight()), chicken.getZ() + (double) (world.random.nextFloat() * chicken.getBbWidth() * 2.0F) - (double) chicken.getBbWidth(), xSpeed, ySpeed, zSpeed);
+							world.addParticle(ParticleTypes.LAVA, chicken.getX() + (double) (world.random.nextFloat() * chicken.getBbWidth() * 2.0F) - (double) chicken.getBbWidth(), chicken.getY() + (double) (world.random.nextFloat() * chicken.getBbHeight()), chicken.getZ() + (double) (world.random.nextFloat() * chicken.getBbWidth() * 2.0F) - (double) chicken.getBbWidth(), xSpeed, ySpeed, zSpeed);
                     }
                 }
             } else {
@@ -38,7 +38,7 @@ public class MGUNetProxyClient extends MGUNetProxyCommon {
     }
 
     public void spawnGlitterParticles( double x, double y, double z, double vecX, double vecY, double vecZ) {
-        World world = Minecraft.getInstance().world;
+        Level world = Minecraft.getInstance().level;
         world.addParticle(MobGrindingUtils.PARTICLE_FLUID_XP.get(), false, x, y, z, vecX, vecY, vecZ);
     }
 }

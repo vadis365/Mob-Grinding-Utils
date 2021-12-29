@@ -1,8 +1,8 @@
 package mob_grinding_utils.events;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
@@ -15,9 +15,9 @@ public class BossBarHidingEvent {
 	@SubscribeEvent
 	public void onRenderHUD(BossInfo event) {
 		if (event.getType().equals(RenderGameOverlayEvent.ElementType.BOSSINFO)) {
-			PlayerEntity player = Minecraft.getInstance().player;
+			Player player = Minecraft.getInstance().player;
 			if (player != null) {
-				CompoundNBT nbt = player.getPersistentData();
+				CompoundTag nbt = player.getPersistentData();
 				if (nbt.getBoolean("MGU_WitherMuffle")) {
 					if (event.getBossInfo().getName().getString().equals("Wither"))
 						event.setCanceled(true);

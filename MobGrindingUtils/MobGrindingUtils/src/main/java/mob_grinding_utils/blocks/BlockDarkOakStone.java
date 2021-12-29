@@ -1,6 +1,6 @@
 package mob_grinding_utils.blocks;
 
-import net.minecraft.block.Block;
+import net.minecraft.world.level.block.Block;
 
 public class BlockDarkOakStone extends Block {
 

@@ -1,13 +1,15 @@
 package mob_grinding_utils.inventory.client;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.widget.button.Button;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.network.chat.Component;
+
+import net.minecraft.client.gui.components.Button.OnPress;
 
 public class GuiMGUButton extends Button {
     private static final ResourceLocation TEXTURES = new ResourceLocation("mob_grinding_utils:textures/gui/absorption_hopper_gui.png");
@@ -15,18 +17,18 @@ public class GuiMGUButton extends Button {
     public Size size;
     public int id;
 
-    public GuiMGUButton(int x, int y, Size s, int idIn, ITextComponent title, IPressable pressedAction) {
+    public GuiMGUButton(int x, int y, Size s, int idIn, Component title, OnPress pressedAction) {
         super(x, y, s.width, s.height, title, pressedAction);
         size = s;
         id = idIn;
     }
 
     @Override
-    public void renderButton(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+    public void renderButton(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
         Minecraft mc = Minecraft.getInstance();
-        FontRenderer fontrenderer = mc.fontRenderer;
+        Font fontrenderer = mc.font;
         if (visible) {
-            mc.getTextureManager().bindTexture(getTextures(size));
+            mc.getTextureManager().bind(getTextures(size));
             RenderSystem.color4f(0.75F, 0.75F, 0.75F, 0.5F);
             boolean hover = mouseX >= x && mouseY >= y && mouseX < x + width && mouseY < y + height;
             if(hover)

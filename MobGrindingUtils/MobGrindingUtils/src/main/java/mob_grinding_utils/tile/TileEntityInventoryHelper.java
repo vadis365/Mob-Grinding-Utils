@@ -2,32 +2,32 @@ package mob_grinding_utils.tile;
 
 import javax.annotation.Nullable;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.ISidedInventory;
-import net.minecraft.inventory.ItemStackHelper;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.NonNullList;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.WorldlyContainer;
+import net.minecraft.world.ContainerHelper;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.core.NonNullList;
 
-public abstract class TileEntityInventoryHelper extends TileEntity implements ISidedInventory {
+public abstract class TileEntityInventoryHelper extends BlockEntity implements WorldlyContainer {
 
 	private NonNullList<ItemStack> inventory;
 
-	public TileEntityInventoryHelper(TileEntityType<?> tileEntityTypeIn, int invtSize) {
+	public TileEntityInventoryHelper(BlockEntityType<?> tileEntityTypeIn, int invtSize) {
 		super(tileEntityTypeIn);
 		inventory = NonNullList.<ItemStack>withSize(invtSize, ItemStack.EMPTY);
 	}
 
 	@Override
-	public int getSizeInventory() {
+	public int getContainerSize() {
 		return inventory.size();
 	}
 
 	@Override
-	public ItemStack getStackInSlot(int slot) {
+	public ItemStack getItem(int slot) {
 		return inventory.get(slot);
 	}
 
@@ -36,28 +36,28 @@ public abstract class TileEntityInventoryHelper extends TileEntity implements IS
     }
 
 	@Override
-    public ItemStack decrStackSize(int index, int count) {
-		ItemStack itemstack = ItemStackHelper.getAndSplit(inventory, index, count);
+    public ItemStack removeItem(int index, int count) {
+		ItemStack itemstack = ContainerHelper.removeItem(inventory, index, count);
 		if (!itemstack.isEmpty())
-			this.markDirty();
+			this.setChanged();
 		return itemstack;
 	}
 
 	@Override
-    public void setInventorySlotContents(int index, @Nullable ItemStack stack) {
+    public void setItem(int index, @Nullable ItemStack stack) {
         inventory.set(index, stack);
-        if (stack.getCount() > this.getInventoryStackLimit())
-            stack.setCount(this.getInventoryStackLimit());
-        this.markDirty();
+        if (stack.getCount() > this.getMaxStackSize())
+            stack.setCount(this.getMaxStackSize());
+        this.setChanged();
     }
 
 	@Override
-	public int getInventoryStackLimit() {
+	public int getMaxStackSize() {
 		return 64;
 	}
 
 	@Override
-	public boolean isUsableByPlayer(PlayerEntity player) {
+	public boolean stillValid(Player player) {
 		return true;
 	}
 
@@ -73,38 +73,38 @@ public abstract class TileEntityInventoryHelper extends TileEntity implements IS
 	}
 
 	@Override
-	public void read(BlockState state,CompoundNBT compound) {
-		super.read(state, compound);
+	public void load(BlockState state,CompoundTag compound) {
+		super.load(state, compound);
 		this.loadFromNbt(compound);
 	}
 
 	@Override
-	public CompoundNBT write(CompoundNBT compound) {
-		super.write(compound);
+	public CompoundTag save(CompoundTag compound) {
+		super.save(compound);
 		return this.saveToNbt(compound);
 	}
 
-	public void loadFromNbt(CompoundNBT compound) {
-		inventory = NonNullList.<ItemStack>withSize(this.getSizeInventory(), ItemStack.EMPTY);
+	public void loadFromNbt(CompoundTag compound) {
+		inventory = NonNullList.<ItemStack>withSize(this.getContainerSize(), ItemStack.EMPTY);
 		if (compound.contains("Items", 9))
-			ItemStackHelper.loadAllItems(compound, inventory);
+			ContainerHelper.loadAllItems(compound, inventory);
 	}
 
-	public CompoundNBT saveToNbt(CompoundNBT compound) {
-		ItemStackHelper.saveAllItems(compound, inventory, false);
+	public CompoundTag saveToNbt(CompoundTag compound) {
+		ContainerHelper.saveAllItems(compound, inventory, false);
 		return compound;
 	}
 
 	@Override
-	public void openInventory(PlayerEntity playerIn) {
+	public void startOpen(Player playerIn) {
 	}
 
 	@Override
-	public void closeInventory(PlayerEntity playerIn) {
+	public void stopOpen(Player playerIn) {
 	}
 
 	@Override
-	public void clear() {
+	public void clearContent() {
 		inventory.clear();
 	}
 

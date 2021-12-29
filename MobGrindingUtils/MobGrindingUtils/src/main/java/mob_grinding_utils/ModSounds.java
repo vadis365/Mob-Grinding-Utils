@@ -5,10 +5,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import net.minecraft.block.SoundType;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.SoundEvent;
-import net.minecraft.util.SoundEvents;
+import net.minecraft.world.level.block.SoundType;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -24,7 +24,7 @@ public class ModSounds {
 	public static SoundEvent SPOOPY_CHANGE;
 	public static SoundEvent SOLID_XP_BLOCK_BOING;
 
-	public static final SoundType SOLID_XP_BLOCK = new SoundType(1.0F, 1.0F, SoundEvents.ENTITY_PLAYER_LEVELUP, SoundEvents.ENTITY_EXPERIENCE_ORB_PICKUP, SoundEvents.ENTITY_EXPERIENCE_ORB_PICKUP, SoundEvents.ENTITY_EXPERIENCE_ORB_PICKUP, SoundEvents.ENTITY_EXPERIENCE_ORB_PICKUP);
+	public static final SoundType SOLID_XP_BLOCK = new SoundType(1.0F, 1.0F, SoundEvents.PLAYER_LEVELUP, SoundEvents.EXPERIENCE_ORB_PICKUP, SoundEvents.EXPERIENCE_ORB_PICKUP, SoundEvents.EXPERIENCE_ORB_PICKUP, SoundEvents.EXPERIENCE_ORB_PICKUP);
 
 	public static SoundEvent registerSoundResource(String name) {
 		return new SoundEvent(new ResourceLocation(Reference.MOD_ID, name));

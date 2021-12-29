@@ -8,20 +8,22 @@ import javax.annotation.Nullable;
 
 import mob_grinding_utils.MobGrindingUtils;
 import mob_grinding_utils.ModItems;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Hand;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.network.chat.Component;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+
+import net.minecraft.world.item.Item.Properties;
 
 public class ItemMobSwab extends Item {
 	public boolean used;
@@ -32,30 +34,30 @@ public class ItemMobSwab extends Item {
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void addInformation(@Nonnull ItemStack stack, @Nullable World world, @Nonnull List<ITextComponent> list, @Nonnull ITooltipFlag flag) {
+	public void appendHoverText(@Nonnull ItemStack stack, @Nullable Level world, @Nonnull List<Component> list, @Nonnull TooltipFlag flag) {
 		if (!used)
-			list.add(new TranslationTextComponent("tooltip.mobswab_1").mergeStyle(TextFormatting.YELLOW));
+			list.add(new TranslatableComponent("tooltip.mobswab_1").withStyle(ChatFormatting.YELLOW));
 		else if (stack.hasTag() && Objects.requireNonNull(stack.getTag()).contains("mguMobName")) {
-			list.add(new TranslationTextComponent("tooltip.mobswab_2").mergeStyle(TextFormatting.YELLOW));
-			list.add(new TranslationTextComponent("tooltip.mobswab_3").mergeStyle(TextFormatting.GREEN).appendString( " " + Objects.requireNonNull(stack.getTag().get("mguMobName")).getString() + " 'DNA'."));
+			list.add(new TranslatableComponent("tooltip.mobswab_2").withStyle(ChatFormatting.YELLOW));
+			list.add(new TranslatableComponent("tooltip.mobswab_3").withStyle(ChatFormatting.GREEN).append( " " + Objects.requireNonNull(stack.getTag().get("mguMobName")).getAsString() + " 'DNA'."));
 		}
 	}
 
 	@Nonnull
 	@Override
-	public ActionResultType itemInteractionForEntity(@Nonnull ItemStack stack, @Nonnull PlayerEntity player, @Nonnull LivingEntity target, @Nonnull Hand hand) {
-		if (!(target instanceof PlayerEntity) && !used && !target.getType().isContained(MobGrindingUtils.NOSWAB)) {
+	public InteractionResult interactLivingEntity(@Nonnull ItemStack stack, @Nonnull Player player, @Nonnull LivingEntity target, @Nonnull InteractionHand hand) {
+		if (!(target instanceof Player) && !used && !target.getType().is(MobGrindingUtils.NOSWAB)) {
 				String mobName = Objects.requireNonNull(target.getType().getRegistryName()).toString();
 				ItemStack stack2 = new ItemStack(ModItems.MOB_SWAB_USED.get(), 1);
 				if (!stack2.getOrCreateTag().contains("mguMobName")) {
 					stack2.getTag().putString("mguMobName", mobName);
-					CompoundNBT nbt = new CompoundNBT();
-					target.writeAdditional(nbt);
+					CompoundTag nbt = new CompoundTag();
+					target.addAdditionalSaveData(nbt);
 				}
-			player.setHeldItem(hand, stack2);
-		    return ActionResultType.SUCCESS;
+			player.setItemInHand(hand, stack2);
+		    return InteractionResult.SUCCESS;
 		} else {
-		      return ActionResultType.PASS;
+		      return InteractionResult.PASS;
 		}
 	}
 
