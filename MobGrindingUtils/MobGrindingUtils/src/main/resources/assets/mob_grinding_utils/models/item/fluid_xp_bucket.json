@@ -1,6 +1,5 @@
 {
-  "parent": "item/generated",
-  "textures": {
-    "layer0": "mob_grinding_utils:items/fluid_xp_bucket"
-  }
+  "parent": "forge:item/bucket",
+  "loader": "forge:bucket",
+  "fluid": "mob_grinding_utils:fluid_xp"
 }
