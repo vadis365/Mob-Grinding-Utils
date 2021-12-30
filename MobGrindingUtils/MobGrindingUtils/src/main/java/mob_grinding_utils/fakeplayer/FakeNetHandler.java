@@ -10,58 +10,13 @@ import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.util.concurrent.Future;
 import io.netty.util.concurrent.GenericFutureListener;
+import net.minecraft.network.protocol.game.*;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.PacketFlow;
 import net.minecraft.network.ConnectionProtocol;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
-import net.minecraft.network.protocol.game.ServerboundSwingPacket;
-import net.minecraft.network.protocol.game.ServerboundChatPacket;
-import net.minecraft.network.protocol.game.ServerboundContainerClickPacket;
-import net.minecraft.network.protocol.game.ServerboundClientInformationPacket;
-import net.minecraft.network.protocol.game.ServerboundClientCommandPacket;
-import net.minecraft.network.protocol.game.ServerboundContainerClosePacket;
-import net.minecraft.network.protocol.game.ServerboundAcceptTeleportationPacket;
-import net.minecraft.network.protocol.game.ServerboundContainerAckPacket;
-import net.minecraft.network.protocol.game.ServerboundSetCreativeModeSlotPacket;
-import net.minecraft.network.protocol.game.ServerboundCustomPayloadPacket;
-import net.minecraft.network.protocol.game.ServerboundEditBookPacket;
-import net.minecraft.network.protocol.game.ServerboundContainerButtonClickPacket;
-import net.minecraft.network.protocol.game.ServerboundPlayerCommandPacket;
-import net.minecraft.network.protocol.game.ServerboundSetCarriedItemPacket;
-import net.minecraft.network.protocol.game.ServerboundPlayerInputPacket;
-import net.minecraft.network.protocol.game.ServerboundJigsawGeneratePacket;
-import net.minecraft.network.protocol.game.ServerboundKeepAlivePacket;
-import net.minecraft.network.protocol.game.ServerboundLockDifficultyPacket;
-import net.minecraft.network.protocol.game.ServerboundRecipeBookSeenRecipePacket;
-import net.minecraft.network.protocol.game.ServerboundMoveVehiclePacket;
-import net.minecraft.network.protocol.game.ServerboundPickItemPacket;
-import net.minecraft.network.protocol.game.ServerboundPlaceRecipePacket;
-import net.minecraft.network.protocol.game.ServerboundPlayerAbilitiesPacket;
-import net.minecraft.network.protocol.game.ServerboundPlayerActionPacket;
-import net.minecraft.network.protocol.game.ServerboundMovePlayerPacket;
-import net.minecraft.network.protocol.game.ServerboundUseItemOnPacket;
-import net.minecraft.network.protocol.game.ServerboundUseItemPacket;
-import net.minecraft.network.protocol.game.ServerboundEntityTagQuery;
-import net.minecraft.network.protocol.game.ServerboundBlockEntityTagQuery;
-import net.minecraft.network.protocol.game.ServerboundRenameItemPacket;
-import net.minecraft.network.protocol.game.ServerboundResourcePackPacket;
-import net.minecraft.network.protocol.game.ServerboundSeenAdvancementsPacket;
-import net.minecraft.network.protocol.game.ServerboundSelectTradePacket;
-import net.minecraft.network.protocol.game.ServerboundChangeDifficultyPacket;
-import net.minecraft.network.protocol.game.ServerboundTeleportToEntityPacket;
-import net.minecraft.network.protocol.game.ServerboundPaddleBoatPacket;
-import net.minecraft.network.protocol.game.ServerboundCommandSuggestionPacket;
-import net.minecraft.network.protocol.game.ServerboundSetBeaconPacket;
-import net.minecraft.network.protocol.game.ServerboundSetCommandBlockPacket;
-import net.minecraft.network.protocol.game.ServerboundSetJigsawBlockPacket;
-import net.minecraft.network.protocol.game.ServerboundSetCommandMinecartPacket;
-import net.minecraft.network.protocol.game.ServerboundRecipeBookChangeSettingsPacket;
-import net.minecraft.network.protocol.game.ServerboundSignUpdatePacket;
-import net.minecraft.network.protocol.game.ServerboundSetStructureBlockPacket;
-import net.minecraft.network.protocol.game.ServerboundInteractPacket;
-import net.minecraft.network.protocol.game.ClientboundPlayerPositionPacket;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.network.chat.Component;
 
@@ -79,7 +34,7 @@ public class FakeNetHandler extends ServerGamePacketListenerImpl {
         public void channelActive(ChannelHandlerContext p_channelActive_1_) throws Exception {}
 
         @Override
-        public void channelInactive(ChannelHandlerContext p_channelInactive_1_) throws Exception {}
+        public void channelInactive(ChannelHandlerContext p_channelInactive_1_) {}
 
         @Override
         public void setProtocol(ConnectionProtocol newState) {}
@@ -88,7 +43,7 @@ public class FakeNetHandler extends ServerGamePacketListenerImpl {
         public void exceptionCaught(ChannelHandlerContext p_exceptionCaught_1_, Throwable p_exceptionCaught_2_) {}
 
         @Override
-        protected void channelRead0(ChannelHandlerContext p_channelRead0_1_, Packet<?> p_channelRead0_2_) throws Exception {}
+        protected void channelRead0(ChannelHandlerContext p_channelRead0_1_, Packet<?> p_channelRead0_2_) {}
 
         @Override
         public void send(Packet<?> packetIn) {}
@@ -130,9 +85,6 @@ public class FakeNetHandler extends ServerGamePacketListenerImpl {
 
         @Override
         public void setReadOnly() {}
-
-        @Override
-        public void setupCompression(int threshold) {}
 
         @Override
         public void handleDisconnection() {}
@@ -279,9 +231,6 @@ public class FakeNetHandler extends ServerGamePacketListenerImpl {
     public void handleSetCreativeModeSlot(ServerboundSetCreativeModeSlotPacket packetIn) {}
 
     @Override
-    public void handleContainerAck(ServerboundContainerAckPacket packetIn) {}
-
-    @Override
     public void handleSignUpdate(ServerboundSignUpdatePacket packetIn) {}
 
     @Override
@@ -301,4 +250,16 @@ public class FakeNetHandler extends ServerGamePacketListenerImpl {
 
     @Override
     public void handleLockDifficulty(ServerboundLockDifficultyPacket p_217261_1_) {}
+
+    @Override
+    public void dismount(double p_143612_, double p_143613_, double p_143614_, float p_143615_, float p_143616_) {
+    }
+
+    @Override
+    public void teleport(double p_143618_, double p_143619_, double p_143620_, float p_143621_, float p_143622_, Set<ClientboundPlayerPositionPacket.RelativeArgument> p_143623_, boolean p_143624_) {
+    }
+
+    @Override
+    public void handlePong(ServerboundPongPacket p_143652_) {
+    }
 }

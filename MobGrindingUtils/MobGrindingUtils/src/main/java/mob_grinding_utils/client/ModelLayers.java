@@ -3,6 +3,7 @@ package mob_grinding_utils.client;
 import mob_grinding_utils.ModBlocks;
 import mob_grinding_utils.Reference;
 import mob_grinding_utils.client.render.*;
+import mob_grinding_utils.models.ModelXPSolidifier;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.client.ClientRegistry;
@@ -40,7 +41,7 @@ public class ModelLayers {
         event.registerLayerDefinition(TANK, fanmodel::createBodyLayer);
         event.registerLayerDefinition(TANK_SINK, fanmodel::createBodyLayer);
         event.registerLayerDefinition(JUMBO_TANK, fanmodel::createBodyLayer);
-        event.registerLayerDefinition(XPSOLIDIFIER, fanmodel::createBodyLayer);
+        event.registerLayerDefinition(XPSOLIDIFIER, ModelXPSolidifier::createBodyLayer);
         event.registerLayerDefinition(ENTITY_SPAWNER, fanmodel::createBodyLayer);
     }
 }

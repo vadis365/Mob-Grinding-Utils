@@ -3,6 +3,7 @@ package mob_grinding_utils.client;
 import javax.annotation.Nonnull;
 
 import mezz.jei.api.registration.IModIngredientRegistration;
+import net.minecraft.network.chat.TextComponent;
 import org.apache.commons.lang3.StringUtils;
 
 import mezz.jei.api.IModPlugin;
@@ -30,9 +31,7 @@ public class JEIPlugin implements IModPlugin {
         ModItems.ITEMS.getEntries().forEach((item) -> {
             String key = item.get().getDescriptionId()+".jei.info";
             if (I18n.exists(key)) {
-                String langEntry = ChatFormatting.stripFormatting(I18n.get(key));
-                if (langEntry != null)
-                    registration.addIngredientInfo(new ItemStack(item.get()), VanillaTypes.ITEM, StringUtils.splitByWholeSeparator(langEntry, "//n"));
+                registration.addIngredientInfo(new ItemStack(item.get()), VanillaTypes.ITEM, new TextComponent(I18n.get(key)));
             }
         });
     }

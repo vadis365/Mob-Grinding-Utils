@@ -18,7 +18,7 @@ public class EntityXPOrbFalling extends ExperienceOrb {
 	public EntityXPOrbFalling(Level worldIn, double x, double y, double z, int expValue) {
 		super(EntityType.EXPERIENCE_ORB, worldIn);
 		setPos(x, y, z);
-		yRot = (float) (Math.random() * 360.0D);
+		setYRot((float) (Math.random() * 360.0D));
 		setDeltaMovement(0D ,0D ,0D);
 		value = expValue;
 	}
@@ -72,7 +72,7 @@ public class EntityXPOrbFalling extends ExperienceOrb {
 				if (value > 0)
 					TileEntitySinkTank.addPlayerXP(player, value);
 
-				remove();
+				remove(RemovalReason.DISCARDED);
 			}
 		}
 	}

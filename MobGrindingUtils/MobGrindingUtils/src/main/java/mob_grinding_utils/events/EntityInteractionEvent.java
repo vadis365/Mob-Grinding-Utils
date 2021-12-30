@@ -15,8 +15,7 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.EntityInteract;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.network.PacketDistributor;
-import net.minecraftforge.fml.network.PacketDistributor.TargetPoint;
+import net.minecraftforge.network.PacketDistributor;
 
 public class EntityInteractionEvent {
 
@@ -55,7 +54,7 @@ public class EntityInteractionEvent {
 						entity.setDeltaMovement(vec3d.x, 0.06D, vec3d.z);
 						entity.setNoGravity(true);
 
-						if (!event.getPlayer().abilities.instabuild)
+						if (!event.getPlayer().getAbilities().instabuild)
 							event.getItemStack().shrink(1);
 					}
 				}

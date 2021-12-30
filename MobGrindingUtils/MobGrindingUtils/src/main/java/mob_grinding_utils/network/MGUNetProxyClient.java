@@ -24,15 +24,15 @@ public class MGUNetProxyClient extends MGUNetProxyCommon {
                 nbt.putInt("countDown", message.nbt.getInt("countDown"));
                 if (message.nbt.getInt("countDown") >= 20) {
                     for (int k = 0; k < 20; ++k) {
-							double xSpeed = world.random.nextGaussian() * 0.02D;
-							double ySpeed = world.random.nextGaussian() * 0.02D;
-							double zSpeed = world.random.nextGaussian() * 0.02D;
-							world.addParticle(ParticleTypes.EXPLOSION, chicken.getX() + (double) (world.random.nextFloat() * chicken.getBbWidth() * 2.0F) - (double) chicken.getBbWidth(), chicken.getY() + (double) (world.random.nextFloat() * chicken.getBbHeight()), chicken.getZ() + (double) (world.random.nextFloat() * chicken.getBbWidth() * 2.0F) - (double) chicken.getBbWidth(), xSpeed, ySpeed, zSpeed);
-							world.addParticle(ParticleTypes.LAVA, chicken.getX() + (double) (world.random.nextFloat() * chicken.getBbWidth() * 2.0F) - (double) chicken.getBbWidth(), chicken.getY() + (double) (world.random.nextFloat() * chicken.getBbHeight()), chicken.getZ() + (double) (world.random.nextFloat() * chicken.getBbWidth() * 2.0F) - (double) chicken.getBbWidth(), xSpeed, ySpeed, zSpeed);
+                        double xSpeed = world.random.nextGaussian() * 0.02D;
+                        double ySpeed = world.random.nextGaussian() * 0.02D;
+                        double zSpeed = world.random.nextGaussian() * 0.02D;
+                        world.addParticle(ParticleTypes.EXPLOSION, chicken.getX() + (double) (world.random.nextFloat() * chicken.getBbWidth() * 2.0F) - (double) chicken.getBbWidth(), chicken.getY() + (double) (world.random.nextFloat() * chicken.getBbHeight()), chicken.getZ() + (double) (world.random.nextFloat() * chicken.getBbWidth() * 2.0F) - (double) chicken.getBbWidth(), xSpeed, ySpeed, zSpeed);
+                        world.addParticle(ParticleTypes.LAVA, chicken.getX() + (double) (world.random.nextFloat() * chicken.getBbWidth() * 2.0F) - (double) chicken.getBbWidth(), chicken.getY() + (double) (world.random.nextFloat() * chicken.getBbHeight()), chicken.getZ() + (double) (world.random.nextFloat() * chicken.getBbWidth() * 2.0F) - (double) chicken.getBbWidth(), xSpeed, ySpeed, zSpeed);
                     }
                 }
             } else {
-               // LogManager.getLogger().info("WHY THE CLUCK IS THE CHICKEN NULL!!!!?");
+                // LogManager.getLogger().info("WHY THE CLUCK IS THE CHICKEN NULL!!!!?");
             }
         }
     }

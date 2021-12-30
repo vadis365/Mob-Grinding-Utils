@@ -47,17 +47,17 @@ public class ItemMobSwab extends Item {
 	@Override
 	public InteractionResult interactLivingEntity(@Nonnull ItemStack stack, @Nonnull Player player, @Nonnull LivingEntity target, @Nonnull InteractionHand hand) {
 		if (!(target instanceof Player) && !used && !target.getType().is(MobGrindingUtils.NOSWAB)) {
-				String mobName = Objects.requireNonNull(target.getType().getRegistryName()).toString();
-				ItemStack stack2 = new ItemStack(ModItems.MOB_SWAB_USED.get(), 1);
-				if (!stack2.getOrCreateTag().contains("mguMobName")) {
-					stack2.getTag().putString("mguMobName", mobName);
-					CompoundTag nbt = new CompoundTag();
-					target.addAdditionalSaveData(nbt);
-				}
+			String mobName = Objects.requireNonNull(target.getType().getRegistryName()).toString();
+			ItemStack stack2 = new ItemStack(ModItems.MOB_SWAB_USED.get(), 1);
+			if (!stack2.getOrCreateTag().contains("mguMobName")) {
+				stack2.getTag().putString("mguMobName", mobName);
+				CompoundTag nbt = new CompoundTag();
+				target.addAdditionalSaveData(nbt);
+			}
 			player.setItemInHand(hand, stack2);
-		    return InteractionResult.SUCCESS;
+			return InteractionResult.SUCCESS;
 		} else {
-		      return InteractionResult.PASS;
+			return InteractionResult.PASS;
 		}
 	}
 

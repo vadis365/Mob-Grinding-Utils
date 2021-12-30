@@ -8,6 +8,7 @@ import mob_grinding_utils.MobGrindingUtils;
 import mob_grinding_utils.ModItems;
 import mob_grinding_utils.ModSounds;
 import mob_grinding_utils.network.MessageChickenSync;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -21,7 +22,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.network.PacketDistributor;
+import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.registries.ForgeRegistries;
 
 public class ChickenFuseEvent {
@@ -78,7 +79,7 @@ public class ChickenFuseEvent {
 							ItemEntity feather = new ItemEntity(world, entity.getX() + (double) (world.random.nextFloat() * entity.getBbWidth() * 2.0F) - (double) entity.getBbWidth(), entity.getY() + (double) (world.random.nextFloat() * entity.getBbHeight()), entity.getZ() + (double) (world.random.nextFloat() * entity.getBbWidth() * 2.0F) - (double) entity.getBbWidth(), stack);
 							world.addFreshEntity(feather);
 						}
-						entity.remove();
+						entity.remove(Entity.RemovalReason.DISCARDED);
 					}
 				}
 			}

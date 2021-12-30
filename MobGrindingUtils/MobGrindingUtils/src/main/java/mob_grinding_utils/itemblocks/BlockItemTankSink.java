@@ -26,7 +26,7 @@ public class BlockItemTankSink extends BlockItem {
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	   public void appendHoverText(ItemStack stack, @Nullable Level world, List<Component> list, TooltipFlag flag) {
+	public void appendHoverText(ItemStack stack, @Nullable Level world, List<Component> list, TooltipFlag flag) {
 		
 		if(stack.hasTag() && !stack.getTag().contains("Empty")) {
 			FluidStack fluid = FluidStack.loadFluidStackFromNBT(stack.getTag());

@@ -26,10 +26,10 @@ public class ItemImaginaryInvisibleNotReallyThereSword extends SwordItem {
 	}
 
 	@Override
-    public boolean hurtEnemy(ItemStack stack, LivingEntity target, LivingEntity attacker) {
+	public boolean hurtEnemy(ItemStack stack, LivingEntity target, LivingEntity attacker) {
 		target.hurt(DamageSource.playerAttack((Player) attacker), getDamage() + EnchantmentHelper.getDamageBonus(stack, ((LivingEntity)target).getMobType()));
 		return true;
-    }
+	}
 
 	@Override
 	@OnlyIn(Dist.CLIENT)

@@ -8,6 +8,7 @@ import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntComparators;
 import it.unimi.dsi.fastutil.ints.IntList;
 import mob_grinding_utils.Reference;
+import net.minecraft.core.Registry;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.ItemStack;
@@ -102,7 +103,8 @@ public class FluidIngredient extends Ingredient {
 
         json.addProperty("advanced", advanced);
         if (fluidTag != null) {
-            json.addProperty("tag", SerializationTags.getInstance().getFluids().getIdOrThrow(fluidTag).toString());
+            json.addProperty("tag", SerializationTags.getInstance().getIdOrThrow(Registry.FLUID_REGISTRY, fluidTag, () -> new IllegalStateException("Unknown fluid tag")
+            ).toString());
         }
         else {
             json.addProperty("fluid", getMatchingFluids().get(0).getRegistryName().toString());
@@ -152,7 +154,7 @@ public class FluidIngredient extends Ingredient {
             boolean advanced = json.has("advanced") && GsonHelper.getAsBoolean(json, "advanced");
             if (json.has("tag")) {
                 ResourceLocation tagRes = new ResourceLocation(GsonHelper.getAsString(json, "tag"));
-                Tag<Fluid> fluidTag = SerializationTags.getInstance().getFluids().getTag(tagRes);
+                Tag<Fluid> fluidTag = SerializationTags.getInstance().getTagOrThrow(Registry.FLUID_REGISTRY, tagRes, (tag) -> new IllegalStateException("Unknown fluid tag: " + tag));
                 if (fluidTag != null)
                     return new FluidIngredient(fluidTag, advanced);
                 else

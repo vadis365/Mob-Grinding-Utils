@@ -39,7 +39,7 @@ public class ItemRottenEgg extends Item {
 	}
 
 	@Override
-	   public InteractionResult useOn(UseOnContext context) {
+	public InteractionResult useOn(UseOnContext context) {
 		Level world = context.getLevel();
 		Player player = context.getPlayer();
 		InteractionHand hand = context.getHand();
@@ -52,7 +52,7 @@ public class ItemRottenEgg extends Item {
 					if (state.getBlock() == Blocks.GRASS_BLOCK || state.getBlock() == Blocks.DIRT || state.getBlock() == Blocks.MYCELIUM || state.getBlock() == Blocks.FARMLAND) {
 						world.levelEvent(null, 2001, pos.offset(x, 0, z), Block.getId(world.getBlockState(pos.offset(x, 0, z))));
 						world.setBlock(pos.offset(x, 0, z), ModBlocks.DREADFUL_DIRT.getBlock().defaultBlockState(), 3);
-						if (!player.abilities.instabuild)
+						if (!player.getAbilities().instabuild)
 							stackHeld.shrink(1);
 					}
 				}

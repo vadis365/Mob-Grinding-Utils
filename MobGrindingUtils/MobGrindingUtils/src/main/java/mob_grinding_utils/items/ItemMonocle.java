@@ -29,7 +29,7 @@ public class ItemMonocle extends ArmorItem {
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	   public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
+	public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
 		tooltip.add(new TranslatableComponent("tooltip.monocle").withStyle(ChatFormatting.YELLOW));//applyTextStyle
 	}
 

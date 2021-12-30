@@ -45,7 +45,7 @@ public class FillXPBottleEvent {
 		if (stackIn.getCount() <= 0)
 			return stack;
 		else {
-			if (!player.inventory.add(stack))
+			if (!player.getInventory().add(stack))
 				player.drop(stack, false);
 			return stackIn;
 		}
