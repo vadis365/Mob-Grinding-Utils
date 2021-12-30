@@ -3,9 +3,15 @@ package mob_grinding_utils.models;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.model.Model;
 import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.client.model.geom.PartPose;
+import net.minecraft.client.model.geom.builders.CubeDeformation;
+import net.minecraft.client.model.geom.builders.CubeListBuilder;
+import net.minecraft.client.model.geom.builders.LayerDefinition;
+import net.minecraft.client.model.geom.builders.MeshDefinition;
+import net.minecraft.client.model.geom.builders.PartDefinition;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -19,36 +25,29 @@ public class ModelXPSolidifier extends Model {
     public ModelPart rack_left;
     public ModelPart rack_right;
 
-    public ModelXPSolidifier() {
+    public ModelXPSolidifier(ModelPart root) {
 		super(RenderType::entitySolid);
-        this.texWidth = 64;
-        this.texHeight = 64;
-        this.rack_left = new ModelPart(this, 6, 2);
-        this.rack_left.setPos(0.0F, 0.0F, 0.0F);
-        this.rack_left.addBox(-6.0F, -5.0F, -12.0F, 1, 1, 10, 0.0F);
-        this.top = new ModelPart(this, 0, 20);
-        this.top.setPos(0.0F, 24.0F, 0.0F);
-        this.top.addBox(-8.0F, -11.0F, -8.0F, 16, 3, 16, 0.0F);
-        this.tank = new ModelPart(this, 0, 40);
-        this.tank.setPos(0.0F, 24.0F, 0.0F);
-        this.tank.addBox(-8.0F, -8.0F, -8.0F, 16, 8, 16, 0.0F);
-        this.rack_top = new ModelPart(this, 17, 14);
-        this.rack_top.setPos(0.0F, 0.0F, 0.0F);
-        this.rack_top.addBox(-6.0F, -6.0F, -2.0F, 12, 2, 3, 0.0F);
-        this.rack_front = new ModelPart(this, 19, 0);
-        this.rack_front.setPos(0.0F, 0.0F, 0.0F);
-        this.rack_front.addBox(-6.0F, -5.0F, -13.0F, 12, 1, 1, 0.0F);
-        this.rack_right = new ModelPart(this, 36, 2);
-        this.rack_right.setPos(0.0F, 0.0F, 0.0F);
-        this.rack_right.addBox(5.0F, -5.0F, -12.0F, 1, 1, 10, 0.0F);
-        this.rack = new ModelPart(this, 25, 4);
-        this.rack.setPos(0.0F, 14.0F, 6.0F);
-        this.rack.addBox(-2.0F, -4.0F, -1.0F, 4, 3, 2, 0.0F);
-        this.rack.addChild(this.rack_left);
-        this.rack.addChild(this.rack_top);
-        this.rack.addChild(this.rack_front);
-        this.rack.addChild(this.rack_right);
+		this.tank = root.getChild("tank");
+		this.top = root.getChild("top");
+		this.rack = root.getChild("rack");
+		this.rack_top = rack.getChild("rack_top");
+		this.rack_front = rack.getChild("rack_front");
+		this.rack_left = rack.getChild("rack_left");
+		this.rack_right = rack.getChild("rack_right");
     }
+
+	public static LayerDefinition createBodyLayer() {
+		MeshDefinition meshdefinition = new MeshDefinition();
+		PartDefinition partdefinition = meshdefinition.getRoot();
+    	partdefinition.addOrReplaceChild("top", CubeListBuilder.create().texOffs(0, 20).addBox(-8F, -11F, -8F, 16F, 3F, 16F, new CubeDeformation(0F)), PartPose.offsetAndRotation(0F, 24F, 0F, 0F, 0F, 0F));
+    	partdefinition.addOrReplaceChild("tank", CubeListBuilder.create().texOffs(0, 40).addBox(-8F, -8F, -8F, 16F, 8F, 16F, new CubeDeformation(0F)), PartPose.offsetAndRotation(0F, 24F, 0F, 0F, 0F, 0F));
+    	PartDefinition rack = partdefinition.addOrReplaceChild("rack", CubeListBuilder.create().texOffs(25, 4).addBox(-2F, -4F, -1F, 4F, 3F, 2F, new CubeDeformation(0F)), PartPose.offsetAndRotation(0F, 14F, 6F, 0F, 0F, 0F));
+    	PartDefinition rack_top = rack.addOrReplaceChild("rack_top", CubeListBuilder.create().texOffs(17, 14).addBox(-6F, -6F, -2F, 12F, 2F, 3F, new CubeDeformation(0F)), PartPose.offsetAndRotation(0F, 0F, 0F, 0F, 0F, 0F));
+    	PartDefinition rack_front = rack.addOrReplaceChild("rack_front", CubeListBuilder.create().texOffs(19, 0).addBox(-6F, -5F, -13F, 12F, 1F, 1F, new CubeDeformation(0F)), PartPose.offsetAndRotation(0F, 0F, 0F, 0F, 0F, 0F));
+    	PartDefinition rack_left = rack.addOrReplaceChild("rack_left", CubeListBuilder.create().texOffs(6, 2).addBox(-6F, -5F, -12F, 1F, 1F, 10F, new CubeDeformation(0F)), PartPose.offsetAndRotation(0F, 0F, 0F, 0F, 0F, 0F));
+       	PartDefinition rack_right = rack.addOrReplaceChild("rack_right", CubeListBuilder.create().texOffs(36, 2).addBox(5F, -5F, -12F, 1F, 1F, 10F, new CubeDeformation(0F)), PartPose.offsetAndRotation(0F, 0F, 0F, 0F, 0F, 0F));
+		return LayerDefinition.create(meshdefinition, 64, 64);
+	}
 
     @Override
 	public void renderToBuffer(PoseStack matrixStackIn, VertexConsumer bufferIn, int packedLightIn, int packedOverlayIn, float red, float green, float blue, float alpha) {
@@ -61,11 +60,5 @@ public class ModelXPSolidifier extends Model {
 
 	public void renderRack(PoseStack matrixStackIn, VertexConsumer bufferIn, int packedLightIn, int packedOverlayIn, float red, float green, float blue, float alpha) {
         this.rack.render(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn, red, green, blue, alpha);
-    }
-
-    public void setRotateAngle(ModelPart modelRenderer, float x, float y, float z) {
-        modelRenderer.xRot = x;
-        modelRenderer.yRot = y;
-        modelRenderer.zRot = z;
     }
 }
