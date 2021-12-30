@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Random;
 
 import mob_grinding_utils.MobGrindingUtils;
+import mob_grinding_utils.network.MGUClientPackets;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.data.worldgen.placement.VegetationPlacements;
@@ -154,7 +155,7 @@ public class BlockDelightfulDirt extends Block {
 				double d3 = ((double) rand.nextFloat() - 0.5D) * 0.5D;
 				double d4 = ((double) rand.nextFloat() - 0.5D) * 0.5D;
 				double d5 = ((double) rand.nextFloat() - 0.5D) * 0.5D;
-				MobGrindingUtils.NETPROXY.spawnGlitterParticles(d0 + d3, d1 + d4, d2 + d5, 0D, 0D, 0D);
+				MGUClientPackets.spawnGlitterParticles(d0 + d3, d1 + d4, d2 + d5, 0D, 0D, 0D);
 			}
 		}
 	}

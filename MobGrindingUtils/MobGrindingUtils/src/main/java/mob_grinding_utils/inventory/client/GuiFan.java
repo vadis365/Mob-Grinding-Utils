@@ -19,6 +19,8 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
+import javax.annotation.Nonnull;
+
 @OnlyIn(Dist.CLIENT)
 public class GuiFan extends AbstractContainerScreen<ContainerFan> {
 
@@ -46,25 +48,24 @@ public class GuiFan extends AbstractContainerScreen<ContainerFan> {
 	}
 
 	@Override
-	public void render(PoseStack stack, int mouseX, int mouseY, float partialTicks) {
+	public void render(@Nonnull PoseStack stack, int mouseX, int mouseY, float partialTicks) {
 		this.renderBackground(stack);
 		super.render(stack, mouseX, mouseY, partialTicks);
 		renderTooltip(stack, mouseX, mouseY);
 	}
 
 	@Override
-	protected void renderLabels(PoseStack stack, int mouseX, int mouseY) {
+	protected void renderLabels(@Nonnull PoseStack stack, int mouseX, int mouseY) {
 		String title = new TranslatableComponent("block.mob_grinding_utils.fan").getString();
-		fontRenderer.draw(stack, title, imageWidth / 2 - fontRenderer.width(title) / 2, imageHeight - 218, 4210752);
-		fontRenderer.drawShadow(stack, !tile.showRenderBox ? "Show Area" : "Hide Area", imageWidth - 88 - fontRenderer.width(!tile.showRenderBox ? "Show Area" : "Hide Area") / 2, imageHeight - 178, 14737632);
+		fontRenderer.draw(stack, title, imageWidth / 2.0f - fontRenderer.width(title) / 2.0f, imageHeight - 218, 4210752);
+		fontRenderer.drawShadow(stack, !tile.showRenderBox ? "Show Area" : "Hide Area", imageWidth - 88 - fontRenderer.width(!tile.showRenderBox ? "Show Area" : "Hide Area") / 2.0f, imageHeight - 178, 14737632);
 	}
 
-	@SuppressWarnings("deprecation")
 	@Override
-	protected void renderBg(PoseStack stack, float partialTicks, int mouseX, int mouseY) {
-    	RenderSystem.setShader(GameRenderer::getPositionTexShader);
-        RenderSystem.setShaderTexture(0, GUI_FAN);
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+	protected void renderBg(@Nonnull PoseStack stack, float partialTicks, int mouseX, int mouseY) {
+		RenderSystem.setShader(GameRenderer::getPositionTexShader);
+		RenderSystem.setShaderTexture(0, GUI_FAN);
+		RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 		int xOffSet = (width - imageWidth) / 2;
 		int yOffSet = (height - imageHeight) / 2;
 		this.blit(stack, xOffSet, yOffSet, 0, 0, imageWidth, imageHeight);

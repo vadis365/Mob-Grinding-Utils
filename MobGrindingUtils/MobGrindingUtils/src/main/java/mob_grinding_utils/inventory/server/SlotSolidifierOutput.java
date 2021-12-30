@@ -1,5 +1,6 @@
 package mob_grinding_utils.inventory.server;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import net.minecraft.world.entity.player.Player;
@@ -10,7 +11,7 @@ import net.minecraftforge.items.SlotItemHandler;
 
 public class SlotSolidifierOutput extends SlotItemHandler {
     @SuppressWarnings("unused")
-	private AbstractContainerMenu container;
+    private AbstractContainerMenu container;
 
     public SlotSolidifierOutput(IItemHandler itemHandler, int index, int xPosition, int yPosition, AbstractContainerMenu container) {
         super(itemHandler, index, xPosition, yPosition);
@@ -23,8 +24,8 @@ public class SlotSolidifierOutput extends SlotItemHandler {
     }
 
     @Override
-    public void onTake(Player player, ItemStack stack) {
-    	// keeping for possible stuffs
+    public void onTake(@Nonnull Player player, @Nonnull ItemStack stack) {
+        // keeping for possible stuffs
         super.onTake(player, stack);
     }
     

@@ -13,6 +13,8 @@ import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 
+import javax.annotation.Nonnull;
+
 public class GuiSaw extends AbstractContainerScreen<ContainerSaw> {
 
 	private static final ResourceLocation GUI_SAW = new ResourceLocation("mob_grinding_utils:textures/gui/saw_gui.png");
@@ -24,23 +26,23 @@ public class GuiSaw extends AbstractContainerScreen<ContainerSaw> {
 	}
 
 	@Override
-	public void render(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+	public void render(@Nonnull PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
 		this.renderBackground(matrixStack);
-        super.render(matrixStack, mouseX, mouseY, partialTicks);
-        renderTooltip(matrixStack, mouseX, mouseY);
-    }
-
-	@Override
-	protected void renderLabels(PoseStack matrixStack, int x, int y) {
-		String title = new TranslatableComponent("block.mob_grinding_utils.saw").getString();
-		fontRenderer.draw(matrixStack, title, imageWidth / 2 - fontRenderer.width(title) / 2, imageHeight - 218, 4210752);
+		super.render(matrixStack, mouseX, mouseY, partialTicks);
+		renderTooltip(matrixStack, mouseX, mouseY);
 	}
 
 	@Override
-	protected void renderBg(PoseStack matrixStack, float partialTicks, int x, int y) {
-    	RenderSystem.setShader(GameRenderer::getPositionTexShader);
-        RenderSystem.setShaderTexture(0, GUI_SAW);
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+	protected void renderLabels(@Nonnull PoseStack matrixStack, int x, int y) {
+		String title = new TranslatableComponent("block.mob_grinding_utils.saw").getString();
+		fontRenderer.draw(matrixStack, title, imageWidth / 2.0f - fontRenderer.width(title) / 2.0f, imageHeight - 218, 4210752);
+	}
+
+	@Override
+	protected void renderBg(@Nonnull PoseStack matrixStack, float partialTicks, int x, int y) {
+		RenderSystem.setShader(GameRenderer::getPositionTexShader);
+		RenderSystem.setShaderTexture(0, GUI_SAW);
+		RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 		int xOffSet = (width - imageWidth) / 2;
 		int yOffSet = (height - imageHeight) / 2;
 		this.blit(matrixStack, xOffSet, yOffSet, 0, 0, imageWidth, imageHeight);

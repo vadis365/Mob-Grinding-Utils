@@ -20,6 +20,8 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 
+import javax.annotation.Nonnull;
+
 public class GuiMGUSpawner extends AbstractContainerScreen<ContainerMGUSpawner> {
 
 	private static final ResourceLocation GUI_TEXTURE = new ResourceLocation("mob_grinding_utils:textures/gui/entity_spawner_gui.png");
@@ -44,12 +46,9 @@ public class GuiMGUSpawner extends AbstractContainerScreen<ContainerMGUSpawner> 
 		int xOffSet = (width - imageWidth) / 2;
 		int yOffSet = (height - imageHeight) / 2;
 
-		Button.OnPress message = new Button.OnPress() {
-			@Override
-			public void onPress(Button button) {
-				if (button instanceof GuiMGUButton)
+		Button.OnPress message = button -> {
+			if (button instanceof GuiMGUButton)
 				MobGrindingUtils.NETWORK_WRAPPER.sendToServer(new MessageEntitySpawner(player, ((GuiMGUButton)button).id, tile.getBlockPos()));
-			}
 		};
 
 		addRenderableWidget(new GuiMGUButton(xOffSet + 101, yOffSet + 113, GuiMGUButton.Size.LARGE, 0, TextComponent.EMPTY, (button) -> {
@@ -66,14 +65,14 @@ public class GuiMGUSpawner extends AbstractContainerScreen<ContainerMGUSpawner> 
 	}
 
 	@Override
-	public void render(PoseStack stack, int mouseX, int mouseY, float partialTicks) {
+	public void render(@Nonnull PoseStack stack, int mouseX, int mouseY, float partialTicks) {
 		this.renderBackground(stack);
 		super.render(stack, mouseX, mouseY, partialTicks);
 		renderTooltip(stack, mouseX, mouseY);
 	}
 
 	@Override
-	protected void renderLabels(PoseStack stack, int mouseX, int mouseY) {
+	protected void renderLabels(@Nonnull PoseStack stack, int mouseX, int mouseY) {
 		fontRenderer.draw(stack, new TranslatableComponent("block.mob_grinding_utils.entity_spawner").getString(), 8, imageHeight - 220, 4210752);
 
 		fontRenderer.draw(stack, new TranslatableComponent("block.mob_grinding_utils.absorption_hopper_d_u").getString(), 102, imageHeight - 212, 4210752);
@@ -81,21 +80,19 @@ public class GuiMGUSpawner extends AbstractContainerScreen<ContainerMGUSpawner> 
 		fontRenderer.draw(stack, new TranslatableComponent("block.mob_grinding_utils.absorption_hopper_n_s").getString(), 102, imageHeight - 178, 4210752);
 		fontRenderer.draw(stack, new TranslatableComponent("block.mob_grinding_utils.absorption_hopper_w_e").getString(), 102, imageHeight - 144, 4210752);
 	
-		fontRenderer.drawShadow(stack, !tile.showRenderBox ? "Show Area" : "Hide Area", imageWidth - 41 - fontRenderer.width(!tile.showRenderBox ? "Show Area" : "Hide Area") / 2, imageHeight - 109, 14737632);
+		fontRenderer.drawShadow(stack, !tile.showRenderBox ? "Show Area" : "Hide Area", imageWidth - 41 - fontRenderer.width(!tile.showRenderBox ? "Show Area" : "Hide Area") / 2.0f, imageHeight - 109, 14737632);
 
 		if(tile.getProgress() > 0)
-			fontRenderer.draw(stack, "Attempting Spawn", imageWidth- 140 - fontRenderer.width("Attempting") / 2, imageHeight - 128, 4210752);
+			fontRenderer.draw(stack, "Attempting Spawn", imageWidth- 140 - fontRenderer.width("Attempting") / 2.0f, imageHeight - 128, 4210752);
 	}
 
-	@SuppressWarnings("deprecation")
 	@Override
-	protected void renderBg(PoseStack stack, float partialTicks, int mouseX, int mouseY) {
-    	RenderSystem.setShader(GameRenderer::getPositionTexShader);
-        RenderSystem.setShaderTexture(0, GUI_TEXTURE);
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+	protected void renderBg(@Nonnull PoseStack stack, float partialTicks, int mouseX, int mouseY) {
+		RenderSystem.setShader(GameRenderer::getPositionTexShader);
+		RenderSystem.setShaderTexture(0, GUI_TEXTURE);
+		RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 		int xOffSet = (width - imageWidth) / 2;
 		int yOffSet = (height - imageHeight) / 2;
-		int zLevel = 0; /// this may need increasing depending on layers
 		this.blit(stack, xOffSet, yOffSet, 0, 0, imageWidth, imageHeight);
 		this.blit(stack, xOffSet + 44, yOffSet + 71 - tile.getProgressScaled(28), 178, 28 - tile.getProgressScaled(28), 16, 28);
 
@@ -103,9 +100,9 @@ public class GuiMGUSpawner extends AbstractContainerScreen<ContainerMGUSpawner> 
 		String OFFSETY = String.valueOf(tile.getoffsetY());
 		String OFFSETZ = String.valueOf(tile.getoffsetZ());
 
-		fontRenderer.draw(stack, I18n.get(OFFSETY), xOffSet + 135 - fontRenderer.width(I18n.get(OFFSETY)) / 2, yOffSet + 29, 5285857);//NS
-		fontRenderer.draw(stack, I18n.get(OFFSETZ), xOffSet + 135 - fontRenderer.width(I18n.get(OFFSETZ)) / 2, yOffSet + 63, 5285857);//WE
-		fontRenderer.draw(stack, I18n.get(OFFSETX), xOffSet + 135 - fontRenderer.width(I18n.get(OFFSETX)) / 2, yOffSet + 97, 5285857);//DU
+		fontRenderer.draw(stack, I18n.get(OFFSETY), xOffSet + 135 - fontRenderer.width(I18n.get(OFFSETY)) / 2.0f, yOffSet + 29, 5285857);//NS
+		fontRenderer.draw(stack, I18n.get(OFFSETZ), xOffSet + 135 - fontRenderer.width(I18n.get(OFFSETZ)) / 2.0f, yOffSet + 63, 5285857);//WE
+		fontRenderer.draw(stack, I18n.get(OFFSETX), xOffSet + 135 - fontRenderer.width(I18n.get(OFFSETX)) / 2.0f, yOffSet + 97, 5285857);//DU
 	}
 
 }

@@ -4,6 +4,8 @@ import net.minecraft.world.Container;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 
+import javax.annotation.Nonnull;
+
 public class SlotRestriction extends Slot {
 	ItemStack item;
 	int maxItems;
@@ -20,12 +22,12 @@ public class SlotRestriction extends Slot {
 	}
 
 	@Override
-    public int getMaxStackSize() {
-        return maxItems;
-    }
+	public int getMaxStackSize() {
+		return maxItems;
+	}
 
-	@Override	
-    public int getMaxStackSize(ItemStack stack) {
-        return this.getMaxStackSize();
-    }
+	@Override
+	public int getMaxStackSize(@Nonnull ItemStack stack) {
+		return this.getMaxStackSize();
+	}
 }

@@ -53,12 +53,9 @@ public class GuiAbsorptionHopper extends AbstractContainerScreen<ContainerAbsorp
 		int xOffSet = (width - imageWidth) / 2;
 		int yOffSet = (height - imageHeight) / 2;
 
-		Button.OnPress message = new Button.OnPress() {
-			@Override
-			public void onPress(Button button) {
-				if (button instanceof GuiMGUButton)
+		Button.OnPress message = button -> {
+			if (button instanceof GuiMGUButton)
 				MobGrindingUtils.NETWORK_WRAPPER.sendToServer(new MessageAbsorptionHopper(player, ((GuiMGUButton)button).id, tile.getBlockPos()));
-			}
 		};
 
 		addRenderableWidget(new GuiMGUButton(xOffSet + 7, yOffSet + 17, GuiMGUButton.Size.MEDIUM, 0, new TextComponent("Down"), message));
@@ -96,16 +93,15 @@ public class GuiAbsorptionHopper extends AbstractContainerScreen<ContainerAbsorp
 		
 		fontRenderer.draw(stack, new TranslatableComponent("block.mob_grinding_utils.absorption_hopper_n_s").getString(), 174, imageHeight - 178, 4210752);
 		fontRenderer.draw(stack, new TranslatableComponent("block.mob_grinding_utils.absorption_hopper_w_e").getString(), 174, imageHeight - 144, 4210752);
-	
-		fontRenderer.drawShadow(stack, !tile.showRenderBox ? "Show Area" : "Hide Area", imageWidth - 41 - fontRenderer.width(!tile.showRenderBox ? "Show Area" : "Hide Area") / 2, imageHeight - 109, 14737632);
+
+		fontRenderer.drawShadow(stack, !tile.showRenderBox ? "Show Area" : "Hide Area", imageWidth - 41 - fontRenderer.width(!tile.showRenderBox ? "Show Area" : "Hide Area") / 2.0f, imageHeight - 109, 14737632);
 	}
 
-	@SuppressWarnings("deprecation")
 	@Override
 	protected void renderBg(PoseStack stack, float partialTicks, int mouseX, int mouseY) {
-    	RenderSystem.setShader(GameRenderer::getPositionTexShader);
-        RenderSystem.setShaderTexture(0, GUI_ABSORPTION_HOPPER);
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+		RenderSystem.setShader(GameRenderer::getPositionTexShader);
+		RenderSystem.setShaderTexture(0, GUI_ABSORPTION_HOPPER);
+		RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 		int xOffSet = (width - imageWidth) / 2;
 		int yOffSet = (height - imageHeight) / 2;
 		int zLevel = 0; /// this may need increasing depending on layers
@@ -121,15 +117,15 @@ public class GuiAbsorptionHopper extends AbstractContainerScreen<ContainerAbsorp
 		String OFFSETY = String.valueOf(tile.getoffsetY());
 		String OFFSETZ = String.valueOf(tile.getoffsetZ());
 
-		fontRenderer.draw(stack, I18n.get(DOWN.getSerializedName()), xOffSet + 58 - fontRenderer.width(I18n.get(DOWN.getSerializedName())) / 2, yOffSet + 21, getModeColour(DOWN.ordinal()));
-		fontRenderer.draw(stack, I18n.get(UP.getSerializedName()), xOffSet + 58 - fontRenderer.width(I18n.get(UP.getSerializedName())) / 2, yOffSet + 38, getModeColour(UP.ordinal()));
-		fontRenderer.draw(stack, I18n.get(NORTH.getSerializedName()), xOffSet + 58 - fontRenderer.width(I18n.get(NORTH.getSerializedName())) / 2, yOffSet + 55, getModeColour(NORTH.ordinal()));
-		fontRenderer.draw(stack, I18n.get(SOUTH.getSerializedName()), xOffSet + 133 - fontRenderer.width(I18n.get(SOUTH.getSerializedName())) / 2, yOffSet + 21, getModeColour(SOUTH.ordinal()));
-		fontRenderer.draw(stack, I18n.get(WEST.getSerializedName()), xOffSet + 133 - fontRenderer.width(I18n.get(WEST.getSerializedName())) / 2, yOffSet + 38, getModeColour(WEST.ordinal()));
-		fontRenderer.draw(stack, I18n.get(EAST.getSerializedName()), xOffSet + 133 - fontRenderer.width(I18n.get(EAST.getSerializedName())) / 2, yOffSet + 55, getModeColour(EAST.ordinal()));
-		fontRenderer.draw(stack, I18n.get(OFFSETY), xOffSet + 207 - fontRenderer.width(I18n.get(OFFSETY)) / 2, yOffSet + 29, 5285857);//NS
-		fontRenderer.draw(stack, I18n.get(OFFSETZ), xOffSet + 207 - fontRenderer.width(I18n.get(OFFSETZ)) / 2, yOffSet + 63, 5285857);//WE
-		fontRenderer.draw(stack, I18n.get(OFFSETX), xOffSet + 207 - fontRenderer.width(I18n.get(OFFSETX)) / 2, yOffSet + 97, 5285857);//DU
+		fontRenderer.draw(stack, I18n.get(DOWN.getSerializedName()), xOffSet + 58 - fontRenderer.width(I18n.get(DOWN.getSerializedName())) / 2.0f, yOffSet + 21, getModeColour(DOWN.ordinal()));
+		fontRenderer.draw(stack, I18n.get(UP.getSerializedName()), xOffSet + 58 - fontRenderer.width(I18n.get(UP.getSerializedName())) / 2.0f, yOffSet + 38, getModeColour(UP.ordinal()));
+		fontRenderer.draw(stack, I18n.get(NORTH.getSerializedName()), xOffSet + 58 - fontRenderer.width(I18n.get(NORTH.getSerializedName())) / 2.0f, yOffSet + 55, getModeColour(NORTH.ordinal()));
+		fontRenderer.draw(stack, I18n.get(SOUTH.getSerializedName()), xOffSet + 133 - fontRenderer.width(I18n.get(SOUTH.getSerializedName())) / 2.0f, yOffSet + 21, getModeColour(SOUTH.ordinal()));
+		fontRenderer.draw(stack, I18n.get(WEST.getSerializedName()), xOffSet + 133 - fontRenderer.width(I18n.get(WEST.getSerializedName())) / 2.0f, yOffSet + 38, getModeColour(WEST.ordinal()));
+		fontRenderer.draw(stack, I18n.get(EAST.getSerializedName()), xOffSet + 133 - fontRenderer.width(I18n.get(EAST.getSerializedName())) / 2.0f, yOffSet + 55, getModeColour(EAST.ordinal()));
+		fontRenderer.draw(stack, I18n.get(OFFSETY), xOffSet + 207 - fontRenderer.width(I18n.get(OFFSETY)) / 2.0f, yOffSet + 29, 5285857);//NS
+		fontRenderer.draw(stack, I18n.get(OFFSETZ), xOffSet + 207 - fontRenderer.width(I18n.get(OFFSETZ)) / 2.0f, yOffSet + 63, 5285857);//WE
+		fontRenderer.draw(stack, I18n.get(OFFSETX), xOffSet + 207 - fontRenderer.width(I18n.get(OFFSETX)) / 2.0f, yOffSet + 97, 5285857);//DU
 
 		int fluid = tile.getScaledFluid(120);
 		if (fluid >= 1) {
@@ -137,9 +133,9 @@ public class GuiAbsorptionHopper extends AbstractContainerScreen<ContainerAbsorp
 			Tesselator tessellator = Tesselator.getInstance();
 			BufferBuilder buffer = tessellator.getBuilder();
 			
-	    	RenderSystem.setShader(GameRenderer::getPositionTexShader);
-	        RenderSystem.setShaderTexture(0, InventoryMenu.BLOCK_ATLAS);
-	        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+			RenderSystem.setShader(GameRenderer::getPositionTexShader);
+			RenderSystem.setShaderTexture(0, InventoryMenu.BLOCK_ATLAS);
+			RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 
 			buffer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
 			buffer.vertex(xOffSet + 156, yOffSet + 128, zLevel).uv(sprite.getU0(), sprite.getV0()).endVertex();
@@ -154,15 +150,11 @@ public class GuiAbsorptionHopper extends AbstractContainerScreen<ContainerAbsorp
 	}
 
 	public int getModeColour(int index) {
-		switch (index) {
-		case 0:
-			return 16711680;
-		case 1:
-			return 5285857;
-		case 2:
-			return 16776960;
-		default:
-			return 16776960;
-		}
+		return switch (index) {
+			case 0 -> 16711680;
+			case 1 -> 5285857;
+			case 2 -> 16776960;
+			default -> 16776960;
+		};
 	}
 }
