@@ -3,6 +3,8 @@ package mob_grinding_utils.client;
 import mob_grinding_utils.ModBlocks;
 import mob_grinding_utils.Reference;
 import mob_grinding_utils.client.render.*;
+import mob_grinding_utils.models.ModelAHConnect;
+import mob_grinding_utils.models.ModelSawBase;
 import mob_grinding_utils.models.ModelXPSolidifier;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.resources.ResourceLocation;
@@ -11,7 +13,6 @@ import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 
 public class ModelLayers {
-    public static final ModelLayerLocation FAN = new ModelLayerLocation(new ResourceLocation(Reference.MOD_ID, "fan"), "fan");
     public static final ModelLayerLocation SAW = new ModelLayerLocation(new ResourceLocation(Reference.MOD_ID, "saw"), "saw");
     public static final ModelLayerLocation ABSORPTION_HOPPER = new ModelLayerLocation(new ResourceLocation(Reference.MOD_ID, "absorption_hopper"), "absorption_hopper");
     public static final ModelLayerLocation TANK = new ModelLayerLocation(new ResourceLocation(Reference.MOD_ID, "tank"), "tank");
@@ -35,13 +36,12 @@ public class ModelLayers {
         event.registerBlockEntityRenderer(ModBlocks.ENTITY_SPAWNER.getTileEntityType(), TileEntityMGUSpawnerRenderer::new);
     }
     public static void registerLayerDefinitions(EntityRenderersEvent.RegisterLayerDefinitions event) {
-        event.registerLayerDefinition(FAN, fanmodel::createBodyLayer);
-        event.registerLayerDefinition(SAW, fanmodel::createBodyLayer);
-        event.registerLayerDefinition(ABSORPTION_HOPPER, fanmodel::createBodyLayer);
-        event.registerLayerDefinition(TANK, fanmodel::createBodyLayer);
-        event.registerLayerDefinition(TANK_SINK, fanmodel::createBodyLayer);
-        event.registerLayerDefinition(JUMBO_TANK, fanmodel::createBodyLayer);
+        event.registerLayerDefinition(SAW, ModelSawBase::createBodyLayer);
+        event.registerLayerDefinition(ABSORPTION_HOPPER, ModelAHConnect::createBodyLayer);
+        //event.registerLayerDefinition(TANK, fanmodel::createBodyLayer);
+        //event.registerLayerDefinition(TANK_SINK, fanmodel::createBodyLayer);
+        //event.registerLayerDefinition(JUMBO_TANK, fanmodel::createBodyLayer);
         event.registerLayerDefinition(XPSOLIDIFIER, ModelXPSolidifier::createBodyLayer);
-        event.registerLayerDefinition(ENTITY_SPAWNER, fanmodel::createBodyLayer);
+        //event.registerLayerDefinition(ENTITY_SPAWNER, fanmodel::createBodyLayer);
     }
 }
