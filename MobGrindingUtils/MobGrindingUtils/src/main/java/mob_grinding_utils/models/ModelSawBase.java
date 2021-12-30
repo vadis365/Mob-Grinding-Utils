@@ -4,9 +4,15 @@ import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.model.Model;
 import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.client.model.geom.PartPose;
+import net.minecraft.client.model.geom.builders.CubeDeformation;
+import net.minecraft.client.model.geom.builders.CubeListBuilder;
+import net.minecraft.client.model.geom.builders.LayerDefinition;
+import net.minecraft.client.model.geom.builders.MeshDefinition;
+import net.minecraft.client.model.geom.builders.PartDefinition;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -24,55 +30,36 @@ public class ModelSawBase extends Model {
     ModelPart mace3;
     ModelPart mace4;
 
-	public ModelSawBase() {
+	public ModelSawBase(ModelPart root) {
 		super(RenderType::entitySolid);
-	    texWidth = 64;
-	    texHeight = 32;
-	    
-	      axle = new ModelPart(this, 0, 0);
-	      axle.addBox(-1F, -5F, -1F, 2, 10, 2);
-	      axle.setPos(0F, 16F, 0F);
-	      setRotation(axle, 0F, 0F, 0F);
-	      axle2 = new ModelPart(this, 0, 0);
-	      axle2.addBox(-1F, -5F, -1F, 2, 10, 2);
-	      axle2.setPos(0F, 16F, 0F);
-	      setRotation(axle2, 0F, 0.7853982F, 0F);
-	      axleTop = new ModelPart(this, 0, 21);
-	      axleTop.addBox(-1.5F, -8F, -1.5F, 3, 3, 3);
-	      axleTop.setPos(0F, 16F, 0F);
-	      setRotation(axleTop, 0F, 0.7853982F, 0F);
-	      plinth = new ModelPart(this, 9, 0);
-	      plinth.addBox(-5.5F, 5F, -5.5F, 11, 2, 11);
-	      plinth.setPos(0F, 16F, 0F);
-	      setRotation(plinth, 0F, 0.7853982F, 0F);
-	      base = new ModelPart(this, 0, 15);
-	      base.addBox(-8F, 7F, -8F, 16, 1, 16);
-	      base.setPos(0F, 16F, 0F);
-	      setRotation(base, 0F, 0F, 0F);
-	      maceBase = new ModelPart(this, 0, 16);
-	      maceBase.addBox(-3.5F, -7.5F, -1F, 2, 2, 2);
-	      maceBase.setPos(0F, 16F, 0F);
-	      setRotation(maceBase, 0F, -0.7853982F, 0F);
-	      maceArm = new ModelPart(this, 9, 16);
-	      maceArm.addBox(-5.5F, -7F, -0.5F, 2, 1, 1);
-	      maceArm.setPos(0F, 16F, 0F);
-	      setRotation(maceArm, 0F, -0.7853982F, 0F);
-	      mace1 = new ModelPart(this, 0, 21);
-	      mace1.addBox(-1.5F, -8F, -8.5F, 3, 3, 3);
-	      mace1.setPos(0F, 16F, 0F);
-	      setRotation(mace1, 0F, 0.7853982F, 0F);
-	      mace2 = new ModelPart(this, 0, 21);
-	      mace2.addBox(-9.5F, -2.5F, -6.5F, 3, 3, 3);
-	      mace2.setPos(0F, 16F, 0F);
-	      setRotation(mace2, 0F, 0F, 0.7853982F);
-	      mace3 = new ModelPart(this, 0, 21);
-	      mace3.addBox(-6.5F, -9.5F, -0.5F, 3, 3, 3);
-	      mace3.setPos(0F, 16F, 0F);
-	      setRotation(mace3, 0.7853982F, 0F, 0F);
-	      mace4 = new ModelPart(this, 0, 21);
-	      mace4.addBox(-6.5F, -8F, -6.5F, 3, 3, 3);
-	      mace4.setPos(0F, 16F, 0F);
-	      setRotation(mace4, 0F, 0F, 0F);
+		this.axle = root.getChild("axle");
+		this.axle2 = root.getChild("axle2");
+		this.axleTop = root.getChild("axleTop");
+		this.plinth = root.getChild("plinth");
+		this.base = root.getChild("base");
+		this.maceBase = root.getChild("maceBase");
+		this.maceArm = root.getChild("maceArm");
+		this.mace1 = root.getChild("mace1");
+		this.mace2 = root.getChild("mace2");
+		this.mace3 = root.getChild("mace3");
+		this.mace4 = root.getChild("mace4");
+	}
+	
+	public static LayerDefinition createBodyLayer() {
+		MeshDefinition meshdefinition = new MeshDefinition();
+		PartDefinition partdefinition = meshdefinition.getRoot();
+	  	partdefinition.addOrReplaceChild("axle", CubeListBuilder.create().texOffs(0, 0).addBox(-1F, -5F, -1F, 2F, 10F, 2F, new CubeDeformation(0F)), PartPose.offsetAndRotation(0F, 16F, 0F, 0F, 0F, 0F));  
+	  	partdefinition.addOrReplaceChild("axle2", CubeListBuilder.create().texOffs(0, 0).addBox(-1F, -5F, -1F, 2F, 10F, 2F, new CubeDeformation(0F)), PartPose.offsetAndRotation(0F, 16F, 0F, 0F, 0.7853982F, 0F)); 
+	  	partdefinition.addOrReplaceChild("axleTop", CubeListBuilder.create().texOffs(0, 21).addBox(-1.5F, -8F, -1.5F, 3F, 3F, 3F, new CubeDeformation(0F)), PartPose.offsetAndRotation(0F, 16F, 0F, 0F, 0.7853982F, 0F)); 
+	  	partdefinition.addOrReplaceChild("plinth", CubeListBuilder.create().texOffs(9, 0).addBox(-5.5F, -5F, -5.5F, 11F, 2F, 11F, new CubeDeformation(0F)), PartPose.offsetAndRotation(0F, 16F, 0F, 0F, 0.7853982F, 0F)); 
+	  	partdefinition.addOrReplaceChild("base", CubeListBuilder.create().texOffs(0, 15).addBox(-8F, -7F, -8F, 16F, 1F, 16F, new CubeDeformation(0F)), PartPose.offsetAndRotation(0F, 16F, 0F, 0F, 0F, 0F)); 
+	  	partdefinition.addOrReplaceChild("maceBase", CubeListBuilder.create().texOffs(0, 16).addBox(-3.5F, -7.5F, -1F, 2F, 2F, 2F, new CubeDeformation(0F)), PartPose.offsetAndRotation(0F, 16F, 0F, 0F, -0.7853982F, 0F)); 
+	  	partdefinition.addOrReplaceChild("maceArm", CubeListBuilder.create().texOffs(9, 16).addBox(-5.5F, -7F, -0.5F, 2F, 1F, 1F, new CubeDeformation(0F)), PartPose.offsetAndRotation(0F, 16F, 0F, 0F, -0.7853982F, 0F)); 
+	  	partdefinition.addOrReplaceChild("mace1", CubeListBuilder.create().texOffs(0, 21).addBox(-1.5F, -8F, -8.5F, 3F, 3F, 3F, new CubeDeformation(0F)), PartPose.offsetAndRotation(0F, 16F, 0F, 0F, 0.7853982F, 0F)); 
+	  	partdefinition.addOrReplaceChild("mace2", CubeListBuilder.create().texOffs(0, 21).addBox(-9.5F, -2.5F, -6.5F, 3F, 3F, 3F, new CubeDeformation(0F)), PartPose.offsetAndRotation(0F, 16F, 0F, 0F, 0F, 0.7853982F)); 
+	  	partdefinition.addOrReplaceChild("mace3", CubeListBuilder.create().texOffs(0, 21).addBox(-6.5F, -9.5F, -0.5F, 3F, 3F, 3F, new CubeDeformation(0F)), PartPose.offsetAndRotation(0F, 16F, 0F, 0.7853982F, 0F, 0F)); 
+	  	partdefinition.addOrReplaceChild("mace4", CubeListBuilder.create().texOffs(0, 21).addBox(-6.5F, -8F, -6.5F, 3F, 3F, 3F, new CubeDeformation(0F)), PartPose.offsetAndRotation(0F, 16F, 0F, 0F, 0F, 0F)); 
+		return LayerDefinition.create(meshdefinition, 64, 32);
 	}
 
 	public void renderToBuffer(PoseStack matrixStackIn, VertexConsumer bufferIn, int packedLightIn, int packedOverlayIn, float red, float green, float blue, float alpha) {
@@ -95,11 +82,4 @@ public class ModelSawBase extends Model {
 			p_228279_8_.render(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn, red, green, blue, alpha);
 		});
 	}
-
-	private void setRotation(ModelPart model, float x, float y, float z) {
-		model.xRot = x;
-		model.yRot = y;
-		model.zRot = z;
-	}
-
 }
