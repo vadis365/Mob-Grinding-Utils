@@ -1,7 +1,7 @@
 package mob_grinding_utils.inventory.client;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
 
 import mob_grinding_utils.MobGrindingUtils;
 import mob_grinding_utils.inventory.server.ContainerMGUSpawner;
@@ -9,26 +9,30 @@ import mob_grinding_utils.network.MessageEntitySpawner;
 import mob_grinding_utils.tile.TileEntityMGUSpawner;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.resources.language.I18n;
-import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
 
 public class GuiMGUSpawner extends AbstractContainerScreen<ContainerMGUSpawner> {
 
 	private static final ResourceLocation GUI_TEXTURE = new ResourceLocation("mob_grinding_utils:textures/gui/entity_spawner_gui.png");
 	protected final ContainerMGUSpawner container;
 	private final TileEntityMGUSpawner tile;
+	private final Player player;
 	Font fontRenderer = Minecraft.getInstance().font;
 
 	public GuiMGUSpawner(ContainerMGUSpawner container, Inventory playerInventory, Component name) {
 		super(container, playerInventory, name);
 		this.container = container;
 		this.tile = this.container.tile;
+		this.player = playerInventory.player;
 		imageHeight = 226;
 		imageWidth = 176;
 	}
@@ -36,7 +40,7 @@ public class GuiMGUSpawner extends AbstractContainerScreen<ContainerMGUSpawner> 
 	@Override
 	public void init() {
 		super.init();
-		buttons.clear();
+		clearWidgets();
 		int xOffSet = (width - imageWidth) / 2;
 		int yOffSet = (height - imageHeight) / 2;
 
@@ -44,21 +48,21 @@ public class GuiMGUSpawner extends AbstractContainerScreen<ContainerMGUSpawner> 
 			@Override
 			public void onPress(Button button) {
 				if (button instanceof GuiMGUButton)
-				MobGrindingUtils.NETWORK_WRAPPER.sendToServer(new MessageEntitySpawner(inventory.player, ((GuiMGUButton)button).id, tile.getBlockPos()));
+				MobGrindingUtils.NETWORK_WRAPPER.sendToServer(new MessageEntitySpawner(player, ((GuiMGUButton)button).id, tile.getBlockPos()));
 			}
 		};
 
-		addButton(new GuiMGUButton(xOffSet + 101, yOffSet + 113, GuiMGUButton.Size.LARGE, 0, TextComponent.EMPTY, (button) -> {
-			MobGrindingUtils.NETWORK_WRAPPER.sendToServer(new MessageEntitySpawner(inventory.player, 0, tile.getBlockPos()));
+		addRenderableWidget(new GuiMGUButton(xOffSet + 101, yOffSet + 113, GuiMGUButton.Size.LARGE, 0, TextComponent.EMPTY, (button) -> {
+			MobGrindingUtils.NETWORK_WRAPPER.sendToServer(new MessageEntitySpawner(player, 0, tile.getBlockPos()));
 			tile.showRenderBox = !tile.showRenderBox;
 		}));
 
-		addButton(new GuiMGUButton(xOffSet + 101, yOffSet + 25, GuiMGUButton.Size.SMALL, 1, new TextComponent("-"), message));
-		addButton(new GuiMGUButton(xOffSet + 153, yOffSet + 25, GuiMGUButton.Size.SMALL, 2, new TextComponent("+"), message));
-		addButton(new GuiMGUButton(xOffSet + 101, yOffSet + 59, GuiMGUButton.Size.SMALL, 3, new TextComponent("-"), message));
-		addButton(new GuiMGUButton(xOffSet + 153, yOffSet + 59, GuiMGUButton.Size.SMALL, 4, new TextComponent("+"), message));
-		addButton(new GuiMGUButton(xOffSet + 101, yOffSet + 93, GuiMGUButton.Size.SMALL, 5, new TextComponent("-"), message));
-		addButton(new GuiMGUButton(xOffSet + 153, yOffSet + 93, GuiMGUButton.Size.SMALL, 6, new TextComponent("+"), message));
+		addRenderableWidget(new GuiMGUButton(xOffSet + 101, yOffSet + 25, GuiMGUButton.Size.SMALL, 1, new TextComponent("-"), message));
+		addRenderableWidget(new GuiMGUButton(xOffSet + 153, yOffSet + 25, GuiMGUButton.Size.SMALL, 2, new TextComponent("+"), message));
+		addRenderableWidget(new GuiMGUButton(xOffSet + 101, yOffSet + 59, GuiMGUButton.Size.SMALL, 3, new TextComponent("-"), message));
+		addRenderableWidget(new GuiMGUButton(xOffSet + 153, yOffSet + 59, GuiMGUButton.Size.SMALL, 4, new TextComponent("+"), message));
+		addRenderableWidget(new GuiMGUButton(xOffSet + 101, yOffSet + 93, GuiMGUButton.Size.SMALL, 5, new TextComponent("-"), message));
+		addRenderableWidget(new GuiMGUButton(xOffSet + 153, yOffSet + 93, GuiMGUButton.Size.SMALL, 6, new TextComponent("+"), message));
 	}
 
 	@Override
@@ -86,8 +90,9 @@ public class GuiMGUSpawner extends AbstractContainerScreen<ContainerMGUSpawner> 
 	@SuppressWarnings("deprecation")
 	@Override
 	protected void renderBg(PoseStack stack, float partialTicks, int mouseX, int mouseY) {
-		RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-		getMinecraft().getTextureManager().bind(GUI_TEXTURE);
+    	RenderSystem.setShader(GameRenderer::getPositionTexShader);
+        RenderSystem.setShaderTexture(0, GUI_TEXTURE);
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 		int xOffSet = (width - imageWidth) / 2;
 		int yOffSet = (height - imageHeight) / 2;
 		int zLevel = 0; /// this may need increasing depending on layers

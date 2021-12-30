@@ -2,11 +2,14 @@ package mob_grinding_utils.inventory.client;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
-import org.lwjgl.opengl.GL11;
-
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.BufferBuilder;
+import com.mojang.blaze3d.vertex.DefaultVertexFormat;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.Tesselator;
+import com.mojang.blaze3d.vertex.VertexFormat;
 
 import mob_grinding_utils.MobGrindingUtils;
 import mob_grinding_utils.inventory.server.ContainerXPSolidifier;
@@ -14,16 +17,14 @@ import mob_grinding_utils.network.MessageSolidifier;
 import mob_grinding_utils.tile.TileEntityXPSolidifier;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
-import com.mojang.blaze3d.vertex.BufferBuilder;
-import com.mojang.blaze3d.vertex.Tesselator;
+import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import net.minecraft.client.resources.language.I18n;
-import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.inventory.InventoryMenu;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.InventoryMenu;
 
 public class GuiXPSolidifier extends AbstractContainerScreen<ContainerXPSolidifier> {
     private static final ResourceLocation GUI_TEX = new ResourceLocation("mob_grinding_utils:textures/gui/solidifier_gui.png");
@@ -45,11 +46,11 @@ public class GuiXPSolidifier extends AbstractContainerScreen<ContainerXPSolidifi
         int xOffSet = (width - imageWidth) / 2;
         int yOffSet = (height - imageHeight) / 2;
 
-        addButton(new GuiMGUButton(xOffSet + 62, yOffSet + 72, GuiMGUButton.Size.SOLIDIFIER, 0, new TextComponent("Push") ,(button) -> {
+        addRenderableWidget(new GuiMGUButton(xOffSet + 62, yOffSet + 72, GuiMGUButton.Size.SOLIDIFIER, 0, new TextComponent("Push") ,(button) -> {
             MobGrindingUtils.NETWORK_WRAPPER.sendToServer(new MessageSolidifier(0, tile.getBlockPos()));
         }));
         
-        addButton(new GuiMGUButton(xOffSet + 148, yOffSet + 8, GuiMGUButton.Size.SOLIDIFIER_ON, 0, new TextComponent("") ,(button) -> {
+        addRenderableWidget(new GuiMGUButton(xOffSet + 148, yOffSet + 8, GuiMGUButton.Size.SOLIDIFIER_ON, 0, new TextComponent("") ,(button) -> {
             MobGrindingUtils.NETWORK_WRAPPER.sendToServer(new MessageSolidifier(1, tile.getBlockPos()));
         }));
     }
@@ -63,8 +64,9 @@ public class GuiXPSolidifier extends AbstractContainerScreen<ContainerXPSolidifi
 
     @Override
     protected void renderBg(PoseStack stack, float partialTicks, int mouseX, int mouseY) {
-        RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-        getMinecraft().getTextureManager().bind(GUI_TEX);
+       	RenderSystem.setShader(GameRenderer::getPositionTexShader);
+        RenderSystem.setShaderTexture(0, GUI_TEX);
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         int xOffSet = (width - imageWidth) / 2;
         int yOffSet = (height - imageHeight) / 2;
         int zLevel = 0;
@@ -73,20 +75,22 @@ public class GuiXPSolidifier extends AbstractContainerScreen<ContainerXPSolidifi
         font.draw(stack, tile.outputDirection.getSerializedName(), xOffSet + 124 - font.width(tile.outputDirection.getSerializedName()) / 2, yOffSet + 76, 5285857);
 
         int fluid = tile.getScaledFluid(70);
-        RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+
         if (fluid >= 1) {
             TextureAtlasSprite sprite = Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(tile.tank.getFluid().getFluid().getAttributes().getStillTexture());
             Tesselator tessellator = Tesselator.getInstance();
             BufferBuilder buffer = tessellator.getBuilder();
-            Minecraft.getInstance().textureManager.bind(InventoryMenu.BLOCK_ATLAS); // dunno if needed now
-            buffer.begin(GL11.GL_QUADS, DefaultVertexFormat.POSITION_TEX);
+	    	RenderSystem.setShader(GameRenderer::getPositionTexShader);
+	        RenderSystem.setShaderTexture(0, InventoryMenu.BLOCK_ATLAS);
+	        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+	        buffer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
             buffer.vertex(xOffSet + 8, yOffSet + 88, zLevel).uv(sprite.getU0(), sprite.getV0()).endVertex();
             buffer.vertex(xOffSet + 20, yOffSet + 88, zLevel).uv(sprite.getU1(), sprite.getV0()).endVertex();
             buffer.vertex(xOffSet + 20, yOffSet + 88 - fluid, zLevel).uv(sprite.getU1(), sprite.getV1()).endVertex();
             buffer.vertex(xOffSet + 8, yOffSet + 88 - fluid, zLevel).uv(sprite.getU0(), sprite.getV1()).endVertex();
             tessellator.end();
         }
-		getMinecraft().getTextureManager().bind(GUI_TEX);
+		getMinecraft().getTextureManager().bindForSetup(GUI_TEX);
 		this.blit(stack, xOffSet + 7, yOffSet + 17 , 178, 0, 6, 71);
 
 		this.blit(stack, xOffSet + 91, yOffSet + 36, 178, 73, tile.getProgressScaled(24), 17);
@@ -108,7 +112,7 @@ public class GuiXPSolidifier extends AbstractContainerScreen<ContainerXPSolidifi
             List<Component> tooltip = new ArrayList<>();
             tooltip.add(tile.tank.getFluid().getDisplayName());
             tooltip.add(new TextComponent(tile.tank.getFluidAmount() + "/" + tile.tank.getCapacity()));
-            this.renderWrappedToolTip(matrixStack,  tooltip, x, y, this.font);
+            this.renderTooltip(matrixStack, tooltip, Optional.empty(), x, y, this.font);
         }
     }
 }

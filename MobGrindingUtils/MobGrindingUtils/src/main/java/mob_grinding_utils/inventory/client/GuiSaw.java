@@ -1,19 +1,22 @@
 package mob_grinding_utils.inventory.client;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
 
 import mob_grinding_utils.inventory.server.ContainerSaw;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
-import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Inventory;
 
 public class GuiSaw extends AbstractContainerScreen<ContainerSaw> {
 
 	private static final ResourceLocation GUI_SAW = new ResourceLocation("mob_grinding_utils:textures/gui/saw_gui.png");
+	private final Font fontRenderer = Minecraft.getInstance().font;
 
 	public GuiSaw(ContainerSaw containerSaw, Inventory playerInventory, Component name) {
 		super(containerSaw, playerInventory, name);
@@ -30,13 +33,14 @@ public class GuiSaw extends AbstractContainerScreen<ContainerSaw> {
 	@Override
 	protected void renderLabels(PoseStack matrixStack, int x, int y) {
 		String title = new TranslatableComponent("block.mob_grinding_utils.saw").getString();
-		Minecraft.getInstance().font.draw(matrixStack, title, imageWidth / 2 - Minecraft.getInstance().font.width(title) / 2, imageHeight - 218, 4210752);
+		fontRenderer.draw(matrixStack, title, imageWidth / 2 - fontRenderer.width(title) / 2, imageHeight - 218, 4210752);
 	}
 
 	@Override
 	protected void renderBg(PoseStack matrixStack, float partialTicks, int x, int y) {
-		RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-		getMinecraft().getTextureManager().bind(GUI_SAW);
+    	RenderSystem.setShader(GameRenderer::getPositionTexShader);
+        RenderSystem.setShaderTexture(0, GUI_SAW);
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 		int xOffSet = (width - imageWidth) / 2;
 		int yOffSet = (height - imageHeight) / 2;
 		this.blit(matrixStack, xOffSet, yOffSet, 0, 0, imageWidth, imageHeight);

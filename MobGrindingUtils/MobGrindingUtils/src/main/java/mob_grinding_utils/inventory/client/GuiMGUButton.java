@@ -10,6 +10,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.network.chat.Component;
 
 import net.minecraft.client.gui.components.Button.OnPress;
+import net.minecraft.client.renderer.GameRenderer;
 
 public class GuiMGUButton extends Button {
     private static final ResourceLocation TEXTURES = new ResourceLocation("mob_grinding_utils:textures/gui/absorption_hopper_gui.png");
@@ -28,11 +29,12 @@ public class GuiMGUButton extends Button {
         Minecraft mc = Minecraft.getInstance();
         Font fontrenderer = mc.font;
         if (visible) {
-            mc.getTextureManager().bind(getTextures(size));
-            RenderSystem.color4f(0.75F, 0.75F, 0.75F, 0.5F);
+        	RenderSystem.setShader(GameRenderer::getPositionTexShader);
+            RenderSystem.setShaderTexture(0, getTextures(size));
+            RenderSystem.setShaderColor(0.75F, 0.75F, 0.75F, 0.5F);
             boolean hover = mouseX >= x && mouseY >= y && mouseX < x + width && mouseY < y + height;
             if(hover)
-                RenderSystem.color4f(0.75F, 1, 0.75F, 1);
+            	RenderSystem.setShaderColor(0.75F, 1F, 0.75F, 1F);
             blit(matrixStack, x, y, size.u, size.v, width, height);
 
             int textColour = 14737632;
@@ -40,7 +42,7 @@ public class GuiMGUButton extends Button {
                 textColour = getFGColor();
             else if (!this.active)
                 textColour = 10526880;
-            else if (this.isHovered())
+            else if (this.isHoveredOrFocused())
                 textColour = 16777120;
             drawCenteredString(matrixStack, fontrenderer, getMessage(), this.x + this.width / 2, this.y + (this.height - 8) / 2, textColour);
         }

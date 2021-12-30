@@ -1,12 +1,11 @@
 package mob_grinding_utils.inventory.client;
 
-import org.lwjgl.opengl.GL11;
-
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.Tesselator;
+import com.mojang.blaze3d.vertex.VertexFormat;
 
 import mob_grinding_utils.MobGrindingUtils;
 import mob_grinding_utils.inventory.server.ContainerAbsorptionHopper;
@@ -17,6 +16,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.Direction;
@@ -25,6 +25,7 @@ import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.InventoryMenu;
 
 public class GuiAbsorptionHopper extends AbstractContainerScreen<ContainerAbsorptionHopper> {
@@ -32,20 +33,23 @@ public class GuiAbsorptionHopper extends AbstractContainerScreen<ContainerAbsorp
 	private static final ResourceLocation GUI_ABSORPTION_HOPPER = new ResourceLocation("mob_grinding_utils:textures/gui/absorption_hopper_gui.png");
 	protected final ContainerAbsorptionHopper container;
 	private final TileEntityAbsorptionHopper tile;
-	Font fontRenderer = Minecraft.getInstance().font;
+	private final Font fontRenderer = Minecraft.getInstance().font;
+	private final Player player;
 
 	public GuiAbsorptionHopper(ContainerAbsorptionHopper container, Inventory playerInventory, Component name) {
 		super(container, playerInventory, name);
 		this.container = container;
 		this.tile = this.container.hopper;
+		this.player = playerInventory.player;
 		imageHeight = 226;
 		imageWidth = 248;
+		
 	}
 
 	@Override
 	public void init() {
 		super.init();
-		buttons.clear();
+		clearWidgets();
 		int xOffSet = (width - imageWidth) / 2;
 		int yOffSet = (height - imageHeight) / 2;
 
@@ -53,28 +57,28 @@ public class GuiAbsorptionHopper extends AbstractContainerScreen<ContainerAbsorp
 			@Override
 			public void onPress(Button button) {
 				if (button instanceof GuiMGUButton)
-				MobGrindingUtils.NETWORK_WRAPPER.sendToServer(new MessageAbsorptionHopper(inventory.player, ((GuiMGUButton)button).id, tile.getBlockPos()));
+				MobGrindingUtils.NETWORK_WRAPPER.sendToServer(new MessageAbsorptionHopper(player, ((GuiMGUButton)button).id, tile.getBlockPos()));
 			}
 		};
 
-		addButton(new GuiMGUButton(xOffSet + 7, yOffSet + 17, GuiMGUButton.Size.MEDIUM, 0, new TextComponent("Down"), message));
-		addButton(new GuiMGUButton(xOffSet + 7, yOffSet + 34, GuiMGUButton.Size.MEDIUM, 1, new TextComponent("Up"), message));
-		addButton(new GuiMGUButton(xOffSet + 7, yOffSet + 51, GuiMGUButton.Size.MEDIUM, 2, new TextComponent("North"), message));
-		addButton(new GuiMGUButton(xOffSet + 82, yOffSet + 17, GuiMGUButton.Size.MEDIUM, 3, new TextComponent("South"), message));
-		addButton(new GuiMGUButton(xOffSet + 82, yOffSet + 34, GuiMGUButton.Size.MEDIUM, 4, new TextComponent("West"), message));
-		addButton(new GuiMGUButton(xOffSet + 82, yOffSet + 51, GuiMGUButton.Size.MEDIUM, 5, new TextComponent("East"), message));
+		addRenderableWidget(new GuiMGUButton(xOffSet + 7, yOffSet + 17, GuiMGUButton.Size.MEDIUM, 0, new TextComponent("Down"), message));
+		addRenderableWidget(new GuiMGUButton(xOffSet + 7, yOffSet + 34, GuiMGUButton.Size.MEDIUM, 1, new TextComponent("Up"), message));
+		addRenderableWidget(new GuiMGUButton(xOffSet + 7, yOffSet + 51, GuiMGUButton.Size.MEDIUM, 2, new TextComponent("North"), message));
+		addRenderableWidget(new GuiMGUButton(xOffSet + 82, yOffSet + 17, GuiMGUButton.Size.MEDIUM, 3, new TextComponent("South"), message));
+		addRenderableWidget(new GuiMGUButton(xOffSet + 82, yOffSet + 34, GuiMGUButton.Size.MEDIUM, 4, new TextComponent("West"), message));
+		addRenderableWidget(new GuiMGUButton(xOffSet + 82, yOffSet + 51, GuiMGUButton.Size.MEDIUM, 5, new TextComponent("East"), message));
 
-		addButton(new GuiMGUButton(xOffSet + 173, yOffSet + 113, GuiMGUButton.Size.LARGE, 6, TextComponent.EMPTY, (button) -> {
-			MobGrindingUtils.NETWORK_WRAPPER.sendToServer(new MessageAbsorptionHopper(inventory.player, 6, tile.getBlockPos()));
+		addRenderableWidget(new GuiMGUButton(xOffSet + 173, yOffSet + 113, GuiMGUButton.Size.LARGE, 6, TextComponent.EMPTY, (button) -> {
+			MobGrindingUtils.NETWORK_WRAPPER.sendToServer(new MessageAbsorptionHopper(player, 6, tile.getBlockPos()));
 			tile.showRenderBox = !tile.showRenderBox;
 		}));
 
-		addButton(new GuiMGUButton(xOffSet + 173, yOffSet + 25, GuiMGUButton.Size.SMALL, 7, new TextComponent("-"), message));
-		addButton(new GuiMGUButton(xOffSet + 225, yOffSet + 25, GuiMGUButton.Size.SMALL, 8, new TextComponent("+"), message));
-		addButton(new GuiMGUButton(xOffSet + 173, yOffSet + 59, GuiMGUButton.Size.SMALL, 9, new TextComponent("-"), message));
-		addButton(new GuiMGUButton(xOffSet + 225, yOffSet + 59, GuiMGUButton.Size.SMALL, 10, new TextComponent("+"), message));
-		addButton(new GuiMGUButton(xOffSet + 173, yOffSet + 93, GuiMGUButton.Size.SMALL, 11, new TextComponent("-"), message));
-		addButton(new GuiMGUButton(xOffSet + 225, yOffSet + 93, GuiMGUButton.Size.SMALL, 12, new TextComponent("+"), message));
+		addRenderableWidget(new GuiMGUButton(xOffSet + 173, yOffSet + 25, GuiMGUButton.Size.SMALL, 7, new TextComponent("-"), message));
+		addRenderableWidget(new GuiMGUButton(xOffSet + 225, yOffSet + 25, GuiMGUButton.Size.SMALL, 8, new TextComponent("+"), message));
+		addRenderableWidget(new GuiMGUButton(xOffSet + 173, yOffSet + 59, GuiMGUButton.Size.SMALL, 9, new TextComponent("-"), message));
+		addRenderableWidget(new GuiMGUButton(xOffSet + 225, yOffSet + 59, GuiMGUButton.Size.SMALL, 10, new TextComponent("+"), message));
+		addRenderableWidget(new GuiMGUButton(xOffSet + 173, yOffSet + 93, GuiMGUButton.Size.SMALL, 11, new TextComponent("-"), message));
+		addRenderableWidget(new GuiMGUButton(xOffSet + 225, yOffSet + 93, GuiMGUButton.Size.SMALL, 12, new TextComponent("+"), message));
 	}
 
 	@Override
@@ -99,8 +103,9 @@ public class GuiAbsorptionHopper extends AbstractContainerScreen<ContainerAbsorp
 	@SuppressWarnings("deprecation")
 	@Override
 	protected void renderBg(PoseStack stack, float partialTicks, int mouseX, int mouseY) {
-		RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-		getMinecraft().getTextureManager().bind(GUI_ABSORPTION_HOPPER);
+    	RenderSystem.setShader(GameRenderer::getPositionTexShader);
+        RenderSystem.setShaderTexture(0, GUI_ABSORPTION_HOPPER);
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 		int xOffSet = (width - imageWidth) / 2;
 		int yOffSet = (height - imageHeight) / 2;
 		int zLevel = 0; /// this may need increasing depending on layers
@@ -127,13 +132,16 @@ public class GuiAbsorptionHopper extends AbstractContainerScreen<ContainerAbsorp
 		fontRenderer.draw(stack, I18n.get(OFFSETX), xOffSet + 207 - fontRenderer.width(I18n.get(OFFSETX)) / 2, yOffSet + 97, 5285857);//DU
 
 		int fluid = tile.getScaledFluid(120);
-		RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 		if (fluid >= 1) {
 			TextureAtlasSprite sprite = Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(tile.tank.getFluid().getFluid().getAttributes().getStillTexture());
 			Tesselator tessellator = Tesselator.getInstance();
 			BufferBuilder buffer = tessellator.getBuilder();
-			Minecraft.getInstance().textureManager.bind(InventoryMenu.BLOCK_ATLAS); // dunno if needed now
-			buffer.begin(GL11.GL_QUADS, DefaultVertexFormat.POSITION_TEX);
+			
+	    	RenderSystem.setShader(GameRenderer::getPositionTexShader);
+	        RenderSystem.setShaderTexture(0, InventoryMenu.BLOCK_ATLAS);
+	        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+
+			buffer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
 			buffer.vertex(xOffSet + 156, yOffSet + 128, zLevel).uv(sprite.getU0(), sprite.getV0()).endVertex();
 			buffer.vertex(xOffSet + 168, yOffSet + 128, zLevel).uv(sprite.getU1(), sprite.getV0()).endVertex();
 			buffer.vertex(xOffSet + 168, yOffSet + 128 - fluid, zLevel).uv(sprite.getU1(), sprite.getV1()).endVertex();
@@ -141,7 +149,7 @@ public class GuiAbsorptionHopper extends AbstractContainerScreen<ContainerAbsorp
 			tessellator.end();
 		}
 
-		getMinecraft().getTextureManager().bind(GUI_ABSORPTION_HOPPER);
+		getMinecraft().getTextureManager().bindForSetup(GUI_ABSORPTION_HOPPER);
 		this.blit(stack, xOffSet + 153, yOffSet + 8 , 248, 0, 6, 120);
 	}
 
