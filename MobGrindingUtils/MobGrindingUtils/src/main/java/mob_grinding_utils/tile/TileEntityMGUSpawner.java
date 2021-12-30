@@ -27,7 +27,6 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
-import net.minecraft.world.level.block.entity.TickableBlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.EntitySelector;
@@ -47,87 +46,88 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 
-public class TileEntityMGUSpawner extends BlockEntity implements TickableBlockEntity, MenuProvider {
+public class TileEntityMGUSpawner extends BlockEntity implements MenuProvider {
 
-    public int spawning_progress = 0;
-    public int MAX_SPAWNING_TIME = 100;
-    public boolean isOn = false;
+	public int spawning_progress = 0;
+	public int MAX_SPAWNING_TIME = 100;
+	public boolean isOn = false;
 
-    public ItemStackHandler inputSlots = new ItemStackHandler(4);
-    public ItemStackHandler fuelSlot = new ItemStackHandler(1) {
-        @Override
-        public boolean isItemValid(int slot, @Nonnull ItemStack stack) {
-            return stack.getItem() == ModItems.SOLID_XP_BABY.get();
-        }
-    };
-    private final LazyOptional<IItemHandler> fuelSlotCap = LazyOptional.of(() -> fuelSlot);
+	public ItemStackHandler inputSlots = new ItemStackHandler(4);
+	public ItemStackHandler fuelSlot = new ItemStackHandler(1) {
+		@Override
+		public boolean isItemValid(int slot, @Nonnull ItemStack stack) {
+			return stack.getItem() == ModItems.SOLID_XP_BABY.get();
+		}
+	};
+	private final LazyOptional<IItemHandler> fuelSlotCap = LazyOptional.of(() -> fuelSlot);
 
 	public int animationTicks, prevAnimationTicks;
 	public boolean showRenderBox;
 	public int offsetX, offsetY, offsetZ;
 
-    public TileEntityMGUSpawner() {
-        super(ModBlocks.ENTITY_SPAWNER.getTileEntityType());
-    }
+	public TileEntityMGUSpawner(BlockPos pos, BlockState state) {
+		super(ModBlocks.ENTITY_SPAWNER.getTileEntityType(), pos, state);
+	}
 
 	public void toggleOnOff() {
 		isOn = !isOn;
 	}
 
-    @Override
-    public void tick() {
-    	if(isOn) {
-			if (getLevel().isClientSide) {
-				prevAnimationTicks = animationTicks;
-				if (animationTicks < 360)
-					animationTicks += 9;
-				if (animationTicks >= 360) {
-					animationTicks -= 360;
-					prevAnimationTicks -= 360;
-				}
-			}
-			if (!getLevel().isClientSide) {
-				if (canOperate()) {
-					setProgress(getProgress() + 1 + getSpeedModifierAmount());
-					if (getProgress() >= MAX_SPAWNING_TIME) {
-						if (spawnMobInArea())
-							fuelSlot.getStackInSlot(0).shrink(1);
-						setProgress(0);
-						return;
+	public static <T extends BlockEntity> void serverTick(Level level, BlockPos blockPos, BlockState blockState, T t) {
+		if (t instanceof TileEntityMGUSpawner tile) {
+			if (tile.isOn) {
+				if (tile.canOperate()) {
+					tile.setProgress(tile.getProgress() + 1 + tile.getSpeedModifierAmount());
+					if (tile.getProgress() >= tile.MAX_SPAWNING_TIME) {
+						if (tile.spawnMobInArea())
+							tile.fuelSlot.getStackInSlot(0).shrink(1);
+						tile.setProgress(0);
 					}
 				} else {
-					if (getProgress() > 0)
-						setProgress(0);
+					if (tile.getProgress() > 0)
+						tile.setProgress(0);
 				}
 			}
+			else {
+				if (tile.getProgress() > 0)
+					tile.setProgress(0);
+			}
 		}
-		else {
-			if (getLevel().isClientSide)
-				prevAnimationTicks = animationTicks = 0;
-
-			if (!getLevel().isClientSide)
-				if (getProgress() > 0)
-					setProgress(0);
+	}
+	public static <T extends BlockEntity> void clientTick(Level level, BlockPos blockPos, BlockState blockState, T t) {
+		if (t instanceof TileEntityMGUSpawner tile) {
+			if (tile.isOn) {
+				tile.prevAnimationTicks = tile.animationTicks;
+				if (tile.animationTicks < 360)
+					tile.animationTicks += 9;
+				if (tile.animationTicks >= 360) {
+					tile.animationTicks -= 360;
+					tile.prevAnimationTicks -= 360;
+				}
+			}
+			else {
+				tile.prevAnimationTicks = tile.animationTicks = 0;
+			}
 		}
-    }
+	}
 
 	private boolean spawnMobInArea() {
-			EntityType<?> type = null;
-			ItemStack eggStack = inputSlots.getStackInSlot(0);
-			SpawnEggItem eggItem = (SpawnEggItem) eggStack.getItem();
-			type = eggItem.getType(null);
+		EntityType<?> type = null;
+		ItemStack eggStack = inputSlots.getStackInSlot(0);
+		SpawnEggItem eggItem = (SpawnEggItem) eggStack.getItem();
+		type = eggItem.getType(null);
 
-			if (type != null) {
-				AABB axisalignedbb = getAABBWithModifiers();
-				int minX = Mth.floor(axisalignedbb.minX);
-				int maxX = Mth.floor(axisalignedbb.maxX);
-				int minY = Mth.floor(axisalignedbb.minY);
-				int maxY = Mth.floor(axisalignedbb.maxY);
-				int minZ = Mth.floor(axisalignedbb.minZ);
-				int maxZ = Mth.floor(axisalignedbb.maxZ);
-				BlockPos.MutableBlockPos mutablePos = new BlockPos.MutableBlockPos();
-				Mob entity = (Mob) type.create(getLevel());
-				List<BlockPos> posArrayList = new ArrayList<BlockPos>();
+		if (type != null) {
+			AABB axisalignedbb = getAABBWithModifiers();
+			int minX = Mth.floor(axisalignedbb.minX);
+			int maxX = Mth.floor(axisalignedbb.maxX);
+			int minY = Mth.floor(axisalignedbb.minY);
+			int maxY = Mth.floor(axisalignedbb.maxY);
+			int minZ = Mth.floor(axisalignedbb.minZ);
+			int maxZ = Mth.floor(axisalignedbb.maxZ);
+			BlockPos.MutableBlockPos mutablePos = new BlockPos.MutableBlockPos();
+			Mob entity = (Mob) type.create(getLevel());
+			List<BlockPos> posArrayList = new ArrayList<BlockPos>();
 			if (entity != null) {
 				for (int x = minX; x < maxX; x++) {
 					for (int y = minY; y < maxY; y++) {
@@ -163,38 +163,38 @@ public class TileEntityMGUSpawner extends BlockEntity implements TickableBlockEn
 
 	public void toggleOffset(int direction) {
 		switch (direction) {
-		case 1:
-			if (getoffsetY() >= -1 - getHeightModifierAmount())
-				offsetY = getoffsetY() - 1;
-			break;
-		case 2:
-			if (getoffsetY() <= 1 + getHeightModifierAmount())
-				offsetY = getoffsetY() + 1;
-			break;
-		case 3:
-			if (getoffsetZ() >= -1 - getWidthModifierAmount())
-				offsetZ = getoffsetZ() - 1;
-			break;
-		case 4:
-			if (getoffsetZ() <= 1 + getWidthModifierAmount())
-				offsetZ = getoffsetZ() + 1;
-			break;
-		case 5:
-			if (getoffsetX() >= -1 - getWidthModifierAmount())
-				offsetX = getoffsetX() - 1;
-			break;
-		case 6:
-			if (getoffsetX() <= 1 + getWidthModifierAmount())
-				offsetX = getoffsetX() + 1;
-			break;
+			case 1:
+				if (getoffsetY() >= -1 - getHeightModifierAmount())
+					offsetY = getoffsetY() - 1;
+				break;
+			case 2:
+				if (getoffsetY() <= 1 + getHeightModifierAmount())
+					offsetY = getoffsetY() + 1;
+				break;
+			case 3:
+				if (getoffsetZ() >= -1 - getWidthModifierAmount())
+					offsetZ = getoffsetZ() - 1;
+				break;
+			case 4:
+				if (getoffsetZ() <= 1 + getWidthModifierAmount())
+					offsetZ = getoffsetZ() + 1;
+				break;
+			case 5:
+				if (getoffsetX() >= -1 - getWidthModifierAmount())
+					offsetX = getoffsetX() - 1;
+				break;
+			case 6:
+				if (getoffsetX() <= 1 + getWidthModifierAmount())
+					offsetX = getoffsetX() + 1;
+				break;
 		}
 		setChanged();
 	}
 
 	@OnlyIn(Dist.CLIENT)
-    public int getProgressScaled(int count) {
-        return getProgress() * count / (MAX_SPAWNING_TIME);
-    }
+	public int getProgressScaled(int count) {
+		return getProgress() * count / (MAX_SPAWNING_TIME);
+	}
 
 	private boolean canOperate() {
 		return hasSpawnEggItem() && hasFuel();
@@ -271,65 +271,63 @@ public class TileEntityMGUSpawner extends BlockEntity implements TickableBlockEn
 		return spawning_progress;
 	}
 
-    @Override
-    public void load(BlockState state, CompoundTag nbt) {
-        super.load(state, nbt);
-        inputSlots.deserializeNBT(nbt.getCompound("inputSlots"));
-        fuelSlot.deserializeNBT(nbt.getCompound("fuelSlot"));
-        isOn = nbt.getBoolean("isOn");
-        showRenderBox = nbt.getBoolean("showRenderBox");
+	@Override
+	public void load(CompoundTag nbt) {
+		super.load(nbt);
+		inputSlots.deserializeNBT(nbt.getCompound("inputSlots"));
+		fuelSlot.deserializeNBT(nbt.getCompound("fuelSlot"));
+		isOn = nbt.getBoolean("isOn");
+		showRenderBox = nbt.getBoolean("showRenderBox");
 		offsetX = nbt.getInt("offsetX");
 		offsetY = nbt.getInt("offsetY");
 		offsetZ = nbt.getInt("offsetZ");
-        spawning_progress = nbt.getInt("spawning_progress");
-    }
+		spawning_progress = nbt.getInt("spawning_progress");
+	}
 
-    @Override
-    public CompoundTag save(CompoundTag nbt) {
-        super.save(nbt);
-        nbt.put("inputSlots", inputSlots.serializeNBT());
-        nbt.put("fuelSlot", fuelSlot.serializeNBT());
-        nbt.putBoolean("isOn", isOn);
-        nbt.putBoolean("showRenderBox", showRenderBox);
-        nbt.putInt("offsetX", offsetX);
-        nbt.putInt("offsetY", offsetY);
-        nbt.putInt("offsetZ", offsetZ);
-        nbt.putInt("spawning_progress", spawning_progress);
-        return nbt;
-    }
+	@Override
+	public void saveAdditional(CompoundTag nbt) {
+		nbt.put("inputSlots", inputSlots.serializeNBT());
+		nbt.put("fuelSlot", fuelSlot.serializeNBT());
+		nbt.putBoolean("isOn", isOn);
+		nbt.putBoolean("showRenderBox", showRenderBox);
+		nbt.putInt("offsetX", offsetX);
+		nbt.putInt("offsetY", offsetY);
+		nbt.putInt("offsetZ", offsetZ);
+		nbt.putInt("spawning_progress", spawning_progress);
+	}
 
-    @Override
-    public CompoundTag getUpdateTag() {
-        CompoundTag nbt = new CompoundTag();
-        return save(nbt);
-    }
+	@Override
+	public CompoundTag getUpdateTag() {
+		CompoundTag nbt = new CompoundTag();
+		return save(nbt);
+	}
 
-    @Override
-    public ClientboundBlockEntityDataPacket getUpdatePacket() {
-        CompoundTag nbt = new CompoundTag();
-        save(nbt);
-        return new ClientboundBlockEntityDataPacket(getBlockPos(), 0, nbt);
-    }
+	@Override
+	public ClientboundBlockEntityDataPacket getUpdatePacket() {
+		CompoundTag nbt = new CompoundTag();
+		save(nbt);
+		return ClientboundBlockEntityDataPacket.create(this);
+	}
 
-    @Override
-    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket packet) {
-        load(getBlockState(), packet.getTag());
-    }
+	@Override
+	public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket packet) {
+		load(packet.getTag());
+	}
 
-    public void updateBlock() {
-        getLevel().sendBlockUpdated(worldPosition, getLevel().getBlockState(worldPosition), getLevel().getBlockState(worldPosition), 3);
-    }
+	public void updateBlock() {
+		getLevel().sendBlockUpdated(worldPosition, getLevel().getBlockState(worldPosition), getLevel().getBlockState(worldPosition), 3);
+	}
 
-    @Override
-    public Component getDisplayName() {
-        return new TextComponent("block.mob_grinding_utils.entity_spawner");
-    }
+	@Override
+	public Component getDisplayName() {
+		return new TextComponent("block.mob_grinding_utils.entity_spawner");
+	}
 
-    @Nullable
+	@Nullable
 	@Override
 	public AbstractContainerMenu createMenu(int windowID, Inventory playerInventory, Player player) {
-        return new ContainerMGUSpawner(windowID, playerInventory, new FriendlyByteBuf(Unpooled.buffer()).writeBlockPos(worldPosition));
-    }
+		return new ContainerMGUSpawner(windowID, playerInventory, new FriendlyByteBuf(Unpooled.buffer()).writeBlockPos(worldPosition));
+	}
 
 	@OnlyIn(Dist.CLIENT)
 	public Entity getEntityToRender() {
@@ -342,12 +340,12 @@ public class TileEntityMGUSpawner extends BlockEntity implements TickableBlockEn
 		return entity;
 	}
 
-    @Nonnull
-    @Override
-    public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
-        if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
-            return fuelSlotCap.cast();
-        return super.getCapability(cap, side);
-    }
+	@Nonnull
+	@Override
+	public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
+		if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
+			return fuelSlotCap.cast();
+		return super.getCapability(cap, side);
+	}
 
 }

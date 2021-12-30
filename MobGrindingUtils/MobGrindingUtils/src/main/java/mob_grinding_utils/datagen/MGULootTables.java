@@ -19,16 +19,16 @@ import net.minecraft.data.DataGenerator;
 import net.minecraft.data.loot.LootTableProvider;
 import net.minecraft.data.loot.BlockLoot;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.storage.loot.LootTables;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSet;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraft.world.level.storage.loot.LootTable;
-import net.minecraft.world.level.storage.loot.LootTables;
 import net.minecraft.world.level.storage.loot.ValidationContext;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.registries.ForgeRegistries;
 
-public class LootTables extends LootTableProvider {
-    public LootTables(DataGenerator dataGeneratorIn) {
+public class MGULootTables extends LootTableProvider {
+    public MGULootTables(DataGenerator dataGeneratorIn) {
         super(dataGeneratorIn);
     }
 
@@ -63,13 +63,13 @@ public class LootTables extends LootTableProvider {
         @Override
         protected Iterable<Block> getKnownBlocks() {
             return ForgeRegistries.BLOCKS.getValues().stream()
-                    .filter(b -> b.getRegistryName().getNamespace().equals(Reference.MOD_ID))
-                    .filter(b -> !b.getRegistryName().getPath().equals("tank"))
-                    .filter(b -> !b.getRegistryName().getPath().equals("tank_sink"))
-                    .filter(b -> !b.getRegistryName().getPath().equals("jumbo_tank"))
-                    .filter(b -> !b.getRegistryName().getPath().equals("xpsolidifier"))
-                    .filter(b -> !b.getRegistryName().getPath().equals("fluid_xp"))
-                    .collect(Collectors.toList());
+                .filter(b -> b.getRegistryName().getNamespace().equals(Reference.MOD_ID))
+                .filter(b -> !b.getRegistryName().getPath().equals("tank"))
+                .filter(b -> !b.getRegistryName().getPath().equals("tank_sink"))
+                .filter(b -> !b.getRegistryName().getPath().equals("jumbo_tank"))
+                .filter(b -> !b.getRegistryName().getPath().equals("xpsolidifier"))
+                .filter(b -> !b.getRegistryName().getPath().equals("fluid_xp"))
+                .collect(Collectors.toList());
         }
     }
 

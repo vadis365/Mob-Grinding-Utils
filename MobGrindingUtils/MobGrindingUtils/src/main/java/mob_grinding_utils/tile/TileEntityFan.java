@@ -10,9 +10,11 @@ import mob_grinding_utils.ModItems;
 import mob_grinding_utils.blocks.BlockFan;
 import mob_grinding_utils.inventory.server.ContainerFan;
 import mob_grinding_utils.items.ItemFanUpgrade;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.AirBlock;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.block.Blocks;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -26,8 +28,6 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
-import net.minecraft.tags.BlockTags;
-import net.minecraft.world.level.block.entity.TickableBlockEntity;
 import net.minecraft.core.Direction;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.util.Mth;
@@ -36,27 +36,27 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.Tags;
 
-public class TileEntityFan extends TileEntityInventoryHelper implements TickableBlockEntity, MenuProvider {
+public class TileEntityFan extends TileEntityInventoryHelper implements MenuProvider {
 
 	private static final int[] SLOTS = new int[] {0, 1, 2};
 	public boolean showRenderBox;
 	float xPos, yPos, zPos;
 	float xNeg, yNeg, zNeg;
 
-	public TileEntityFan() {
-		super(ModBlocks.FAN.getTileEntityType(), 3);
+	public TileEntityFan(BlockPos pos, BlockState state) {
+		super(ModBlocks.FAN.getTileEntityType(), 3, pos, state);
 	}
 
-	@Override
-	public void tick() {
-		if (getLevel().getGameTime()%2==0 && getLevel().getBlockState(getBlockPos()).getBlock() instanceof BlockFan)
-			if (getLevel().getBlockState(getBlockPos()).getValue(BlockFan.POWERED)) {
-				activateBlock();
+	public static <T extends BlockEntity> void tick(Level level, BlockPos pos, BlockState blockState, T t) {
+		if(t instanceof TileEntityFan fan) {
+			if (level.getGameTime() % 2 == 0)
+				if (level.getBlockState(pos).getValue(BlockFan.POWERED)) {
+					fan.activateBlock();
+				}
+			if (!level.isClientSide)
+				fan.setAABBWithModifiers();
 		}
-		if (!getLevel().isClientSide)
-			setAABBWithModifiers();
 	}
 
 	public int getWidthModifier() {
@@ -191,8 +191,8 @@ public class TileEntityFan extends TileEntityInventoryHelper implements Tickable
 	}
 
 	@Override
-	public CompoundTag save(CompoundTag nbt) {
-		super.save(nbt);
+	public void saveAdditional(CompoundTag nbt) {
+		super.saveAdditional(nbt);
 		nbt.putBoolean("showRenderBox", showRenderBox);
 		nbt.putFloat("xPos", xPos);
 		nbt.putFloat("yPos", yPos);
@@ -200,12 +200,11 @@ public class TileEntityFan extends TileEntityInventoryHelper implements Tickable
 		nbt.putFloat("xNeg", xNeg);
 		nbt.putFloat("yNeg", yNeg);
 		nbt.putFloat("zNeg", zNeg);
-		return nbt;
 	}
 
 	@Override
-	public void load(BlockState state, CompoundTag nbt) {
-		super.load(state, nbt);
+	public void load(CompoundTag nbt) {
+		super.load(nbt);
 		showRenderBox = nbt.getBoolean("showRenderBox");
 		xPos = nbt.getFloat("xPos");
 		yPos = nbt.getFloat("yPos");
@@ -217,21 +216,21 @@ public class TileEntityFan extends TileEntityInventoryHelper implements Tickable
 
 	@Nonnull
 	@Override
-    public CompoundTag getUpdateTag() {
+	public CompoundTag getUpdateTag() {
 		CompoundTag nbt = new CompoundTag();
-        return save(nbt);
-    }
+		return save(nbt);
+	}
 
 	@Override
 	public ClientboundBlockEntityDataPacket getUpdatePacket() {
 		CompoundTag nbt = new CompoundTag();
 		save(nbt);
-		return new ClientboundBlockEntityDataPacket(getBlockPos(), 0, nbt);
+		return ClientboundBlockEntityDataPacket.create(this);
 	}
 
 	@Override
 	public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket packet) {
-		load(getBlockState(), packet.getTag());
+		load(packet.getTag());
 		onContentsChanged();
 	}
 

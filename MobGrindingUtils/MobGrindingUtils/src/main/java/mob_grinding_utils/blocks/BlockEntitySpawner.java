@@ -6,6 +6,8 @@ import mob_grinding_utils.ModBlocks;
 import mob_grinding_utils.tile.TileEntityMGUSpawner;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.RenderShape;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.HorizontalDirectionalBlock;
 import net.minecraft.world.level.block.EntityBlock;
@@ -30,6 +32,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraftforge.network.NetworkHooks;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 @SuppressWarnings("deprecation")
 public class BlockEntitySpawner extends Block implements EntityBlock {
@@ -48,7 +51,13 @@ public class BlockEntitySpawner extends Block implements EntityBlock {
 
 	@Override
 	public BlockEntity newBlockEntity(@Nonnull BlockPos pos, @Nonnull BlockState state) {
-		return new TileEntityMGUSpawner();
+		return new TileEntityMGUSpawner(pos, state);
+	}
+
+	@Nullable
+	@Override
+	public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level pLevel, BlockState pState, BlockEntityType<T> pBlockEntityType) {
+		return pLevel.isClientSide ? TileEntityMGUSpawner::clientTick : TileEntityMGUSpawner::serverTick;
 	}
 
 	@Override
@@ -111,7 +120,7 @@ public class BlockEntitySpawner extends Block implements EntityBlock {
 			boolean flag = state.getValue(POWERED);
 			if (flag != world.hasNeighborSignal(pos))
 				if (flag)
-					world.getBlockTicks().scheduleTick(pos, this, 4);
+					world.scheduleTick(pos, this, 4);
 				else {
 					world.setBlock(pos, state.cycle(POWERED), 2);
 					if (tile != null)

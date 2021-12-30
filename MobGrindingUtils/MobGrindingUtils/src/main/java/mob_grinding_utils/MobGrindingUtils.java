@@ -3,6 +3,7 @@ package mob_grinding_utils;
 import javax.annotation.Nonnull;
 
 import mob_grinding_utils.blocks.BlockSpikes;
+import mob_grinding_utils.client.ModelLayers;
 import mob_grinding_utils.client.render.TileEntityAbsorptionRenderer;
 import mob_grinding_utils.client.render.TileEntityFanRenderer;
 import mob_grinding_utils.client.render.TileEntityMGUSpawnerRenderer;
@@ -115,6 +116,7 @@ public class MobGrindingUtils {
 		ModContainers.init(modBus);
 		PARTICLES.register(modBus);
 		RECIPES.register(modBus);
+		ModelLayers.init(modBus);
 
 		modBus.addListener(this::setup);
 		modBus.addListener(this::doClientStuff);
@@ -156,15 +158,6 @@ public class MobGrindingUtils {
 		MinecraftForge.EVENT_BUS.register(new GlobalDragonSoundEvent());
 		MinecraftForge.EVENT_BUS.register(new BossBarHidingEvent());
 		MinecraftForge.EVENT_BUS.addListener(this::worldUnload);
-
-		ClientRegistry.bindTileEntityRenderer(ModBlocks.FAN.getTileEntityType(), TileEntityFanRenderer::new);
-		ClientRegistry.bindTileEntityRenderer(ModBlocks.SAW.getTileEntityType(), TileEntitySawRenderer::new);
-		ClientRegistry.bindTileEntityRenderer(ModBlocks.ABSORPTION_HOPPER.getTileEntityType(), TileEntityAbsorptionRenderer::new);
-		ClientRegistry.bindTileEntityRenderer(ModBlocks.TANK.getTileEntityType(), TileEntityTankRenderer::new);
-		ClientRegistry.bindTileEntityRenderer(ModBlocks.TANK_SINK.getTileEntityType(), TileEntityTankRenderer::new);
-		ClientRegistry.bindTileEntityRenderer(ModBlocks.JUMBO_TANK.getTileEntityType(), TileEntityTankRenderer::new);
-		ClientRegistry.bindTileEntityRenderer(ModBlocks.XPSOLIDIFIER.getTileEntityType(), TileEntityXPSolidifierRenderer::new);
-		ClientRegistry.bindTileEntityRenderer(ModBlocks.ENTITY_SPAWNER.getTileEntityType(), TileEntityMGUSpawnerRenderer::new);
 
 		MenuScreens.register(ModContainers.ABSORPTION_HOPPER.get(), GuiAbsorptionHopper::new);
 		MenuScreens.register(ModContainers.SOLIDIFIER.get(), GuiXPSolidifier::new);

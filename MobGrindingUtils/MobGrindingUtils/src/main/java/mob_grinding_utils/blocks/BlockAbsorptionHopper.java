@@ -3,6 +3,8 @@ package mob_grinding_utils.blocks;
 import mob_grinding_utils.tile.TileEntityAbsorptionHopper;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.RenderShape;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.entity.player.Player;
@@ -21,6 +23,8 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.network.NetworkHooks;
 
+import javax.annotation.Nullable;
+
 public class BlockAbsorptionHopper extends BaseEntityBlock {
 
 	public static final VoxelShape HOPPER_AABB = Block.box(4D, 4D, 4D, 12D, 12D, 12D);
@@ -31,12 +35,18 @@ public class BlockAbsorptionHopper extends BaseEntityBlock {
 
 	@Override
 	public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-		return new TileEntityAbsorptionHopper();
+		return new TileEntityAbsorptionHopper(pos, state);
 	}
 
 	@Override
 	public RenderShape getRenderShape(BlockState state) {
 		return RenderShape.MODEL;
+	}
+
+	@Nullable
+	@Override
+	public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level pLevel, BlockState pState, BlockEntityType<T> pBlockEntityType) {
+		return pLevel.isClientSide ? null : TileEntityAbsorptionHopper::serverTick;
 	}
 
 	@Override

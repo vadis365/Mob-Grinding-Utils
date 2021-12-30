@@ -9,6 +9,9 @@ import mob_grinding_utils.blocks.BlockSaw;
 import mob_grinding_utils.fakeplayer.MGUFakePlayer;
 import mob_grinding_utils.inventory.server.ContainerSaw;
 import mob_grinding_utils.items.ItemSawUpgrade;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.entity.Entity;
@@ -23,7 +26,6 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
-import net.minecraft.world.level.block.entity.TickableBlockEntity;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.phys.AABB;
@@ -31,34 +33,36 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.server.level.ServerLevel;
 
-public class TileEntitySaw extends TileEntityInventoryHelper implements TickableBlockEntity, MenuProvider {
+public class TileEntitySaw extends TileEntityInventoryHelper implements MenuProvider {
 
 	public boolean active;
 	public int animationTicks, prevAnimationTicks;
-    private static final int[] SLOTS = new int[] {0, 1, 2, 3, 4, 5};
+	private static final int[] SLOTS = new int[] {0, 1, 2, 3, 4, 5};
 
-	public TileEntitySaw() {
-		super(ModBlocks.SAW.getTileEntityType(), 6);
+	public TileEntitySaw(BlockPos pos, BlockState state) {
+		super(ModBlocks.SAW.getTileEntityType(), 6, pos, state);
 	}
 
-	@Override
-	public void tick() {
-		if (getLevel().isClientSide && active) {
-			prevAnimationTicks = animationTicks;
-			if (animationTicks < 360)
-				animationTicks += 18;
-			if (animationTicks >= 360) {
-				animationTicks -= 360;
-				prevAnimationTicks -= 360;
-			}
+	public static <T extends BlockEntity> void clientTick(Level level, BlockPos blockPos, BlockState blockState, T t) {
+		if (t instanceof TileEntitySaw tile ) {
+			if (tile.active) {
+				tile.prevAnimationTicks = tile.animationTicks;
+				if (tile.animationTicks < 360)
+					tile.animationTicks += 18;
+				if (tile.animationTicks >= 360) {
+					tile.animationTicks -= 360;
+					tile.prevAnimationTicks -= 360;
+				}
+			} else
+				tile.prevAnimationTicks = tile.animationTicks = 0;
 		}
-
-		if (getLevel().isClientSide && !active)
-			prevAnimationTicks = animationTicks = 0;
-
-		if (!getLevel().isClientSide && getLevel().getGameTime() % 10 == 0 && getLevel().getBlockState(worldPosition).getBlock() instanceof BlockSaw)
-			if (getLevel().getBlockState(worldPosition).getValue(BlockSaw.POWERED))
-				activateBlock();
+	}
+	public static <T extends BlockEntity > void serverTick(Level level, BlockPos blockPos, BlockState blockState, T t) {
+		if (t instanceof TileEntitySaw tile) {
+			if (level.getGameTime() % 10 == 0 && level.getBlockState(blockPos).getBlock() instanceof BlockSaw)
+				if (level.getBlockState(blockPos).getValue(BlockSaw.POWERED))
+					tile.activateBlock();
+		}
 	}
 
 	public void setActive(boolean isActive) {
@@ -126,62 +130,60 @@ public class TileEntitySaw extends TileEntityInventoryHelper implements Tickable
 	}
 
 	@Override
-	public CompoundTag save(CompoundTag nbt) {
-		super.save(nbt);
+	public void saveAdditional(CompoundTag nbt) {
+		super.saveAdditional(nbt);
 		nbt.putBoolean("active", active);
-		return nbt;
 	}
 
 	@Override
-	public void load(BlockState state, CompoundTag nbt) {
-		super.load(state, nbt);
+	public void load(CompoundTag nbt) {
+		super.load(nbt);
 		active = nbt.getBoolean("active");
 	}
 
 	@Override
-    public CompoundTag getUpdateTag() {
+	public CompoundTag getUpdateTag() {
 		CompoundTag tag = new CompoundTag();
-        return save(tag);
-    }
+		return save(tag);
+	}
 
 	@Override
 	public ClientboundBlockEntityDataPacket getUpdatePacket() {
 		CompoundTag tag = new CompoundTag();
 		save(tag);
-		return new ClientboundBlockEntityDataPacket(getBlockPos(), 0, tag);
+		return ClientboundBlockEntityDataPacket.create(this);
 	}
 
 	@Override
 	public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket packet) {
 		super.onDataPacket(net, packet);
-		load(getBlockState(), packet.getTag());
-		if(!getLevel().isClientSide)
-			getLevel().sendBlockUpdated(worldPosition, getLevel().getBlockState(worldPosition), getLevel().getBlockState(worldPosition), 3);
-		return;
+		load(packet.getTag());
+		if(!level.isClientSide)
+			level.sendBlockUpdated(worldPosition, level.getBlockState(worldPosition), level.getBlockState(worldPosition), 3);
 	}
 
 	@Override
 	public boolean canPlaceItem(int slot, ItemStack stack) {
 		if (stack.getItem() instanceof ItemSawUpgrade) {
 			switch (slot) {
-			case 0:
-				if (stack.getItem() == ModItems.SAW_UPGRADE_SHARPNESS.get())
-					return true;
-			case 1:
-				if (stack.getItem() == ModItems.SAW_UPGRADE_LOOTING.get())
-					return true;
-			case 2:
-				if (stack.getItem() == ModItems.SAW_UPGRADE_FIRE.get())
-					return true;
-			case 3:
-				if (stack.getItem() == ModItems.SAW_UPGRADE_SMITE.get())
-					return true;
-			case 4:
-				if (stack.getItem() == ModItems.SAW_UPGRADE_ARTHROPOD.get())
-					return true;
-			case 5:
-				if (stack.getItem() == ModItems.SAW_UPGRADE_BEHEADING.get())
-					return true;
+				case 0:
+					if (stack.getItem() == ModItems.SAW_UPGRADE_SHARPNESS.get())
+						return true;
+				case 1:
+					if (stack.getItem() == ModItems.SAW_UPGRADE_LOOTING.get())
+						return true;
+				case 2:
+					if (stack.getItem() == ModItems.SAW_UPGRADE_FIRE.get())
+						return true;
+				case 3:
+					if (stack.getItem() == ModItems.SAW_UPGRADE_SMITE.get())
+						return true;
+				case 4:
+					if (stack.getItem() == ModItems.SAW_UPGRADE_ARTHROPOD.get())
+						return true;
+				case 5:
+					if (stack.getItem() == ModItems.SAW_UPGRADE_BEHEADING.get())
+						return true;
 			}
 		}
 		return false;

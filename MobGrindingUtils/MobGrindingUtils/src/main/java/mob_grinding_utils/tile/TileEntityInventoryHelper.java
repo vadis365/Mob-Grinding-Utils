@@ -2,6 +2,7 @@ package mob_grinding_utils.tile;
 
 import javax.annotation.Nullable;
 
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.WorldlyContainer;
@@ -16,8 +17,8 @@ public abstract class TileEntityInventoryHelper extends BlockEntity implements W
 
 	private NonNullList<ItemStack> inventory;
 
-	public TileEntityInventoryHelper(BlockEntityType<?> tileEntityTypeIn, int invtSize) {
-		super(tileEntityTypeIn);
+	public TileEntityInventoryHelper(BlockEntityType<?> tileEntityTypeIn, int invtSize, BlockPos pos, BlockState state) {
+		super(tileEntityTypeIn, pos, state);
 		inventory = NonNullList.<ItemStack>withSize(invtSize, ItemStack.EMPTY);
 	}
 
@@ -73,15 +74,14 @@ public abstract class TileEntityInventoryHelper extends BlockEntity implements W
 	}
 
 	@Override
-	public void load(BlockState state,CompoundTag compound) {
-		super.load(state, compound);
+	public void load(CompoundTag compound) {
+		super.load(compound);
 		this.loadFromNbt(compound);
 	}
 
 	@Override
-	public CompoundTag save(CompoundTag compound) {
-		super.save(compound);
-		return this.saveToNbt(compound);
+	public void saveAdditional(CompoundTag compound) {
+		this.saveToNbt(compound);
 	}
 
 	public void loadFromNbt(CompoundTag compound) {
