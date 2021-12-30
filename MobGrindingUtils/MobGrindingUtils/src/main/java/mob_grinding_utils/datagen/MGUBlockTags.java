@@ -10,7 +10,7 @@ import net.minecraftforge.common.data.ExistingFileHelper;
 
 import net.minecraft.data.tags.TagsProvider.TagAppender;
 
-public class MGUBlockTags extends BlockTagsProvider {
+public class  MGUBlockTags extends BlockTagsProvider {
     public MGUBlockTags(DataGenerator generatorIn, ExistingFileHelper existingFileHelper) {
         super(generatorIn, Reference.MOD_ID, existingFileHelper);
     }
@@ -19,10 +19,12 @@ public class MGUBlockTags extends BlockTagsProvider {
     protected void addTags() {
         TagAppender<Block> witherTag = this.tag(BlockTags.WITHER_IMMUNE);
         TagAppender<Block> dragonTag = this.tag(BlockTags.DRAGON_IMMUNE);
+        TagAppender<Block> pickaxeTag = this.tag(BlockTags.MINEABLE_WITH_PICKAXE);
 
         ModBlocks.BLOCKS.getEntries().forEach((block) -> {
             witherTag.add(block.get());
             dragonTag.add(block.get());
+            pickaxeTag.add(block.get());
         });
     }
 }

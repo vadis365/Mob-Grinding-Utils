@@ -4,12 +4,6 @@ import javax.annotation.Nonnull;
 
 import mob_grinding_utils.blocks.BlockSpikes;
 import mob_grinding_utils.client.ModelLayers;
-import mob_grinding_utils.client.render.TileEntityAbsorptionRenderer;
-import mob_grinding_utils.client.render.TileEntityFanRenderer;
-import mob_grinding_utils.client.render.TileEntityMGUSpawnerRenderer;
-import mob_grinding_utils.client.render.TileEntitySawRenderer;
-import mob_grinding_utils.client.render.TileEntityTankRenderer;
-import mob_grinding_utils.client.render.TileEntityXPSolidifierRenderer;
 import mob_grinding_utils.datagen.Generator;
 import mob_grinding_utils.events.BossBarHidingEvent;
 import mob_grinding_utils.events.ChickenFuseEvent;
@@ -30,8 +24,6 @@ import mob_grinding_utils.inventory.client.GuiFan;
 import mob_grinding_utils.inventory.client.GuiMGUSpawner;
 import mob_grinding_utils.inventory.client.GuiSaw;
 import mob_grinding_utils.inventory.client.GuiXPSolidifier;
-import mob_grinding_utils.network.MGUNetProxyClient;
-import mob_grinding_utils.network.MGUNetProxyCommon;
 import mob_grinding_utils.network.MGUNetwork;
 import mob_grinding_utils.network.MessageFlagSync;
 import mob_grinding_utils.recipe.ChickenFeedRecipe;
@@ -56,7 +48,6 @@ import net.minecraft.tags.Tag;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraftforge.client.ClientRegistry;
 import net.minecraftforge.client.event.RecipesUpdatedEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.crafting.CraftingHelper;
@@ -64,7 +55,6 @@ import net.minecraftforge.event.AddReloadListenerEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
@@ -107,7 +97,6 @@ public class MobGrindingUtils {
 			return new ItemStack(ModBlocks.SPIKES.getItem());
 		}
 	};
-	public static MGUNetProxyCommon NETPROXY;
 
 	public MobGrindingUtils() {
 		IEventBus modBus = FMLJavaModLoadingContext.get().getModEventBus();
@@ -123,8 +112,6 @@ public class MobGrindingUtils {
 
 		//Central Data generator, called on runData
 		modBus.addListener(Generator::gatherData);
-
-		NETPROXY = DistExecutor.safeRunForDist(() -> MGUNetProxyClient::new, () -> MGUNetProxyCommon::new);
 	}
 
 	public void setup(FMLCommonSetupEvent event) {

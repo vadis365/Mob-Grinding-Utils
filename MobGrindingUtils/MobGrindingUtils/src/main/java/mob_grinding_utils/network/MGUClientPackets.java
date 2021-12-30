@@ -8,8 +8,8 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.world.level.Level;
 
-public class MGUNetProxyClient extends MGUNetProxyCommon {
-    public void HandleChickenSync(MessageChickenSync message) {
+public class MGUClientPackets {
+    public static void HandleChickenSync(MessageChickenSync message) {
         Level world = Minecraft.getInstance().level;
 
         if (world == null)
@@ -37,7 +37,7 @@ public class MGUNetProxyClient extends MGUNetProxyCommon {
         }
     }
 
-    public void spawnGlitterParticles( double x, double y, double z, double vecX, double vecY, double vecZ) {
+    public static void spawnGlitterParticles( double x, double y, double z, double vecX, double vecY, double vecZ) {
         Level world = Minecraft.getInstance().level;
         world.addParticle(MobGrindingUtils.PARTICLE_FLUID_XP.get(), false, x, y, z, vecX, vecY, vecZ);
     }

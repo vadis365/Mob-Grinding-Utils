@@ -30,7 +30,7 @@ public class MessageTapParticle {
 
 	public static void handle(MessageTapParticle message, final Supplier<NetworkEvent.Context> ctx) {
 		ctx.get().enqueueWork(() -> {
-			MobGrindingUtils.NETPROXY.spawnGlitterParticles(message.tilePos.getX(), message.tilePos.getY(), message.tilePos.getZ(), 0D, 0D, 0D);
+			MGUClientPackets.spawnGlitterParticles(message.tilePos.getX(), message.tilePos.getY(), message.tilePos.getZ(), 0D, 0D, 0D);
 		});
 		ctx.get().setPacketHandled(true);
 	}

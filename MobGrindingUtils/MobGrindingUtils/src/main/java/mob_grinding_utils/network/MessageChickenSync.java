@@ -34,7 +34,7 @@ public class MessageChickenSync {
 
 	public static void handle(MessageChickenSync message, final Supplier<NetworkEvent.Context> ctx) {
 		ctx.get().enqueueWork(() -> {
-			MobGrindingUtils.NETPROXY.HandleChickenSync(message);
+			MGUClientPackets.HandleChickenSync(message);
 		});
 		ctx.get().setPacketHandled(true);
 	}
