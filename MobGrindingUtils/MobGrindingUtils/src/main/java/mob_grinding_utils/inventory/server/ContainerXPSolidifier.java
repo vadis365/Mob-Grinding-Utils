@@ -14,6 +14,7 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.core.BlockPos;
 
+import javax.annotation.Nonnull;
 import java.util.function.Predicate;
 
 
@@ -33,7 +34,7 @@ public class ContainerXPSolidifier extends AbstractContainerMenu {
     }
 
     @Override
-    public boolean stillValid(Player playerIn) {
+    public boolean stillValid(@Nonnull Player playerIn) {
         return true;
     }
 
@@ -73,10 +74,11 @@ public class ContainerXPSolidifier extends AbstractContainerMenu {
 
     }
 
+    @Nonnull
     @Override
-    public ItemStack quickMoveStack(Player player, int index) {
+    public ItemStack quickMoveStack(@Nonnull Player player, int index) {
         ItemStack stack = ItemStack.EMPTY;
-        Slot slot = (Slot) slots.get(index);
+        Slot slot = slots.get(index);
 
         if (slot != null && slot.hasItem()) {
             ItemStack stack1 = slot.getItem();

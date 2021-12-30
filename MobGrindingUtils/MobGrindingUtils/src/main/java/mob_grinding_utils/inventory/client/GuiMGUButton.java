@@ -9,8 +9,9 @@ import net.minecraft.client.gui.components.Button;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.network.chat.Component;
 
-import net.minecraft.client.gui.components.Button.OnPress;
 import net.minecraft.client.renderer.GameRenderer;
+
+import javax.annotation.Nonnull;
 
 public class GuiMGUButton extends Button {
     private static final ResourceLocation TEXTURES = new ResourceLocation("mob_grinding_utils:textures/gui/absorption_hopper_gui.png");
@@ -25,16 +26,16 @@ public class GuiMGUButton extends Button {
     }
 
     @Override
-    public void renderButton(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+    public void renderButton(@Nonnull PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
         Minecraft mc = Minecraft.getInstance();
         Font fontrenderer = mc.font;
         if (visible) {
-        	RenderSystem.setShader(GameRenderer::getPositionTexShader);
+            RenderSystem.setShader(GameRenderer::getPositionTexShader);
             RenderSystem.setShaderTexture(0, getTextures(size));
             RenderSystem.setShaderColor(0.75F, 0.75F, 0.75F, 0.5F);
             boolean hover = mouseX >= x && mouseY >= y && mouseX < x + width && mouseY < y + height;
             if(hover)
-            	RenderSystem.setShaderColor(0.75F, 1F, 0.75F, 1F);
+                RenderSystem.setShaderColor(0.75F, 1F, 0.75F, 1F);
             blit(matrixStack, x, y, size.u, size.v, width, height);
 
             int textColour = 14737632;
@@ -48,18 +49,12 @@ public class GuiMGUButton extends Button {
         }
     }
     
-	public ResourceLocation getTextures(Size size) {
-		switch (size) {
-		case SMALL:
-		case MEDIUM:
-		case LARGE:
-			return TEXTURES;
-		case SOLIDIFIER:
-		case SOLIDIFIER_ON:
-			return SOLIDIFIER_TEXTURES;
-		}
-		return TEXTURES;
-	}
+    public ResourceLocation getTextures(Size size) {
+        return switch (size) {
+            case SMALL, MEDIUM, LARGE -> TEXTURES;
+            case SOLIDIFIER, SOLIDIFIER_ON -> SOLIDIFIER_TEXTURES;
+        };
+    }
 
     enum Size {
         SMALL(16 , 16, 103, 228),
@@ -68,7 +63,10 @@ public class GuiMGUButton extends Button {
         SOLIDIFIER(34, 16, 178, 92),
         SOLIDIFIER_ON(20, 16, 178, 110);
 
-        int width, height, u, v;
+        final int width;
+        final int height;
+        final int u;
+        final int v;
         Size(int w, int h, int U, int V) {width = w; height = h; u = U; v = V;}
     }
 }

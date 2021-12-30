@@ -13,6 +13,8 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.core.BlockPos;
 
+import javax.annotation.Nonnull;
+
 public class ContainerSaw extends AbstractContainerMenu {
 	private final int numRows = 2;
 	public TileEntitySaw saw;
@@ -42,15 +44,16 @@ public class ContainerSaw extends AbstractContainerMenu {
 	}
 	
 	@Override
-	public boolean stillValid(Player player) {
+	public boolean stillValid(@Nonnull Player player) {
 		return true;
 	}
-	
+
+	@Nonnull
 	@Override
-	public ItemStack quickMoveStack(Player player, int slotIndex) {
+	public ItemStack quickMoveStack(@Nonnull Player player, int slotIndex) {
 
 		ItemStack stack = ItemStack.EMPTY;
-		Slot slot = (Slot) slots.get(slotIndex);
+		Slot slot = slots.get(slotIndex);
 		if (slot != null && slot.hasItem()) {
 			ItemStack stack1 = slot.getItem();
 			stack = stack1.copy();
@@ -89,7 +92,7 @@ public class ContainerSaw extends AbstractContainerMenu {
 	}
 
 	@Override
-	protected boolean moveItemStackTo(ItemStack stack, int startIndex, int endIndex, boolean reverseDirection) {
+	protected boolean moveItemStackTo(@Nonnull ItemStack stack, int startIndex, int endIndex, boolean reverseDirection) {
 		boolean merged = false;
 		int slotIndex = startIndex;
 
@@ -101,11 +104,11 @@ public class ContainerSaw extends AbstractContainerMenu {
 
 		if (stack.isStackable()) {
 			while (stack.getCount() > 0 && (!reverseDirection && slotIndex < endIndex || reverseDirection && slotIndex >= startIndex)) {
-				slot = (Slot) this.slots.get(slotIndex);
+				slot = this.slots.get(slotIndex);
 				slotstack = slot.getItem();
 
 				if (!slotstack.isEmpty() && slotstack.getItem() == stack.getItem() && stack.getDamageValue() == slotstack.getDamageValue() && ItemStack.tagMatches(stack, slotstack) && slotstack.getCount() < slot.getMaxStackSize()) {
-					int mergedStackSize = stack.getCount() + getSmaller(slotstack.getCount(), slot.getMaxStackSize());
+					int mergedStackSize = stack.getCount() + Math.min(slotstack.getCount(), slot.getMaxStackSize());
 
 					if (mergedStackSize <= stack.getMaxStackSize() && mergedStackSize <= slot.getMaxStackSize()) {
 						stack.setCount(0);
@@ -169,12 +172,4 @@ public class ContainerSaw extends AbstractContainerMenu {
 
 		return merged;
 	}
-
-	protected int getSmaller(int stackSize1, int stackSize2) {
-		if (stackSize1 < stackSize2)
-			return stackSize1;
-		else
-			return stackSize2;
-	}
-
 }

@@ -155,7 +155,7 @@ public class InventoryWrapperAH implements IItemHandlerModifiable {
 	}
 
 	@Override
-	public boolean isItemValid(int slot, ItemStack stack) {
+	public boolean isItemValid(int slot, @Nonnull ItemStack stack) {
 		return slot != 0;
 	}
 }
