@@ -4,9 +4,15 @@ import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.model.Model;
 import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.client.model.geom.PartPose;
+import net.minecraft.client.model.geom.builders.CubeDeformation;
+import net.minecraft.client.model.geom.builders.CubeListBuilder;
+import net.minecraft.client.model.geom.builders.LayerDefinition;
+import net.minecraft.client.model.geom.builders.MeshDefinition;
+import net.minecraft.client.model.geom.builders.PartDefinition;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -16,18 +22,20 @@ public class ModelAHConnect extends Model {
 	ModelPart plate;
 	ModelPart pipe;
 
-	public ModelAHConnect() {
+	public ModelAHConnect(ModelPart root) {
 		super(RenderType::entitySolid);
-		texWidth = 32;
-		texHeight = 16;
-		plate = new ModelPart(this, 0, 0);
-		plate.addBox(-3.0F, -12.0F, -3.0F, 6, 1, 6);
-		plate.setPos(0.0F, 7.0F, 0.0F);
-		setRotation(plate, 0F, 0F, 0F);
-		pipe = new ModelPart(this, 0, 7);
-		pipe.addBox(-2.0F, -15.0F, -2.0F, 4, 3, 4);
-		pipe.setPos(0.0F, 7.0F, 0.0F);
-		setRotation(pipe, 0F, 0F, 0F);
+		
+		this.plate = root.getChild("plate");
+		this.pipe = root.getChild("pipe");
+
+	}
+	
+	public static LayerDefinition createBodyLayer() {
+		MeshDefinition meshdefinition = new MeshDefinition();
+		PartDefinition partdefinition = meshdefinition.getRoot();
+		partdefinition.addOrReplaceChild("plate", CubeListBuilder.create().texOffs(0, 0).addBox(-3F, -12F, -3F, 6F, 1F, 6F, new CubeDeformation(0F)), PartPose.offsetAndRotation(0F, 7F, 0.0F, 0F, 0F, 0F));
+		partdefinition.addOrReplaceChild("pipe", CubeListBuilder.create().texOffs(0, 7).addBox(-2F, -15F, -2F, 4F, 3F, 4F, new CubeDeformation(0F)), PartPose.offsetAndRotation(0F, 7F, 0.0F, 0F, 0F, 0F));
+		return LayerDefinition.create(meshdefinition, 32, 16);
 	}
 
 	@Override
@@ -35,11 +43,5 @@ public class ModelAHConnect extends Model {
 		ImmutableList.of(plate, pipe).forEach((modelRenderer) -> {
 			modelRenderer.render(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn, red, green, blue, alpha);
 		});
-	}
-
-	public void setRotation(ModelPart modelRenderer, float x, float y, float z) {
-		modelRenderer.xRot = x;
-		modelRenderer.yRot = y;
-		modelRenderer.zRot = z;
 	}
 }
