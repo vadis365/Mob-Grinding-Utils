@@ -3,20 +3,22 @@ package mob_grinding_utils.entity;
 import java.util.Map.Entry;
 
 import mob_grinding_utils.tile.TileEntitySinkTank;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.ExperienceOrb;
+import net.minecraft.world.entity.MoverType;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.MoverType;
-import net.minecraft.world.entity.ExperienceOrb;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
 public class EntityXPOrbFalling extends ExperienceOrb {
+	private int age;
+	public int delayBeforeCanPickup;
 
-	public EntityXPOrbFalling(Level worldIn, double x, double y, double z, int expValue) {
-		super(EntityType.EXPERIENCE_ORB, worldIn);
+	public EntityXPOrbFalling(Level level, double x, double y, double z, int expValue) {
+		super(EntityType.EXPERIENCE_ORB, level);
 		setPos(x, y, z);
 		setYRot((float) (Math.random() * 360.0D));
 		setDeltaMovement(0D ,0D ,0D);
@@ -27,8 +29,8 @@ public class EntityXPOrbFalling extends ExperienceOrb {
 	   public void tick() {
 		super.tick();
 
-		if (throwTime > 0)
-			--throwTime;
+		if (delayBeforeCanPickup > 0)
+			--delayBeforeCanPickup;
 
 		xo = getX();
 		yo = getY();
@@ -53,7 +55,7 @@ public class EntityXPOrbFalling extends ExperienceOrb {
 	@Override
 	public void playerTouch(Player player) {
 		if (!level.isClientSide) {
-			if (throwTime == 0 && player.takeXpDelay == 0) {
+			if (delayBeforeCanPickup == 0 && player.takeXpDelay == 0) {
 				if (net.minecraftforge.common.MinecraftForge.EVENT_BUS.post(new net.minecraftforge.event.entity.player.PlayerXpEvent.PickupXp(player, this)))
 					return;
 				player.takeXpDelay = 2;

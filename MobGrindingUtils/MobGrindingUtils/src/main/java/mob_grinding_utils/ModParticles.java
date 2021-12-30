@@ -8,7 +8,8 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 @Mod.EventBusSubscriber(modid = Reference.MOD_ID, value = Dist.CLIENT, bus= Mod.EventBusSubscriber.Bus.MOD)
 public class ModParticles {
-    @SubscribeEvent
+    @SuppressWarnings("resource")
+	@SubscribeEvent
 	public static void registerParticleFactory(ParticleFactoryRegisterEvent event) {
 		Minecraft.getInstance().particleEngine.register(MobGrindingUtils.PARTICLE_FLUID_XP.get(), sprite -> new ParticleFluidXP.Factory(sprite));
 	}

@@ -47,7 +47,7 @@ public class BlockXPSolidifier extends BaseEntityBlock {
     @Nullable
     @Override
     public BlockEntity newBlockEntity(@Nonnull BlockPos pos, @Nonnull BlockState state) {
-        return new TileEntityXPSolidifier();
+        return new TileEntityXPSolidifier(pos, state);
     }
 
     @Override

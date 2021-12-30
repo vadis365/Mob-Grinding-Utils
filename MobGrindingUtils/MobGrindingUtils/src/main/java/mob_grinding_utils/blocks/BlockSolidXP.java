@@ -1,16 +1,16 @@
 package mob_grinding_utils.blocks;
 
 import mob_grinding_utils.ModSounds;
-import net.minecraft.world.level.block.HalfTransparentBlock;
+import net.minecraft.core.BlockPos;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.sounds.SoundSource;
-import net.minecraft.core.BlockPos;
-import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
-
-import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
+import net.minecraft.world.level.block.HalfTransparentBlock;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
 
 public class BlockSolidXP extends HalfTransparentBlock {
 	public BlockSolidXP(Properties properties) {
@@ -18,19 +18,19 @@ public class BlockSolidXP extends HalfTransparentBlock {
    }
 
 	@Override
-	public void fallOn(Level worldIn, BlockPos pos, Entity entity, float fallDistance) {
+	public void fallOn(Level level, BlockState state, BlockPos pos, Entity entity, float fallDistance) {
 		if (entity.isSuppressingBounce())
-			super.fallOn(worldIn, pos, entity, fallDistance);
+			super.fallOn(level, state, pos, entity, fallDistance);
 		else {
-			entity.causeFallDamage(fallDistance, 0.0F);
+			entity.causeFallDamage(fallDistance, 0.0F, DamageSource.FALL);
 			entity.getCommandSenderWorld().playSound(null, entity.blockPosition(), ModSounds.SOLID_XP_BLOCK_BOING, SoundSource.BLOCKS, 0.3F, 1F);
 		}
 	}
 
 	@Override
-	public void updateEntityAfterFallOn(BlockGetter worldIn, Entity entity) {
+	public void updateEntityAfterFallOn(BlockGetter level, Entity entity) {
 		if (entity.isSuppressingBounce())
-			super.updateEntityAfterFallOn(worldIn, entity);
+			super.updateEntityAfterFallOn(level, entity);
 		else 
 			this.bounceEntity(entity);
 	}
@@ -46,12 +46,12 @@ public class BlockSolidXP extends HalfTransparentBlock {
 	}
 
 	@Override
-	public void stepOn(Level worldIn, BlockPos pos, Entity entityIn) {
+	public void stepOn(Level level, BlockPos pos, BlockState state, Entity entityIn) {
 		double d0 = Math.abs(entityIn.getDeltaMovement().y);
 		if (d0 < 0.1D && !entityIn.isSteppingCarefully()) {
 			double d1 = 0.4D + d0 * 0.2D;
 			entityIn.setDeltaMovement(entityIn.getDeltaMovement().multiply(d1, 1.0D, d1));
 		}
-		super.stepOn(worldIn, pos, entityIn);
+		super.stepOn(level, pos, state, entityIn);
 	}
 }

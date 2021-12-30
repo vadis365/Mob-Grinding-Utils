@@ -5,17 +5,18 @@ import mob_grinding_utils.ModItems;
 import mob_grinding_utils.items.ItemGMChickenFeed;
 import mob_grinding_utils.items.ItemMobSwab;
 import mob_grinding_utils.network.MessageChickenSync;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.npc.WanderingTrader;
-import net.minecraft.world.entity.animal.Chicken;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.phys.Vec3;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.animal.Chicken;
+import net.minecraft.world.entity.npc.WanderingTrader;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.EntityInteract;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.network.PacketDistributor;
+import net.minecraftforge.network.PacketDistributor.TargetPoint;
 
 public class EntityInteractionEvent {
 

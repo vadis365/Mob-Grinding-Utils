@@ -10,6 +10,6 @@ public class GlobalDragonSoundEvent {
 	@SubscribeEvent
 	public void onDragonSound(PlaySoundEvent event) {
 		if (event.getName().equals("entity.enderdragon.death"))
-			event.setResultSound(null);
+			event.setSound(null);
 	}
 }

@@ -16,6 +16,6 @@ public class BlockTankJumbo extends BlockTank {
 
 	@Override
 	public BlockEntity newBlockEntity(@Nonnull BlockPos pos, @Nonnull BlockState state) {
-		return new TileEntityJumboTank();
+		return new TileEntityJumboTank(pos, state);
 	}
 }

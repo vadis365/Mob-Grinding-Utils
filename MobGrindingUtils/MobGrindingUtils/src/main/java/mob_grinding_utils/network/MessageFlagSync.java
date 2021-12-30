@@ -7,6 +7,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.network.NetworkEvent;
 
+
 public class MessageFlagSync {
 
     public boolean wither, dragon;
@@ -25,7 +26,8 @@ public class MessageFlagSync {
         return new MessageFlagSync(buf.readBoolean(), buf.readBoolean());
     }
 
-    public static void handle(MessageFlagSync message, final Supplier<NetworkEvent.Context> ctx) {
+    @SuppressWarnings("resource")
+	public static void handle(MessageFlagSync message, final Supplier<NetworkEvent.Context> ctx) {
         if (ctx.get().getDirection().getReceptionSide().isClient()) {
             ctx.get().enqueueWork(() -> {
                 CompoundTag nbt = Minecraft.getInstance().player.getPersistentData();

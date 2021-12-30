@@ -2,13 +2,11 @@ package mob_grinding_utils.datagen;
 
 import mob_grinding_utils.ModBlocks;
 import mob_grinding_utils.Reference;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.data.tags.BlockTagsProvider;
 import net.minecraft.data.DataGenerator;
+import net.minecraft.data.tags.BlockTagsProvider;
 import net.minecraft.tags.BlockTags;
+import net.minecraft.world.level.block.Block;
 import net.minecraftforge.common.data.ExistingFileHelper;
-
-import net.minecraft.data.tags.TagsProvider.TagAppender;
 
 public class  MGUBlockTags extends BlockTagsProvider {
     public MGUBlockTags(DataGenerator generatorIn, ExistingFileHelper existingFileHelper) {

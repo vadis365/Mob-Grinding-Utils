@@ -49,7 +49,7 @@ public class BlockSaw extends DirectionalBlock implements EntityBlock {
 
 	@Override
 	public BlockEntity newBlockEntity(@Nonnull BlockPos pos, @Nonnull BlockState state) {
-		return new TileEntitySaw();
+		return new TileEntitySaw(pos, state);
 	}
 
 	@Nullable

@@ -9,7 +9,8 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
 
 public class SlotSolidifierOutput extends SlotItemHandler {
-    private AbstractContainerMenu container;
+    @SuppressWarnings("unused")
+	private AbstractContainerMenu container;
 
     public SlotSolidifierOutput(IItemHandler itemHandler, int index, int xPosition, int yPosition, AbstractContainerMenu container) {
         super(itemHandler, index, xPosition, yPosition);
@@ -22,9 +23,9 @@ public class SlotSolidifierOutput extends SlotItemHandler {
     }
 
     @Override
-    public ItemStack onTake(Player player, ItemStack stack) {
+    public void onTake(Player player, ItemStack stack) {
     	// keeping for possible stuffs
-        return super.onTake(player, stack);
+        super.onTake(player, stack);
     }
     
     @Override

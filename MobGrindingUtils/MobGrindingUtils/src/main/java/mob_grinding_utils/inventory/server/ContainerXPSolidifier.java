@@ -105,10 +105,10 @@ public class ContainerXPSolidifier extends AbstractContainerMenu {
             if (stack1.getCount() == stack.getCount())
                 return ItemStack.EMPTY;
 
-            ItemStack stack2 = slot.onTake(player, stack1); //TODO huh?
+            slot.onTake(player, stack1);
 
             if (index == 2)
-                player.drop(stack2, false);
+                player.drop(stack1, false);
         }
 
         return stack;

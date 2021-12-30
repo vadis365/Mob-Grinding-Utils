@@ -10,6 +10,6 @@ public class GlobalWitherSoundEvent {
 	@SubscribeEvent
 	public void onWitherSound(PlaySoundEvent event) {
 		if (event.getName().equals("entity.wither.spawn") || event.getName().equals("entity.wither.death"))
-			event.setResultSound(null);
+			event.setSound(null);
 	}
 }
