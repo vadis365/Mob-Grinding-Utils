@@ -1,17 +1,16 @@
 package mob_grinding_utils.inventory.client;
 
-import com.mojang.blaze3d.vertex.PoseStack;
+import javax.annotation.Nonnull;
+
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.components.Button;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.network.chat.Component;
-
 import net.minecraft.client.renderer.GameRenderer;
-
-import javax.annotation.Nonnull;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 
 public class GuiMGUButton extends Button {
     private static final ResourceLocation TEXTURES = new ResourceLocation("mob_grinding_utils:textures/gui/absorption_hopper_gui.png");

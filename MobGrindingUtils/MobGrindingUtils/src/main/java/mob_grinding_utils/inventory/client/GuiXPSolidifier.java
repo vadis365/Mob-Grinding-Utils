@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import javax.annotation.Nonnull;
+
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
@@ -25,8 +27,6 @@ import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.InventoryMenu;
-
-import javax.annotation.Nonnull;
 
 public class GuiXPSolidifier extends AbstractContainerScreen<ContainerXPSolidifier> {
     private static final ResourceLocation GUI_TEX = new ResourceLocation("mob_grinding_utils:textures/gui/solidifier_gui.png");
@@ -90,7 +90,9 @@ public class GuiXPSolidifier extends AbstractContainerScreen<ContainerXPSolidifi
             buffer.vertex(xOffSet + 8, yOffSet + 88 - fluid, zLevel).uv(sprite.getU0(), sprite.getV1()).endVertex();
             tessellator.end();
         }
-        getMinecraft().getTextureManager().bindForSetup(GUI_TEX);
+        RenderSystem.setShader(GameRenderer::getPositionTexShader);
+        RenderSystem.setShaderTexture(0, GUI_TEX);
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         this.blit(stack, xOffSet + 7, yOffSet + 17 , 178, 0, 6, 71);
 
         this.blit(stack, xOffSet + 91, yOffSet + 36, 178, 73, tile.getProgressScaled(24), 17);

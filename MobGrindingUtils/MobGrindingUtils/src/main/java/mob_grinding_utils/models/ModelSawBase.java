@@ -51,8 +51,10 @@ public class ModelSawBase extends Model {
 	  	partdefinition.addOrReplaceChild("axle", CubeListBuilder.create().texOffs(0, 0).addBox(-1F, -5F, -1F, 2F, 10F, 2F, new CubeDeformation(0F)), PartPose.offsetAndRotation(0F, 16F, 0F, 0F, 0F, 0F));  
 	  	partdefinition.addOrReplaceChild("axle2", CubeListBuilder.create().texOffs(0, 0).addBox(-1F, -5F, -1F, 2F, 10F, 2F, new CubeDeformation(0F)), PartPose.offsetAndRotation(0F, 16F, 0F, 0F, 0.7853982F, 0F)); 
 	  	partdefinition.addOrReplaceChild("axleTop", CubeListBuilder.create().texOffs(0, 21).addBox(-1.5F, -8F, -1.5F, 3F, 3F, 3F, new CubeDeformation(0F)), PartPose.offsetAndRotation(0F, 16F, 0F, 0F, 0.7853982F, 0F)); 
-	  	partdefinition.addOrReplaceChild("plinth", CubeListBuilder.create().texOffs(9, 0).addBox(-5.5F, -5F, -5.5F, 11F, 2F, 11F, new CubeDeformation(0F)), PartPose.offsetAndRotation(0F, 16F, 0F, 0F, 0.7853982F, 0F)); 
-	  	partdefinition.addOrReplaceChild("base", CubeListBuilder.create().texOffs(0, 15).addBox(-8F, -7F, -8F, 16F, 1F, 16F, new CubeDeformation(0F)), PartPose.offsetAndRotation(0F, 16F, 0F, 0F, 0F, 0F)); 
+	  	partdefinition.addOrReplaceChild("plinth", CubeListBuilder.create().texOffs(9, 0).addBox(-5.5F, -5F, -5.5F, 11F, 2F, 11F, new CubeDeformation(0F)),
+	  			PartPose.offsetAndRotation(0F, 26F, 0F, 0F, 0.7853982F, 0F)); 
+	  	partdefinition.addOrReplaceChild("base", CubeListBuilder.create().texOffs(0, 15).addBox(-8F, -7F, -8F, 16F, 1F, 16F, new CubeDeformation(0F)),
+	  			PartPose.offsetAndRotation(0F, 30F, 0F, 0F, 0F, 0F)); 
 	  	partdefinition.addOrReplaceChild("maceBase", CubeListBuilder.create().texOffs(0, 16).addBox(-3.5F, -7.5F, -1F, 2F, 2F, 2F, new CubeDeformation(0F)), PartPose.offsetAndRotation(0F, 16F, 0F, 0F, -0.7853982F, 0F)); 
 	  	partdefinition.addOrReplaceChild("maceArm", CubeListBuilder.create().texOffs(9, 16).addBox(-5.5F, -7F, -0.5F, 2F, 1F, 1F, new CubeDeformation(0F)), PartPose.offsetAndRotation(0F, 16F, 0F, 0F, -0.7853982F, 0F)); 
 	  	partdefinition.addOrReplaceChild("mace1", CubeListBuilder.create().texOffs(0, 21).addBox(-1.5F, -8F, -8.5F, 3F, 3F, 3F, new CubeDeformation(0F)), PartPose.offsetAndRotation(0F, 16F, 0F, 0F, 0.7853982F, 0F)); 

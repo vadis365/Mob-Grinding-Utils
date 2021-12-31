@@ -1,5 +1,7 @@
 package mob_grinding_utils.inventory.client;
 
+import javax.annotation.Nonnull;
+
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 
@@ -19,8 +21,6 @@ import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-
-import javax.annotation.Nonnull;
 
 public class GuiMGUSpawner extends AbstractContainerScreen<ContainerMGUSpawner> {
 

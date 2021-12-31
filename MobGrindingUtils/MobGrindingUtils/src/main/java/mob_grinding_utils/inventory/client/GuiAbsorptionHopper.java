@@ -144,8 +144,9 @@ public class GuiAbsorptionHopper extends AbstractContainerScreen<ContainerAbsorp
 			buffer.vertex(xOffSet + 156, yOffSet + 128 - fluid, zLevel).uv(sprite.getU0(), sprite.getV1()).endVertex();
 			tessellator.end();
 		}
-
-		getMinecraft().getTextureManager().bindForSetup(GUI_ABSORPTION_HOPPER);
+        RenderSystem.setShader(GameRenderer::getPositionTexShader);
+        RenderSystem.setShaderTexture(0, GUI_ABSORPTION_HOPPER);
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 		this.blit(stack, xOffSet + 153, yOffSet + 8 , 248, 0, 6, 120);
 	}
 
