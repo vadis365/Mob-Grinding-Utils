@@ -107,10 +107,10 @@ public class BlockDelightfulDirt extends Block {
 
 	@SuppressWarnings("unchecked")
 	public void spawnMob(ServerLevel level, BlockPos pos) {
-		WeightedRandomList<SpawnerData> spawns = level.getBiome(pos).getMobSettings().getMobs(MobCategory.CREATURE);
+		List<SpawnerData> spawns = level.getBiome(pos).getMobSettings().getMobs(MobCategory.CREATURE).unwrap();
 		if (!spawns.isEmpty()) {
-			int indexSize = ((List<Mob>) spawns).size();
-			EntityType<?> type = ((List<Mob>) spawns).get(RANDOM.nextInt(indexSize)).getType();
+			int indexSize = spawns.size();
+			EntityType<?> type = spawns.get(RANDOM.nextInt(indexSize)).type;
 			if (type == null || !NaturalSpawner.isSpawnPositionOk(SpawnPlacements.getPlacementType(type), level, pos.above(), type))
 				return;
 			Mob entity = (Mob) type.create(level);

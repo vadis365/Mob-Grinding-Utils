@@ -10,25 +10,25 @@ import mob_grinding_utils.ModItems;
 import mob_grinding_utils.inventory.server.ContainerXPSolidifier;
 import mob_grinding_utils.recipe.SolidifyRecipe;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.Container;
-import net.minecraft.world.WorldlyContainer;
-import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.MenuProvider;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.core.Direction;
-import net.minecraft.util.StringRepresentable;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.StringRepresentable;
+import net.minecraft.world.Container;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.WorldlyContainer;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.capabilities.Capability;
@@ -347,7 +347,8 @@ public class TileEntityXPSolidifier extends BlockEntity implements MenuProvider 
 	}
 
 	@Override
-	public void saveAdditional(@Nonnull CompoundTag nbt) {
+	public CompoundTag save(CompoundTag nbt) {
+		super.save(nbt);
 		tank.writeToNBT(nbt);
 		nbt.put("inputSlots", inputSlots.serializeNBT());
 		nbt.put("outputSlot", outputSlot.serializeNBT());
@@ -357,7 +358,9 @@ public class TileEntityXPSolidifier extends BlockEntity implements MenuProvider 
 		nbt.putInt("moulding_progress", moulding_progress);
 		if (currentRecipe != null)
 			nbt.putString("currentRecipe", currentRecipe.getId().toString());
+		return nbt;
 	}
+
 	@Nonnull
 	@Override
 	public CompoundTag getUpdateTag() {
