@@ -16,25 +16,22 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-
 @OnlyIn(Dist.CLIENT)
 public class ModelAHConnect extends Model {
-	ModelPart plate;
-	ModelPart pipe;
+    public ModelPart plate;
+    public ModelPart pipe;
 
 	public ModelAHConnect(ModelPart root) {
 		super(RenderType::entitySolid);
-		
 		this.plate = root.getChild("plate");
 		this.pipe = root.getChild("pipe");
-
 	}
 	
 	public static LayerDefinition createBodyLayer() {
 		MeshDefinition meshdefinition = new MeshDefinition();
 		PartDefinition partdefinition = meshdefinition.getRoot();
-		partdefinition.addOrReplaceChild("plate", CubeListBuilder.create().texOffs(0, 0).addBox(-3F, -12F, -3F, 6F, 1F, 6F, new CubeDeformation(0F)), PartPose.offsetAndRotation(0F, 7F, 0.0F, 0F, 0F, 0F));
-		partdefinition.addOrReplaceChild("pipe", CubeListBuilder.create().texOffs(0, 7).addBox(-2F, -15F, -2F, 4F, 3F, 4F, new CubeDeformation(0F)), PartPose.offsetAndRotation(0F, 7F, 0.0F, 0F, 0F, 0F));
+		partdefinition.addOrReplaceChild("plate", CubeListBuilder.create().texOffs(0, 0).addBox(-3F, -12F, -3F, 6F, 1F, 6F, new CubeDeformation(0F)), PartPose.offsetAndRotation(0F, 7F, 0F, 0F, 0F, 0F));
+		partdefinition.addOrReplaceChild("pipe", CubeListBuilder.create().texOffs(0, 7).addBox(-2F, -15F, -2F, 4F, 3F, 4F, new CubeDeformation(0F)), PartPose.offsetAndRotation(0F, 7F, 0F, 0F, 0F, 0F));
 		return LayerDefinition.create(meshdefinition, 32, 16);
 	}
 

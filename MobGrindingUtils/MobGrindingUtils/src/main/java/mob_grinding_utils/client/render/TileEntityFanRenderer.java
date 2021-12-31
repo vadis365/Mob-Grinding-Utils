@@ -3,13 +3,11 @@ package mob_grinding_utils.client.render;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 
-import mob_grinding_utils.client.ModelLayers;
 import mob_grinding_utils.tile.TileEntityFan;
+import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -18,7 +16,6 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 public class TileEntityFanRenderer implements BlockEntityRenderer<TileEntityFan> {
 
 	public TileEntityFanRenderer(BlockEntityRendererProvider.Context context) {
-		context.bakeLayer(ModelLayers.FAN);
 	}
 
 	@Override

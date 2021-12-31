@@ -2,25 +2,36 @@ package mob_grinding_utils.client.render;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.math.Vector3f;
 
+import mob_grinding_utils.client.ModelLayers;
 import mob_grinding_utils.models.ModelSawBase;
 import mob_grinding_utils.models.ModelSawBlade;
+import net.minecraft.client.model.geom.EntityModelSet;
+import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.ItemTransforms.TransformType;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.resources.ResourceLocation;
-import com.mojang.math.Vector3f;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 @OnlyIn(Dist.CLIENT)
 public class TileSawStackItemRenderer extends BlockEntityWithoutLevelRenderer {
+
 	private static final ResourceLocation BASE_TEXTURE = new ResourceLocation("mob_grinding_utils:textures/tiles/saw_base.png");
 	private static final ResourceLocation BLADE_TEXTURE = new ResourceLocation("mob_grinding_utils:textures/tiles/saw_blade.png");
-	private final ModelSawBase saw_base = new ModelSawBase();
-	private final ModelSawBlade saw_blade = new ModelSawBlade();
+	private final ModelSawBase saw_base;
+	private final ModelSawBlade saw_blade;
+
+	public TileSawStackItemRenderer(BlockEntityRenderDispatcher renderer, EntityModelSet modelSet) {
+		super(renderer, modelSet);
+		saw_base = new ModelSawBase(modelSet.bakeLayer(ModelLayers.SAW_BASE)); 
+		saw_blade = new ModelSawBlade(modelSet.bakeLayer(ModelLayers.SAW_BLADE));
+	}
+
 	@Override
 	public void renderByItem(ItemStack itemStackIn, TransformType transformType, PoseStack matrixStack, MultiBufferSource buffer, int combinedLight, int combinedOverlayIn) {
 		VertexConsumer ivertexbuilder = buffer.getBuffer(RenderType.entitySolid(BASE_TEXTURE));

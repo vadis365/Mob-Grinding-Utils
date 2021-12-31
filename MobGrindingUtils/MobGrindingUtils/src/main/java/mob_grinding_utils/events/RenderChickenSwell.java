@@ -3,6 +3,7 @@ package mob_grinding_utils.events;
 import mob_grinding_utils.models.ChickenBodyModel;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.model.ChickenModel;
+import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.world.entity.animal.Chicken;
 import net.minecraft.resources.ResourceLocation;
@@ -24,7 +25,7 @@ public class RenderChickenSwell {
 				
 				if (event.getRenderer().getModel() instanceof ChickenModel) {
 					
-					ChickenBodyModel model = new ChickenBodyModel();
+					ChickenBodyModel model = new ChickenBodyModel(null); /// TODO errrrrr
 					int count = event.getEntity().getPersistentData().getInt("countDown");
 					float scale = count * 0.04F;
 					if (scale >= 0.75F)

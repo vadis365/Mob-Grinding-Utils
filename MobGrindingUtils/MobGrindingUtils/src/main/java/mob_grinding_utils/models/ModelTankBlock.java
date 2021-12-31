@@ -16,7 +16,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 @OnlyIn(Dist.CLIENT)
 public class ModelTankBlock extends Model {
-	ModelPart tank_box;
+    public ModelPart tank_box;
 
 	public ModelTankBlock(ModelPart root) {
 		super(RenderType::entitySolid);

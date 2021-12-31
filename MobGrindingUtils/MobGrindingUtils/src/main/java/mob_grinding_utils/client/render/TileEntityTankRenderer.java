@@ -1,10 +1,11 @@
 package mob_grinding_utils.client.render;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 
+import mob_grinding_utils.client.ModelLayers;
 import mob_grinding_utils.models.ModelTankBlock;
 import mob_grinding_utils.tile.TileEntityJumboTank;
 import mob_grinding_utils.tile.TileEntitySinkTank;
@@ -12,25 +13,25 @@ import mob_grinding_utils.tile.TileEntityTank;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider.Context;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
-import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fluids.FluidStack;
 
 @OnlyIn(Dist.CLIENT)
-public class TileEntityTankRenderer extends BlockEntityRenderer<TileEntityTank> {
+public class TileEntityTankRenderer implements BlockEntityRenderer<TileEntityTank> {
 	private static final ResourceLocation TANK_TEXTURE = new ResourceLocation("mob_grinding_utils:textures/tiles/tank.png");
 	private static final ResourceLocation TANK_SINK_TEXTURE = new ResourceLocation("mob_grinding_utils:textures/tiles/tank_sink.png");
 	private static final ResourceLocation TANK_JUMBO_TEXTURE = new ResourceLocation("mob_grinding_utils:textures/tiles/tank_jumbo.png");
-	private final ModelTankBlock tank_model = new ModelTankBlock();
+	private final ModelTankBlock tank_model;
 	
-	public TileEntityTankRenderer(BlockEntityRenderDispatcher rendererDispatcherIn) {
-		super(rendererDispatcherIn);
+	public TileEntityTankRenderer(Context context) {
+		tank_model = new ModelTankBlock(context.bakeLayer(ModelLayers.TANK));
 	}
 
 	@Override

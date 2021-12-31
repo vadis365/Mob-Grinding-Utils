@@ -18,17 +18,17 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
 public class ModelSawBase extends Model {
-    ModelPart axle;
-    ModelPart axle2;
-    ModelPart axleTop;
-    ModelPart plinth;
-    ModelPart base;
-    ModelPart maceBase;
-    ModelPart maceArm;
-    ModelPart mace1;
-    ModelPart mace2;
-    ModelPart mace3;
-    ModelPart mace4;
+    public ModelPart axle;
+    public ModelPart axle2;
+    public ModelPart axleTop;
+    public ModelPart plinth;
+    public ModelPart base;
+    public ModelPart maceBase;
+    public ModelPart maceArm;
+    public ModelPart mace1;
+    public ModelPart mace2;
+    public ModelPart mace3;
+    public ModelPart mace4;
 
 	public ModelSawBase(ModelPart root) {
 		super(RenderType::entitySolid);
@@ -44,7 +44,7 @@ public class ModelSawBase extends Model {
 		this.mace3 = root.getChild("mace3");
 		this.mace4 = root.getChild("mace4");
 	}
-	
+
 	public static LayerDefinition createBodyLayer() {
 		MeshDefinition meshdefinition = new MeshDefinition();
 		PartDefinition partdefinition = meshdefinition.getRoot();

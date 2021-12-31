@@ -4,14 +4,15 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Vector3f;
 
 import mob_grinding_utils.ModBlocks;
+import mob_grinding_utils.client.ModelLayers;
 import mob_grinding_utils.models.ModelAHConnect;
 import mob_grinding_utils.tile.TileEntityAbsorptionHopper;
 import mob_grinding_utils.tile.TileEntityAbsorptionHopper.EnumStatus;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider.Context;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
@@ -20,13 +21,13 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
-public class TileEntityAbsorptionRenderer extends BlockEntityRenderer<TileEntityAbsorptionHopper> {
+public class TileEntityAbsorptionRenderer implements BlockEntityRenderer<TileEntityAbsorptionHopper> {
 	private static final ResourceLocation ITEM_TEXTURE = new ResourceLocation("mob_grinding_utils:textures/tiles/absorption_hopper_connects_items.png");
 	private static final ResourceLocation FLUID_TEXTURE = new ResourceLocation("mob_grinding_utils:textures/tiles/absorption_hopper_connects_fluids.png");
-	private final ModelAHConnect connectionModel = new ModelAHConnect();
+	private final ModelAHConnect connectionModel;
 
-	public TileEntityAbsorptionRenderer(BlockEntityRenderDispatcher rendererDispatcherIn) {
-		super(rendererDispatcherIn);
+	public TileEntityAbsorptionRenderer(Context context) {
+		connectionModel = new ModelAHConnect(context.bakeLayer(ModelLayers.ABSORPTION_HOPPER));
 	}
 
 	@Override

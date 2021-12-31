@@ -1,41 +1,42 @@
 package mob_grinding_utils.client.render;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.math.Vector3f;
 
 import mob_grinding_utils.ModBlocks;
 import mob_grinding_utils.blocks.BlockXPSolidifier;
+import mob_grinding_utils.client.ModelLayers;
 import mob_grinding_utils.models.ModelXPSolidifier;
 import mob_grinding_utils.tile.TileEntityXPSolidifier;
 import mob_grinding_utils.tile.TileEntityXPSolidifier.OutputDirection;
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider.Context;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
-import net.minecraft.world.inventory.InventoryMenu;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
-import com.mojang.math.Vector3f;
+import net.minecraft.world.inventory.InventoryMenu;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fluids.FluidStack;
 
 @OnlyIn(Dist.CLIENT)
-public class TileEntityXPSolidifierRenderer extends BlockEntityRenderer<TileEntityXPSolidifier> {
+public class TileEntityXPSolidifierRenderer implements BlockEntityRenderer<TileEntityXPSolidifier> {
 	private static final ResourceLocation TEXTURE = new ResourceLocation("mob_grinding_utils:textures/tiles/xp_solidifier.png");
 	private static final ResourceLocation TEXTURE_NO_PUSH = new ResourceLocation("mob_grinding_utils:textures/tiles/xp_solidifier_no_push.png");
-	private final ModelXPSolidifier xp_solidifier_model = new ModelXPSolidifier();
-	
-	public TileEntityXPSolidifierRenderer(BlockEntityRenderDispatcher rendererDispatcherIn) {
-		super(rendererDispatcherIn);
+	private final ModelXPSolidifier xp_solidifier_model;
+
+	public TileEntityXPSolidifierRenderer(Context context) {
+		xp_solidifier_model = new ModelXPSolidifier(context.bakeLayer(ModelLayers.XPSOLIDIFIER));
 	}
 
 	@Override
@@ -123,8 +124,8 @@ public class TileEntityXPSolidifierRenderer extends BlockEntityRenderer<TileEnti
 		matrixStack.scale(1.25F, 1.25F, 1.25F);
 		ItemStack stackMould = tile.inputSlots.getStackInSlot(0);
 		if (!stackMould.isEmpty()) {
-			Minecraft.getInstance().getTextureManager().bind(InventoryMenu.BLOCK_ATLAS);
-			Minecraft.getInstance().getItemRenderer().render(stackMould, ItemTransforms.TransformType.GROUND, false, matrixStack, bufferIn, combinedLight, combinedOverlay, Minecraft.getInstance().getItemRenderer().getModel(stackMould, null, null));
+			Minecraft.getInstance().getTextureManager().bindForSetup(InventoryMenu.BLOCK_ATLAS);
+			Minecraft.getInstance().getItemRenderer().render(stackMould, ItemTransforms.TransformType.GROUND, false, matrixStack, bufferIn, combinedLight, combinedOverlay, Minecraft.getInstance().getItemRenderer().getModel(stackMould, null, null, 0));
 		}
 		matrixStack.popPose();
 		
@@ -142,11 +143,11 @@ public class TileEntityXPSolidifierRenderer extends BlockEntityRenderer<TileEnti
 		matrixStack.scale(1.25F, 1.25F, 1.25F);
 		ItemStack stackResult = tile.outputSlot.getStackInSlot(0);
 		if (stackResult.isEmpty() && !tile.getCachedOutPutRenderStack().isEmpty() && tile.getProgress() > 60) { //may want to add some earlier blending fade here
-			Minecraft.getInstance().getTextureManager().bind(InventoryMenu.BLOCK_ATLAS);
-			Minecraft.getInstance().getItemRenderer().render(tile.getCachedOutPutRenderStack(), ItemTransforms.TransformType.GROUND, false, matrixStack, bufferIn, combinedLight, combinedOverlay, Minecraft.getInstance().getItemRenderer() .getModel(tile.getCachedOutPutRenderStack(), null, null));
+			Minecraft.getInstance().getTextureManager().bindForSetup(InventoryMenu.BLOCK_ATLAS);
+			Minecraft.getInstance().getItemRenderer().render(tile.getCachedOutPutRenderStack(), ItemTransforms.TransformType.GROUND, false, matrixStack, bufferIn, combinedLight, combinedOverlay, Minecraft.getInstance().getItemRenderer() .getModel(tile.getCachedOutPutRenderStack(), null, null, 0));
 		} else if (!stackResult.isEmpty()) {
-			Minecraft.getInstance().getTextureManager().bind(InventoryMenu.BLOCK_ATLAS);
-			Minecraft.getInstance().getItemRenderer().render(stackResult, ItemTransforms.TransformType.GROUND, false, matrixStack, bufferIn, combinedLight, combinedOverlay, Minecraft.getInstance().getItemRenderer().getModel(stackResult, null, null));
+			Minecraft.getInstance().getTextureManager().bindForSetup(InventoryMenu.BLOCK_ATLAS);
+			Minecraft.getInstance().getItemRenderer().render(stackResult, ItemTransforms.TransformType.GROUND, false, matrixStack, bufferIn, combinedLight, combinedOverlay, Minecraft.getInstance().getItemRenderer().getModel(stackResult, null, null, 0));
 		}
 		matrixStack.popPose();
 

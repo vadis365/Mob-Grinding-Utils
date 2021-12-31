@@ -1,26 +1,25 @@
 package mob_grinding_utils.client.render;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Vector3f;
 
 import mob_grinding_utils.tile.TileEntityMGUSpawner;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider.Context;
 import net.minecraft.world.entity.Entity;
-import com.mojang.math.Vector3f;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
-public class TileEntityMGUSpawnerRenderer extends BlockEntityRenderer<TileEntityMGUSpawner> {
+public class TileEntityMGUSpawnerRenderer implements BlockEntityRenderer<TileEntityMGUSpawner> {
 
-	public TileEntityMGUSpawnerRenderer(BlockEntityRenderDispatcher rendererDispatcherIn) {
-		super(rendererDispatcherIn);
+	public TileEntityMGUSpawnerRenderer(Context context) {
 	}
 
 	@Override
@@ -35,12 +34,13 @@ public class TileEntityMGUSpawnerRenderer extends BlockEntityRenderer<TileEntity
 			matrixStack.pushPose();
 			matrixStack.translate(0.5D, 0.75D, 0.5D);
 			RenderSystem.enableBlend();
+			
 			RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
-			RenderSystem.color4f(1.0F, 1.0F, 1.0F, 0.65F);
+			//RenderSystem.color4f(1.0F, 1.0F, 1.0F, 0.65F);
 			matrixStack.mulPose(Vector3f.YP.rotationDegrees(ticks));
 			matrixStack.scale(0.125F, 0.125F, 0.125F);
 			Minecraft.getInstance().getEntityRenderDispatcher().render(entity, 0D, 0D, 0D, 0F, 0F, matrixStack, buffer, combinedLight);
-			RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+			//RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 			matrixStack.popPose();
 		}
 
