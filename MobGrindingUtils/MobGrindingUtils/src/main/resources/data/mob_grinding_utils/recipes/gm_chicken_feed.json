@@ -1,0 +1,19 @@
+{
+  "type": "mob_grinding_utils:chicken_feed",
+  "ingredients": [
+    {
+      "tag": "forge:seeds"
+    },
+    {
+      "item": "mob_grinding_utils:mob_swab_used"
+    },
+    {
+      "type": "mob_grinding_utils:fluid",
+      "advanced": false,
+      "tag": "forge:experience"
+    }
+  ],
+  "result": {
+    "item": "mob_grinding_utils:gm_chicken_feed"
+  }
+}
