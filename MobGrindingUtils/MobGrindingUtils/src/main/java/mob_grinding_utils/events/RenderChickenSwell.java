@@ -24,8 +24,8 @@ public class RenderChickenSwell {
 			if (event.getEntity().getPersistentData().contains("shouldExplode")) {
 				
 				if (event.getRenderer().getModel() instanceof ChickenModel) {
-					
-					ChickenBodyModel model = new ChickenBodyModel(null); /// TODO errrrrr
+					ModelPart tempPart = ChickenBodyModel.createBodyLayer().bakeRoot();
+					ChickenBodyModel model = new ChickenBodyModel(tempPart); /// TODO errrrrr
 					int count = event.getEntity().getPersistentData().getInt("countDown");
 					float scale = count * 0.04F;
 					if (scale >= 0.75F)
