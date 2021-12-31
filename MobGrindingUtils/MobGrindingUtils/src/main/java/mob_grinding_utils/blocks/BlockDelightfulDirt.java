@@ -3,14 +3,12 @@ package mob_grinding_utils.blocks;
 import java.util.List;
 import java.util.Random;
 
-import mob_grinding_utils.MobGrindingUtils;
 import mob_grinding_utils.network.MGUClientPackets;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.data.worldgen.placement.VegetationPlacements;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
-import net.minecraft.util.random.WeightedRandomList;
 import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
@@ -105,7 +103,6 @@ public class BlockDelightfulDirt extends Block {
 		}
 	}
 
-	@SuppressWarnings("unchecked")
 	public void spawnMob(ServerLevel level, BlockPos pos) {
 		List<SpawnerData> spawns = level.getBiome(pos).getMobSettings().getMobs(MobCategory.CREATURE).unwrap();
 		if (!spawns.isEmpty()) {

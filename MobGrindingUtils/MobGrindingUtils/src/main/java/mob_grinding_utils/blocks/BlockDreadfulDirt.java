@@ -8,7 +8,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
-import net.minecraft.util.random.WeightedRandomList;
 import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
@@ -83,12 +82,11 @@ public class BlockDreadfulDirt extends Block {
 		}
 	}
 
-	@SuppressWarnings("unchecked")
 	public void spawnMob(ServerLevel level, BlockPos pos) {
-		WeightedRandomList<SpawnerData> spawns = level.getBiome(pos).getMobSettings().getMobs(MobCategory.MONSTER);
+		List<SpawnerData> spawns = level.getBiome(pos).getMobSettings().getMobs(MobCategory.MONSTER).unwrap();
 		if (!spawns.isEmpty()) {
-			int indexSize = ((List<Mob>) spawns).size();
-			EntityType<?> type = ((List<Mob>) spawns).get(RANDOM.nextInt(indexSize)).getType();
+			int indexSize = spawns.size();
+			EntityType<?> type = spawns.get(RANDOM.nextInt(indexSize)).type;
 			if (type == null || !NaturalSpawner.isSpawnPositionOk(SpawnPlacements.getPlacementType(type), level, pos.above(), type))
 				return;
 			Mob entity = (Mob) type.create(level);

@@ -74,23 +74,21 @@ public abstract class TileEntityInventoryHelper extends BlockEntity implements W
 	}
 
 	@Override
-	public void load(CompoundTag compound) {
-		super.load(compound);
-		this.loadFromNbt(compound);
+	public void saveAdditional(CompoundTag compound) {
+		super.saveAdditional(compound);
 	}
 
 	@Override
-	public void saveAdditional(CompoundTag compound) {
-		this.saveToNbt(compound);
-	}
-
-	public void loadFromNbt(CompoundTag compound) {
+	public void load(CompoundTag compound) {
+		super.load(compound);
 		inventory = NonNullList.<ItemStack>withSize(this.getContainerSize(), ItemStack.EMPTY);
 		if (compound.contains("Items", 9))
 			ContainerHelper.loadAllItems(compound, inventory);
 	}
 
-	public CompoundTag saveToNbt(CompoundTag compound) {
+	@Override
+	public CompoundTag save(CompoundTag compound) {
+		super.save(compound);
 		ContainerHelper.saveAllItems(compound, inventory, false);
 		return compound;
 	}
