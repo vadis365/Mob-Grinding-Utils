@@ -17,7 +17,7 @@ repositories {
     maven { url "https://dvs1.progwml6.com/files/maven" }
 }
 
-version = "${version}"
+version = "${modversion}"
 group = 'com.vadis365.mob_grinding_utils' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = 'mob_grinding_utils'
 
