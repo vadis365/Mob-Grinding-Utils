@@ -313,6 +313,7 @@ public class TileEntityMGUSpawner extends BlockEntity implements MenuProvider {
 
 	@Override
 	public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket packet) {
+		super.onDataPacket(net, packet);
 		load(packet.getTag());
 	}
 

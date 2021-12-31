@@ -377,6 +377,7 @@ public class TileEntityXPSolidifier extends BlockEntity implements MenuProvider 
 
 	@Override
 	public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket packet) {
+		super.onDataPacket(net, packet);
 		load(packet.getTag());
 		onContentsChanged();
 	}
