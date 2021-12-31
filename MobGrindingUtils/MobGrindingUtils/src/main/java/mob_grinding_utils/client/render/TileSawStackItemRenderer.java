@@ -7,6 +7,7 @@ import com.mojang.math.Vector3f;
 import mob_grinding_utils.client.ModelLayers;
 import mob_grinding_utils.models.ModelSawBase;
 import mob_grinding_utils.models.ModelSawBlade;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.geom.EntityModelSet;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -28,8 +29,9 @@ public class TileSawStackItemRenderer extends BlockEntityWithoutLevelRenderer {
 
 	public TileSawStackItemRenderer(BlockEntityRenderDispatcher renderer, EntityModelSet modelSet) {
 		super(renderer, modelSet);
-		saw_base = new ModelSawBase(modelSet.bakeLayer(ModelLayers.SAW_BASE)); 
-		saw_blade = new ModelSawBlade(modelSet.bakeLayer(ModelLayers.SAW_BLADE));
+	    EntityModelSet EntityModelSetThatIsntNULL = Minecraft.getInstance().getEntityModels();
+		saw_base = new ModelSawBase(EntityModelSetThatIsntNULL.bakeLayer(ModelLayers.SAW_BASE)); 
+		saw_blade = new ModelSawBlade(EntityModelSetThatIsntNULL.bakeLayer(ModelLayers.SAW_BLADE));
 	}
 
 	@Override

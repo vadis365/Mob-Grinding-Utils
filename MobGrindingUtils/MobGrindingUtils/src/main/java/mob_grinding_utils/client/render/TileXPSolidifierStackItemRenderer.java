@@ -31,7 +31,8 @@ public class TileXPSolidifierStackItemRenderer extends BlockEntityWithoutLevelRe
 
 	public TileXPSolidifierStackItemRenderer(BlockEntityRenderDispatcher renderer, EntityModelSet modelSet) {
 		super(renderer, modelSet);
-		xp_solidifier_model = new ModelXPSolidifier(modelSet.bakeLayer(ModelLayers.XPSOLIDIFIER));
+		EntityModelSet EntityModelSetThatIsntNULL = Minecraft.getInstance().getEntityModels();
+		xp_solidifier_model = new ModelXPSolidifier(EntityModelSetThatIsntNULL.bakeLayer(ModelLayers.XPSOLIDIFIER));
 	}
 
 	@Override

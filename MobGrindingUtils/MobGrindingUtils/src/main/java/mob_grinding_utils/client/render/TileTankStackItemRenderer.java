@@ -35,7 +35,8 @@ public class TileTankStackItemRenderer extends BlockEntityWithoutLevelRenderer {
 
 	public TileTankStackItemRenderer(BlockEntityRenderDispatcher renderer, EntityModelSet modelSet) {
 		super(renderer, modelSet);
-		tank_model = new ModelTankBlock(modelSet.bakeLayer(ModelLayers.TANK));
+		EntityModelSet EntityModelSetThatIsntNULL = Minecraft.getInstance().getEntityModels();
+		tank_model = new ModelTankBlock(EntityModelSetThatIsntNULL.bakeLayer(ModelLayers.TANK));
 	}
 
 	@Override

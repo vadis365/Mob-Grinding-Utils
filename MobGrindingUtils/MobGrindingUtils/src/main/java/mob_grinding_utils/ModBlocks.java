@@ -77,7 +77,7 @@ public class ModBlocks {
 				consumer.accept(new IItemRenderProperties() {
 					@Override
 					public BlockEntityWithoutLevelRenderer getItemStackRenderer() {
-						return new TileSawStackItemRenderer();
+						return new TileSawStackItemRenderer(null, null);
 					}
 				});
 			}
@@ -99,7 +99,7 @@ public class ModBlocks {
 				consumer.accept(new IItemRenderProperties() {
 					@Override
 					public BlockEntityWithoutLevelRenderer getItemStackRenderer() {
-						return new TileTankStackItemRenderer();
+						return new TileTankStackItemRenderer(null, null);
 					}
 				});
 			}
@@ -113,7 +113,7 @@ public class ModBlocks {
 				consumer.accept(new IItemRenderProperties() {
 					@Override
 					public BlockEntityWithoutLevelRenderer getItemStackRenderer() {
-						return new TileTankStackItemRenderer();
+						return new TileTankStackItemRenderer(null, null);
 					}
 				});
 			}
@@ -159,7 +159,7 @@ public class ModBlocks {
 				consumer.accept(new IItemRenderProperties() {
 					@Override
 					public BlockEntityWithoutLevelRenderer getItemStackRenderer() {
-						return new TileTankStackItemRenderer();
+						return new TileTankStackItemRenderer(null, null);
 					}
 				});
 			}
@@ -173,7 +173,7 @@ public class ModBlocks {
 				consumer.accept(new IItemRenderProperties() {
 					@Override
 					public BlockEntityWithoutLevelRenderer getItemStackRenderer() {
-						return new TileXPSolidifierStackItemRenderer();
+						return new TileXPSolidifierStackItemRenderer(null, null);
 					}
 				});
 			}

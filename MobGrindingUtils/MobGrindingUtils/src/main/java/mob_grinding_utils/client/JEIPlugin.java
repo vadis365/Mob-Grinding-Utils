@@ -1,10 +1,6 @@
-package mob_grinding_utils.client;
+/* package mob_grinding_utils.client;
 
 import javax.annotation.Nonnull;
-
-import mezz.jei.api.registration.IModIngredientRegistration;
-import net.minecraft.network.chat.TextComponent;
-import org.apache.commons.lang3.StringUtils;
 
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
@@ -13,9 +9,9 @@ import mezz.jei.api.registration.IRecipeRegistration;
 import mob_grinding_utils.ModItems;
 import mob_grinding_utils.Reference;
 import net.minecraft.client.resources.language.I18n;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.ChatFormatting;
+import net.minecraft.world.item.ItemStack;
 
 @JeiPlugin
 public class JEIPlugin implements IModPlugin {
@@ -36,3 +32,4 @@ public class JEIPlugin implements IModPlugin {
         });
     }
 }
+*/
