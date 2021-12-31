@@ -2,7 +2,12 @@ package mob_grinding_utils.client;
 
 import mob_grinding_utils.ModBlocks;
 import mob_grinding_utils.Reference;
-import mob_grinding_utils.client.render.*;
+import mob_grinding_utils.client.render.TileEntityAbsorptionRenderer;
+import mob_grinding_utils.client.render.TileEntityFanRenderer;
+import mob_grinding_utils.client.render.TileEntityMGUSpawnerRenderer;
+import mob_grinding_utils.client.render.TileEntitySawRenderer;
+import mob_grinding_utils.client.render.TileEntityTankRenderer;
+import mob_grinding_utils.client.render.TileEntityXPSolidifierRenderer;
 import mob_grinding_utils.models.ModelAHConnect;
 import mob_grinding_utils.models.ModelSawBase;
 import mob_grinding_utils.models.ModelSawBlade;
@@ -10,7 +15,6 @@ import mob_grinding_utils.models.ModelTankBlock;
 import mob_grinding_utils.models.ModelXPSolidifier;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.client.ClientRegistry;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 
