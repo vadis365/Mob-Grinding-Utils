@@ -1,4 +1,4 @@
-/* package mob_grinding_utils.client;
+ package mob_grinding_utils.client;
 
 import javax.annotation.Nonnull;
 
@@ -32,4 +32,3 @@ public class JEIPlugin implements IModPlugin {
         });
     }
 }
-*/
