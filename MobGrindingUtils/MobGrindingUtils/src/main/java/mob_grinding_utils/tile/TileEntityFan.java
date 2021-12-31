@@ -204,6 +204,18 @@ public class TileEntityFan extends TileEntityInventoryHelper implements MenuProv
 	}
 
 	@Override
+	public void saveAdditional(CompoundTag nbt) {
+		super.saveAdditional(nbt);
+		nbt.putBoolean("showRenderBox", showRenderBox);
+		nbt.putFloat("xPos", xPos);
+		nbt.putFloat("yPos", yPos);
+		nbt.putFloat("zPos", zPos);
+		nbt.putFloat("xNeg", xNeg);
+		nbt.putFloat("yNeg", yNeg);
+		nbt.putFloat("zNeg", zNeg);
+	}
+
+	@Override
 	public void load(CompoundTag nbt) {
 		super.load(nbt);
 		showRenderBox = nbt.getBoolean("showRenderBox");
@@ -225,7 +237,7 @@ public class TileEntityFan extends TileEntityInventoryHelper implements MenuProv
 	@Override
 	public ClientboundBlockEntityDataPacket getUpdatePacket() {
 		CompoundTag nbt = new CompoundTag();
-		save(nbt);
+		saveAdditional(nbt);
 		return ClientboundBlockEntityDataPacket.create(this);
 	}
 

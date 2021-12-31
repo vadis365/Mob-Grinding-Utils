@@ -1,6 +1,7 @@
 package mob_grinding_utils.tile;
 
 import java.util.List;
+import java.util.function.Function;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -101,7 +102,7 @@ public class TileEntityAbsorptionHopper extends TileEntityInventoryHelper implem
 	@Override
 	public ClientboundBlockEntityDataPacket getUpdatePacket() {
 		CompoundTag nbt = new CompoundTag();
-		save(nbt);
+		saveAdditional(nbt);
 		return ClientboundBlockEntityDataPacket.create(this);
 	}
 
@@ -142,6 +143,22 @@ public class TileEntityAbsorptionHopper extends TileEntityInventoryHelper implem
 		tagCompound.putInt("offsetZ", offsetZ);
 		tank.writeToNBT(tagCompound);
 		return tagCompound;
+	}
+	
+	@Override
+	public void saveAdditional (CompoundTag tagCompound) {
+		super.saveAdditional(tagCompound);
+		tagCompound.putByte("down", (byte) status[0].ordinal());
+		tagCompound.putByte("up", (byte) status[1].ordinal());
+		tagCompound.putByte("north", (byte) status[2].ordinal());
+		tagCompound.putByte("south", (byte) status[3].ordinal());
+		tagCompound.putByte("west", (byte) status[4].ordinal());
+		tagCompound.putByte("east", (byte) status[5].ordinal());
+		tagCompound.putBoolean("showRenderBox", showRenderBox);
+		tagCompound.putInt("offsetX", offsetX);
+		tagCompound.putInt("offsetY", offsetY);
+		tagCompound.putInt("offsetZ", offsetZ);
+		tank.writeToNBT(tagCompound);
 	}
 
 	public EnumStatus getSideStatus(Direction side) {

@@ -59,7 +59,7 @@ public class TileEntityTank extends BlockEntity {
 	@Override
 	public ClientboundBlockEntityDataPacket getUpdatePacket() {
 		CompoundTag nbt = new CompoundTag();
-		save(nbt);
+		saveAdditional(nbt);
 		return ClientboundBlockEntityDataPacket.create(this);
 	}
 
@@ -80,6 +80,12 @@ public class TileEntityTank extends BlockEntity {
 		super.save(nbt);
 		tank.writeToNBT(nbt);
 		return nbt;
+	}
+
+	@Override
+	public void saveAdditional(CompoundTag nbt) {
+		super.saveAdditional(nbt);
+		tank.writeToNBT(nbt);
 	}
 
 	@Override

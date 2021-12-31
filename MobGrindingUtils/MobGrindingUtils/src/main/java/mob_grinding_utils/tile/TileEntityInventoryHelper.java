@@ -76,6 +76,7 @@ public abstract class TileEntityInventoryHelper extends BlockEntity implements W
 	@Override
 	public void saveAdditional(CompoundTag compound) {
 		super.saveAdditional(compound);
+		ContainerHelper.saveAllItems(compound, inventory, false);
 	}
 
 	@Override

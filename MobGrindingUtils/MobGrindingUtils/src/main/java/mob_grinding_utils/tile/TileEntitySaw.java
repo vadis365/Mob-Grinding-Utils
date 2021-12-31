@@ -143,6 +143,12 @@ public class TileEntitySaw extends TileEntityInventoryHelper implements MenuProv
 	}
 
 	@Override
+	public void saveAdditional(CompoundTag nbt) {
+		super.saveAdditional(nbt);
+		nbt.putBoolean("active", active);
+	}
+
+	@Override
 	public CompoundTag getUpdateTag() {
 		CompoundTag tag = new CompoundTag();
 		return save(tag);
@@ -151,7 +157,7 @@ public class TileEntitySaw extends TileEntityInventoryHelper implements MenuProv
 	@Override
 	public ClientboundBlockEntityDataPacket getUpdatePacket() {
 		CompoundTag tag = new CompoundTag();
-		save(tag);
+		saveAdditional(tag);
 		return ClientboundBlockEntityDataPacket.create(this);
 	}
 

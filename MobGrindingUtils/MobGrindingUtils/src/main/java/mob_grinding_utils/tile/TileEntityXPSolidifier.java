@@ -1,5 +1,7 @@
 package mob_grinding_utils.tile;
 
+import java.util.function.Function;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -361,6 +363,20 @@ public class TileEntityXPSolidifier extends BlockEntity implements MenuProvider 
 		return nbt;
 	}
 
+	@Override
+	public void saveAdditional(CompoundTag nbt) {
+		super.saveAdditional(nbt);
+		tank.writeToNBT(nbt);
+		nbt.put("inputSlots", inputSlots.serializeNBT());
+		nbt.put("outputSlot", outputSlot.serializeNBT());
+		nbt.putString("outputDirection", outputDirection.getSerializedName());
+		nbt.putBoolean("isOn", isOn);
+		nbt.putBoolean("active", active);
+		nbt.putInt("moulding_progress", moulding_progress);
+		if (currentRecipe != null)
+			nbt.putString("currentRecipe", currentRecipe.getId().toString());
+	}
+
 	@Nonnull
 	@Override
 	public CompoundTag getUpdateTag() {
@@ -371,7 +387,7 @@ public class TileEntityXPSolidifier extends BlockEntity implements MenuProvider 
 	@Override
 	public ClientboundBlockEntityDataPacket getUpdatePacket() {
 		CompoundTag nbt = new CompoundTag();
-		save(nbt);
+		saveAdditional(nbt);
 		return ClientboundBlockEntityDataPacket.create(this);
 	}
 
