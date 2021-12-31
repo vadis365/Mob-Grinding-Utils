@@ -51,6 +51,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.material.Fluid;
+import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RecipesUpdatedEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.Tags.IOptionalNamedTag;
@@ -59,6 +60,7 @@ import net.minecraftforge.event.AddReloadListenerEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
@@ -106,7 +108,8 @@ public class MobGrindingUtils {
 		ModContainers.init(modBus);
 		PARTICLES.register(modBus);
 		RECIPES.register(modBus);
-		ModelLayers.init(modBus);
+
+		DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> ModelLayers.init(modBus));
 
 		modBus.addListener(this::setup);
 		modBus.addListener(this::doClientStuff);

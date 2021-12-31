@@ -123,8 +123,10 @@ public class TileEntityXPSolidifier extends BlockEntity implements MenuProvider 
 				if (tile.currentRecipe != null) {
 					if (!tile.currentRecipe.matches(tile.inputSlots.getStackInSlot(0)))
 						tile.currentRecipe = null;
-				} else
-					tile.currentRecipe = getRecipeForMould(tile.inputSlots.getStackInSlot(0));
+				} else {
+					if (!tile.inputSlots.getStackInSlot(0).isEmpty())
+						tile.currentRecipe = getRecipeForMould(tile.inputSlots.getStackInSlot(0));
+				}
 
 
 				if (tile.hasfluid() && tile.canOperate()) {

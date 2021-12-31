@@ -40,10 +40,10 @@ public class ModelLayers {
         event.registerBlockEntityRenderer(ModBlocks.ENTITY_SPAWNER.getTileEntityType(), TileEntityMGUSpawnerRenderer::new);
     }
     public static void registerLayerDefinitions(EntityRenderersEvent.RegisterLayerDefinitions event) {
-        event.registerLayerDefinition(SAW_BASE, ()-> ModelSawBase.createBodyLayer());
-        event.registerLayerDefinition(SAW_BLADE, ()-> ModelSawBlade.createBodyLayer());
-        event.registerLayerDefinition(ABSORPTION_HOPPER,()-> ModelAHConnect.createBodyLayer());
-        event.registerLayerDefinition(TANK, ()-> ModelTankBlock.createBodyLayer());
-        event.registerLayerDefinition(XPSOLIDIFIER, ()-> ModelXPSolidifier.createBodyLayer());
+        event.registerLayerDefinition(SAW_BASE, ModelSawBase::createBodyLayer);
+        event.registerLayerDefinition(SAW_BLADE, ModelSawBlade::createBodyLayer);
+        event.registerLayerDefinition(ABSORPTION_HOPPER, ModelAHConnect::createBodyLayer);
+        event.registerLayerDefinition(TANK, ModelTankBlock::createBodyLayer);
+        event.registerLayerDefinition(XPSOLIDIFIER, ModelXPSolidifier::createBodyLayer);
     }
 }
