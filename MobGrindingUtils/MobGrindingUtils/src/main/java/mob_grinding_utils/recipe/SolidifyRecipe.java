@@ -45,6 +45,10 @@ public class SolidifyRecipe implements Recipe<Container> {
         return this.fluidAmount;
     }
 
+    public Ingredient getMould() {
+        return this.mould;
+    }
+
     @Nonnull
     @Override
     public ItemStack assemble(Container inv) {

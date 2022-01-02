@@ -439,7 +439,7 @@ public class Recipes extends RecipeProvider {
             .save(WrappedRecipe.Inject(consumer, MobGrindingUtils.CHICKEN_FEED.get()), new ResourceLocation(Reference.MOD_ID, "gm_chicken_feed"));
 
 
-        //Solidifier
+        //Solidifier recipes
         consumer.accept(new SolidifyRecipe.DataRecipe(new ResourceLocation(Reference.MOD_ID, "solidify/jelly_baby"), Ingredient.of(ModItems.SOLID_XP_MOULD_BABY.get()), new ItemStack(ModItems.SOLID_XP_BABY.get()), 1000));
     }
 

@@ -1,7 +1,5 @@
 package mob_grinding_utils.tile;
 
-import java.util.function.Function;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -240,11 +238,7 @@ public class TileEntityXPSolidifier extends BlockEntity implements MenuProvider 
 
 	@Nullable
 	public static SolidifyRecipe getRecipeForMould(ItemStack stack) {
-		for (SolidifyRecipe recipe : MobGrindingUtils.SOLIDIFIER_RECIPES) {
-			if(recipe.matches(stack))
-				return recipe;
-		}
-		return null;
+		return MobGrindingUtils.SOLIDIFIER_RECIPES.stream().filter(recipe -> recipe.matches(stack)).findFirst().orElse(null);
 	}
 
 	private boolean isOutputEmpty() {
@@ -341,12 +335,8 @@ public class TileEntityXPSolidifier extends BlockEntity implements MenuProvider 
 		moulding_progress = nbt.getInt("moulding_progress");
 		if (nbt.contains("currentRecipe")) {
 			ResourceLocation id = new ResourceLocation(nbt.getString("currentRecipe"));
-			for (SolidifyRecipe recipe : MobGrindingUtils.SOLIDIFIER_RECIPES) {
-				if (recipe.getId().equals(id)) {
-					this.currentRecipe = recipe;
-					break;
-				}
-			}
+			MobGrindingUtils.SOLIDIFIER_RECIPES.stream().filter(recipe -> recipe.getId().equals(id))
+				.findFirst().ifPresent(recipe -> this.currentRecipe = recipe);
 		}
 	}
 
