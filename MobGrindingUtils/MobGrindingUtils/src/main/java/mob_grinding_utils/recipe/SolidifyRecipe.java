@@ -45,6 +45,10 @@ public class SolidifyRecipe implements IRecipe<IInventory> {
         return this.fluidAmount;
     }
 
+    public Ingredient getMould() {
+        return this.mould;
+    }
+
     @Nonnull
     @Override
     public ItemStack getCraftingResult(IInventory inv) {
