@@ -8,16 +8,14 @@ import mezz.jei.api.gui.ingredient.ITooltipCallback;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.category.IRecipeCategory;
-import mob_grinding_utils.MobGrindingUtils;
 import mob_grinding_utils.ModBlocks;
 import mob_grinding_utils.Reference;
 import mob_grinding_utils.recipe.SolidifyRecipe;
-import net.minecraft.ChatFormatting;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.fluids.FluidStack;
 
 import java.util.Arrays;
@@ -43,8 +41,8 @@ public class SolidifierCategory implements IRecipeCategory<SolidifyRecipe> {
     }
 
     @Override
-    public Component getTitle() {
-        return new TextComponent("Solidifier Recipe");
+    public String getTitle() {
+        return "Solidifier Recipe";
     }
 
     @Override
@@ -59,9 +57,9 @@ public class SolidifierCategory implements IRecipeCategory<SolidifyRecipe> {
 
     @Override
     public void setIngredients(SolidifyRecipe recipe, IIngredients ingredients) {
-        ingredients.setInputs(VanillaTypes.ITEM, Arrays.asList(recipe.getMould().getItems()));
+        ingredients.setInputs(VanillaTypes.ITEM, Arrays.asList(recipe.getMould().getMatchingStacks()));
         ingredients.setInputs(VanillaTypes.FLUID, Arrays.asList(new FluidStack(ModBlocks.FLUID_XP.get(), recipe.getFluidAmount())));
-        ingredients.setOutput(VanillaTypes.ITEM, recipe.getResultItem());
+        ingredients.setOutput(VanillaTypes.ITEM, recipe.getRecipeOutput());
     }
 
     @Override
@@ -72,9 +70,9 @@ public class SolidifierCategory implements IRecipeCategory<SolidifyRecipe> {
         recipeLayout.getFluidStacks().set(2, ingredients.getInputs(VanillaTypes.FLUID).get(0));
         recipeLayout.getFluidStacks().addTooltipCallback(new ITooltipCallback<FluidStack>() {
             @Override
-            public void onTooltip(int slotIndex, boolean input, FluidStack ingredient, List<Component> tooltip) {
-                tooltip.add(new TextComponent(recipe.getFluidAmount() + " mB"));
-                tooltip.add(new TranslatableComponent("mob_grinding_utils.jei.any_experience").withStyle(ChatFormatting.GRAY));
+            public void onTooltip(int slotIndex, boolean input, FluidStack ingredient, List<ITextComponent> tooltip) {
+                tooltip.add(new StringTextComponent(recipe.getFluidAmount() + " mB"));
+                tooltip.add(new TranslationTextComponent("mob_grinding_utils.jei.any_experience").mergeStyle(TextFormatting.GRAY));
             }
         });
         recipeLayout.getItemStacks().init(3, false, 69, 4);

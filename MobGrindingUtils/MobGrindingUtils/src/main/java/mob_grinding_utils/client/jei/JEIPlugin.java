@@ -13,11 +13,13 @@ import mob_grinding_utils.ModBlocks;
 import mob_grinding_utils.ModItems;
 import mob_grinding_utils.Reference;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.resources.language.I18n;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
+import net.minecraft.client.resources.I18n;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.World;
+
 
  @JeiPlugin
 public class JEIPlugin implements IModPlugin {
@@ -31,13 +33,13 @@ public class JEIPlugin implements IModPlugin {
     @Override
     public void registerRecipes(@Nonnull IRecipeRegistration registration) {
         ModItems.ITEMS.getEntries().forEach((item) -> {
-            String key = item.get().getDescriptionId()+".jei.info";
-            if (I18n.exists(key)) {
-                registration.addIngredientInfo(new ItemStack(item.get()), VanillaTypes.ITEM, new TextComponent(I18n.get(key)));
+            String key = item.get().getTranslationKey()+".jei.info";
+            if (I18n.hasKey(key)) {
+                registration.addIngredientInfo(new ItemStack(item.get()), VanillaTypes.ITEM, new TranslationTextComponent(key).getString());
             }
         });
-        Level level = Minecraft.getInstance().level;
-        registration.addRecipes(level.getRecipeManager().getAllRecipesFor(MobGrindingUtils.SOLIDIFIER_TYPE), SolidifierCategory.ID);
+        World level = Minecraft.getInstance().world;
+        registration.addRecipes(level.getRecipeManager().getRecipesForType(MobGrindingUtils.SOLIDIFIER_TYPE), SolidifierCategory.ID);
     }
 
     @Override
