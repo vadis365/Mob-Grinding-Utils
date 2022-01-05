@@ -14,6 +14,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import net.minecraftforge.fml.network.PacketDistributor;
+import org.apache.logging.log4j.Logger;
 
 public class TileEntitySinkTank extends TileEntityTank {
 
@@ -59,7 +60,7 @@ public class TileEntitySinkTank extends TileEntityTank {
 	}
 
 	public static int getPlayerXP(PlayerEntity player) {
-		return (int)(getExperienceForLevel(player.experienceLevel) + (player.experience * player.xpBarCap()));
+		return (getExperienceForLevel(player.experienceLevel) + (int)(player.experience * player.xpBarCap()));
 	}
 
 	public static int getLevelForExperience(int experience) {
