@@ -61,7 +61,7 @@ public class TileEntitySinkTank extends TileEntityTank {
 	}
 
 	public static int getPlayerXP(Player player) {
-		return (int)(getExperienceForLevel(player.experienceLevel) + (player.experienceProgress * player.getXpNeededForNextLevel()));
+		return (getExperienceForLevel(player.experienceLevel) + (int)(player.experienceProgress * player.getXpNeededForNextLevel()));
 	}
 
 	public static int getLevelForExperience(int experience) {
