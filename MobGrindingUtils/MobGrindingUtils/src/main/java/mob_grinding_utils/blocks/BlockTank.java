@@ -58,7 +58,7 @@ public class BlockTank extends BaseEntityBlock {
 			BlockEntity tileentity = world.getBlockEntity(pos);
 			if (tileentity instanceof TileEntityTank) {
 				CompoundTag nbt = new CompoundTag();
-				tileentity.save(nbt);
+				((TileEntityTank) tileentity).saveAdditional(nbt);
 				ItemStack stack = new ItemStack(Item.byBlock(this), 1);
 				if (((TileEntityTank) tileentity).tank.getFluidAmount() > 0)
 					stack.setTag(nbt);
