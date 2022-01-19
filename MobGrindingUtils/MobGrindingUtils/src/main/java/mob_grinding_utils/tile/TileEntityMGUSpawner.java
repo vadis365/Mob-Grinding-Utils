@@ -285,20 +285,6 @@ public class TileEntityMGUSpawner extends BlockEntity implements MenuProvider {
 	}
 
 	@Override
-	public CompoundTag save(CompoundTag nbt) {
-		super.save(nbt);
-		nbt.put("inputSlots", inputSlots.serializeNBT());
-		nbt.put("fuelSlot", fuelSlot.serializeNBT());
-		nbt.putBoolean("isOn", isOn);
-		nbt.putBoolean("showRenderBox", showRenderBox);
-		nbt.putInt("offsetX", offsetX);
-		nbt.putInt("offsetY", offsetY);
-		nbt.putInt("offsetZ", offsetZ);
-		nbt.putInt("spawning_progress", spawning_progress);
-		return nbt;
-	}
-
-	@Override
 	public void saveAdditional(CompoundTag nbt) {
 		super.saveAdditional(nbt);
 		nbt.put("inputSlots", inputSlots.serializeNBT());
@@ -314,7 +300,8 @@ public class TileEntityMGUSpawner extends BlockEntity implements MenuProvider {
 	@Override
 	public CompoundTag getUpdateTag() {
 		CompoundTag nbt = new CompoundTag();
-		return save(nbt);
+		saveAdditional(nbt);
+		return nbt;
 	}
 
 	@Override

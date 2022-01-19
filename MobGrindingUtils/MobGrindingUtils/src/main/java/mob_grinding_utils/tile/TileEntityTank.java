@@ -66,20 +66,14 @@ public class TileEntityTank extends BlockEntity {
 	@Override
 	public CompoundTag getUpdateTag() {
 		CompoundTag nbt = new CompoundTag();
-		return save(nbt);
+		saveAdditional(nbt);
+		return nbt;
 	}
 
 	@Override
 	public void load(CompoundTag nbt) {
 		super.load(nbt);
 		tank.readFromNBT(nbt);
-	}
-
-	@Override
-	public CompoundTag save(CompoundTag nbt) {
-		super.save(nbt);
-		tank.writeToNBT(nbt);
-		return nbt;
 	}
 
 	@Override

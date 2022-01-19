@@ -341,21 +341,6 @@ public class TileEntityXPSolidifier extends BlockEntity implements MenuProvider 
 	}
 
 	@Override
-	public CompoundTag save(CompoundTag nbt) {
-		super.save(nbt);
-		tank.writeToNBT(nbt);
-		nbt.put("inputSlots", inputSlots.serializeNBT());
-		nbt.put("outputSlot", outputSlot.serializeNBT());
-		nbt.putString("outputDirection", outputDirection.getSerializedName());
-		nbt.putBoolean("isOn", isOn);
-		nbt.putBoolean("active", active);
-		nbt.putInt("moulding_progress", moulding_progress);
-		if (currentRecipe != null)
-			nbt.putString("currentRecipe", currentRecipe.getId().toString());
-		return nbt;
-	}
-
-	@Override
 	public void saveAdditional(CompoundTag nbt) {
 		super.saveAdditional(nbt);
 		tank.writeToNBT(nbt);
@@ -373,7 +358,8 @@ public class TileEntityXPSolidifier extends BlockEntity implements MenuProvider 
 	@Override
 	public CompoundTag getUpdateTag() {
 		CompoundTag nbt = new CompoundTag();
-		return save(nbt);
+		saveAdditional(nbt);
+		return nbt;
 	}
 
 	@Override

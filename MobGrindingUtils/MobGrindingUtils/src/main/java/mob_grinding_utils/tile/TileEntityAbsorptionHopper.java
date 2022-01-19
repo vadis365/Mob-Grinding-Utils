@@ -109,7 +109,8 @@ public class TileEntityAbsorptionHopper extends TileEntityInventoryHelper implem
 	@Override
 	public CompoundTag getUpdateTag() {
 		CompoundTag nbt = new CompoundTag();
-		return save(nbt);
+		saveAdditional(nbt);
+		return nbt;
 	}
 
 	@Override
@@ -128,23 +129,6 @@ public class TileEntityAbsorptionHopper extends TileEntityInventoryHelper implem
 		tank.readFromNBT(tagCompound);
 	}
 
-	@Override
-	public CompoundTag save(CompoundTag tagCompound) {
-		super.save(tagCompound);
-		tagCompound.putByte("down", (byte) status[0].ordinal());
-		tagCompound.putByte("up", (byte) status[1].ordinal());
-		tagCompound.putByte("north", (byte) status[2].ordinal());
-		tagCompound.putByte("south", (byte) status[3].ordinal());
-		tagCompound.putByte("west", (byte) status[4].ordinal());
-		tagCompound.putByte("east", (byte) status[5].ordinal());
-		tagCompound.putBoolean("showRenderBox", showRenderBox);
-		tagCompound.putInt("offsetX", offsetX);
-		tagCompound.putInt("offsetY", offsetY);
-		tagCompound.putInt("offsetZ", offsetZ);
-		tank.writeToNBT(tagCompound);
-		return tagCompound;
-	}
-	
 	@Override
 	public void saveAdditional (CompoundTag tagCompound) {
 		super.saveAdditional(tagCompound);

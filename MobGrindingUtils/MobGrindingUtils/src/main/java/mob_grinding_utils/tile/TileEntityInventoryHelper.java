@@ -88,13 +88,6 @@ public abstract class TileEntityInventoryHelper extends BlockEntity implements W
 	}
 
 	@Override
-	public CompoundTag save(CompoundTag compound) {
-		super.save(compound);
-		ContainerHelper.saveAllItems(compound, inventory, false);
-		return compound;
-	}
-
-	@Override
 	public void startOpen(Player playerIn) {
 	}
 

@@ -2,6 +2,7 @@ package mob_grinding_utils.datagen;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -10,6 +11,7 @@ import java.util.stream.Collectors;
 import javax.annotation.Nonnull;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import com.mojang.datafixers.util.Pair;
 
 import mob_grinding_utils.ModBlocks;
@@ -26,6 +28,7 @@ import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.ValidationContext;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.RegistryObject;
 
 public class MGULootTables extends LootTableProvider {
     public MGULootTables(DataGenerator dataGeneratorIn) {
@@ -62,14 +65,16 @@ public class MGULootTables extends LootTableProvider {
         @Nonnull
         @Override
         protected Iterable<Block> getKnownBlocks() {
-            return ForgeRegistries.BLOCKS.getValues().stream()
-                .filter(b -> b.getRegistryName().getNamespace().equals(Reference.MOD_ID))
-                .filter(b -> !b.getRegistryName().getPath().equals("tank"))
-                .filter(b -> !b.getRegistryName().getPath().equals("tank_sink"))
-                .filter(b -> !b.getRegistryName().getPath().equals("jumbo_tank"))
-                .filter(b -> !b.getRegistryName().getPath().equals("xpsolidifier"))
-                .filter(b -> !b.getRegistryName().getPath().equals("fluid_xp"))
-                .collect(Collectors.toList());
+            Set<Block> ignoreList = ImmutableSet.of(
+                ModBlocks.TANK.getBlock(),
+                ModBlocks.TANK_SINK.getBlock(),
+                ModBlocks.JUMBO_TANK.getBlock(),
+                ModBlocks.XPSOLIDIFIER.getBlock(),
+                ModBlocks.FLUID_XP_BLOCK.get()
+            );
+
+            return ModBlocks.BLOCKS.getEntries().stream().map(RegistryObject::get)
+                .filter(e -> !ignoreList.contains(e)).collect(Collectors.toList());
         }
     }
 
