@@ -50,7 +50,7 @@ public class TileEntityFan extends TileEntityInventoryHelper implements MenuProv
 
 	public static <T extends BlockEntity> void tick(Level level, BlockPos pos, BlockState blockState, T t) {
 		if(t instanceof TileEntityFan fan) {
-			if (level.getGameTime() % 2 == 0)
+			if (level.getGameTime() % 2 == 0 && level.getBlockState(pos).getBlock() instanceof BlockFan)
 				if (level.getBlockState(pos).getValue(BlockFan.POWERED)) {
 					fan.activateBlock();
 				}
