@@ -16,7 +16,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 
@@ -39,6 +38,7 @@ public class JEIPlugin implements IModPlugin {
             }
         });
         World level = Minecraft.getInstance().world;
+
         registration.addRecipes(level.getRecipeManager().getRecipesForType(MobGrindingUtils.SOLIDIFIER_TYPE), SolidifierCategory.ID);
     }
 
