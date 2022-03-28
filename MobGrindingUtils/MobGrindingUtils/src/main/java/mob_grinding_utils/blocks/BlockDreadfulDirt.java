@@ -3,6 +3,7 @@ package mob_grinding_utils.blocks;
 import java.util.List;
 import java.util.Random;
 
+import mob_grinding_utils.MobGrindingUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
@@ -87,6 +88,8 @@ public class BlockDreadfulDirt extends Block {
 		if (!spawns.isEmpty()) {
 			int indexSize = spawns.size();
 			EntityType<?> type = spawns.get(RANDOM.nextInt(indexSize)).type;
+			if (type.is(MobGrindingUtils.NOSPAWN))
+				return;
 			if (type == null || !NaturalSpawner.isSpawnPositionOk(SpawnPlacements.getPlacementType(type), level, pos.above(), type))
 				return;
 			Mob entity = (Mob) type.create(level);

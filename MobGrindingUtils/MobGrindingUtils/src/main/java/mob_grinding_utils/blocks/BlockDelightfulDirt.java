@@ -3,6 +3,7 @@ package mob_grinding_utils.blocks;
 import java.util.List;
 import java.util.Random;
 
+import mob_grinding_utils.MobGrindingUtils;
 import mob_grinding_utils.network.MGUClientPackets;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -21,6 +22,7 @@ import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.NaturalSpawner;
 import net.minecraft.world.level.biome.MobSpawnSettings.SpawnerData;
+import net.minecraft.world.level.block.AirBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
@@ -108,6 +110,8 @@ public class BlockDelightfulDirt extends Block {
 		if (!spawns.isEmpty()) {
 			int indexSize = spawns.size();
 			EntityType<?> type = spawns.get(RANDOM.nextInt(indexSize)).type;
+			if (type.is(MobGrindingUtils.NOSPAWN))
+				return;
 			if (type == null || !NaturalSpawner.isSpawnPositionOk(SpawnPlacements.getPlacementType(type), level, pos.above(), type))
 				return;
 			Mob entity = (Mob) type.create(level);

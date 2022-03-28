@@ -122,7 +122,7 @@
 
   "block.mob_grinding_utils.dreadful_dirt.tooltip_1": "Spawns More Hostile Mobs.",
   "block.mob_grinding_utils.dreadful_dirt.tooltip_2": "Will Ignite in Daylight if Exposed to the Sky.",
-  "block.mob_grinding_utils.dreadful_dirt.tooltip_3": "Light level of 10 and above Stops Hostile Mob Spawns.",
+  "block.mob_grinding_utils.dreadful_dirt.tooltip_3": "Light level of 5 and above Stops Hostile Mob Spawns.",
 
   "block.mob_grinding_utils.delightful_dirt.tooltip_1": "Spawns More Creature Mobs.",
   "block.mob_grinding_utils.delightful_dirt.tooltip_2": "Will Snow-Cap at Night if Exposed to the Sky.",
