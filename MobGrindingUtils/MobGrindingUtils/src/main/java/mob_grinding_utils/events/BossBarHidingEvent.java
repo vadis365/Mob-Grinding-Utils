@@ -19,12 +19,12 @@ public class BossBarHidingEvent {
 			if (player != null) {
 				CompoundTag nbt = player.getPersistentData();
 				if (nbt.getBoolean("MGU_WitherMuffle")) {
-					if (event.getBossEvent().getName().getString().equals("Wither"))
+					if (event.getBossEvent().getName().getString().contains("Wither"))
 						event.setCanceled(true);
 				}
 
 				if (nbt.getBoolean("MGU_DragonMuffle")) {
-					if (event.getBossEvent().getName().getString().equals("Ender Dragon"))
+					if (event.getBossEvent().getName().getString().contains("Dragon"))
 						event.setCanceled(true);
 				}
 			}
