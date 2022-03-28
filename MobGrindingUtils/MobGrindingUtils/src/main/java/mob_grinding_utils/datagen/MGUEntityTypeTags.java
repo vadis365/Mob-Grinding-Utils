@@ -18,5 +18,9 @@ public class MGUEntityTypeTags extends EntityTypeTagsProvider {
     protected void registerTags() {
         this.getOrCreateBuilder(MobGrindingUtils.NOSWAB).add(EntityType.WITHER);
         this.getOrCreateBuilder(MobGrindingUtils.NOSWAB).add(EntityType.ENDER_DRAGON);
+
+        getOrCreateBuilder(MobGrindingUtils.NOSPAWN);
+
+
     }
 }

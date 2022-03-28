@@ -3,6 +3,7 @@ package mob_grinding_utils.blocks;
 import java.util.List;
 import java.util.Random;
 
+import mob_grinding_utils.MobGrindingUtils;
 import net.minecraft.block.AbstractFireBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -87,6 +88,8 @@ public class BlockDreadfulDirt extends Block {
 		if (!spawns.isEmpty()) {
 			int indexSize = spawns.size();
 			EntityType<?> type = spawns.get(RANDOM.nextInt(indexSize)).type;
+			if (type.isContained(MobGrindingUtils.NOSPAWN))
+				return;
 			if (type == null || !WorldEntitySpawner.canCreatureTypeSpawnAtLocation(EntitySpawnPlacementRegistry.getPlacementType(type), world, pos.up(), type))
 				return;
 			MobEntity entity = (MobEntity) type.create(world);

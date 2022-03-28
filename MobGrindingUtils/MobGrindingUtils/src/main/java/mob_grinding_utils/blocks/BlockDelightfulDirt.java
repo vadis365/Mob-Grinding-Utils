@@ -109,6 +109,8 @@ public class BlockDelightfulDirt extends Block {
 		if (!spawns.isEmpty()) {
 			int indexSize = spawns.size();
 			EntityType<?> type = spawns.get(RANDOM.nextInt(indexSize)).type;
+			if (type.isContained(MobGrindingUtils.NOSPAWN))
+				return;
 			if (type == null || !WorldEntitySpawner.canCreatureTypeSpawnAtLocation(EntitySpawnPlacementRegistry.getPlacementType(type), world, pos.up(), type))
 				return;
 			MobEntity entity = (MobEntity) type.create(world);

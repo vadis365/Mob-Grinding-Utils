@@ -87,6 +87,7 @@ public class MobGrindingUtils {
 	public static final ITag.INamedTag<Fluid> EXPERIENCE = FluidTags.makeWrapperTag(new ResourceLocation("forge", "experience").toString());
 	public static final ITag.INamedTag<Fluid> XPJUICE = FluidTags.makeWrapperTag(new ResourceLocation("forge", "xpjuice").toString());
 	public static final ITag.INamedTag<EntityType<?>> NOSWAB = EntityTypeTags.createOptional(new ResourceLocation(Reference.MOD_NAME, "noswab"));
+	public static final ITag.INamedTag<EntityType<?>> NOSPAWN = EntityTypeTags.createOptional(new ResourceLocation(Reference.MOD_NAME, "no_spawn"));
 
 	public static final DeferredRegister<ParticleType<?>> PARTICLES = DeferredRegister.create(ForgeRegistries.PARTICLE_TYPES, Reference.MOD_ID);
 	public static final DeferredRegister<IRecipeSerializer<?>> RECIPES = DeferredRegister.create(ForgeRegistries.RECIPE_SERIALIZERS, Reference.MOD_ID);

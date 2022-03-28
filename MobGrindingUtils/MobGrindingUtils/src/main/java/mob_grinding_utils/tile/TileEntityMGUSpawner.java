@@ -8,6 +8,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import io.netty.buffer.Unpooled;
+import mob_grinding_utils.MobGrindingUtils;
 import mob_grinding_utils.ModBlocks;
 import mob_grinding_utils.ModItems;
 import mob_grinding_utils.inventory.server.ContainerMGUSpawner;
@@ -117,7 +118,7 @@ public class TileEntityMGUSpawner extends TileEntity implements ITickableTileEnt
 			SpawnEggItem eggItem = (SpawnEggItem) eggStack.getItem();
 			type = eggItem.getType(null);
 
-			if (type != null) {
+			if (type != null && !(type.isContained(MobGrindingUtils.NOSPAWN) || type.isContained(MobGrindingUtils.NOSWAB))) {
 				AxisAlignedBB axisalignedbb = getAABBWithModifiers();
 				int minX = MathHelper.floor(axisalignedbb.minX);
 				int maxX = MathHelper.floor(axisalignedbb.maxX);
