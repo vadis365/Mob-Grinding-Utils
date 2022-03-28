@@ -41,7 +41,7 @@ public class BlockDreadfulDirt extends Block {
 	}
 
 	public boolean shouldSpawnMob(Level level, BlockPos pos) {
-		return level.getMaxLocalRawBrightness(pos.above()) < 10;
+		return level.getMaxLocalRawBrightness(pos.above()) < 5;
 	}
 
 	@Override
