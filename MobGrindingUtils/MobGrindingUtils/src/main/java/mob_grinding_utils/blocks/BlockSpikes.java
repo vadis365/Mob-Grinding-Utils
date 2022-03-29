@@ -88,12 +88,12 @@ public class BlockSpikes extends DirectionalBlock {
 	public static Method getExperiencePoints() {
 		Method method = null;
 		try {
-			method = LivingEntity.class.getDeclaredMethod("getExperiencePoints", Player.class);
+			method = LivingEntity.class.getDeclaredMethod("getExperienceReward", Player.class);
 			method.setAccessible(true);
 		} catch (Exception e) {
 		}
 		try {
-			method = LivingEntity.class.getDeclaredMethod("getExperienceReward", Player.class);
+			method = LivingEntity.class.getDeclaredMethod("m_6552_", Player.class);
 			method.setAccessible(true);
 		} catch (Exception e) {
 		}
