@@ -84,7 +84,7 @@ public class BlockDreadfulDirt extends Block {
 	}
 
 	public void spawnMob(ServerLevel level, BlockPos pos) {
-		List<SpawnerData> spawns = level.getBiome(pos).getMobSettings().getMobs(MobCategory.MONSTER).unwrap();
+		List<SpawnerData> spawns = level.getBiome(pos).value().getMobSettings().getMobs(MobCategory.MONSTER).unwrap();
 		if (!spawns.isEmpty()) {
 			int indexSize = spawns.size();
 			EntityType<?> type = spawns.get(RANDOM.nextInt(indexSize)).type;

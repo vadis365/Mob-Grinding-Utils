@@ -92,12 +92,12 @@ public class BlockDelightfulDirt extends Block {
 				if (level.getBlockState(posUp).getMaterial() == Material.AIR) {
 					PlacedFeature placedfeature;
 					if (rand.nextInt(8) == 0) {
-						List<ConfiguredFeature<?, ?>> list = level.getBiome(posUp).getGenerationSettings().getFlowerFeatures();
+						List<ConfiguredFeature<?, ?>> list = level.getBiome(posUp).value().getGenerationSettings().getFlowerFeatures();
 						if (list.isEmpty())
 							return;
-						placedfeature = ((RandomPatchConfiguration)list.get(0).config()).feature().get();
+						placedfeature = ((RandomPatchConfiguration)list.get(0).config()).feature().value();
 					 } else {
-			               placedfeature = VegetationPlacements.GRASS_BONEMEAL;
+			               placedfeature = VegetationPlacements.GRASS_BONEMEAL.value();
 			            }
 					 placedfeature.place(level, level.getChunkSource().getGenerator(), rand, posUp);	
 				}
@@ -106,7 +106,7 @@ public class BlockDelightfulDirt extends Block {
 	}
 
 	public void spawnMob(ServerLevel level, BlockPos pos) {
-		List<SpawnerData> spawns = level.getBiome(pos).getMobSettings().getMobs(MobCategory.CREATURE).unwrap();
+		List<SpawnerData> spawns = level.getBiome(pos).value().getMobSettings().getMobs(MobCategory.CREATURE).unwrap();
 		if (!spawns.isEmpty()) {
 			int indexSize = spawns.size();
 			EntityType<?> type = spawns.get(RANDOM.nextInt(indexSize)).type;

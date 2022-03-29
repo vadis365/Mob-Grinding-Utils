@@ -35,18 +35,18 @@ import mob_grinding_utils.recipe.SolidifyRecipe;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.core.Registry;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.tags.EntityTypeTags;
-import net.minecraft.tags.FluidTags;
-import net.minecraft.tags.Tag.Named;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
@@ -54,9 +54,9 @@ import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RecipesUpdatedEvent;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.Tags.IOptionalNamedTag;
 import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.event.AddReloadListenerEvent;
+import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -78,10 +78,10 @@ public class MobGrindingUtils {
 	public static DamageSource SPIKE_DAMAGE;
 
 	//Tags
-	public static final Named<Fluid> EXPERIENCE = FluidTags.bind(new ResourceLocation("forge", "experience").toString());
-	public static final Named<Fluid> XPJUICE = FluidTags.bind(new ResourceLocation("forge", "xpjuice").toString());
-	public static final IOptionalNamedTag<EntityType<?>> NOSWAB = EntityTypeTags.createOptional(new ResourceLocation(Reference.MOD_NAME, "noswab"));
-	public static final IOptionalNamedTag<EntityType<?>> NOSPAWN = EntityTypeTags.createOptional(new ResourceLocation(Reference.MOD_NAME, "no_spawn"));
+	public static final TagKey<Fluid> EXPERIENCE = TagKey.create(Registry.FLUID_REGISTRY, new ResourceLocation("forge", "experience"));
+	public static final TagKey<Fluid> XPJUICE = TagKey.create(Registry.FLUID_REGISTRY, new ResourceLocation("forge", "xpjuice"));
+	public static final TagKey<EntityType<?>> NOSWAB = TagKey.create(Registry.ENTITY_TYPE_REGISTRY, new ResourceLocation(Reference.MOD_NAME, "noswab"));
+	public static final TagKey<EntityType<?>> NOSPAWN = TagKey.create(Registry.ENTITY_TYPE_REGISTRY, new ResourceLocation(Reference.MOD_NAME, "no_spawn"));
 
 	public static final DeferredRegister<ParticleType<?>> PARTICLES = DeferredRegister.create(ForgeRegistries.PARTICLE_TYPES, Reference.MOD_ID);
 	public static final DeferredRegister<RecipeSerializer<?>> RECIPES = DeferredRegister.create(ForgeRegistries.RECIPE_SERIALIZERS, Reference.MOD_ID);
@@ -92,7 +92,7 @@ public class MobGrindingUtils {
 
 	public static final List<SolidifyRecipe> SOLIDIFIER_RECIPES = new ArrayList<>();
 	public static final RegistryObject<RecipeSerializer<?>> SOLIDIFIER_RECIPE = RECIPES.register(SolidifyRecipe.NAME, SolidifyRecipe.Serializer::new);
-	public static final RecipeType<SolidifyRecipe> SOLIDIFIER_TYPE = RecipeType.register(Reference.MOD_ID + ":solidify");
+	public static RecipeType<SolidifyRecipe> SOLIDIFIER_TYPE;
 
 	public static final CreativeModeTab TAB = new CreativeModeTab(Reference.MOD_ID) {
 		@Nonnull
@@ -114,17 +114,7 @@ public class MobGrindingUtils {
 
 		modBus.addListener(this::setup);
 		modBus.addListener(this::doClientStuff);
-
-		//Central Data generator, called on runData
-		modBus.addListener(Generator::gatherData);
-	}
-
-	public void setup(FMLCommonSetupEvent event) {
-		event.enqueueWork(() -> CraftingHelper.register(FluidIngredient.Serializer.NAME, FluidIngredient.SERIALIZER));
-
-		SPIKE_DAMAGE = new DamageSource("spikes").bypassArmor();
-
-		NETWORK_WRAPPER = MGUNetwork.getNetworkChannel();
+		modBus.addGenericListener(Item.class, this::recipeTypeRegister);
 
 		MinecraftForge.EVENT_BUS.addListener(BlockSpikes::dropXP);
 		MinecraftForge.EVENT_BUS.register(new EntityInteractionEvent());
@@ -141,6 +131,17 @@ public class MobGrindingUtils {
 		MinecraftForge.EVENT_BUS.addListener(this::cloneEvent);
 		MinecraftForge.EVENT_BUS.addListener(this::serverReloadListener);
 		MinecraftForge.EVENT_BUS.addListener(this::clientRecipeReload);
+
+		//Central Data generator, called on runData
+		modBus.addListener(Generator::gatherData);
+	}
+
+	public void setup(FMLCommonSetupEvent event) {
+		event.enqueueWork(() -> CraftingHelper.register(FluidIngredient.Serializer.NAME, FluidIngredient.SERIALIZER));
+
+		SPIKE_DAMAGE = new DamageSource("spikes").bypassArmor();
+
+		NETWORK_WRAPPER = MGUNetwork.getNetworkChannel();
 	}
 
 	private void doClientStuff(final FMLClientSetupEvent event) {
@@ -179,7 +180,7 @@ public class MobGrindingUtils {
 	}
 
 	private void serverReloadListener(final AddReloadListenerEvent event) {
-		event.addListener(new ServerResourceReloader(event.getDataPackRegistries()));
+		event.addListener(new ServerResourceReloader(event.getServerResources()));
 	}
 	private void clientRecipeReload(final RecipesUpdatedEvent event) {
 		SOLIDIFIER_RECIPES.clear();
@@ -190,6 +191,10 @@ public class MobGrindingUtils {
 		if (event.getPlayer() instanceof ServerPlayer) {
 			sendPersistentData((ServerPlayer) event.getPlayer());
 		}
+	}
+
+	private void recipeTypeRegister(final RegistryEvent.Register<Item> event) {
+		MobGrindingUtils.SOLIDIFIER_TYPE = RecipeType.register(Reference.MOD_ID + ":solidify");
 	}
 
 	private void changedDimension(final PlayerEvent.PlayerChangedDimensionEvent event) {
