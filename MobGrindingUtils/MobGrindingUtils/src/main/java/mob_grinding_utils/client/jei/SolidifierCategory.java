@@ -1,20 +1,14 @@
 package mob_grinding_utils.client.jei;
 
 import mezz.jei.api.constants.VanillaTypes;
-import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.drawable.IDrawableStatic;
-import mezz.jei.api.gui.ingredient.IRecipeSlotTooltipCallback;
-import mezz.jei.api.gui.ingredient.IRecipeSlotView;
-import mezz.jei.api.gui.ingredient.ITooltipCallback;
 import mezz.jei.api.helpers.IGuiHelper;
-import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
-import mob_grinding_utils.MobGrindingUtils;
 import mob_grinding_utils.ModBlocks;
 import mob_grinding_utils.Reference;
 import mob_grinding_utils.recipe.SolidifyRecipe;
@@ -23,11 +17,9 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraftforge.fluids.FluidStack;
 
 import javax.annotation.Nonnull;
-import java.util.Arrays;
 import java.util.List;
 
 public class SolidifierCategory implements IRecipeCategory<SolidifyRecipe> {
@@ -78,10 +70,10 @@ public class SolidifierCategory implements IRecipeCategory<SolidifyRecipe> {
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, SolidifyRecipe recipe, @Nonnull IFocusGroup focuses) {
-        builder.addSlot(RecipeIngredientRole.INPUT, 5,5)
+        builder.addSlot(RecipeIngredientRole.CATALYST, 5,5)
             .addIngredients(recipe.getMould());
 
-        builder.addSlot(RecipeIngredientRole.CATALYST, 37, 5)
+        builder.addSlot(RecipeIngredientRole.INPUT, 37, 5)
             .addIngredients(VanillaTypes.FLUID, List.of(new FluidStack(ModBlocks.FLUID_XP.get(), recipe.getFluidAmount())))
             .addTooltipCallback((recipeSlot, tooltip) -> {
                 var ingredient = recipeSlot.getDisplayedIngredient(VanillaTypes.FLUID);
