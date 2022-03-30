@@ -2,11 +2,17 @@ package mob_grinding_utils.client.jei;
 
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;
+import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.drawable.IDrawableStatic;
+import mezz.jei.api.gui.ingredient.IRecipeSlotTooltipCallback;
+import mezz.jei.api.gui.ingredient.IRecipeSlotView;
 import mezz.jei.api.gui.ingredient.ITooltipCallback;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.ingredients.IIngredients;
+import mezz.jei.api.recipe.IFocusGroup;
+import mezz.jei.api.recipe.RecipeIngredientRole;
+import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import mob_grinding_utils.MobGrindingUtils;
 import mob_grinding_utils.ModBlocks;
@@ -20,6 +26,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraftforge.fluids.FluidStack;
 
+import javax.annotation.Nonnull;
 import java.util.Arrays;
 import java.util.List;
 
@@ -32,21 +39,19 @@ public class SolidifierCategory implements IRecipeCategory<SolidifyRecipe> {
         background = guiHelper.drawableBuilder(new ResourceLocation(Reference.MOD_ID, "textures/gui/solidifier_jei.png"), 0, 0, 91, 26).setTextureSize(91, 26).build();
     }
 
+    @Nonnull
     @Override
-    public ResourceLocation getUid() {
-        return ID;
+    public RecipeType<SolidifyRecipe> getRecipeType() {
+        return JEIPlugin.SOLIDIFY_TYPE;
     }
 
-    @Override
-    public Class<? extends SolidifyRecipe> getRecipeClass() {
-        return SolidifyRecipe.class;
-    }
-
+    @Nonnull
     @Override
     public Component getTitle() {
         return new TextComponent("Solidifier Recipe");
     }
 
+    @Nonnull
     @Override
     public IDrawable getBackground() {
         return background;
@@ -57,27 +62,35 @@ public class SolidifierCategory implements IRecipeCategory<SolidifyRecipe> {
         return null;
     }
 
+    @Nonnull
+    @SuppressWarnings("removal")
     @Override
-    public void setIngredients(SolidifyRecipe recipe, IIngredients ingredients) {
-        ingredients.setInputs(VanillaTypes.ITEM, Arrays.asList(recipe.getMould().getItems()));
-        ingredients.setInputs(VanillaTypes.FLUID, Arrays.asList(new FluidStack(ModBlocks.FLUID_XP.get(), recipe.getFluidAmount())));
-        ingredients.setOutput(VanillaTypes.ITEM, recipe.getResultItem());
+    public ResourceLocation getUid() {
+        return ID;
+    }
+
+    @Nonnull
+    @SuppressWarnings("removal")
+    @Override
+    public Class<? extends SolidifyRecipe> getRecipeClass() {
+        return SolidifyRecipe.class;
     }
 
     @Override
-    public void setRecipe(IRecipeLayout recipeLayout, SolidifyRecipe recipe, IIngredients ingredients) {
-        recipeLayout.getItemStacks().init(0, true, 4, 4);
-        recipeLayout.getItemStacks().set(0, ingredients.getInputs(VanillaTypes.ITEM).get(0));
-        recipeLayout.getFluidStacks().init(2, true, 37, 5);
-        recipeLayout.getFluidStacks().set(2, ingredients.getInputs(VanillaTypes.FLUID).get(0));
-        recipeLayout.getFluidStacks().addTooltipCallback(new ITooltipCallback<FluidStack>() {
-            @Override
-            public void onTooltip(int slotIndex, boolean input, FluidStack ingredient, List<Component> tooltip) {
-                tooltip.add(new TextComponent(recipe.getFluidAmount() + " mB"));
-                tooltip.add(new TranslatableComponent("mob_grinding_utils.jei.any_experience").withStyle(ChatFormatting.GRAY));
-            }
-        });
-        recipeLayout.getItemStacks().init(3, false, 69, 4);
-        recipeLayout.getItemStacks().set(3, ingredients.getOutputs(VanillaTypes.ITEM).get(0));
+    public void setRecipe(IRecipeLayoutBuilder builder, SolidifyRecipe recipe, @Nonnull IFocusGroup focuses) {
+        builder.addSlot(RecipeIngredientRole.INPUT, 5,5)
+            .addIngredients(recipe.getMould());
+
+        builder.addSlot(RecipeIngredientRole.CATALYST, 37, 5)
+            .addIngredients(VanillaTypes.FLUID, List.of(new FluidStack(ModBlocks.FLUID_XP.get(), recipe.getFluidAmount())))
+            .addTooltipCallback((recipeSlot, tooltip) -> {
+                var ingredient = recipeSlot.getDisplayedIngredient(VanillaTypes.FLUID);
+                ingredient.ifPresent(fluidStack -> {
+                    tooltip.add(new TextComponent(fluidStack.getAmount() + " mB"));
+                    tooltip.add(new TranslatableComponent("mob_grinding_utils.jei.any_experience").withStyle(ChatFormatting.GRAY));
+                });
+            });
+        builder.addSlot(RecipeIngredientRole.OUTPUT, 70, 5)
+            .addItemStack(recipe.getResultItem());
     }
 }
