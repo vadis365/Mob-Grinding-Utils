@@ -85,6 +85,7 @@ public class MobGrindingUtils {
 
 	public static final DeferredRegister<ParticleType<?>> PARTICLES = DeferredRegister.create(ForgeRegistries.PARTICLE_TYPES, Reference.MOD_ID);
 	public static final DeferredRegister<RecipeSerializer<?>> RECIPES = DeferredRegister.create(ForgeRegistries.RECIPE_SERIALIZERS, Reference.MOD_ID);
+	public static final DeferredRegister<RecipeType<?>> RECIPE_TYPES = DeferredRegister.create(Registry.RECIPE_TYPE_REGISTRY, Reference.MOD_ID);
 
 	public static final RegistryObject<SimpleParticleType> PARTICLE_FLUID_XP = PARTICLES.register("fluid_xp_particles", () -> new SimpleParticleType(true));
 
@@ -92,7 +93,7 @@ public class MobGrindingUtils {
 
 	public static final List<SolidifyRecipe> SOLIDIFIER_RECIPES = new ArrayList<>();
 	public static final RegistryObject<RecipeSerializer<?>> SOLIDIFIER_RECIPE = RECIPES.register(SolidifyRecipe.NAME, SolidifyRecipe.Serializer::new);
-	public static RecipeType<SolidifyRecipe> SOLIDIFIER_TYPE;
+	public static final RegistryObject<RecipeType<SolidifyRecipe>> SOLIDIFIER_TYPE = RECIPE_TYPES.register("solidify", () -> new RecipeType<>() {});
 
 	public static final CreativeModeTab TAB = new CreativeModeTab(Reference.MOD_ID) {
 		@Nonnull
@@ -109,12 +110,12 @@ public class MobGrindingUtils {
 		ModContainers.init(modBus);
 		PARTICLES.register(modBus);
 		RECIPES.register(modBus);
+		RECIPE_TYPES.register(modBus);
 
 		DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> ModelLayers.init(modBus));
 
 		modBus.addListener(this::setup);
 		modBus.addListener(this::doClientStuff);
-		modBus.addGenericListener(Item.class, this::recipeTypeRegister);
 
 		MinecraftForge.EVENT_BUS.addListener(BlockSpikes::dropXP);
 		MinecraftForge.EVENT_BUS.register(new EntityInteractionEvent());
@@ -184,17 +185,13 @@ public class MobGrindingUtils {
 	}
 	private void clientRecipeReload(final RecipesUpdatedEvent event) {
 		SOLIDIFIER_RECIPES.clear();
-		SOLIDIFIER_RECIPES.addAll(event.getRecipeManager().getAllRecipesFor(SOLIDIFIER_TYPE));
+		SOLIDIFIER_RECIPES.addAll(event.getRecipeManager().getAllRecipesFor(SOLIDIFIER_TYPE.get()));
 	}
 
 	private void playerConnected(final PlayerEvent.PlayerLoggedInEvent event) {
 		if (event.getPlayer() instanceof ServerPlayer) {
 			sendPersistentData((ServerPlayer) event.getPlayer());
 		}
-	}
-
-	private void recipeTypeRegister(final RegistryEvent.Register<Item> event) {
-		MobGrindingUtils.SOLIDIFIER_TYPE = RecipeType.register(Reference.MOD_ID + ":solidify");
 	}
 
 	private void changedDimension(final PlayerEvent.PlayerChangedDimensionEvent event) {

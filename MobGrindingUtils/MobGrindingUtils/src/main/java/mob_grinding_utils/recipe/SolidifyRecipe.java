@@ -85,7 +85,7 @@ public class SolidifyRecipe implements Recipe<Container> {
     @Nonnull
     @Override
     public RecipeType<?> getType() {
-        return MobGrindingUtils.SOLIDIFIER_TYPE;
+        return MobGrindingUtils.SOLIDIFIER_TYPE.get();
     }
 
     public static class DataRecipe implements FinishedRecipe {

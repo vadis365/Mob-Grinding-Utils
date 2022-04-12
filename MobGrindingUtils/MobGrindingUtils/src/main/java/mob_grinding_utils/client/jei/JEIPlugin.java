@@ -41,7 +41,7 @@ public class JEIPlugin implements IModPlugin {
             }
         });
         Level level = Minecraft.getInstance().level;
-        registration.addRecipes(SOLIDIFY_TYPE, level.getRecipeManager().getAllRecipesFor(MobGrindingUtils.SOLIDIFIER_TYPE));
+        registration.addRecipes(SOLIDIFY_TYPE, level.getRecipeManager().getAllRecipesFor(MobGrindingUtils.SOLIDIFIER_TYPE.get()));
     }
 
     @Override
