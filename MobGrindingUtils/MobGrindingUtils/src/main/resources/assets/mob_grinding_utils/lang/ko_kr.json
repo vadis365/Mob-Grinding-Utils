@@ -2,11 +2,11 @@
     "_comment": "Blocks",
     "block.mob_grinding_utils.fan": "몹 선풍기",
     "block.mob_grinding_utils.saw": "몹 매셔",
-    "block.mob_grinding_utils.absorption_hopper": "흡수 깔때기",
+    "block.mob_grinding_utils.absorption_hopper": "흡수 호퍼",
     "block.mob_grinding_utils.absorption_hopper_d_u": "오프셋 상/하",
     "block.mob_grinding_utils.absorption_hopper_n_s": "오프셋 북/남",
     "block.mob_grinding_utils.absorption_hopper_w_e": "오프셋 서/동",
-    "block.mob_grinding_utils.spikes": "철 스파이크",
+    "block.mob_grinding_utils.spikes": "철 가시",
     "block.mob_grinding_utils.tank": "특이점 탱크",
     "block.mob_grinding_utils.tank_sink": "경험치 흡수 특이점 탱크",
     "block.mob_grinding_utils.xp_tap": "경험치 수도꼭지",
@@ -72,8 +72,8 @@
     "fakeplayer.mob_masher": "몹 매셔",
   
     "_comment": "Spike Damage",
-    "death.attack.spikes": "%1$s이(가) 스파이크에 찔렸습니다.",
-    "death.attack.spikes.player": "%1$s이(가) 스파이크 %2$s에 찔렸습니다.",
+    "death.attack.spikes": "%1$s이(가) 가시에 찔렸습니다.",
+    "death.attack.spikes.player": "%1$s이(가) 가시 %2$s에 찔렸습니다.",
   
     "_comment": "Block Tool tips",
     "block.mob_grinding_utils.fan.tooltip_1": "바라보는 방향으로 몹을 밉니다.",
@@ -91,8 +91,8 @@
     "block.mob_grinding_utils.absorption_hopper.tooltip_5": "효과 영역을 gui에서 토글할 수 있습니다.",
     "block.mob_grinding_utils.absorption_hopper.tooltip_6": "gui에서 위치의 오프셋을 정할 수 있습니다.",
   
-    "block.mob_grinding_utils.spikes.tooltip_1": "기본 스파이크 - 경험치도 떨어뜨립니다.",
-    "block.mob_grinding_utils.spikes.tooltip_2": "스파이크로 죽은 몹들은 플레이어가 죽인것으로 처라되지 않습니다.",
+    "block.mob_grinding_utils.spikes.tooltip_1": "기본 가시 - 경험치도 떨어뜨립니다.",
+    "block.mob_grinding_utils.spikes.tooltip_2": "가시로 죽은 몹들은 플레이어가 죽인것으로 처라되지 않습니다.",
   
     "block.mob_grinding_utils.xp_tap.tooltip_1": "탱크의 한 면에 붙이세요.",
     "block.mob_grinding_utils.xp_tap.tooltip_2": "액체 경험치를 구슬로 바꿉니다.",
@@ -173,7 +173,7 @@
     "tooltip.golden_egg_2": "잔디, 흙, 균사체, 또는 경작지에 사용하세요.",
   
     "tooltip.solid_xp": "소모품. 경험치 값: ",
-    "tooltip.solid_xp2": "묶음 총 경험치 값: ",
+    "tooltip.solid_xp2": "세트 총 경험치 값: ",
     "tooltip.solid_xp_mould": "경험치 응고기에 사용하세요.",
     "tooltip.solid_xp_mould_blank": "경험치 금형으로 조합하세요.",
      
@@ -181,5 +181,5 @@
     "tooltip.spawner_upgrade_width": "너비 수정자: +1. 최대 5.",
     "tooltip.spawner_upgrade_height": "높이 수정자: +1. 최대 5.",
   
-    "tooltip.monocle": "뭐야? 말쑥하고 오래된 콩!"
+    "tooltip.monocle": "What-ho? Spiffy, old bean!"
   }
