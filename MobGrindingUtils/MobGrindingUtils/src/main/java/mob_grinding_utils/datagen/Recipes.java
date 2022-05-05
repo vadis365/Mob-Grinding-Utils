@@ -32,20 +32,6 @@ public class Recipes extends RecipeProvider {
     }
     @Override
     protected void buildCraftingRecipes(Consumer<FinishedRecipe> consumer) {
-        /*
-        //Template
-        ShapedRecipeBuilder.shapedRecipe( )
-                .patternLine("")
-                .patternLine("")
-                .patternLine("")
-                .key('', )
-                .key('', )
-                .key('', )
-                .addCriterion("", hasItem(Items.AIR))
-                .build(consumer, new ResourceLocation(Reference.MOD_ID, "recipe_"));
-        */
-
-
         //Absorbtion Hopper
         InventoryChangeTrigger.TriggerInstance noneItem = has(Items.AIR);
         ShapedRecipeBuilder.shaped(ModBlocks.ABSORPTION_HOPPER.getItem())
@@ -315,7 +301,7 @@ public class Recipes extends RecipeProvider {
             .pattern("BEB")
             .pattern("RSX")
             .pattern("BGB")
-            .define('B', ModItems.FLUID_XP_BUCKET.get())
+            .define('B', new FluidIngredient(MobGrindingUtils.EXPERIENCE, false))
             .define('E', Items.SPIDER_EYE)
             .define('R', Items.ROTTEN_FLESH)
             .define('S', Tags.Items.SEEDS)
@@ -357,7 +343,7 @@ public class Recipes extends RecipeProvider {
             .pattern("XBX")
             .pattern("XXX")
             .define('X', Tags.Items.NUGGETS_GOLD)
-            .define('B', ModItems.FLUID_XP_BUCKET.get())
+            .define('B', new FluidIngredient(MobGrindingUtils.EXPERIENCE, false))
             .unlockedBy("", noneItem)
             .save(consumer, new ResourceLocation(Reference.MOD_ID, "recipe_mould_blank"));
 
@@ -392,7 +378,7 @@ public class Recipes extends RecipeProvider {
             .define('S', Items.SUGAR)
             .define('R', Tags.Items.DUSTS_REDSTONE)
             .define('B', Items.BLAZE_POWDER)
-            .define('X', ModItems.FLUID_XP_BUCKET.get())
+            .define('X', new FluidIngredient(MobGrindingUtils.EXPERIENCE, false))
             .unlockedBy("", noneItem)
             .save(consumer, new ResourceLocation(Reference.MOD_ID, "recipe_xpsolidifier_upgrade"));
 
@@ -400,7 +386,7 @@ public class Recipes extends RecipeProvider {
             .pattern("BCB")
             .pattern("PSX")
             .pattern("BWB")
-            .define('B', ModItems.FLUID_XP_BUCKET.get())
+            .define('B', new FluidIngredient(MobGrindingUtils.EXPERIENCE, false))
             .define('C', Items.CARROT)
             .define('P', Items.POTATO)
             .define('S', Tags.Items.SEEDS)
@@ -416,7 +402,7 @@ public class Recipes extends RecipeProvider {
             .pattern("EEE")
             .define('E', Items.EGG)
             .define('B', Items.BLAZE_POWDER)
-            .define('X', ModItems.FLUID_XP_BUCKET.get())
+            .define('X', new FluidIngredient(MobGrindingUtils.EXPERIENCE, false))
             .unlockedBy("", noneItem)
             .save(consumer, new ResourceLocation(Reference.MOD_ID, "recipe_spawner_upgrade_width"));
 
@@ -427,7 +413,7 @@ public class Recipes extends RecipeProvider {
             .pattern("EBE")
             .define('E', Items.EGG)
             .define('B', Items.BLAZE_POWDER)
-            .define('X', ModItems.FLUID_XP_BUCKET.get())
+            .define('X', new FluidIngredient(MobGrindingUtils.EXPERIENCE, false))
             .unlockedBy("", noneItem)
             .save(consumer, new ResourceLocation(Reference.MOD_ID, "recipe_spawner_upgrade_height"));
 

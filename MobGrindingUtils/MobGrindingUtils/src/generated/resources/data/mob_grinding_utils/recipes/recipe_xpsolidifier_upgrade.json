@@ -16,7 +16,9 @@
       "item": "minecraft:blaze_powder"
     },
     "X": {
-      "item": "mob_grinding_utils:fluid_xp_bucket"
+      "type": "mob_grinding_utils:fluid",
+      "advanced": false,
+      "tag": "forge:experience"
     }
   },
   "result": {

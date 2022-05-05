@@ -82,7 +82,7 @@ dependencies {
     //runtimeOnly fg.deobf("curse.maven:TE-69163:3247000")
     //runtimeOnly fg.deobf("curse.maven:TF-222880:3248150")
     //runtimeOnly fg.deobf("curse.maven:CLUMPS-256717:3481298")
-    //runtimeOnly fg.deobf("curse.maven:CYCLIC-239286:3525767")
+    runtimeOnly fg.deobf("curse.maven:CYCLIC-239286:3708026")
 }
 
 jar {

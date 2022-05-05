@@ -7,7 +7,9 @@
   ],
   "key": {
     "B": {
-      "item": "mob_grinding_utils:fluid_xp_bucket"
+      "type": "mob_grinding_utils:fluid",
+      "advanced": false,
+      "tag": "forge:experience"
     },
     "E": {
       "item": "minecraft:spider_eye"
