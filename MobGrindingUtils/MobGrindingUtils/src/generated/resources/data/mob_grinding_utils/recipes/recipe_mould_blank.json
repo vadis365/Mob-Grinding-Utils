@@ -10,7 +10,9 @@
       "tag": "forge:nuggets/gold"
     },
     "B": {
-      "item": "mob_grinding_utils:fluid_xp_bucket"
+      "type": "mob_grinding_utils:fluid",
+      "advanced": false,
+      "tag": "forge:experience"
     }
   },
   "result": {
