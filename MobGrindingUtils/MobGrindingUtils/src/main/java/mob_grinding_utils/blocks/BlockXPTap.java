@@ -93,7 +93,7 @@ public class BlockXPTap extends DirectionalBlock implements EntityBlock {
 			boolean swap = state.getValue(POWERED);
 			world.setBlock(pos, state.setValue(POWERED, !swap), 3);
 			float f = state.getValue(POWERED) ? 0.6F : 0.5F;
-			world.playSound(null, pos, ModSounds.TAP_SQUEAK, SoundSource.BLOCKS, 0.3F, f);
+			world.playSound(null, pos, ModSounds.TAP_SQUEAK.get(), SoundSource.BLOCKS, 0.3F, f);
 			TileEntityXPTap tileentity = (TileEntityXPTap) world.getBlockEntity(pos);
 			tileentity.setActive(!swap);
 		}

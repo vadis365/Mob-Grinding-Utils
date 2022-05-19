@@ -67,11 +67,11 @@ public class ChickenFuseEvent {
 
 						if (nbt.contains("cursed") && nbt.getBoolean("cursed")) {
 							entity.spawnAtLocation(new ItemStack(ModItems.ROTTEN_EGG.get()), 0.0F);
-							entity.playSound(ModSounds.SPOOPY_CHANGE, 1F, 1F);
+							entity.playSound(ModSounds.SPOOPY_CHANGE.get(), 1F, 1F);
 						}
 						else {
 							entity.playSound(SoundEvents.CHICKEN_DEATH, 1F, 1F);
-							entity.playSound(ModSounds.CHICKEN_RISE, 0.5F, 1F);
+							entity.playSound(ModSounds.CHICKEN_RISE.get(), 0.5F, 1F);
 						}
 
 						for (int k = 0; k < 4; ++k) {

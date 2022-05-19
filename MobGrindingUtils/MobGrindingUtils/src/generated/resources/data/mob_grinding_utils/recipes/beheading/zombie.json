@@ -1,0 +1,7 @@
+{
+  "type": "mob_grinding_utils:beheading",
+  "entity": "minecraft:zombie",
+  "result": {
+    "item": "minecraft:zombie_head"
+  }
+}

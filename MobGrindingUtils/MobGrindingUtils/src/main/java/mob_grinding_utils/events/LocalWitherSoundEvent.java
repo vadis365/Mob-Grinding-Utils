@@ -26,8 +26,8 @@ public class LocalWitherSoundEvent {
 								break;
 							}
 				if (playsound) {
-					world.playSound(null, wither.getX(), wither.getY(), wither.getZ(), ModSounds.ENTITY_WITHER_SPAWN_LOCAL, SoundSource.HOSTILE, 1.0F, 1.0F);
-					world.playSound(null, wither.getX(), wither.getY(), wither.getZ(), ModSounds.ENTITY_WITHER_DEATH_LOCAL, SoundSource.HOSTILE, 1.0F, 1.0F);
+					world.playSound(null, wither.getX(), wither.getY(), wither.getZ(), ModSounds.ENTITY_WITHER_SPAWN_LOCAL.get(), SoundSource.HOSTILE, 1.0F, 1.0F);
+					world.playSound(null, wither.getX(), wither.getY(), wither.getZ(), ModSounds.ENTITY_WITHER_DEATH_LOCAL.get(), SoundSource.HOSTILE, 1.0F, 1.0F);
 				}
 			}
 		}

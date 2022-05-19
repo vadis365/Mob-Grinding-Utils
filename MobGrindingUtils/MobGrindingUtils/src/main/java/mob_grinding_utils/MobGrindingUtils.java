@@ -29,6 +29,7 @@ import mob_grinding_utils.inventory.client.GuiSaw;
 import mob_grinding_utils.inventory.client.GuiXPSolidifier;
 import mob_grinding_utils.network.MGUNetwork;
 import mob_grinding_utils.network.MessageFlagSync;
+import mob_grinding_utils.recipe.BeheadingRecipe;
 import mob_grinding_utils.recipe.ChickenFeedRecipe;
 import mob_grinding_utils.recipe.FluidIngredient;
 import mob_grinding_utils.recipe.SolidifyRecipe;
@@ -92,8 +93,11 @@ public class MobGrindingUtils {
 	public static final RegistryObject<RecipeSerializer<?>> CHICKEN_FEED = RECIPES.register(ChickenFeedRecipe.NAME, ChickenFeedRecipe.Serializer::new);
 
 	public static final List<SolidifyRecipe> SOLIDIFIER_RECIPES = new ArrayList<>();
+	public static final List<BeheadingRecipe> BEHEADING_RECIPES = new ArrayList<>();
 	public static final RegistryObject<RecipeSerializer<?>> SOLIDIFIER_RECIPE = RECIPES.register(SolidifyRecipe.NAME, SolidifyRecipe.Serializer::new);
+	public static final RegistryObject<RecipeSerializer<?>> BEHEADING_RECIPE = RECIPES.register(BeheadingRecipe.NAME, BeheadingRecipe.Serializer::new);
 	public static final RegistryObject<RecipeType<SolidifyRecipe>> SOLIDIFIER_TYPE = RECIPE_TYPES.register("solidify", () -> new RecipeType<>() {});
+	public static final RegistryObject<RecipeType<BeheadingRecipe>> BEHEADING_TYPE = RECIPE_TYPES.register("beheading", () -> new RecipeType<>() {});
 
 	public static final CreativeModeTab TAB = new CreativeModeTab(Reference.MOD_ID) {
 		@Nonnull
@@ -111,6 +115,7 @@ public class MobGrindingUtils {
 		PARTICLES.register(modBus);
 		RECIPES.register(modBus);
 		RECIPE_TYPES.register(modBus);
+		ModSounds.init(modBus);
 
 		DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> ModelLayers.init(modBus));
 

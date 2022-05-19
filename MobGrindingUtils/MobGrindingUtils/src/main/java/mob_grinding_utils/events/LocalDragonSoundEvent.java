@@ -26,7 +26,7 @@ public class LocalDragonSoundEvent {
 								break;
 							}
 				if (playsound) {
-					world.playSound(null, dragon.getX(), dragon.getY(), dragon.getZ(), ModSounds.ENTITY_DRAGON_DEATH_LOCAL, SoundSource.HOSTILE, 5.0F, 1.0F);
+					world.playSound(null, dragon.getX(), dragon.getY(), dragon.getZ(), ModSounds.ENTITY_DRAGON_DEATH_LOCAL.get(), SoundSource.HOSTILE, 5.0F, 1.0F);
 				}
 			}
 		}

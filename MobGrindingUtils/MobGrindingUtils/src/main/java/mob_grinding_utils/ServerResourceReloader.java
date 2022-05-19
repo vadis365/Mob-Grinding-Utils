@@ -18,5 +18,7 @@ public class ServerResourceReloader implements ResourceManagerReloadListener {
         RecipeManager recipeManager = this.dataPackRegistries.getRecipeManager();
         MobGrindingUtils.SOLIDIFIER_RECIPES.clear();
         MobGrindingUtils.SOLIDIFIER_RECIPES.addAll(recipeManager.getAllRecipesFor(MobGrindingUtils.SOLIDIFIER_TYPE.get()));
+        MobGrindingUtils.BEHEADING_RECIPES.clear();
+        MobGrindingUtils.BEHEADING_RECIPES.addAll(recipeManager.getAllRecipesFor(MobGrindingUtils.BEHEADING_TYPE.get()));
     }
 }

@@ -23,7 +23,7 @@ public class BlockSolidXP extends HalfTransparentBlock {
 			super.fallOn(level, state, pos, entity, fallDistance);
 		else {
 			entity.causeFallDamage(fallDistance, 0.0F, DamageSource.FALL);
-			entity.getCommandSenderWorld().playSound(null, entity.blockPosition(), ModSounds.SOLID_XP_BLOCK_BOING, SoundSource.BLOCKS, 0.3F, 1F);
+			entity.getCommandSenderWorld().playSound(null, entity.blockPosition(), ModSounds.SOLID_XP_BLOCK_BOING.get(), SoundSource.BLOCKS, 0.3F, 1F);
 		}
 	}
 

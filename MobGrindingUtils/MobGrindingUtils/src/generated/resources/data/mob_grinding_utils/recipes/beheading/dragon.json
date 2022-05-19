@@ -1,0 +1,7 @@
+{
+  "type": "mob_grinding_utils:beheading",
+  "entity": "minecraft:ender_dragon",
+  "result": {
+    "item": "minecraft:dragon_head"
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "type": "mob_grinding_utils:beheading",
+  "entity": "minecraft:creeper",
+  "result": {
+    "item": "minecraft:creeper_head"
+  }
+}

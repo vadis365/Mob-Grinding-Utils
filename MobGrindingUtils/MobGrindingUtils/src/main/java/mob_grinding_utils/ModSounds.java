@@ -1,74 +1,32 @@
 package mob_grinding_utils;
 
-import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
 
-import net.minecraft.world.level.block.SoundType;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraftforge.event.RegistryEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.registries.IForgeRegistry;
+import net.minecraft.world.level.block.SoundType;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.RegistryObject;
 
 public class ModSounds {
-	public static final List<SoundEvent> SOUNDS = new ArrayList<SoundEvent>();
-	public static SoundEvent TAP_SQUEAK;
-	public static SoundEvent ENTITY_WITHER_SPAWN_LOCAL;
-	public static SoundEvent ENTITY_WITHER_DEATH_LOCAL;
-	public static SoundEvent ENTITY_DRAGON_DEATH_LOCAL;
-	public static SoundEvent CHICKEN_RISE;
-	public static SoundEvent SPOOPY_CHANGE;
-	public static SoundEvent SOLID_XP_BLOCK_BOING;
+	public static final DeferredRegister<SoundEvent> SOUNDS = DeferredRegister.create(ForgeRegistries.SOUND_EVENTS, Reference.MOD_ID);
+	public static final RegistryObject<SoundEvent> TAP_SQUEAK = registerSound("tap_squeak");
+	public static final RegistryObject<SoundEvent> ENTITY_WITHER_SPAWN_LOCAL = registerSound("entity_wither_spawn_local");
+	public static final RegistryObject<SoundEvent> ENTITY_WITHER_DEATH_LOCAL = registerSound("entity_wither_death_local");
+	public static final RegistryObject<SoundEvent> ENTITY_DRAGON_DEATH_LOCAL = registerSound("entity_dragon_death_local");
+	public static final RegistryObject<SoundEvent> CHICKEN_RISE = registerSound("chicken_rise");
+	public static final RegistryObject<SoundEvent> SPOOPY_CHANGE = registerSound("spoopy_change");
+	public static final RegistryObject<SoundEvent> SOLID_XP_BLOCK_BOING = registerSound("solid_xp_block_boing");
 
 	public static final SoundType SOLID_XP_BLOCK = new SoundType(1.0F, 1.0F, SoundEvents.PLAYER_LEVELUP, SoundEvents.EXPERIENCE_ORB_PICKUP, SoundEvents.EXPERIENCE_ORB_PICKUP, SoundEvents.EXPERIENCE_ORB_PICKUP, SoundEvents.EXPERIENCE_ORB_PICKUP);
 
-	public static SoundEvent registerSoundResource(String name) {
-		return new SoundEvent(new ResourceLocation(Reference.MOD_ID, name));
+	private static RegistryObject<SoundEvent> registerSound(String name) {
+		return SOUNDS.register(name, () -> new SoundEvent(new ResourceLocation(Reference.MOD_ID, name)));
 	}
 
-	public static void init() {
-		TAP_SQUEAK = registerSoundResource("tap_squeak");
-		ENTITY_WITHER_SPAWN_LOCAL = registerSoundResource("entity_wither_spawn_local");
-		ENTITY_WITHER_DEATH_LOCAL = registerSoundResource("entity_wither_death_local");
-		ENTITY_DRAGON_DEATH_LOCAL = registerSoundResource("entity_dragon_death_local");
-		CHICKEN_RISE = registerSoundResource("chicken_rise");
-		SPOOPY_CHANGE = registerSoundResource("spoopy_change");
-		SOLID_XP_BLOCK_BOING = registerSoundResource("solid_xp_block_boing");
-	}
-
-	public static void initReg() {
-		try {
-			for (Field field : ModSounds.class.getDeclaredFields()) {
-				Object obj = field.get(null);
-				if (obj instanceof SoundEvent) {
-					SoundEvent sound = (SoundEvent) obj;
-					String name = field.getName().toLowerCase(Locale.ENGLISH);
-					registerSoundName(name, sound);
-				}
-			}
-		} catch (IllegalAccessException e) {
-			throw new RuntimeException(e);
-		}
-	}
-
-	public static void registerSoundName(String name, SoundEvent sound) {
-		SOUNDS.add(sound);
-		sound.setRegistryName(Reference.MOD_ID, name);
-	}
-
-	@Mod.EventBusSubscriber(modid = Reference.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
-	public static class RegistrationHandlerSounds {
-		@SubscribeEvent
-		public static void registerSoundEvents(final RegistryEvent.Register<SoundEvent> event) {
-			init();
-			initReg();
-			final IForgeRegistry<SoundEvent> registry = event.getRegistry();
-			for (SoundEvent sounds : SOUNDS)
-				registry.register(sounds);
-		}
+	public static void init(IEventBus bus) {
+		SOUNDS.register(bus);
 	}
 }
