@@ -9,7 +9,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 public class GlobalDragonSoundEvent {
 	@SubscribeEvent
 	public void onDragonSound(PlaySoundEvent event) {
-		if (event.getName().equals("entity.enderdragon.death"))
+		if (event.getName().equals("entity.ender_dragon.death"))
 			event.setSound(null);
 	}
 }
