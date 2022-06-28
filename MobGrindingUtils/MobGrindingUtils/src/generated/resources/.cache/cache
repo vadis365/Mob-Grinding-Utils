@@ -2,6 +2,7 @@
 dbf546c84707b01aa0cc7dfbcbd1df348f7dace6 data/forge/tags/fluids/xpjuice.json
 195709064cacb441a3e89b6ed1ea1fd336de6bf2 data/minecraft/tags/blocks/dragon_immune.json
 195709064cacb441a3e89b6ed1ea1fd336de6bf2 data/minecraft/tags/blocks/mineable/pickaxe.json
+302344662d459a817a12f6ec13869359747fe1ee data/minecraft/tags/blocks/rabbits_spawnable_on.json
 195709064cacb441a3e89b6ed1ea1fd336de6bf2 data/minecraft/tags/blocks/wither_immune.json
 f4b5616ef3c351955a7346109cfdb3be74065cc9 data/mob_grinding_utils/loot_tables/blocks/absorption_hopper.json
 46955deb221df9152749866a4d1d71f2f4a0dfcb data/mob_grinding_utils/loot_tables/blocks/dark_oak_stone.json

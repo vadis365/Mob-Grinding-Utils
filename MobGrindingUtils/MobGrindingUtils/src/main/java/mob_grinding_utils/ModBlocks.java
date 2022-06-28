@@ -52,6 +52,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.level.material.MaterialColor;
+import net.minecraft.world.level.material.PushReaction;
 import net.minecraftforge.client.IItemRenderProperties;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fluids.FluidAttributes;
@@ -59,6 +60,8 @@ import net.minecraftforge.fluids.ForgeFlowingFluid;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
+
+import javax.annotation.Nonnull;
 
 public class ModBlocks {
 	public static DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, Reference.MOD_ID);
@@ -169,7 +172,7 @@ public class ModBlocks {
 		() -> new BlockXPSolidifier(Block.Properties.of(Material.METAL, MaterialColor.COLOR_GRAY).strength(1.0F, 2000.0F).sound(SoundType.METAL).noOcclusion()),
 		(b) -> new MGUBlockItem(b, new Item.Properties().tab(MobGrindingUtils.TAB)){
 			@Override
-			public void initializeClient(Consumer<IItemRenderProperties> consumer) {
+			public void initializeClient(@Nonnull Consumer<IItemRenderProperties> consumer) {
 				consumer.accept(new IItemRenderProperties() {
 					@Override
 					public BlockEntityWithoutLevelRenderer getItemStackRenderer() {
@@ -179,9 +182,9 @@ public class ModBlocks {
 			}
 		}, TileEntityXPSolidifier::new);
 
-	public static Material MATERIAL_DREADFUL_DIRT = new Material(MaterialColor.DIRT, false, true, false, true, true, false, null);
+	public static Material MATERIAL_DREADFUL_DIRT = new Material(MaterialColor.DIRT, false, true, false, true, true, false, PushReaction.NORMAL);
 	public static MGUBlockReg<BlockDreadfulDirt, MGUBlockItem, ?> DREADFUL_DIRT = new MGUBlockReg<>("dreadful_dirt",
-		() -> new BlockDreadfulDirt(Block.Properties.of(MATERIAL_DREADFUL_DIRT, MaterialColor.COLOR_PURPLE).strength(1.0F, 2000.0F).sound(SoundType.GRAVEL).randomTicks().isValidSpawn((state, reader, pos, entitytype) -> entitytype.getCategory() == MobCategory.MONSTER)),
+		() -> new BlockDreadfulDirt(Block.Properties.of(MATERIAL_DREADFUL_DIRT, MaterialColor.COLOR_PURPLE).strength(1.0F, 2000.0F).sound(SoundType.GRAVEL).randomTicks()),
 		(b) -> new MGUBlockItem(b, new Item.Properties().tab(MobGrindingUtils.TAB)));
 
 	public static MGUBlockReg<BlockSolidXP, MGUBlockItem, ?> SOLID_XP_BLOCK = new MGUBlockReg<>("solid_xp_block",
@@ -189,7 +192,7 @@ public class ModBlocks {
 		(b) -> new MGUBlockItem(b, new Item.Properties().tab(MobGrindingUtils.TAB)));
 
 	public static MGUBlockReg<BlockDelightfulDirt, MGUBlockItem, ?> DELIGHTFUL_DIRT = new MGUBlockReg<>("delightful_dirt",
-		() -> new BlockDelightfulDirt(Block.Properties.of(Material.DIRT, MaterialColor.COLOR_PURPLE).strength(1.0F, 2000.0F).sound(SoundType.GRAVEL).randomTicks().isValidSpawn((state, reader, pos, entitytype) -> entitytype.getCategory() == MobCategory.CREATURE)),
+		() -> new BlockDelightfulDirt(Block.Properties.of(Material.DIRT, MaterialColor.COLOR_PURPLE).strength(1.0F, 2000.0F).sound(SoundType.GRAVEL).randomTicks()),
 		(b) -> new MGUBlockItem(b, new Item.Properties().tab(MobGrindingUtils.TAB)));
 
 	public static MGUBlockReg<BlockEntitySpawner, MGUBlockItem, TileEntityMGUSpawner> ENTITY_SPAWNER = new MGUBlockReg<>("entity_spawner",

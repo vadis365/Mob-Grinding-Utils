@@ -49,6 +49,8 @@ public class BlockDreadfulDirt extends Block {
 	public void onPlace(BlockState state, Level level, BlockPos pos, BlockState oldState, boolean isMoving) {
 		if (shouldCatchFire(level, pos) || shouldSpawnMob(level, pos))
 			level.scheduleTick(pos, this, Mth.nextInt(RANDOM, 20,60));
+		//List<SpawnerData> spawns = level.getBiome(pos).value().getMobSettings().getMobs(MobCategory.MONSTER).unwrap();
+		//spawns.forEach(spawn -> MobGrindingUtils.LOGGER.info(spawn.type.getRegistryName().toString()));
 	}
 
 	@SuppressWarnings("deprecation")
@@ -116,6 +118,14 @@ public class BlockDreadfulDirt extends Block {
 	@Override
     public boolean isFireSource(BlockState state, LevelReader level, BlockPos pos, Direction side) {
 		return side == Direction.UP;
+	}
+
+	@Override
+	public boolean isValidSpawn(BlockState state, BlockGetter level, BlockPos pos, SpawnPlacements.Type type, EntityType<?> entityType) {
+		if (entityType == null)
+			return super.isValidSpawn(state, level, pos, type, entityType);
+		else
+			return entityType.getCategory() == MobCategory.MONSTER;
 	}
 
 	@Override

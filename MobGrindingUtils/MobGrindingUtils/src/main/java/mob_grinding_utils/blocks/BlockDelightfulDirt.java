@@ -22,7 +22,6 @@ import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.NaturalSpawner;
 import net.minecraft.world.level.biome.MobSpawnSettings.SpawnerData;
-import net.minecraft.world.level.block.AirBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
@@ -35,6 +34,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.IPlantable;
 
+import javax.annotation.Nonnull;
 public class BlockDelightfulDirt extends Block {
 
 	public BlockDelightfulDirt(Block.Properties properties) {
@@ -73,7 +73,7 @@ public class BlockDelightfulDirt extends Block {
 	@SuppressWarnings("unchecked")
 	@Deprecated
 	@Override
-	public void tick(BlockState state, ServerLevel level, BlockPos pos, Random rand) {
+	public void tick(@Nonnull BlockState state, @Nonnull ServerLevel level, @Nonnull BlockPos pos, @Nonnull Random rand) {
 		if (shouldSnowCap(level, pos)) {
 			BlockPos posUp = pos.above();
 			BlockState blockstate = Blocks.SNOW.defaultBlockState();
@@ -123,6 +123,13 @@ public class BlockDelightfulDirt extends Block {
 				 }
 			}
 		}
+	}
+
+	public boolean isValidSpawn(BlockState state, BlockGetter level, BlockPos pos, SpawnPlacements.Type type, EntityType<?> entityType) {
+		if (entityType == null)
+			return super.isValidSpawn(state, level, pos, type, entityType);
+		else
+			return entityType.getCategory() == MobCategory.CREATURE;
 	}
 
 	@Override

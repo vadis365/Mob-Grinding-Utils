@@ -12,8 +12,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 public class LocalDragonSoundEvent {
 	@SubscribeEvent
 	public void onDragonDeath(LivingDeathEvent event) {
-		if (event.getEntity() instanceof EnderDragon) {
-			EnderDragon dragon = (EnderDragon) event.getEntity();
+		if (event.getEntity() instanceof EnderDragon dragon) {
 			Level world = dragon.getCommandSenderWorld();
 			BlockPos.MutableBlockPos mutablePos = new BlockPos.MutableBlockPos();
 			boolean playsound = true;
