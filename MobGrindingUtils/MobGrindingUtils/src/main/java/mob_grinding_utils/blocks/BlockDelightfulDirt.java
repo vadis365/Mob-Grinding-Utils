@@ -7,6 +7,8 @@ import mob_grinding_utils.MobGrindingUtils;
 import mob_grinding_utils.network.MGUClientPackets;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Holder;
+import net.minecraft.core.Registry;
 import net.minecraft.data.worldgen.placement.VegetationPlacements;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
@@ -21,6 +23,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.NaturalSpawner;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.biome.Biomes;
 import net.minecraft.world.level.biome.MobSpawnSettings.SpawnerData;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -33,6 +37,8 @@ import net.minecraft.world.phys.AABB;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.IPlantable;
+import net.minecraftforge.common.Tags;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.Nonnull;
 public class BlockDelightfulDirt extends Block {
@@ -106,7 +112,12 @@ public class BlockDelightfulDirt extends Block {
 	}
 
 	public void spawnMob(ServerLevel level, BlockPos pos) {
-		List<SpawnerData> spawns = level.getBiome(pos).value().getMobSettings().getMobs(MobCategory.CREATURE).unwrap();
+		Holder<Biome> biomeHolder = level.getBiome(pos);
+		Biome biome = !biomeHolder.is(Tags.Biomes.IS_UNDERGROUND) ? biomeHolder.value() : level.registryAccess().registry(Registry.BIOME_REGISTRY)
+				.flatMap(reg -> reg.getOptional(Biomes.PLAINS))
+				.orElseGet(biomeHolder::value);
+
+		List<SpawnerData> spawns = biome.getMobSettings().getMobs(MobCategory.CREATURE).unwrap();
 		if (!spawns.isEmpty()) {
 			int indexSize = spawns.size();
 			EntityType<?> type = spawns.get(RANDOM.nextInt(indexSize)).type;
