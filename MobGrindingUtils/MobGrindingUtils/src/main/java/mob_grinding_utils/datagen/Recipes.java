@@ -14,6 +14,7 @@ import mob_grinding_utils.recipe.FluidIngredient;
 import mob_grinding_utils.recipe.SolidifyRecipe;
 import mob_grinding_utils.recipe.WrappedRecipe;
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;
+import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.HashCache;
 import net.minecraft.data.recipes.FinishedRecipe;
@@ -31,12 +32,14 @@ import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.crafting.ConditionalRecipe;
 import net.minecraftforge.common.crafting.conditions.ModLoadedCondition;
 
+import javax.annotation.Nonnull;
+
 public class Recipes extends RecipeProvider {
     public Recipes(DataGenerator generatorIn) {
         super(generatorIn);
     }
     @Override
-    protected void buildCraftingRecipes(Consumer<FinishedRecipe> consumer) {
+    protected void buildCraftingRecipes(@Nonnull Consumer<FinishedRecipe> consumer) {
         //Absorbtion Hopper
         InventoryChangeTrigger.TriggerInstance noneItem = has(Items.AIR);
         ShapedRecipeBuilder.shaped(ModBlocks.ABSORPTION_HOPPER.getItem())
@@ -471,7 +474,7 @@ public class Recipes extends RecipeProvider {
     }
 
     @Override
-    protected void saveAdvancement(HashCache cache, JsonObject cache2, Path advancementJson) {
-        // No thank you.
+    protected void saveAdvancement(@Nonnull CachedOutput cachedOutput, @Nonnull JsonObject object, @Nonnull Path path) {
+        // No thank you, good day sir.
     }
 }

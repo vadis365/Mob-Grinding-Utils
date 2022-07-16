@@ -2,7 +2,6 @@ package mob_grinding_utils.recipe;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
-import com.mojang.serialization.Codec;
 import mob_grinding_utils.MobGrindingUtils;
 import net.minecraft.core.Registry;
 import net.minecraft.data.recipes.FinishedRecipe;
@@ -16,8 +15,6 @@ import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.common.util.JsonUtils;
-import net.minecraftforge.registries.ForgeRegistryEntry;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -142,7 +139,7 @@ public class BeheadingRecipe implements Recipe<Container>{
     }
 
 
-    public static class Serializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<BeheadingRecipe> {
+    public static class Serializer implements RecipeSerializer<BeheadingRecipe> {
 
         @Nonnull
         @Override

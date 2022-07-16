@@ -3,10 +3,9 @@ package mob_grinding_utils;
 import net.minecraft.tags.TagKey;
 import net.minecraftforge.common.util.Lazy;
 import net.minecraftforge.registries.IForgeRegistry;
-import net.minecraftforge.registries.IForgeRegistryEntry;
 import net.minecraftforge.registries.tags.ITag;
 
-public class TagLookup<T extends IForgeRegistryEntry<T>> {
+public class TagLookup<T> {
     private final TagKey<T> tagKey;
     private final Lazy<ITag<T>> lazy;
 

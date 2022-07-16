@@ -16,7 +16,7 @@ public class ModContainers {
     public static void init(IEventBus bus) {
         CONTAINERS.register(bus);
     }
-    public static final DeferredRegister<MenuType<?>> CONTAINERS = DeferredRegister.create(ForgeRegistries.CONTAINERS, Reference.MOD_ID);
+    public static final DeferredRegister<MenuType<?>> CONTAINERS = DeferredRegister.create(ForgeRegistries.MENU_TYPES, Reference.MOD_ID);
 
     public static final RegistryObject<MenuType<ContainerAbsorptionHopper>> ABSORPTION_HOPPER = CONTAINERS.register("absorption_hopper_container", () -> IForgeMenuType.create(ContainerAbsorptionHopper::new));
     public static final RegistryObject<MenuType<ContainerFan>> FAN = CONTAINERS.register("fan_container", () -> IForgeMenuType.create(ContainerFan::new));
