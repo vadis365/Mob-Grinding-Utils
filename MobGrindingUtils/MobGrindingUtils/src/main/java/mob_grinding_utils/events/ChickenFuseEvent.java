@@ -36,12 +36,13 @@ public class ChickenFuseEvent {
 			}
 		}
 		//It wasnt there, try grabbing the common naming convention from the item registry.
-		return new ItemStack(ForgeRegistries.ITEMS.getValue(new ResourceLocation(entityType.getRegistryName() + "_spawn_egg")));
+		ResourceLocation res = ForgeRegistries.ENTITY_TYPES.getKey(entityType);
+		return new ItemStack(ForgeRegistries.ITEMS.getValue(new ResourceLocation(res + "_spawn_egg")));
 	}
 
 	@SubscribeEvent
 	public void startChickenFuse(LivingEvent event) {
-		LivingEntity entity = (LivingEntity) event.getEntity();
+		LivingEntity entity = event.getEntity();
 		if (entity instanceof Chicken) {
 			Level world = entity.getCommandSenderWorld();
 			if (!world.isClientSide) {

@@ -27,9 +27,9 @@ public class EntityHeadDropEvent {
 
 	@SubscribeEvent(priority = EventPriority.LOWEST)
 	public void dropEvent(LivingDropsEvent event) {
-		if (event.getEntityLiving().level.isClientSide)
+		if (event.getEntity().level.isClientSide)
 			return;
-		if (event.getEntityLiving().getHealth() > 0.0F)
+		if (event.getEntity().getHealth() > 0.0F)
 			return;
 		int beheadingLevel = 0;
 		if (event.getSource().getEntity() instanceof MGUFakePlayer fakePlayer) {
@@ -37,11 +37,11 @@ public class EntityHeadDropEvent {
 				ItemStack tempSword = fakePlayer.getMainHandItem();
 				if (tempSword.hasTag() && tempSword.getTag().contains("beheadingValue"))
 					beheadingLevel = tempSword.getTag().getInt("beheadingValue");
-				int dropChance = event.getEntityLiving().getCommandSenderWorld().random.nextInt(10);
+				int dropChance = event.getEntity().getCommandSenderWorld().random.nextInt(10);
 				if (dropChance < beheadingLevel) {
-					ItemStack stack = getHeadFromEntity(event.getEntityLiving());
+					ItemStack stack = getHeadFromEntity(event.getEntity());
 					if (!stack.isEmpty())
-						addDrop(stack, event.getEntityLiving(), event.getDrops());
+						addDrop(stack, event.getEntity(), event.getDrops());
 				}
 			}
 		}

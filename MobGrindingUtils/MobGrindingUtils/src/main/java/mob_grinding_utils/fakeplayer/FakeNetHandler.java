@@ -3,6 +3,7 @@ package mob_grinding_utils.fakeplayer;
 import java.net.SocketAddress;
 import java.util.Set;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.crypto.Cipher;
 
@@ -76,25 +77,25 @@ public class FakeNetHandler extends ServerGamePacketListenerImpl {
         }
 
         @Override
-        public void channelActive(ChannelHandlerContext p_channelActive_1_) throws Exception {}
+        public void channelActive(@Nonnull ChannelHandlerContext p_channelActive_1_) throws Exception {}
 
         @Override
-        public void channelInactive(ChannelHandlerContext p_channelInactive_1_) {}
+        public void channelInactive(@Nonnull ChannelHandlerContext p_channelInactive_1_) {}
 
         @Override
-        public void setProtocol(ConnectionProtocol newState) {}
+        public void setProtocol(@Nonnull ConnectionProtocol newState) {}
 
         @Override
-        public void exceptionCaught(ChannelHandlerContext p_exceptionCaught_1_, Throwable p_exceptionCaught_2_) {}
+        public void exceptionCaught(@Nonnull ChannelHandlerContext p_exceptionCaught_1_, @Nonnull Throwable p_exceptionCaught_2_) {}
 
         @Override
-        protected void channelRead0(ChannelHandlerContext p_channelRead0_1_, Packet<?> p_channelRead0_2_) {}
+        protected void channelRead0(@Nonnull ChannelHandlerContext p_channelRead0_1_, @Nonnull Packet<?> p_channelRead0_2_) {}
 
         @Override
-        public void send(Packet<?> packetIn) {}
+        public void send(@Nonnull Packet<?> packetIn) {}
 
         @Override
-        public void send(Packet<?> packetIn, @Nullable GenericFutureListener<? extends Future<? super Void>> p_201058_2_) {}
+        public void send(@Nonnull Packet<?> packetIn, @Nullable GenericFutureListener<? extends Future<? super Void>> p_201058_2_) {}
 
         @Override
         public void tick() {}
@@ -108,7 +109,7 @@ public class FakeNetHandler extends ServerGamePacketListenerImpl {
         }
 
         @Override
-        public void disconnect(Component message) {}
+        public void disconnect(@Nonnull Component message) {}
 
         @Override
         public boolean isConnecting() {
@@ -121,7 +122,7 @@ public class FakeNetHandler extends ServerGamePacketListenerImpl {
         }
 
         @Override
-        public void setEncryptionKey(Cipher p_244777_1_, Cipher p_244777_2_) {}
+        public void setEncryptionKey(@Nonnull Cipher p_244777_1_, @Nonnull Cipher p_244777_2_) {}
 
         @Override
         public boolean isConnected() {
@@ -147,37 +148,37 @@ public class FakeNetHandler extends ServerGamePacketListenerImpl {
     public void resetPosition() {}
 
     @Override
-    public void disconnect(Component textComponent) {}
+    public void disconnect(@Nonnull Component textComponent) {}
 
     @Override
-    public void handlePlayerInput(ServerboundPlayerInputPacket packetIn) {}
+    public void handlePlayerInput(@Nonnull ServerboundPlayerInputPacket packetIn) {}
 
     @Override
-    public void handleMoveVehicle(ServerboundMoveVehiclePacket packetIn) {}
+    public void handleMoveVehicle(@Nonnull ServerboundMoveVehiclePacket packetIn) {}
 
     @Override
-    public void handleAcceptTeleportPacket(ServerboundAcceptTeleportationPacket packetIn) {}
+    public void handleAcceptTeleportPacket(@Nonnull ServerboundAcceptTeleportationPacket packetIn) {}
 
     @Override
-    public void handleRecipeBookSeenRecipePacket(ServerboundRecipeBookSeenRecipePacket packetIn) {}
+    public void handleRecipeBookSeenRecipePacket(@Nonnull ServerboundRecipeBookSeenRecipePacket packetIn) {}
 
     @Override
-    public void handleRecipeBookChangeSettingsPacket(ServerboundRecipeBookChangeSettingsPacket p_241831_1_) {}
+    public void handleRecipeBookChangeSettingsPacket(@Nonnull ServerboundRecipeBookChangeSettingsPacket p_241831_1_) {}
 
     @Override
-    public void handleSeenAdvancements(ServerboundSeenAdvancementsPacket packetIn) {}
+    public void handleSeenAdvancements(@Nonnull ServerboundSeenAdvancementsPacket packetIn) {}
 
     @Override
-    public void handleCustomCommandSuggestions(ServerboundCommandSuggestionPacket packetIn) {}
+    public void handleCustomCommandSuggestions(@Nonnull ServerboundCommandSuggestionPacket packetIn) {}
 
     @Override
-    public void handleSetCommandBlock(ServerboundSetCommandBlockPacket packetIn) {}
+    public void handleSetCommandBlock(@Nonnull ServerboundSetCommandBlockPacket packetIn) {}
 
     @Override
-    public void handleSetCommandMinecart(ServerboundSetCommandMinecartPacket packetIn) {}
+    public void handleSetCommandMinecart(@Nonnull ServerboundSetCommandMinecartPacket packetIn) {}
 
     @Override
-    public void handlePickItem(ServerboundPickItemPacket packetIn) {}
+    public void handlePickItem(@Nonnull ServerboundPickItemPacket packetIn) {}
 
     @Override
     public void handleRenameItem(ServerboundRenameItemPacket packetIn) {}

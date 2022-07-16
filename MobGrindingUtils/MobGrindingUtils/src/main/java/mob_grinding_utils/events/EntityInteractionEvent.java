@@ -26,7 +26,7 @@ public class EntityInteractionEvent {
 			LivingEntity entity = (LivingEntity) event.getTarget();
 
 			if (entity instanceof WanderingTrader && !event.getItemStack().isEmpty() && event.getItemStack().getItem() instanceof ItemMobSwab) {
-				event.getItemStack().interactLivingEntity(event.getPlayer(), entity, event.getHand());
+				event.getItemStack().interactLivingEntity(event.getEntity(), entity, event.getHand());
 				return;
 			}
 
@@ -46,7 +46,7 @@ public class EntityInteractionEvent {
 								nbt.putBoolean("cursed", true);
 							if (eventItem.getItem() == ModItems.NUTRITIOUS_CHICKEN_FEED.get())
 								nbt.putBoolean("nutritious", true);
-							if (event.getPlayer() instanceof ServerPlayer) {
+							if (event.getEntity() instanceof ServerPlayer) {
 								TargetPoint target = new TargetPoint(entity.getX(), entity.getY(), entity.getZ(), 32, entity.getCommandSenderWorld().dimension());
 								MobGrindingUtils.NETWORK_WRAPPER.send(PacketDistributor.NEAR.with(()->target), new MessageChickenSync(entity, nbt));
 							}
@@ -55,7 +55,7 @@ public class EntityInteractionEvent {
 						entity.setDeltaMovement(vec3d.x, 0.06D, vec3d.z);
 						entity.setNoGravity(true);
 
-						if (!event.getPlayer().getAbilities().instabuild)
+						if (!event.getEntity().getAbilities().instabuild)
 							event.getItemStack().shrink(1);
 					}
 				}
