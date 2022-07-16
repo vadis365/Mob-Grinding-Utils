@@ -17,8 +17,8 @@ repositories {
     maven { url "https://dvs1.progwml6.com/files/maven" }
 }
 
-version = "${modversion}"
-group = 'com.vadis365.mob_grinding_utils' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
+version = "${minecraft_version}-${mod_version}"
+group = 'com.vadis365.mob_grinding_utils'
 archivesBaseName = 'mob_grinding_utils'
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
@@ -65,12 +65,13 @@ minecraft {
 sourceSets.main.resources { srcDir 'src/generated/resources' }
 
 dependencies {
-    minecraft "net.minecraftforge:forge:$forge_version"
+    minecraft "net.minecraftforge:forge:$minecraft_version-$forge_version"
 
-    compileOnly fg.deobf("mezz.jei:jei-${jei_version}:api")
-    runtimeOnly fg.deobf("mezz.jei:jei-${jei_version}")
+    compileOnly fg.deobf("mezz.jei:jei-${minecraft_version}-common-api:${jei_version}") //new
+    compileOnly fg.deobf("mezz.jei:jei-${minecraft_version}-forge-api:${jei_version}")
+    runtimeOnly fg.deobf("mezz.jei:jei-${minecraft_version}-forge:${jei_version}")
 
-    runtimeOnly fg.deobf("curse.maven:top-245211:3671753")
+    runtimeOnly fg.deobf("curse.maven:top-245211:3871444")
     //runtimeOnly fg.deobf("curse.maven:playermobs-430513:3153298") //Not ported yet
     //runtimeOnly fg.deobf("curse.maven:mek-268560:3183270") //ditto
     //runtimeOnly fg.deobf("curse.maven:IF-266515:3261176")
@@ -82,7 +83,7 @@ dependencies {
     //runtimeOnly fg.deobf("curse.maven:TE-69163:3247000")
     //runtimeOnly fg.deobf("curse.maven:TF-222880:3248150")
     //runtimeOnly fg.deobf("curse.maven:CLUMPS-256717:3481298")
-    runtimeOnly fg.deobf("curse.maven:CYCLIC-239286:3708026")
+    //runtimeOnly fg.deobf("curse.maven:CYCLIC-239286:3708026")
 }
 
 jar {

@@ -1,4 +1,5 @@
 {   "parent": "block/block",
+    "render_type": "solid",
     "textures": {
         "particle": "block/dirt",
         "bottom": "block/dirt",

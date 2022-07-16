@@ -57,7 +57,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.event.AddReloadListenerEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
-import net.minecraftforge.event.world.WorldEvent;
+import net.minecraftforge.event.level.LevelEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.common.Mod;
@@ -167,21 +167,21 @@ public static final Logger LOGGER = LogManager.getLogger(Reference.MOD_ID);
 
 		ItemBlockRenderTypes.setRenderLayer(ModBlocks.TANK.getBlock(), RenderType.cutout());
 		ItemBlockRenderTypes.setRenderLayer(ModBlocks.TANK_SINK.getBlock(), RenderType.cutout());
-		ItemBlockRenderTypes.setRenderLayer(ModBlocks.XP_TAP.getBlock(), RenderType.cutout());
-		ItemBlockRenderTypes.setRenderLayer(ModBlocks.ENDER_INHIBITOR_ON.getBlock(), RenderType.cutout());
-		ItemBlockRenderTypes.setRenderLayer(ModBlocks.ENDER_INHIBITOR_OFF.getBlock(), RenderType.cutout());
+		//ItemBlockRenderTypes.setRenderLayer(ModBlocks.XP_TAP.getBlock(), RenderType.cutout());
+		//ItemBlockRenderTypes.setRenderLayer(ModBlocks.ENDER_INHIBITOR_ON.getBlock(), RenderType.cutout());
+		//ItemBlockRenderTypes.setRenderLayer(ModBlocks.ENDER_INHIBITOR_OFF.getBlock(), RenderType.cutout());
 		ItemBlockRenderTypes.setRenderLayer(ModBlocks.SAW.getBlock(), RenderType.cutout());
-		ItemBlockRenderTypes.setRenderLayer(ModBlocks.SPIKES.getBlock(), RenderType.cutout());
-		ItemBlockRenderTypes.setRenderLayer(ModBlocks.ABSORPTION_HOPPER.getBlock(), RenderType.cutout());
-		ItemBlockRenderTypes.setRenderLayer(ModBlocks.TINTED_GLASS.getBlock(), RenderType.translucent());
-		ItemBlockRenderTypes.setRenderLayer(ModBlocks.JUMBO_TANK.getBlock(), RenderType.cutout());
-		ItemBlockRenderTypes.setRenderLayer(ModBlocks.DREADFUL_DIRT.getBlock(), RenderType.cutout());
-		ItemBlockRenderTypes.setRenderLayer(ModBlocks.DELIGHTFUL_DIRT.getBlock(), RenderType.cutout());
+		//ItemBlockRenderTypes.setRenderLayer(ModBlocks.SPIKES.getBlock(), RenderType.cutout());
+		//ItemBlockRenderTypes.setRenderLayer(ModBlocks.ABSORPTION_HOPPER.getBlock(), RenderType.cutout());
+		//ItemBlockRenderTypes.setRenderLayer(ModBlocks.TINTED_GLASS.getBlock(), RenderType.translucent());
+		//ItemBlockRenderTypes.setRenderLayer(ModBlocks.JUMBO_TANK.getBlock(), RenderType.cutout());
+		//ItemBlockRenderTypes.setRenderLayer(ModBlocks.DREADFUL_DIRT.getBlock(), RenderType.cutout());
+		//ItemBlockRenderTypes.setRenderLayer(ModBlocks.DELIGHTFUL_DIRT.getBlock(), RenderType.cutout());
 		ItemBlockRenderTypes.setRenderLayer(ModBlocks.XPSOLIDIFIER.getBlock(), RenderType.cutout());
-		ItemBlockRenderTypes.setRenderLayer(ModBlocks.SOLID_XP_BLOCK.getBlock(), RenderType.translucent());
-		ItemBlockRenderTypes.setRenderLayer(ModBlocks.FLUID_XP_FLOWING.get(), RenderType.translucent());
-		ItemBlockRenderTypes.setRenderLayer(ModBlocks.FLUID_XP.get(), RenderType.translucent());
-		ItemBlockRenderTypes.setRenderLayer(ModBlocks.ENTITY_SPAWNER.getBlock(), RenderType.cutout());
+		//ItemBlockRenderTypes.setRenderLayer(ModBlocks.SOLID_XP_BLOCK.getBlock(), RenderType.translucent());
+		//ItemBlockRenderTypes.setRenderLayer(ModBlocks.FLUID_XP_FLOWING.get(), RenderType.translucent());
+		//ItemBlockRenderTypes.setRenderLayer(ModBlocks.FLUID_XP.get(), RenderType.translucent());
+		//ItemBlockRenderTypes.setRenderLayer(ModBlocks.ENTITY_SPAWNER.getBlock(), RenderType.cutout());
 
 		ModColourManager.registerColourHandlers();
 	}
@@ -195,19 +195,19 @@ public static final Logger LOGGER = LogManager.getLogger(Reference.MOD_ID);
 	}
 
 	private void playerConnected(final PlayerEvent.PlayerLoggedInEvent event) {
-		if (event.getPlayer() instanceof ServerPlayer) {
-			sendPersistentData((ServerPlayer) event.getPlayer());
+		if (event.getEntity() instanceof ServerPlayer) {
+			sendPersistentData((ServerPlayer) event.getEntity());
 		}
 	}
 
 	private void changedDimension(final PlayerEvent.PlayerChangedDimensionEvent event) {
-		if (event.getPlayer() instanceof ServerPlayer) {
-			sendPersistentData((ServerPlayer) event.getPlayer());
+		if (event.getEntity() instanceof ServerPlayer) {
+			sendPersistentData((ServerPlayer) event.getEntity());
 		}
 	}
 	private void playerRespawn(final PlayerEvent.PlayerRespawnEvent event) {
-		if (event.getPlayer() instanceof ServerPlayer) {
-			sendPersistentData((ServerPlayer) event.getPlayer());
+		if (event.getEntity() instanceof ServerPlayer) {
+			sendPersistentData((ServerPlayer) event.getEntity());
 		}
 	}
 
@@ -221,15 +221,15 @@ public static final Logger LOGGER = LogManager.getLogger(Reference.MOD_ID);
 	private void cloneEvent(PlayerEvent.Clone event) {
 		CompoundTag nbt = event.getOriginal().getPersistentData();
 		if (nbt.contains("MGU_WitherMuffle") || nbt.contains("MGU_DragonMuffle")) {
-			CompoundTag newNBT = event.getPlayer().getPersistentData();
+			CompoundTag newNBT = event.getEntity().getPersistentData();
 			newNBT.putBoolean("MGU_WitherMuffle", nbt.getBoolean("MGU_WitherMuffle"));
 			newNBT.putBoolean("MGU_DragonMuffle", nbt.getBoolean("MGU_DragonMuffle"));
 		}
 	}
 
-	private void worldUnload(final WorldEvent.Unload event) {
-		if (event.getWorld() instanceof ServerLevel) {
-			MGUFakePlayer.unload(event.getWorld());
+	private void worldUnload(final LevelEvent.Unload event) {
+		if (event.getLevel() instanceof ServerLevel) {
+			MGUFakePlayer.unload(event.getLevel());
 		}
 	}
 }

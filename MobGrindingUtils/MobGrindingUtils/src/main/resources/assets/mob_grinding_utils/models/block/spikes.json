@@ -1,5 +1,6 @@
 {
     "parent": "block/cube",
+    "render_type": "cutout",
     "textures": {
         "0": "block/iron_block",
         "particle": "block/iron_block"

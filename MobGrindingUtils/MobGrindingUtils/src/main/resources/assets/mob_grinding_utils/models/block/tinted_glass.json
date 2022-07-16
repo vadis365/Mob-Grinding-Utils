@@ -1,4 +1,5 @@
 {
+  "render_type": "translucent",
   "parent": "block/cube_all",
   "textures": {
     "all": "mob_grinding_utils:blocks/tinted_glass_island"

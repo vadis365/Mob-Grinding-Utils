@@ -1,4 +1,5 @@
 {
+    "render_type": "cutout",
     "textures": {
         "0": "mob_grinding_utils:blocks/absorption_hopper",
         "particle": "mob_grinding_utils:blocks/absorption_hopper"

@@ -1,5 +1,6 @@
 {
     "parent": "block/cube",
+    "render_type": "solid",
     "textures": {
         "particle": "mob_grinding_utils:blocks/entity_conveyor_top",
         "down": "mob_grinding_utils:blocks/entity_conveyor_side",

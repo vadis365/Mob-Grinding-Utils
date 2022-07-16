@@ -1,5 +1,6 @@
 {
 	"parent": "block/cube",
+	"render_type": "translucent",
     "textures": {
 		"particle": "mob_grinding_utils:blocks/tinted_glass_island",
         "down": "mob_grinding_utils:blocks/tinted_glass_ne",
