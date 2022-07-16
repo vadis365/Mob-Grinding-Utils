@@ -36,6 +36,7 @@
   "block.mob_grinding_utils.solid_xp_block.jei.info": "A block of solidified experience, very bouncy, much fun.",
   "block.mob_grinding_utils.delightfull_dirt.jei.info": "Rapidly spawns creatures in the light, will snow-cap if exposed to the sky during the night.",
   "block.mob_grinding_utils.entity_spawner.jei.info": "Spawns Mobs in a 3x3x1 area.\nConsumes XP Jellies.\nCan be upgraded.",
+  "block.mob_grinding_utils.delightful_dirt.jei.info": "Will not function in ocean biomes and other biomes without passive mob spawns.",
 
   "_comment": "Items",
   "item.mob_grinding_utils.mob_swab": "Mob Swab",
@@ -64,7 +65,7 @@
   "item.mob_grinding_utils.spawner_upgrade_width": "Entity Spawner Width Upgrade",
   "item.mob_grinding_utils.spawner_upgrade_height": "Entity Spawner Height Upgrade",
   "item.mob_grinding_utils.monocle": "Monocle",
- 
+
   "_comment": "Creative Tab",
   "itemGroup.mob_grinding_utils": "Mob Grinding Utils",
 
@@ -127,6 +128,7 @@
   "block.mob_grinding_utils.delightful_dirt.tooltip_1": "Spawns More Creature Mobs.",
   "block.mob_grinding_utils.delightful_dirt.tooltip_2": "Will Snow-Cap at Night if Exposed to the Sky.",
   "block.mob_grinding_utils.delightful_dirt.tooltip_3": "Light level below 10 Stops Creature Mob Spawns.",
+  "block.mob_grinding_utils.delightful_dirt.tooltip_4": "Does not work in ocean biomes.",
 
   "block.mob_grinding_utils.xpsolidifier.tooltip_1": "Solidifies Fluid XP.",
   "block.mob_grinding_utils.xpsolidifier.tooltip_2": "Requires an XP Mould and Fluid XP in its Tank.",
@@ -176,7 +178,7 @@
   "tooltip.solid_xp2": "Total Stack XP value: ",
   "tooltip.solid_xp_mould": "Used in the XP Solidifier",
   "tooltip.solid_xp_mould_blank": "Crafts in to XP Moulds",
-   
+
   "tooltip.solidifier_upgrade": "Speed Modifier: +1.",
   "tooltip.spawner_upgrade_width": "Width Modifier: +1. Max of 5.",
   "tooltip.spawner_upgrade_height": "Height Modifier: +1. Max of 5.",
