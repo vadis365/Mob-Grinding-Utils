@@ -4,7 +4,6 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-
 import mob_grinding_utils.ModBlocks;
 import mob_grinding_utils.client.ModelLayers;
 import mob_grinding_utils.models.ModelTankBlock;
@@ -23,6 +22,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.minecraftforge.fluids.FluidStack;
 @OnlyIn(Dist.CLIENT)
 public class TileTankStackItemRenderer extends BlockEntityWithoutLevelRenderer {
@@ -64,10 +64,12 @@ public class TileTankStackItemRenderer extends BlockEntityWithoutLevelRenderer {
 		if(stack.getItem() == ModBlocks.JUMBO_TANK.getItem())
 			tankMax = 1024000F;
 		float height = (0.96875F / tankMax) * fluidLevel; // volumes hardcoded until config
+
+		var fluidExtensions = IClientFluidTypeExtensions.of(fluidStack.getFluid());
 		
-		TextureAtlasSprite fluidStillSprite = Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(fluidStack.getFluid().getAttributes().getStillTexture());
+		TextureAtlasSprite fluidStillSprite = Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(fluidExtensions.getStillTexture());
 		VertexConsumer buffer = bufferIn.getBuffer(RenderType.translucent());
-		int fluidColor = fluidStack.getFluid().getAttributes().getColor();
+		int fluidColor = fluidExtensions.getTintColor();
 		matrixStack.pushPose();
 		matrixStack.translate(0D, 0D, 0D);
 		float xMax, zMax, xMin, zMin, yMin = 0;

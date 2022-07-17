@@ -1,10 +1,7 @@
 package mob_grinding_utils.inventory.client;
 
-import javax.annotation.Nonnull;
-
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-
 import mob_grinding_utils.MobGrindingUtils;
 import mob_grinding_utils.inventory.server.ContainerMGUSpawner;
 import mob_grinding_utils.network.MessageEntitySpawner;
@@ -16,11 +13,11 @@ import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
+
+import javax.annotation.Nonnull;
 
 public class GuiMGUSpawner extends AbstractContainerScreen<ContainerMGUSpawner> {
 
@@ -51,17 +48,17 @@ public class GuiMGUSpawner extends AbstractContainerScreen<ContainerMGUSpawner> 
 				MobGrindingUtils.NETWORK_WRAPPER.sendToServer(new MessageEntitySpawner(player, ((GuiMGUButton)button).id, tile.getBlockPos()));
 		};
 
-		addRenderableWidget(new GuiMGUButton(xOffSet + 101, yOffSet + 113, GuiMGUButton.Size.LARGE, 0, TextComponent.EMPTY, (button) -> {
+		addRenderableWidget(new GuiMGUButton(xOffSet + 101, yOffSet + 113, GuiMGUButton.Size.LARGE, 0, Component.empty(), (button) -> {
 			MobGrindingUtils.NETWORK_WRAPPER.sendToServer(new MessageEntitySpawner(player, 0, tile.getBlockPos()));
 			tile.showRenderBox = !tile.showRenderBox;
 		}));
 
-		addRenderableWidget(new GuiMGUButton(xOffSet + 101, yOffSet + 25, GuiMGUButton.Size.SMALL, 1, new TextComponent("-"), message));
-		addRenderableWidget(new GuiMGUButton(xOffSet + 153, yOffSet + 25, GuiMGUButton.Size.SMALL, 2, new TextComponent("+"), message));
-		addRenderableWidget(new GuiMGUButton(xOffSet + 101, yOffSet + 59, GuiMGUButton.Size.SMALL, 3, new TextComponent("-"), message));
-		addRenderableWidget(new GuiMGUButton(xOffSet + 153, yOffSet + 59, GuiMGUButton.Size.SMALL, 4, new TextComponent("+"), message));
-		addRenderableWidget(new GuiMGUButton(xOffSet + 101, yOffSet + 93, GuiMGUButton.Size.SMALL, 5, new TextComponent("-"), message));
-		addRenderableWidget(new GuiMGUButton(xOffSet + 153, yOffSet + 93, GuiMGUButton.Size.SMALL, 6, new TextComponent("+"), message));
+		addRenderableWidget(new GuiMGUButton(xOffSet + 101, yOffSet + 25, GuiMGUButton.Size.SMALL, 1, Component.literal("-"), message));
+		addRenderableWidget(new GuiMGUButton(xOffSet + 153, yOffSet + 25, GuiMGUButton.Size.SMALL, 2, Component.literal("+"), message));
+		addRenderableWidget(new GuiMGUButton(xOffSet + 101, yOffSet + 59, GuiMGUButton.Size.SMALL, 3, Component.literal("-"), message));
+		addRenderableWidget(new GuiMGUButton(xOffSet + 153, yOffSet + 59, GuiMGUButton.Size.SMALL, 4, Component.literal("+"), message));
+		addRenderableWidget(new GuiMGUButton(xOffSet + 101, yOffSet + 93, GuiMGUButton.Size.SMALL, 5, Component.literal("-"), message));
+		addRenderableWidget(new GuiMGUButton(xOffSet + 153, yOffSet + 93, GuiMGUButton.Size.SMALL, 6, Component.literal("+"), message));
 	}
 
 	@Override
@@ -73,12 +70,12 @@ public class GuiMGUSpawner extends AbstractContainerScreen<ContainerMGUSpawner> 
 
 	@Override
 	protected void renderLabels(@Nonnull PoseStack stack, int mouseX, int mouseY) {
-		fontRenderer.draw(stack, new TranslatableComponent("block.mob_grinding_utils.entity_spawner").getString(), 8, imageHeight - 220, 4210752);
+		fontRenderer.draw(stack, Component.translatable("block.mob_grinding_utils.entity_spawner").getString(), 8, imageHeight - 220, 4210752);
 
-		fontRenderer.draw(stack, new TranslatableComponent("block.mob_grinding_utils.absorption_hopper_d_u").getString(), 102, imageHeight - 212, 4210752);
+		fontRenderer.draw(stack, Component.translatable("block.mob_grinding_utils.absorption_hopper_d_u").getString(), 102, imageHeight - 212, 4210752);
 
-		fontRenderer.draw(stack, new TranslatableComponent("block.mob_grinding_utils.absorption_hopper_n_s").getString(), 102, imageHeight - 178, 4210752);
-		fontRenderer.draw(stack, new TranslatableComponent("block.mob_grinding_utils.absorption_hopper_w_e").getString(), 102, imageHeight - 144, 4210752);
+		fontRenderer.draw(stack, Component.translatable("block.mob_grinding_utils.absorption_hopper_n_s").getString(), 102, imageHeight - 178, 4210752);
+		fontRenderer.draw(stack, Component.translatable("block.mob_grinding_utils.absorption_hopper_w_e").getString(), 102, imageHeight - 144, 4210752);
 	
 		fontRenderer.drawShadow(stack, !tile.showRenderBox ? "Show Area" : "Hide Area", imageWidth - 41 - fontRenderer.width(!tile.showRenderBox ? "Show Area" : "Hide Area") / 2.0f, imageHeight - 109, 14737632);
 

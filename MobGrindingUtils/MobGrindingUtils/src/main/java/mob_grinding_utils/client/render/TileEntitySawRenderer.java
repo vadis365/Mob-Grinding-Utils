@@ -3,7 +3,6 @@ package mob_grinding_utils.client.render;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Vector3f;
-
 import mob_grinding_utils.ModBlocks;
 import mob_grinding_utils.blocks.BlockSaw;
 import mob_grinding_utils.client.ModelLayers;
@@ -21,6 +20,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
+import javax.annotation.Nonnull;
+
 @OnlyIn(Dist.CLIENT)
 public class TileEntitySawRenderer implements BlockEntityRenderer<TileEntitySaw> {
 
@@ -35,7 +36,7 @@ public class TileEntitySawRenderer implements BlockEntityRenderer<TileEntitySaw>
 	}
 
 	@Override
-	public void render(TileEntitySaw tile, float partialTicks, PoseStack matrixStack, MultiBufferSource buffer, int combinedLight, int combinedOverlay) {
+	public void render(@Nonnull TileEntitySaw tile, float partialTicks, @Nonnull PoseStack matrixStack, @Nonnull MultiBufferSource buffer, int combinedLight, int combinedOverlay) {
 		if(tile == null || !tile.hasLevel())
 			return;
 
@@ -53,24 +54,12 @@ public class TileEntitySawRenderer implements BlockEntityRenderer<TileEntitySaw>
 		matrixStack.scale(-1, -1, 1);
 
 		switch (facing) {
-		case UP:
-			matrixStack.mulPose(Vector3f.YP.rotationDegrees(0F));
-			break;
-		case DOWN:
-			matrixStack.mulPose(Vector3f.XP.rotationDegrees(180F));
-			break;
-		case NORTH:
-			matrixStack.mulPose(Vector3f.XP.rotationDegrees(90F));
-			break;
-		case SOUTH:
-			matrixStack.mulPose(Vector3f.XP.rotationDegrees(-90F));
-			break;
-		case WEST:
-			matrixStack.mulPose(Vector3f.ZP.rotationDegrees(90F));
-			break;
-		case EAST:
-			matrixStack.mulPose(Vector3f.ZP.rotationDegrees(-90F));
-			break;
+			case UP -> matrixStack.mulPose(Vector3f.YP.rotationDegrees(0F));
+			case DOWN -> matrixStack.mulPose(Vector3f.XP.rotationDegrees(180F));
+			case NORTH -> matrixStack.mulPose(Vector3f.XP.rotationDegrees(90F));
+			case SOUTH -> matrixStack.mulPose(Vector3f.XP.rotationDegrees(-90F));
+			case WEST -> matrixStack.mulPose(Vector3f.ZP.rotationDegrees(90F));
+			case EAST -> matrixStack.mulPose(Vector3f.ZP.rotationDegrees(-90F));
 		}
 		matrixStack.translate(0F, -1F, 0F);
 		saw_base.renderToBuffer(matrixStack, ivertexbuilder, combinedLight, OverlayTexture.NO_OVERLAY, 1F, 1F, 1F, 1.0F);

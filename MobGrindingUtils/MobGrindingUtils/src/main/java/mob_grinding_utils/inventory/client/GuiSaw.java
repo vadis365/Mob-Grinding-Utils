@@ -1,19 +1,17 @@
 package mob_grinding_utils.inventory.client;
 
-import javax.annotation.Nonnull;
-
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-
 import mob_grinding_utils.inventory.server.ContainerSaw;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
+
+import javax.annotation.Nonnull;
 
 public class GuiSaw extends AbstractContainerScreen<ContainerSaw> {
 
@@ -34,7 +32,7 @@ public class GuiSaw extends AbstractContainerScreen<ContainerSaw> {
 
 	@Override
 	protected void renderLabels(@Nonnull PoseStack matrixStack, int x, int y) {
-		String title = new TranslatableComponent("block.mob_grinding_utils.saw").getString();
+		String title = Component.translatable("block.mob_grinding_utils.saw").getString();
 		fontRenderer.draw(matrixStack, title, imageWidth / 2.0f - fontRenderer.width(title) / 2.0f, imageHeight - 218, 4210752);
 	}
 

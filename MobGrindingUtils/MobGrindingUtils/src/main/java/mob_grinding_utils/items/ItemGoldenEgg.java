@@ -1,29 +1,25 @@
 package mob_grinding_utils.items;
 
-import java.util.List;
-
-import javax.annotation.Nullable;
-
 import mob_grinding_utils.ModBlocks;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.ChatFormatting;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.UseOnContext;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.core.BlockPos;
-import net.minecraft.network.chat.Component;
-import net.minecraft.ChatFormatting;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-import net.minecraft.world.item.Item.Properties;
+import javax.annotation.Nullable;
+import java.util.List;
 
 public class ItemGoldenEgg extends Item {
 
@@ -34,8 +30,8 @@ public class ItemGoldenEgg extends Item {
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void appendHoverText(ItemStack stack, @Nullable Level world, List<Component> list, TooltipFlag flag) {
-		list.add(new TranslatableComponent("tooltip.golden_egg_1").withStyle(ChatFormatting.YELLOW));
-		list.add(new TranslatableComponent("tooltip.golden_egg_2").withStyle(ChatFormatting.YELLOW));
+		list.add(Component.translatable("tooltip.golden_egg_1").withStyle(ChatFormatting.YELLOW));
+		list.add(Component.translatable("tooltip.golden_egg_2").withStyle(ChatFormatting.YELLOW));
 	}
 
 	@Override

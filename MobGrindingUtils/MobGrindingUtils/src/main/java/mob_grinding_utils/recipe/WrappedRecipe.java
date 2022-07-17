@@ -2,9 +2,11 @@ package mob_grinding_utils.recipe;
 
 import com.google.gson.JsonObject;
 import net.minecraft.data.recipes.FinishedRecipe;
-import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraftforge.registries.ForgeRegistries;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.function.Consumer;
 
@@ -30,14 +32,15 @@ public class WrappedRecipe implements FinishedRecipe {
         inner.serializeRecipeData(json);
     }
 
+    @Nonnull
     @Override
     public JsonObject serializeRecipe() {
         JsonObject jsonObject = new JsonObject();
 
         if (serializerOverride != null)
-            jsonObject.addProperty("type", serializerOverride.getRegistryName().toString());
+            jsonObject.addProperty("type", ForgeRegistries.RECIPE_SERIALIZERS.getKey(serializerOverride).toString());
         else
-            jsonObject.addProperty("type", inner.getType().getRegistryName().toString());
+            jsonObject.addProperty("type", ForgeRegistries.RECIPE_SERIALIZERS.getKey(inner.getType()).toString());
         serializeRecipeData(jsonObject);
         return jsonObject;
     }

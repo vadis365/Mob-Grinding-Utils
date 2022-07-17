@@ -1,7 +1,5 @@
 package mob_grinding_utils.tile;
 
-import java.util.List;
-
 import io.netty.buffer.Unpooled;
 import mob_grinding_utils.ModBlocks;
 import mob_grinding_utils.ModItems;
@@ -15,7 +13,6 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.ContainerHelper;
@@ -32,6 +29,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
+
+import java.util.List;
 
 public class TileEntitySaw extends TileEntityInventoryHelper implements MenuProvider {
 
@@ -222,6 +221,6 @@ public class TileEntitySaw extends TileEntityInventoryHelper implements MenuProv
 
 	@Override
 	public Component getDisplayName() {
-		return new TextComponent("Mob Masher"); //TODO localise
+		return Component.literal("Mob Masher"); //TODO localise
 	}
 }

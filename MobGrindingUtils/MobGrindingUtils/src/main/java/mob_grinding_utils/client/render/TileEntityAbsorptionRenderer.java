@@ -2,7 +2,6 @@ package mob_grinding_utils.client.render;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Vector3f;
-
 import mob_grinding_utils.ModBlocks;
 import mob_grinding_utils.client.ModelLayers;
 import mob_grinding_utils.models.ModelAHConnect;
@@ -20,6 +19,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
+import javax.annotation.Nonnull;
+
 @OnlyIn(Dist.CLIENT)
 public class TileEntityAbsorptionRenderer implements BlockEntityRenderer<TileEntityAbsorptionHopper> {
 	private static final ResourceLocation ITEM_TEXTURE = new ResourceLocation("mob_grinding_utils:textures/tiles/absorption_hopper_connects_items.png");
@@ -31,7 +32,7 @@ public class TileEntityAbsorptionRenderer implements BlockEntityRenderer<TileEnt
 	}
 
 	@Override
-	public void render(TileEntityAbsorptionHopper tile, float partialTicks, PoseStack matrixStack, MultiBufferSource buffer, int combinedLight, int combinedOverlay) {
+	public void render(TileEntityAbsorptionHopper tile, float partialTicks, @Nonnull PoseStack matrixStack, @Nonnull MultiBufferSource buffer, int combinedLight, int combinedOverlay) {
 		if (tile == null || !tile.hasLevel())
 			return;
 

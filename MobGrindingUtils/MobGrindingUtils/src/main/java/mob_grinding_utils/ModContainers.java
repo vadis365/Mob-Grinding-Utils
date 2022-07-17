@@ -1,10 +1,6 @@
 package mob_grinding_utils;
 
-import mob_grinding_utils.inventory.server.ContainerAbsorptionHopper;
-import mob_grinding_utils.inventory.server.ContainerFan;
-import mob_grinding_utils.inventory.server.ContainerMGUSpawner;
-import mob_grinding_utils.inventory.server.ContainerSaw;
-import mob_grinding_utils.inventory.server.ContainerXPSolidifier;
+import mob_grinding_utils.inventory.server.*;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraftforge.common.extensions.IForgeMenuType;
 import net.minecraftforge.eventbus.api.IEventBus;

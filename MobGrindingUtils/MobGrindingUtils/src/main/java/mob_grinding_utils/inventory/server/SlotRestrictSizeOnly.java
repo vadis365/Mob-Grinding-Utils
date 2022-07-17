@@ -1,10 +1,10 @@
 package mob_grinding_utils.inventory.server;
 
-import javax.annotation.Nonnull;
-
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
+
+import javax.annotation.Nonnull;
 
 public class SlotRestrictSizeOnly extends SlotItemHandler {
     private final int stackLimit;

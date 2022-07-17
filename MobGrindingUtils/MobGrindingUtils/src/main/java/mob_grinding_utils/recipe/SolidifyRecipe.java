@@ -3,20 +3,21 @@ package mob_grinding_utils.recipe;
 import com.google.gson.JsonObject;
 import mob_grinding_utils.MobGrindingUtils;
 import net.minecraft.data.recipes.FinishedRecipe;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.GsonHelper;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
-import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.util.GsonHelper;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.registries.ForgeRegistryEntry;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Objects;
 
 public class SolidifyRecipe implements Recipe<Container> {
     private final Ingredient mould;
@@ -106,7 +107,7 @@ public class SolidifyRecipe implements Recipe<Container> {
             json.add("ingredient", this.mould.toJson());
             json.addProperty("fluidAmount", this.fluidAmount);
             JsonObject resultJson = new JsonObject();
-            resultJson.addProperty("item", this.result.getItem().getRegistryName().toString());
+            resultJson.addProperty("item", Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(this.result.getItem())).toString());
             json.add("result", resultJson);
         }
 
@@ -135,7 +136,7 @@ public class SolidifyRecipe implements Recipe<Container> {
         }
     }
 
-    public static class Serializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<SolidifyRecipe> {
+    public static class Serializer implements RecipeSerializer<SolidifyRecipe> {
 
         @Nonnull
         @Override

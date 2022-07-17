@@ -1,8 +1,5 @@
 package mob_grinding_utils.tile;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import io.netty.buffer.Unpooled;
 import mob_grinding_utils.MobGrindingUtils;
 import mob_grinding_utils.ModBlocks;
@@ -15,7 +12,6 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.StringRepresentable;
@@ -33,7 +29,6 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
@@ -43,8 +38,11 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.ItemStackHandler;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 public class TileEntityXPSolidifier extends BlockEntity implements MenuProvider {
-	public FluidTank tank = new FluidTank(FluidAttributes.BUCKET_VOLUME *  16);
+	public FluidTank tank = new FluidTank(1000 *  16);
 	private final LazyOptional<IFluidHandler> tank_holder = LazyOptional.of(() -> tank);
 	private int prevFluidLevel = 0;
 	public int moulding_progress = 0;
@@ -395,7 +393,7 @@ public class TileEntityXPSolidifier extends BlockEntity implements MenuProvider 
 	@Nonnull
 	@Override
 	public Component getDisplayName() {
-		return new TextComponent("block.mob_grinding_utils.xpsolidifier");
+		return Component.literal("block.mob_grinding_utils.xpsolidifier");
 	}
 
 	@Nullable

@@ -1,11 +1,11 @@
 package mob_grinding_utils.inventory.server;
 
-import javax.annotation.Nonnull;
-
 import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemHandlerHelper;
+
+import javax.annotation.Nonnull;
 
 public class InventoryWrapperAH implements IItemHandlerModifiable {
 	private final Container inv;

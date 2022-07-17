@@ -1,7 +1,5 @@
 package mob_grinding_utils.client.jei;
 
-import javax.annotation.Nonnull;
-
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.constants.VanillaTypes;
@@ -16,10 +14,12 @@ import mob_grinding_utils.Reference;
 import mob_grinding_utils.recipe.SolidifyRecipe;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.language.I18n;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+
+import javax.annotation.Nonnull;
 
 @JeiPlugin
 public class JEIPlugin implements IModPlugin {
@@ -37,7 +37,7 @@ public class JEIPlugin implements IModPlugin {
         ModItems.ITEMS.getEntries().forEach((item) -> {
             String key = item.get().getDescriptionId()+".jei.info";
             if (I18n.exists(key)) {
-                registration.addIngredientInfo(new ItemStack(item.get()), VanillaTypes.ITEM, new TextComponent(I18n.get(key)));
+                registration.addIngredientInfo(new ItemStack(item.get()), VanillaTypes.ITEM_STACK, Component.translatable(key));
             }
         });
         Level level = Minecraft.getInstance().level;

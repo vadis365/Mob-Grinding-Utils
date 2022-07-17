@@ -4,13 +4,12 @@ package mob_grinding_utils.recipe;
 import com.google.gson.JsonObject;
 import mob_grinding_utils.MobGrindingUtils;
 import mob_grinding_utils.ModItems;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.ShapelessRecipe;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.registries.ForgeRegistryEntry;
 import org.apache.logging.log4j.LogManager;
 
 import javax.annotation.Nonnull;
@@ -53,7 +52,7 @@ public class ChickenFeedRecipe extends ShapelessRecipe {
         return MobGrindingUtils.CHICKEN_FEED.get();
     }
 
-    public static class Serializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<ChickenFeedRecipe> {
+    public static class Serializer implements RecipeSerializer<ChickenFeedRecipe> {
         @Nullable
         @Override
         public ChickenFeedRecipe fromNetwork(@Nonnull ResourceLocation recipeId, @Nonnull FriendlyByteBuf buffer) {

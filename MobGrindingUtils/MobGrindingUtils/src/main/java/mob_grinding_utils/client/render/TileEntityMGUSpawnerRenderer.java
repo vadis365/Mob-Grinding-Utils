@@ -4,7 +4,6 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Vector3f;
-
 import mob_grinding_utils.tile.TileEntityMGUSpawner;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.LevelRenderer;
@@ -16,6 +15,8 @@ import net.minecraft.world.entity.Entity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
+import javax.annotation.Nonnull;
+
 @OnlyIn(Dist.CLIENT)
 public class TileEntityMGUSpawnerRenderer implements BlockEntityRenderer<TileEntityMGUSpawner> {
 
@@ -23,8 +24,7 @@ public class TileEntityMGUSpawnerRenderer implements BlockEntityRenderer<TileEnt
 	}
 
 	@Override
-	public void render(TileEntityMGUSpawner tile, float partialTicks, PoseStack matrixStack, MultiBufferSource buffer,
-			int combinedLight, int combinedOverlay) {
+	public void render(@Nonnull TileEntityMGUSpawner tile, float partialTicks, @Nonnull PoseStack matrixStack, @Nonnull MultiBufferSource buffer, int combinedLight, int combinedOverlay) {
 		if (tile == null || !tile.hasLevel())
 			return;
 

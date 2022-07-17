@@ -4,7 +4,6 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-
 import mob_grinding_utils.client.ModelLayers;
 import mob_grinding_utils.models.ModelTankBlock;
 import mob_grinding_utils.tile.TileEntityJumboTank;
@@ -21,7 +20,10 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.minecraftforge.fluids.FluidStack;
+
+import javax.annotation.Nonnull;
 
 @OnlyIn(Dist.CLIENT)
 public class TileEntityTankRenderer implements BlockEntityRenderer<TileEntityTank> {
@@ -35,7 +37,7 @@ public class TileEntityTankRenderer implements BlockEntityRenderer<TileEntityTan
 	}
 
 	@Override
-	public void render(TileEntityTank tile, float partialTicks, PoseStack matrixStack, MultiBufferSource bufferIn, int combinedLight, int combinedOverlay) {
+	public void render(@Nonnull TileEntityTank tile, float partialTicks, PoseStack matrixStack, MultiBufferSource bufferIn, int combinedLight, int combinedOverlay) {
 		matrixStack.pushPose();
 		matrixStack.translate(0.5D, 1.5D, 0.5D);
 		matrixStack.scale(-0.9999F, -0.9999F, 0.9999F); //don't want to cull, but also don't want z-fighty nonsense
@@ -53,10 +55,12 @@ public class TileEntityTankRenderer implements BlockEntityRenderer<TileEntityTan
 			return;
 		FluidStack fluidStack = new FluidStack(tile.tank.getFluid(), 100);
 		float height = (0.96875F / tile.tank.getCapacity()) * tile.tank.getFluidAmount();
+
+		var fluidExtensions = IClientFluidTypeExtensions.of(fluidStack.getFluid());
 		
-		TextureAtlasSprite fluidStillSprite = Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(fluidStack.getFluid().getAttributes().getStillTexture());
+		TextureAtlasSprite fluidStillSprite = Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(fluidExtensions.getStillTexture());
 		VertexConsumer buffer = bufferIn.getBuffer(RenderType.translucent());
-		int fluidColor = fluidStack.getFluid().getAttributes().getColor();
+		int fluidColor = fluidExtensions.getTintColor();
 		matrixStack.pushPose();
 		matrixStack.translate(0D, 0D, 0D);
 		float xMax, zMax, xMin, zMin, yMin = 0;

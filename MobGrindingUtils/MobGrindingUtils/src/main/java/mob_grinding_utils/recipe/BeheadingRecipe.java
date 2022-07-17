@@ -15,9 +15,11 @@ import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Objects;
 import java.util.Optional;
 
 public class BeheadingRecipe implements Recipe<Container>{
@@ -83,14 +85,14 @@ public class BeheadingRecipe implements Recipe<Container>{
 
         public DataRecipe(ResourceLocation id, EntityType<?> entityType, ItemStack result) {
             this.id = id;
-            this.entityRes = entityType.getRegistryName();
-            this.resultRes = result.getItem().getRegistryName();
+            this.entityRes = ForgeRegistries.ENTITY_TYPES.getKey(entityType);
+            this.resultRes = ForgeRegistries.ITEMS.getKey(result.getItem());
         }
 
         public DataRecipe(ResourceLocation id, ResourceLocation entityRes, ItemStack result) {
             this.id = id;
             this.entityRes = entityRes;
-            this.resultRes = result.getItem().getRegistryName();
+            this.resultRes = ForgeRegistries.ITEMS.getKey(result.getItem());
         }
 
         public DataRecipe(ResourceLocation id, ResourceLocation entityRes, ResourceLocation result) {
@@ -101,7 +103,7 @@ public class BeheadingRecipe implements Recipe<Container>{
 
         public DataRecipe(ResourceLocation id, EntityType<?> entityType, ResourceLocation result) {
             this.id = id;
-            this.entityRes = entityType.getRegistryName();
+            this.entityRes = ForgeRegistries.ENTITY_TYPES.getKey(entityType);
             this.resultRes = result;
         }
 
@@ -167,7 +169,7 @@ public class BeheadingRecipe implements Recipe<Container>{
 
         @Override
         public void toNetwork(FriendlyByteBuf buf, BeheadingRecipe recipe) {
-            buf.writeUtf(recipe.entityType.getRegistryName().toString());
+            buf.writeUtf(Objects.requireNonNull(ForgeRegistries.ENTITY_TYPES.getKey(recipe.entityType)).toString());
             buf.writeItem(recipe.result);
         }
     }

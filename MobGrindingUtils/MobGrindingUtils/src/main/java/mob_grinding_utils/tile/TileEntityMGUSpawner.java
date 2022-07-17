@@ -1,12 +1,5 @@
 package mob_grinding_utils.tile;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import io.netty.buffer.Unpooled;
 import mob_grinding_utils.MobGrindingUtils;
 import mob_grinding_utils.ModBlocks;
@@ -18,16 +11,10 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.util.Mth;
 import net.minecraft.world.MenuProvider;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntitySelector;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.MobSpawnType;
-import net.minecraft.world.entity.SpawnPlacements;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -46,6 +33,12 @@ import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class TileEntityMGUSpawner extends BlockEntity implements MenuProvider {
 
@@ -324,7 +317,7 @@ public class TileEntityMGUSpawner extends BlockEntity implements MenuProvider {
 
 	@Override
 	public Component getDisplayName() {
-		return new TextComponent("block.mob_grinding_utils.entity_spawner");
+		return Component.translatable("block.mob_grinding_utils.entity_spawner");
 	}
 
 	@Nullable

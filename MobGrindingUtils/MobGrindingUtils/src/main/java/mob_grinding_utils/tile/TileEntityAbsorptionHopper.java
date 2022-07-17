@@ -1,11 +1,5 @@
 package mob_grinding_utils.tile;
 
-import java.util.List;
-import java.util.function.Function;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import io.netty.buffer.Unpooled;
 import mob_grinding_utils.ModBlocks;
 import mob_grinding_utils.ModItems;
@@ -17,7 +11,6 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.Container;
@@ -40,7 +33,6 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
@@ -50,9 +42,13 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.List;
+
 
 public class TileEntityAbsorptionHopper extends TileEntityInventoryHelper implements MenuProvider {
-	public FluidTank tank = new FluidTank(FluidAttributes.BUCKET_VOLUME *  16);
+	public FluidTank tank = new FluidTank(1000 *  16);
 	private final LazyOptional<IFluidHandler> tank_holder = LazyOptional.of(() -> tank);
 	private final IItemHandler itemHandler;
 	private LazyOptional<IItemHandler> itemholder = LazyOptional.empty();
@@ -493,7 +489,7 @@ public class TileEntityAbsorptionHopper extends TileEntityInventoryHelper implem
 	@Nonnull
 	@Override
 	public Component getDisplayName() {
-		return new TextComponent("Absorption Hopper"); //TODO localise
+		return Component.literal("Absorption Hopper"); //TODO localise
 	}
 
 }

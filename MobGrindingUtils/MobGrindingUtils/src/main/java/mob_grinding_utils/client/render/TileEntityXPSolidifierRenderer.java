@@ -5,7 +5,6 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Vector3f;
-
 import mob_grinding_utils.ModBlocks;
 import mob_grinding_utils.blocks.BlockXPSolidifier;
 import mob_grinding_utils.client.ModelLayers;
@@ -27,6 +26,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.minecraftforge.fluids.FluidStack;
 
 @OnlyIn(Dist.CLIENT)
@@ -163,9 +163,11 @@ public class TileEntityXPSolidifierRenderer implements BlockEntityRenderer<TileE
 		FluidStack fluidStack = new FluidStack(tile.tank.getFluid(), 100);
 		float height = (0.46875F / tile.tank.getCapacity()) * tile.tank.getFluidAmount();
 
-		TextureAtlasSprite fluidStillSprite = Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(fluidStack.getFluid().getAttributes().getStillTexture());
+		var fluidExtensions = IClientFluidTypeExtensions.of(fluidStack.getFluid());
+
+		TextureAtlasSprite fluidStillSprite = Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(fluidExtensions.getStillTexture());
 		VertexConsumer buffer = bufferIn.getBuffer(RenderType.translucent());
-		int fluidColor = fluidStack.getFluid().getAttributes().getColor();
+		int fluidColor = fluidExtensions.getTintColor();
 		matrixStack.pushPose();
 		matrixStack.translate(0D, 0D, 0D);
 		float xMax, zMax, xMin, zMin, yMin = 0;

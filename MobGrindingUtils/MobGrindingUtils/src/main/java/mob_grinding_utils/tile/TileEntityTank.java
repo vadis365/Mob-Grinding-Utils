@@ -1,8 +1,5 @@
 package mob_grinding_utils.tile;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import mob_grinding_utils.ModBlocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -15,13 +12,15 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 public class TileEntityTank extends BlockEntity {
-	public FluidTank tank = new FluidTank(FluidAttributes.BUCKET_VOLUME *  32);
+	public FluidTank tank = new FluidTank(1000 *  32);
 	private final LazyOptional<IFluidHandler> tank_holder = LazyOptional.of(() -> tank);
 	public int prevTankAmount;
 

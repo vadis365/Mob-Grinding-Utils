@@ -3,7 +3,6 @@ package mob_grinding_utils.client.render;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Vector3f;
-
 import mob_grinding_utils.client.ModelLayers;
 import mob_grinding_utils.models.ModelSawBase;
 import mob_grinding_utils.models.ModelSawBlade;
@@ -19,6 +18,9 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+
+import javax.annotation.Nonnull;
+
 @OnlyIn(Dist.CLIENT)
 public class TileSawStackItemRenderer extends BlockEntityWithoutLevelRenderer {
 
@@ -35,7 +37,7 @@ public class TileSawStackItemRenderer extends BlockEntityWithoutLevelRenderer {
 	}
 
 	@Override
-	public void renderByItem(ItemStack itemStackIn, TransformType transformType, PoseStack matrixStack, MultiBufferSource buffer, int combinedLight, int combinedOverlayIn) {
+	public void renderByItem(@Nonnull ItemStack itemStackIn, @Nonnull TransformType transformType, PoseStack matrixStack, MultiBufferSource buffer, int combinedLight, int combinedOverlayIn) {
 		VertexConsumer ivertexbuilder = buffer.getBuffer(RenderType.entitySolid(BASE_TEXTURE));
 		matrixStack.pushPose();
 		matrixStack.translate(0.5D, 1.5D, 0.5D);

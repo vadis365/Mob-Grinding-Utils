@@ -2,7 +2,6 @@ package mob_grinding_utils.client.render;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-
 import mob_grinding_utils.tile.TileEntityFan;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -12,6 +11,8 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
+import javax.annotation.Nonnull;
+
 @OnlyIn(Dist.CLIENT)
 public class TileEntityFanRenderer implements BlockEntityRenderer<TileEntityFan> {
 
@@ -19,7 +20,7 @@ public class TileEntityFanRenderer implements BlockEntityRenderer<TileEntityFan>
 	}
 
 	@Override
-	public void render(TileEntityFan tile, float partialTicks, PoseStack matrixStack, MultiBufferSource buffer, int combinedLight, int combinedOverlay) {
+	public void render(@Nonnull TileEntityFan tile, float partialTicks, @Nonnull PoseStack matrixStack, @Nonnull MultiBufferSource buffer, int combinedLight, int combinedOverlay) {
 		if (tile == null || !tile.hasLevel())
 			return;
 

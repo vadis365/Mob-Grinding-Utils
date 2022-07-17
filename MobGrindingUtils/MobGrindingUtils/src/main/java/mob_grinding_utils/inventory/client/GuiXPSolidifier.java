@@ -1,18 +1,7 @@
 package mob_grinding_utils.inventory.client;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
-import javax.annotation.Nonnull;
-
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.BufferBuilder;
-import com.mojang.blaze3d.vertex.DefaultVertexFormat;
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.Tesselator;
-import com.mojang.blaze3d.vertex.VertexFormat;
-
+import com.mojang.blaze3d.vertex.*;
 import mob_grinding_utils.MobGrindingUtils;
 import mob_grinding_utils.inventory.server.ContainerXPSolidifier;
 import mob_grinding_utils.network.MessageSolidifier;
@@ -23,10 +12,15 @@ import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.InventoryMenu;
+import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
+
+import javax.annotation.Nonnull;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 public class GuiXPSolidifier extends AbstractContainerScreen<ContainerXPSolidifier> {
     private static final ResourceLocation GUI_TEX = new ResourceLocation("mob_grinding_utils:textures/gui/solidifier_gui.png");
@@ -48,10 +42,10 @@ public class GuiXPSolidifier extends AbstractContainerScreen<ContainerXPSolidifi
         int xOffSet = (width - imageWidth) / 2;
         int yOffSet = (height - imageHeight) / 2;
 
-        addRenderableWidget(new GuiMGUButton(xOffSet + 62, yOffSet + 72, GuiMGUButton.Size.SOLIDIFIER, 0, new TextComponent("Push") ,
+        addRenderableWidget(new GuiMGUButton(xOffSet + 62, yOffSet + 72, GuiMGUButton.Size.SOLIDIFIER, 0, Component.literal("Push") ,
             (button) -> MobGrindingUtils.NETWORK_WRAPPER.sendToServer(new MessageSolidifier(0, tile.getBlockPos()))));
 
-        addRenderableWidget(new GuiMGUButton(xOffSet + 148, yOffSet + 8, GuiMGUButton.Size.SOLIDIFIER_ON, 0, new TextComponent("") ,
+        addRenderableWidget(new GuiMGUButton(xOffSet + 148, yOffSet + 8, GuiMGUButton.Size.SOLIDIFIER_ON, 0, Component.literal("") ,
             (button) -> MobGrindingUtils.NETWORK_WRAPPER.sendToServer(new MessageSolidifier(1, tile.getBlockPos()))));
     }
 
@@ -76,8 +70,10 @@ public class GuiXPSolidifier extends AbstractContainerScreen<ContainerXPSolidifi
 
         int fluid = tile.getScaledFluid(70);
 
+        var fluidExtensions = IClientFluidTypeExtensions.of(tile.tank.getFluid().getFluid());
+
         if (fluid >= 1) {
-            TextureAtlasSprite sprite = Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(tile.tank.getFluid().getFluid().getAttributes().getStillTexture());
+            TextureAtlasSprite sprite = Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(fluidExtensions.getStillTexture());
             Tesselator tessellator = Tesselator.getInstance();
             BufferBuilder buffer = tessellator.getBuilder();
             RenderSystem.setShader(GameRenderer::getPositionTexShader);
@@ -113,7 +109,7 @@ public class GuiXPSolidifier extends AbstractContainerScreen<ContainerXPSolidifi
         if (x > xOffSet + 8 && x < xOffSet + 20 && y > yOffSet + 20 && y < yOffSet + 88) {
             List<Component> tooltip = new ArrayList<>();
             tooltip.add(tile.tank.getFluid().getDisplayName());
-            tooltip.add(new TextComponent(tile.tank.getFluidAmount() + "/" + tile.tank.getCapacity()));
+            tooltip.add(Component.literal(tile.tank.getFluidAmount() + "/" + tile.tank.getCapacity()));
             this.renderTooltip(matrixStack, tooltip, Optional.empty(), x, y, this.font);
         }
     }

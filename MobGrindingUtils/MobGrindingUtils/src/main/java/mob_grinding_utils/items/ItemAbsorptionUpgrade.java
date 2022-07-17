@@ -1,20 +1,17 @@
 package mob_grinding_utils.items;
 
-import java.util.List;
-
-import javax.annotation.Nullable;
-
-import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.network.chat.Component;
-import net.minecraft.ChatFormatting;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-import net.minecraft.world.item.Item.Properties;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.List;
 
 public class ItemAbsorptionUpgrade extends Item {
 
@@ -24,7 +21,7 @@ public class ItemAbsorptionUpgrade extends Item {
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void appendHoverText(ItemStack stack, @Nullable Level world, List<Component> list, TooltipFlag flag) {
-		list.add(new TranslatableComponent("tooltip.hopperupgrade").withStyle(ChatFormatting.YELLOW));
+	public void appendHoverText(@Nonnull ItemStack stack, @Nullable Level world, List<Component> list, @Nonnull TooltipFlag flag) {
+		list.add(Component.translatable("tooltip.hopperupgrade").withStyle(ChatFormatting.YELLOW));
 	}
 }

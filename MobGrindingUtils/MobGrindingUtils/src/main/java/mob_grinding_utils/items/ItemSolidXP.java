@@ -1,26 +1,22 @@
 package mob_grinding_utils.items;
 
-import java.util.List;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import mob_grinding_utils.tile.TileEntitySinkTank;
-import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.sounds.SoundSource;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.network.chat.Component;
-import net.minecraft.ChatFormatting;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-import net.minecraft.world.item.Item.Properties;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.List;
 
 public class ItemSolidXP extends Item {
 	public int xpValue;
@@ -33,9 +29,9 @@ public class ItemSolidXP extends Item {
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void appendHoverText(ItemStack stack, @Nullable Level world, List<Component> list, @Nonnull TooltipFlag flag) {
-		list.add(new TranslatableComponent("tooltip.solid_xp").append(Integer.toString(xpValue)).withStyle(ChatFormatting.YELLOW));
+		list.add(Component.translatable("tooltip.solid_xp").append(Integer.toString(xpValue)).withStyle(ChatFormatting.YELLOW));
 		if (stack.getCount() > 1)
-			list.add(new TranslatableComponent("tooltip.solid_xp2").append(Integer.toString(xpValue * stack.getCount())).withStyle(ChatFormatting.YELLOW));
+			list.add(Component.translatable("tooltip.solid_xp2").append(Integer.toString(xpValue * stack.getCount())).withStyle(ChatFormatting.YELLOW));
 	}
 
 	@Nonnull

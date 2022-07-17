@@ -1,6 +1,6 @@
 package mob_grinding_utils.client.jei;
 
-import mezz.jei.api.constants.VanillaTypes;
+import mezz.jei.api.forge.ForgeTypes;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.drawable.IDrawableStatic;
@@ -14,8 +14,6 @@ import mob_grinding_utils.Reference;
 import mob_grinding_utils.recipe.SolidifyRecipe;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.fluids.FluidStack;
 
@@ -40,7 +38,7 @@ public class SolidifierCategory implements IRecipeCategory<SolidifyRecipe> {
     @Nonnull
     @Override
     public Component getTitle() {
-        return new TextComponent("Solidifier Recipe");
+        return Component.literal("Solidifier Recipe");
     }
 
     @Nonnull
@@ -54,32 +52,18 @@ public class SolidifierCategory implements IRecipeCategory<SolidifyRecipe> {
         return null;
     }
 
-    @Nonnull
-    @SuppressWarnings("removal")
-    @Override
-    public ResourceLocation getUid() {
-        return ID;
-    }
-
-    @Nonnull
-    @SuppressWarnings("removal")
-    @Override
-    public Class<? extends SolidifyRecipe> getRecipeClass() {
-        return SolidifyRecipe.class;
-    }
-
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, SolidifyRecipe recipe, @Nonnull IFocusGroup focuses) {
         builder.addSlot(RecipeIngredientRole.CATALYST, 5,5)
             .addIngredients(recipe.getMould());
 
         builder.addSlot(RecipeIngredientRole.INPUT, 37, 5)
-            .addIngredients(VanillaTypes.FLUID, List.of(new FluidStack(ModBlocks.FLUID_XP.get(), recipe.getFluidAmount())))
+            .addIngredients(ForgeTypes.FLUID_STACK, List.of(new FluidStack(ModBlocks.FLUID_XP.get(), recipe.getFluidAmount())))
             .addTooltipCallback((recipeSlot, tooltip) -> {
-                var ingredient = recipeSlot.getDisplayedIngredient(VanillaTypes.FLUID);
+                var ingredient = recipeSlot.getDisplayedIngredient(ForgeTypes.FLUID_STACK);
                 ingredient.ifPresent(fluidStack -> {
-                    tooltip.add(new TextComponent(fluidStack.getAmount() + " mB"));
-                    tooltip.add(new TranslatableComponent("mob_grinding_utils.jei.any_experience").withStyle(ChatFormatting.GRAY));
+                    tooltip.add(Component.literal(fluidStack.getAmount() + " mB"));
+                    tooltip.add(Component.translatable("mob_grinding_utils.jei.any_experience").withStyle(ChatFormatting.GRAY));
                 });
             });
         builder.addSlot(RecipeIngredientRole.OUTPUT, 70, 5)

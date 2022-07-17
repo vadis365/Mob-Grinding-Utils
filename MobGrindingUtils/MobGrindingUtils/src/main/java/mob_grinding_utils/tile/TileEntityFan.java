@@ -1,9 +1,5 @@
 package mob_grinding_utils.tile;
 
-import java.util.List;
-
-import javax.annotation.Nonnull;
-
 import io.netty.buffer.Unpooled;
 import mob_grinding_utils.ModBlocks;
 import mob_grinding_utils.ModItems;
@@ -16,7 +12,6 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.util.Mth;
 import net.minecraft.world.ContainerHelper;
@@ -36,6 +31,9 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+
+import javax.annotation.Nonnull;
+import java.util.List;
 
 public class TileEntityFan extends TileEntityInventoryHelper implements MenuProvider {
 
@@ -284,6 +282,6 @@ public class TileEntityFan extends TileEntityInventoryHelper implements MenuProv
 	@Nonnull
 	@Override
 	public Component getDisplayName() {
-		return new TranslatableComponent("block.mob_grinding_utils.fan");
+		return Component.literal("block.mob_grinding_utils.fan");
 	}
 }

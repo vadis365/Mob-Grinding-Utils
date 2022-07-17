@@ -21,43 +21,43 @@ public class MGUNetwork {
         channel.messageBuilder(MessageAbsorptionHopper.class, 0, NetworkDirection.PLAY_TO_SERVER)
             .decoder(MessageAbsorptionHopper::decode)
             .encoder(MessageAbsorptionHopper::encode)
-            .consumer(MessageAbsorptionHopper::handle)
+            .consumerNetworkThread(MessageAbsorptionHopper::handle)
             .add();
 
         channel.messageBuilder(MessageChickenSync.class, 1, NetworkDirection.PLAY_TO_CLIENT)
             .decoder(MessageChickenSync::decode)
             .encoder(MessageChickenSync::encode)
-            .consumer(MessageChickenSync::handle)
+            .consumerNetworkThread(MessageChickenSync::handle)
             .add();
 
         channel.messageBuilder(MessageTapParticle.class, 2, NetworkDirection.PLAY_TO_CLIENT)
             .decoder(MessageTapParticle::decode)
             .encoder(MessageTapParticle::encode)
-            .consumer(MessageTapParticle::handle)
+            .consumerNetworkThread(MessageTapParticle::handle)
             .add();
 
         channel.messageBuilder(MessageFan.class, 3, NetworkDirection.PLAY_TO_SERVER)
             .decoder(MessageFan::decode)
             .encoder(MessageFan::encode)
-            .consumer(MessageFan::handle)
+            .consumerNetworkThread(MessageFan::handle)
             .add();
 
         channel.messageBuilder(MessageFlagSync.class, 4, NetworkDirection.PLAY_TO_CLIENT)
             .decoder(MessageFlagSync::decode)
             .encoder(MessageFlagSync::encode)
-            .consumer(MessageFlagSync::handle)
+            .consumerNetworkThread(MessageFlagSync::handle)
             .add();
 
         channel.messageBuilder(MessageSolidifier.class, 5, NetworkDirection.PLAY_TO_SERVER)
             .decoder(MessageSolidifier::decode)
             .encoder(MessageSolidifier::encode)
-            .consumer(MessageSolidifier::handle)
+            .consumerNetworkThread(MessageSolidifier::handle)
             .add();
 
         channel.messageBuilder(MessageEntitySpawner.class, 6, NetworkDirection.PLAY_TO_SERVER)
             .decoder(MessageEntitySpawner::decode)
             .encoder(MessageEntitySpawner::encode)
-            .consumer(MessageEntitySpawner::handle)
+            .consumerNetworkThread(MessageEntitySpawner::handle)
             .add();
 
         return channel;

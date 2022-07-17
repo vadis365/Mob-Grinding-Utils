@@ -31,6 +31,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Stream;
 
 public class FluidIngredient extends Ingredient {
@@ -106,7 +107,7 @@ public class FluidIngredient extends Ingredient {
             json.addProperty("tag", fluidTag.getKey().location().toString());
         }
         else {
-            json.addProperty("fluid", getMatchingFluids().get(0).getRegistryName().toString());
+            json.addProperty("fluid", Objects.requireNonNull(ForgeRegistries.FLUIDS.getKey(getMatchingFluids().get(0))).toString());
         }
 
         return json;
@@ -173,7 +174,7 @@ public class FluidIngredient extends Ingredient {
         public void write(FriendlyByteBuf buffer, FluidIngredient ingredient) {
             buffer.writeBoolean(ingredient.advanced);
             buffer.writeVarInt(ingredient.getMatchingFluids().size());
-            ingredient.getMatchingFluids().forEach((fluid -> buffer.writeUtf(fluid.getRegistryName().toString())));
+            ingredient.getMatchingFluids().forEach((fluid -> buffer.writeUtf(Objects.requireNonNull(ForgeRegistries.FLUIDS.getKey(fluid)).toString())));
         }
     }
 
