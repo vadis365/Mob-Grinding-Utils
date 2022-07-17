@@ -9,6 +9,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
@@ -48,7 +49,7 @@ public class BlockDreadfulDirt extends Block {
 	@Override
 	public void onPlace(BlockState state, Level level, BlockPos pos, BlockState oldState, boolean isMoving) {
 		if (shouldCatchFire(level, pos) || shouldSpawnMob(level, pos))
-			level.scheduleTick(pos, this, Mth.nextInt(RANDOM, 20,60));
+			level.scheduleTick(pos, this, Mth.nextInt(level.getRandom(), 20,60));
 		//List<SpawnerData> spawns = level.getBiome(pos).value().getMobSettings().getMobs(MobCategory.MONSTER).unwrap();
 		//spawns.forEach(spawn -> MobGrindingUtils.LOGGER.info(spawn.type.getRegistryName().toString()));
 	}
@@ -57,19 +58,19 @@ public class BlockDreadfulDirt extends Block {
 	@Override
 	public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, LevelAccessor level, BlockPos pos, BlockPos facingPos) {
 		if (shouldCatchFire((Level) level, pos) || shouldSpawnMob((Level) level, pos))
-			level.scheduleTick(pos, this, Mth.nextInt(RANDOM, 20, 60));
+			level.scheduleTick(pos, this, Mth.nextInt(level.getRandom(), 20, 60));
 		return super.updateShape(stateIn, facing, facingState, level, pos, facingPos);
 	}
 
 	@Override
 	public void neighborChanged(BlockState state, Level level, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving) {
 		if (shouldCatchFire((Level) level, pos) || shouldSpawnMob((Level) level, pos))
-			level.scheduleTick(pos, this, Mth.nextInt(RANDOM, 20, 60));
+			level.scheduleTick(pos, this, Mth.nextInt(level.getRandom(), 20, 60));
 	}
 
 	@Deprecated
 	@Override
-	public void tick(BlockState state, ServerLevel level, BlockPos pos, Random rand) {
+	public void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource rand) {
 		if (shouldCatchFire(level, pos)) {
 			BlockPos posUp = pos.above();
 			BlockState blockstate = BaseFireBlock.getState(level, posUp);
@@ -89,7 +90,7 @@ public class BlockDreadfulDirt extends Block {
 		List<SpawnerData> spawns = level.getBiome(pos).value().getMobSettings().getMobs(MobCategory.MONSTER).unwrap();
 		if (!spawns.isEmpty()) {
 			int indexSize = spawns.size();
-			EntityType<?> type = spawns.get(RANDOM.nextInt(indexSize)).type;
+			EntityType<?> type = spawns.get(level.getRandom().nextInt(indexSize)).type;
 			if (type.is(MobGrindingUtils.NOSPAWN))
 				return;
 			if (type == null || !NaturalSpawner.isSpawnPositionOk(SpawnPlacements.getPlacementType(type), level, pos.above(), type))
@@ -130,7 +131,7 @@ public class BlockDreadfulDirt extends Block {
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void animateTick(BlockState stateIn, Level level, BlockPos pos, Random rand) {
+	public void animateTick(BlockState stateIn, Level level, BlockPos pos, RandomSource rand) {
 		for (int i = 0; i < 4; ++i) {
 			double d0 = (double) ((float) pos.getX() + rand.nextFloat());
 			double d1 = (double) ((float) pos.getY() + rand.nextFloat());

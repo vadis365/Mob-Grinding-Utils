@@ -1,16 +1,18 @@
 package mob_grinding_utils.blocks;
 
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.item.context.BlockPlaceContext;
-import net.minecraft.world.level.block.state.properties.BooleanProperty;
-import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraft.core.Direction;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+
+import javax.annotation.Nonnull;
 
 public class BlockTintedGlass extends Block {
 
@@ -27,17 +29,17 @@ public class BlockTintedGlass extends Block {
 	}
 
 	@OnlyIn(Dist.CLIENT)
-	public boolean skipRendering(BlockState state, BlockState adjacentBlockState, Direction side) {
+	public boolean skipRendering(@Nonnull BlockState state, BlockState adjacentBlockState, @Nonnull Direction side) {
 		return adjacentBlockState.is(this) || super.skipRendering(state, adjacentBlockState, side);
 	}
 
 	@Override
-	public boolean propagatesSkylightDown(BlockState state, BlockGetter reader, BlockPos pos) {
+	public boolean propagatesSkylightDown(@Nonnull BlockState state, @Nonnull BlockGetter reader, @Nonnull BlockPos pos) {
 		return false;
 	}
 	
     @Override
-    public int getLightBlock (BlockState state, BlockGetter world, BlockPos pos) {
+    public int getLightBlock (@Nonnull BlockState state, BlockGetter world, @Nonnull BlockPos pos) {
         return world.getMaxLightLevel();
     }
 
@@ -54,8 +56,9 @@ public class BlockTintedGlass extends Block {
 			.setValue(CONNECTED_WEST, this.isSideConnectable(world, pos, Direction.WEST));
 	}
 	
+	@Nonnull
 	@Override
-	public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, LevelAccessor world, BlockPos pos, BlockPos facingPos) {
+	public BlockState updateShape(BlockState stateIn, @Nonnull Direction facing, @Nonnull BlockState facingState, @Nonnull LevelAccessor world, @Nonnull BlockPos pos, @Nonnull BlockPos facingPos) {
 		return stateIn.setValue(CONNECTED_DOWN, this.isSideConnectable(world, pos, Direction.DOWN))
 			.setValue(CONNECTED_EAST, this.isSideConnectable(world, pos, Direction.EAST))
 			.setValue(CONNECTED_NORTH, this.isSideConnectable(world, pos, Direction.NORTH))

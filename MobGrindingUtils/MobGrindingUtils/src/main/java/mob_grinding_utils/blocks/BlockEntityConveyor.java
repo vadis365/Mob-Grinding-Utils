@@ -18,6 +18,8 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 
+import javax.annotation.Nonnull;
+
 public class BlockEntityConveyor extends Block {
 	public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
 	public static final VoxelShape CONVEYOR_AABB = Block.box(0D, 0D, 0D, 16D, 14D, 16D);
@@ -26,13 +28,15 @@ public class BlockEntityConveyor extends Block {
 		super(properties);
 	}
 
+	@Nonnull
 	@Override
-	public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
+	public VoxelShape getShape(@Nonnull BlockState state, @Nonnull BlockGetter worldIn, @Nonnull BlockPos pos, @Nonnull CollisionContext context) {
 		return CONVEYOR_AABB;
 	}
 	
+	@Nonnull
 	@Override
-	public VoxelShape getInteractionShape(BlockState state, BlockGetter worldIn, BlockPos pos) {
+	public VoxelShape getInteractionShape(@Nonnull BlockState state, @Nonnull BlockGetter worldIn, @Nonnull BlockPos pos) {
 		return Shapes.block();
 	}
 
@@ -48,7 +52,7 @@ public class BlockEntityConveyor extends Block {
 	}
 
 	@Override
-	public void entityInside(BlockState state, Level world, BlockPos pos, Entity entity) {
+	public void entityInside(@Nonnull BlockState state, @Nonnull Level world, @Nonnull BlockPos pos, Entity entity) {
 		if (entity.isShiftKeyDown())
 			return;
 

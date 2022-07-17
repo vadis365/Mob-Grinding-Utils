@@ -1,10 +1,10 @@
 package mob_grinding_utils.blocks;
 
-import java.util.Random;
 import java.util.function.Supplier;
 
 import mob_grinding_utils.MobGrindingUtils;
 import mob_grinding_utils.entity.EntityXPOrbFalling;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.LiquidBlock;
 import net.minecraft.world.entity.Entity;
@@ -15,7 +15,7 @@ import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
+import javax.annotation.Nonnull;
 
 public class MGUFlowingFluidBlock extends LiquidBlock {
 	public MGUFlowingFluidBlock(FlowingFluid fluidIn, Properties builder) {
@@ -27,10 +27,9 @@ public class MGUFlowingFluidBlock extends LiquidBlock {
 	}
 
 	@Override
-	public void entityInside(BlockState state, Level world, BlockPos pos, Entity entity) {
+	public void entityInside(@Nonnull BlockState state, Level world, @Nonnull BlockPos pos, @Nonnull Entity entity) {
 		if (!world.isClientSide)
-			if (entity instanceof Player) {
-				Player player = (Player) entity;
+			if (entity instanceof Player player) {
 				if (world.getGameTime() % 20 == 0 && player.getFoodData().getFoodLevel() > 0) {
 					player.getFoodData().setFoodLevel(player.getFoodData().getFoodLevel() - 1);
 					EntityXPOrbFalling orb = new EntityXPOrbFalling(world, pos.getX() + 0.5D, pos.getY() - 0.125D, pos.getZ() + 0.5D, 1);
@@ -41,7 +40,7 @@ public class MGUFlowingFluidBlock extends LiquidBlock {
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void animateTick(BlockState stateIn, Level world, BlockPos pos, Random rand) {
+	public void animateTick(@Nonnull BlockState stateIn, Level world, BlockPos pos, @Nonnull RandomSource rand) {
 		if (world.isEmptyBlock(pos.above()) && world.getGameTime()%5 == 0) {
 			float xx = (float) pos.getX() + 0.5F;
 			float zz = (float) pos.getZ() + 0.5F;

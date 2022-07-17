@@ -1,14 +1,12 @@
 package mob_grinding_utils.blocks;
 
-import java.util.Locale;
-import java.util.Random;
-
 import mob_grinding_utils.ModBlocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.RandomSource;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -31,6 +29,8 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
+import javax.annotation.Nonnull;
+import java.util.Locale;
 
 
 public class BlockEnderInhibitorOn extends Block {
@@ -54,14 +54,15 @@ public class BlockEnderInhibitorOn extends Block {
 		registerDefaultState(this.stateDefinition.any().setValue(TYPE, EnumGemDirection.DOWN_NORTH));
 	}
 
+	@Nonnull
 	@Override
-	public RenderShape getRenderShape(BlockState state) {
+	public RenderShape getRenderShape(@Nonnull BlockState state) {
 		return RenderShape.MODEL;
 	}
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void animateTick(BlockState stateIn, Level world, BlockPos pos, Random rand) {
+	public void animateTick(@Nonnull BlockState stateIn, @Nonnull Level world, @Nonnull BlockPos pos, @Nonnull RandomSource rand) {
 		for (int i = 0; i < 4; ++i) {
 			double d0 = (double) ((float) pos.getX() + rand.nextFloat());
 			double d1 = (double) ((float) pos.getY() + rand.nextFloat());
@@ -83,70 +84,46 @@ public class BlockEnderInhibitorOn extends Block {
 	}
 
 
+	@Nonnull
 	@Override
-	public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
-		switch (state.getValue(TYPE)) {
-		case SOUTH:
-			return SOUTH_AABB;
-		case NORTH:
-			return NORTH_AABB;
-		case EAST:
-			return EAST_AABB;
-		case WEST:
-			return WEST_AABB;
-		case UP_NORTH:
-			return UP_NORTH_AABB;
-		case UP_EAST:
-			return UP_EAST_AABB;
-		case UP_SOUTH:
-			return UP_SOUTH_AABB;
-		case UP_WEST:
-			return UP_WEST_AABB;
-		case DOWN_NORTH:
-			return DOWN_NORTH_AABB;
-		case DOWN_EAST:
-			return DOWN_EAST_AABB;
-		case DOWN_SOUTH:
-			return DOWN_SOUTH_AABB;
-		case DOWN_WEST:
-			return DOWN_WEST_AABB;
-		}
-		return DOWN_NORTH_AABB;
+	public VoxelShape getShape(BlockState state, @Nonnull BlockGetter worldIn, @Nonnull BlockPos pos, @Nonnull CollisionContext context) {
+		return switch (state.getValue(TYPE)) {
+			case SOUTH -> SOUTH_AABB;
+			case NORTH -> NORTH_AABB;
+			case EAST -> EAST_AABB;
+			case WEST -> WEST_AABB;
+			case UP_NORTH -> UP_NORTH_AABB;
+			case UP_EAST -> UP_EAST_AABB;
+			case UP_SOUTH -> UP_SOUTH_AABB;
+			case UP_WEST -> UP_WEST_AABB;
+			case DOWN_NORTH -> DOWN_NORTH_AABB;
+			case DOWN_EAST -> DOWN_EAST_AABB;
+			case DOWN_SOUTH -> DOWN_SOUTH_AABB;
+			case DOWN_WEST -> DOWN_WEST_AABB;
+		};
+	}
+
+	@Nonnull
+	@Override
+	public VoxelShape getInteractionShape(BlockState state, @Nonnull BlockGetter worldIn, @Nonnull BlockPos pos) {
+		return switch (state.getValue(TYPE)) {
+			case SOUTH -> SOUTH_AABB;
+			case NORTH -> NORTH_AABB;
+			case EAST -> EAST_AABB;
+			case WEST -> WEST_AABB;
+			case UP_NORTH -> UP_NORTH_AABB;
+			case UP_EAST -> UP_EAST_AABB;
+			case UP_SOUTH -> UP_SOUTH_AABB;
+			case UP_WEST -> UP_WEST_AABB;
+			case DOWN_NORTH -> DOWN_NORTH_AABB;
+			case DOWN_EAST -> DOWN_EAST_AABB;
+			case DOWN_SOUTH -> DOWN_SOUTH_AABB;
+			case DOWN_WEST -> DOWN_WEST_AABB;
+		};
 	}
 
 	@Override
-	public VoxelShape getInteractionShape(BlockState state, BlockGetter worldIn, BlockPos pos) {
-		switch (state.getValue(TYPE)) {
-		case SOUTH:
-			return SOUTH_AABB;
-		case NORTH:
-			return NORTH_AABB;
-		case EAST:
-			return EAST_AABB;
-		case WEST:
-			return WEST_AABB;
-		case UP_NORTH:
-			return UP_NORTH_AABB;
-		case UP_EAST:
-			return UP_EAST_AABB;
-		case UP_SOUTH:
-			return UP_SOUTH_AABB;
-		case UP_WEST:
-			return UP_WEST_AABB;
-		case DOWN_NORTH:
-			return DOWN_NORTH_AABB;
-		case DOWN_EAST:
-			return DOWN_EAST_AABB;
-		case DOWN_SOUTH:
-			return DOWN_SOUTH_AABB;
-		case DOWN_WEST:
-			return DOWN_WEST_AABB;
-		}
-		return DOWN_NORTH_AABB;
-	}
-
-	@Override
-	public void neighborChanged(BlockState state, Level world, BlockPos pos, Block block, BlockPos fromPos, boolean isMoving) {
+	public void neighborChanged(BlockState state, @Nonnull Level world, @Nonnull BlockPos pos, @Nonnull Block block, @Nonnull BlockPos fromPos, boolean isMoving) {
 		EnumGemDirection newFacing = state.getValue(TYPE);
 		boolean flag = false;
 
@@ -178,8 +155,9 @@ public class BlockEnderInhibitorOn extends Block {
 		super.neighborChanged(state, world, pos, block, fromPos, isMoving);
 	}
 
+	@Nonnull
 	@Override
-	public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+	public InteractionResult use(@Nonnull BlockState state, Level world, @Nonnull BlockPos pos, @Nonnull Player player, @Nonnull InteractionHand hand, @Nonnull BlockHitResult hit) {
 		if (!world.isClientSide) {
 			BlockState activeState = ModBlocks.ENDER_INHIBITOR_OFF.getBlock().defaultBlockState().setValue(BlockEnderInhibitorOff.TYPE, state.getValue(TYPE));
 			world.setBlock(pos, activeState, 3);
@@ -189,7 +167,7 @@ public class BlockEnderInhibitorOn extends Block {
 	}
 
 	@Override
-	public boolean canSurvive(BlockState state, LevelReader world, BlockPos pos) {
+	public boolean canSurvive(@Nonnull BlockState state, @Nonnull LevelReader world, @Nonnull BlockPos pos) {
 		for (Direction enumfacing : Direction.values())
 			if (canSupportCenter(world, pos.relative(enumfacing.getOpposite()), enumfacing))
 				return true;
@@ -203,52 +181,31 @@ public class BlockEnderInhibitorOn extends Block {
 		Direction direction = context.getPlayer().getDirection();
 		EnumGemDirection newFacing = EnumGemDirection.DOWN_NORTH;
 		if (facing == Direction.UP) {
-			switch (direction) {
-				case SOUTH:
-					newFacing = EnumGemDirection.DOWN_SOUTH;
-					break;
-				case EAST:
-					newFacing = EnumGemDirection.DOWN_WEST;
-					break;
-				case NORTH:
-					newFacing = EnumGemDirection.DOWN_NORTH;
-					break;
-				case WEST:
-					newFacing = EnumGemDirection.DOWN_EAST;
-					break;
-			}
+			newFacing = switch (direction) {
+				case SOUTH -> EnumGemDirection.DOWN_SOUTH;
+				case EAST -> EnumGemDirection.DOWN_WEST;
+				case NORTH -> EnumGemDirection.DOWN_NORTH;
+				case WEST -> EnumGemDirection.DOWN_EAST;
+				default -> newFacing;
+			};
 		}
 		else if (facing == Direction.DOWN) {
-			switch (direction) {
-			case SOUTH:
-				newFacing = EnumGemDirection.UP_SOUTH;
-				break;
-			case EAST:
-				newFacing = EnumGemDirection.UP_WEST;
-				break;
-			case NORTH:
-				newFacing = EnumGemDirection.UP_NORTH;
-				break;
-			case WEST:
-				newFacing = EnumGemDirection.UP_EAST;
-				break;
-			}
+			newFacing = switch (direction) {
+				case SOUTH -> EnumGemDirection.UP_SOUTH;
+				case EAST -> EnumGemDirection.UP_WEST;
+				case NORTH -> EnumGemDirection.UP_NORTH;
+				case WEST -> EnumGemDirection.UP_EAST;
+				default -> newFacing;
+			};
 		}
 		else {
-			switch (facing) {
-			case SOUTH:
-				newFacing = EnumGemDirection.NORTH;
-				break;
-			case EAST:
-				newFacing = EnumGemDirection.WEST;
-				break;
-			case NORTH:
-				newFacing = EnumGemDirection.SOUTH;
-				break;
-			case WEST:
-				newFacing = EnumGemDirection.EAST;
-				break;
-			}
+			newFacing = switch (facing) {
+				case SOUTH -> EnumGemDirection.NORTH;
+				case EAST -> EnumGemDirection.WEST;
+				case NORTH -> EnumGemDirection.SOUTH;
+				case WEST -> EnumGemDirection.EAST;
+				default -> newFacing;
+			};
 		}
 
 		return defaultBlockState().setValue(TYPE, newFacing);
@@ -273,6 +230,7 @@ public class BlockEnderInhibitorOn extends Block {
 		WEST,
 		EAST;
 
+		@Nonnull
 		@Override
 		public String getSerializedName() {
 			return name().toLowerCase(Locale.ENGLISH);

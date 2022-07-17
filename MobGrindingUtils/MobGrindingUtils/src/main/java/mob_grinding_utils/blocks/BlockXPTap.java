@@ -1,37 +1,33 @@
 package mob_grinding_utils.blocks;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import mob_grinding_utils.ModBlocks;
 import mob_grinding_utils.ModSounds;
 import mob_grinding_utils.tile.TileEntityXPTap;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.RenderShape;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.DirectionalBlock;
-import net.minecraft.world.level.block.EntityBlock;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.context.BlockPlaceContext;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.core.Direction;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.sounds.SoundSource;
-import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.LevelReader;
-import net.minecraft.world.level.Level;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class BlockXPTap extends DirectionalBlock implements EntityBlock {
 
@@ -46,38 +42,31 @@ public class BlockXPTap extends DirectionalBlock implements EntityBlock {
 		registerDefaultState(this.stateDefinition.any().setValue(POWERED, false));
 	}
 
+	@Nonnull
 	@Override
-	public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
-		switch (state.getValue(FACING)) {
-			default:
-			case EAST:
-				return XP_TAP_EAST_AABB;
-			case WEST:
-				return XP_TAP_WEST_AABB;
-			case SOUTH:
-				return XP_TAP_SOUTH_AABB;
-			case NORTH:
-				return  XP_TAP_NORTH_AABB;
-		}
+	public VoxelShape getShape(BlockState state, @Nonnull BlockGetter worldIn, @Nonnull BlockPos pos, @Nonnull CollisionContext context) {
+		return switch (state.getValue(FACING)) {
+			case EAST -> XP_TAP_EAST_AABB;
+			case WEST -> XP_TAP_WEST_AABB;
+			case SOUTH -> XP_TAP_SOUTH_AABB;
+			default -> XP_TAP_NORTH_AABB;
+		};
 	}
 
+	@Nonnull
 	@Override
 	public VoxelShape getInteractionShape(BlockState state, @Nonnull BlockGetter worldIn, @Nonnull BlockPos pos) {
-		switch (state.getValue(FACING)) {
-			default:
-			case EAST:
-				return XP_TAP_EAST_AABB;
-			case WEST:
-				return XP_TAP_WEST_AABB;
-			case SOUTH:
-				return XP_TAP_SOUTH_AABB;
-			case NORTH:
-				return  XP_TAP_NORTH_AABB;
-		}
+		return switch (state.getValue(FACING)) {
+			case EAST -> XP_TAP_EAST_AABB;
+			case WEST -> XP_TAP_WEST_AABB;
+			case SOUTH -> XP_TAP_SOUTH_AABB;
+			default -> XP_TAP_NORTH_AABB;
+		};
 	}
 
+	@Nonnull
 	@Override
-	public RenderShape getRenderShape(BlockState state) {
+	public RenderShape getRenderShape(@Nonnull BlockState state) {
 		return RenderShape.MODEL;
 	}
 
@@ -87,8 +76,9 @@ public class BlockXPTap extends DirectionalBlock implements EntityBlock {
 		return this.defaultBlockState().setValue(FACING, direction).setValue(POWERED, false);
 	}
 	
+	@Nonnull
 	@Override
-	public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+	public InteractionResult use(@Nonnull BlockState state, Level world, @Nonnull BlockPos pos, @Nonnull Player player, @Nonnull InteractionHand hand, @Nonnull BlockHitResult hit) {
 		if (!world.isClientSide) {
 			boolean swap = state.getValue(POWERED);
 			world.setBlock(pos, state.setValue(POWERED, !swap), 3);
@@ -101,7 +91,7 @@ public class BlockXPTap extends DirectionalBlock implements EntityBlock {
 	}
 
 	@Override
-	public boolean canSurvive(BlockState state, LevelReader world, BlockPos pos) {
+	public boolean canSurvive(@Nonnull BlockState state, @Nonnull LevelReader world, @Nonnull BlockPos pos) {
 		for (Direction enumfacing : Direction.values()) {
 			if (canPlaceAt(world, pos.relative(enumfacing.getOpposite()), enumfacing))
 				return true;
@@ -119,7 +109,7 @@ public class BlockXPTap extends DirectionalBlock implements EntityBlock {
 	}
 
 	@Override
-	public void neighborChanged(BlockState state, Level world, BlockPos pos, Block block, BlockPos fromPos, boolean isMoving) {
+	public void neighborChanged(@Nonnull BlockState state, Level world, @Nonnull BlockPos pos, @Nonnull Block block, @Nonnull BlockPos fromPos, boolean isMoving) {
 		Direction facing = world.getBlockState(pos).getValue(FACING);
 		if (!canPlaceAt(world, pos.relative(facing.getOpposite()), facing)) {
 			popResource(world, pos, new ItemStack(ModBlocks.XP_TAP.getItem(), 1));
@@ -140,7 +130,7 @@ public class BlockXPTap extends DirectionalBlock implements EntityBlock {
 
 	@Nullable
 	@Override
-	public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level pLevel, BlockState pState, BlockEntityType<T> pBlockEntityType) {
+	public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level pLevel, @Nonnull BlockState pState, @Nonnull BlockEntityType<T> pBlockEntityType) {
 		return pLevel.isClientSide? null : TileEntityXPTap::serverTick;
 	}
 }

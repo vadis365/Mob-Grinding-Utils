@@ -12,6 +12,7 @@ import net.minecraft.core.Registry;
 import net.minecraft.data.worldgen.placement.VegetationPlacements;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
@@ -59,27 +60,27 @@ public class BlockDelightfulDirt extends Block {
 	@Override
 	public void onPlace(BlockState state, Level level, BlockPos pos, BlockState oldState, boolean isMoving) {
 		if (shouldSnowCap(level, pos) || shouldSpawnMob(level, pos))
-			level.scheduleTick(pos, this, Mth.nextInt(RANDOM, 20,60));
+			level.scheduleTick(pos, this, Mth.nextInt(level.random, 20,60));
 	}
 
 	@SuppressWarnings("deprecation")
 	@Override
 	public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, LevelAccessor level, BlockPos pos, BlockPos facingPos) {
 		if (shouldSnowCap((Level) level, pos) || shouldSpawnMob((Level) level, pos))
-			level.scheduleTick(pos, this, Mth.nextInt(RANDOM, 20, 60));
+			level.scheduleTick(pos, this, Mth.nextInt(level.getRandom(), 20, 60));
 		return super.updateShape(stateIn, facing, facingState, level, pos, facingPos);
 	}
 
 	@Override
 	public void neighborChanged(BlockState state, Level level, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving) {
 		if (shouldSnowCap((Level) level, pos) || shouldSpawnMob((Level) level, pos))
-			level.scheduleTick(pos, this, Mth.nextInt(RANDOM, 20, 60));
+			level.scheduleTick(pos, this, Mth.nextInt(level.random, 20, 60));
 	}
 
 	@SuppressWarnings("unchecked")
 	@Deprecated
 	@Override
-	public void tick(@Nonnull BlockState state, @Nonnull ServerLevel level, @Nonnull BlockPos pos, @Nonnull Random rand) {
+	public void tick(@Nonnull BlockState state, @Nonnull ServerLevel level, @Nonnull BlockPos pos, @Nonnull RandomSource rand) {
 		if (shouldSnowCap(level, pos)) {
 			BlockPos posUp = pos.above();
 			BlockState blockstate = Blocks.SNOW.defaultBlockState();
@@ -120,7 +121,7 @@ public class BlockDelightfulDirt extends Block {
 		List<SpawnerData> spawns = biome.getMobSettings().getMobs(MobCategory.CREATURE).unwrap();
 		if (!spawns.isEmpty()) {
 			int indexSize = spawns.size();
-			EntityType<?> type = spawns.get(RANDOM.nextInt(indexSize)).type;
+			EntityType<?> type = spawns.get(level.random.nextInt(indexSize)).type;
 			if (type.is(MobGrindingUtils.NOSPAWN))
 				return;
 			if (type == null || !NaturalSpawner.isSpawnPositionOk(SpawnPlacements.getPlacementType(type), level, pos.above(), type))
@@ -165,7 +166,7 @@ public class BlockDelightfulDirt extends Block {
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void animateTick(BlockState stateIn, Level level, BlockPos pos, Random rand) {
+	public void animateTick(BlockState stateIn, Level level, BlockPos pos, RandomSource rand) {
 		if(level.getGameTime()%3 == 0 && level.getBlockState(pos.above()).getMaterial() == Material.AIR) {
 			for (int i = 0; i < 4; ++i) {
 				double d0 = (double) ((float) pos.getX( ));

@@ -12,13 +12,15 @@ import net.minecraft.world.level.block.HalfTransparentBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 
+import javax.annotation.Nonnull;
+
 public class BlockSolidXP extends HalfTransparentBlock {
 	public BlockSolidXP(Properties properties) {
       super(properties);
    }
 
 	@Override
-	public void fallOn(Level level, BlockState state, BlockPos pos, Entity entity, float fallDistance) {
+	public void fallOn(@Nonnull Level level, @Nonnull BlockState state, @Nonnull BlockPos pos, Entity entity, float fallDistance) {
 		if (entity.isSuppressingBounce())
 			super.fallOn(level, state, pos, entity, fallDistance);
 		else {
@@ -28,7 +30,7 @@ public class BlockSolidXP extends HalfTransparentBlock {
 	}
 
 	@Override
-	public void updateEntityAfterFallOn(BlockGetter level, Entity entity) {
+	public void updateEntityAfterFallOn(@Nonnull BlockGetter level, Entity entity) {
 		if (entity.isSuppressingBounce())
 			super.updateEntityAfterFallOn(level, entity);
 		else 
@@ -46,7 +48,7 @@ public class BlockSolidXP extends HalfTransparentBlock {
 	}
 
 	@Override
-	public void stepOn(Level level, BlockPos pos, BlockState state, Entity entityIn) {
+	public void stepOn(@Nonnull Level level, @Nonnull BlockPos pos, @Nonnull BlockState state, Entity entityIn) {
 		double d0 = Math.abs(entityIn.getDeltaMovement().y);
 		if (d0 < 0.1D && !entityIn.isSteppingCarefully()) {
 			double d1 = 0.4D + d0 * 0.2D;

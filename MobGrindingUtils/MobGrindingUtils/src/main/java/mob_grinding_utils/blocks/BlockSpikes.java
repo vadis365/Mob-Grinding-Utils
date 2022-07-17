@@ -1,28 +1,29 @@
 package mob_grinding_utils.blocks;
 
-import java.lang.reflect.Method;
-
 import mob_grinding_utils.MobGrindingUtils;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.RenderShape;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.DirectionalBlock;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ExperienceOrb;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.context.BlockPlaceContext;
-import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraft.core.Direction;
-import net.minecraft.core.BlockPos;
-import net.minecraft.world.phys.shapes.CollisionContext;
-import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
-import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.DirectionalBlock;
+import net.minecraft.world.level.block.RenderShape;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.common.util.FakePlayerFactory;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
+
+import javax.annotation.Nonnull;
+import java.lang.reflect.Method;
 
 public class BlockSpikes extends DirectionalBlock {
 
@@ -32,18 +33,21 @@ public class BlockSpikes extends DirectionalBlock {
 		super(properties);
 	}
 	
+	@Nonnull
 	@Override
-	public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
+	public VoxelShape getShape(@Nonnull BlockState state, @Nonnull BlockGetter worldIn, @Nonnull BlockPos pos, @Nonnull CollisionContext context) {
 		return SPIKES_AABB;
 	}
 
+	@Nonnull
 	@Override
-	public VoxelShape getInteractionShape(BlockState state, BlockGetter worldIn, BlockPos pos) {
+	public VoxelShape getInteractionShape(@Nonnull BlockState state, @Nonnull BlockGetter worldIn, @Nonnull BlockPos pos) {
 		return Shapes.block();
 	}
 
+	@Nonnull
 	@Override
-	public RenderShape getRenderShape(BlockState state) {
+	public RenderShape getRenderShape(@Nonnull BlockState state) {
 		return RenderShape.MODEL;
 	}
 
@@ -59,7 +63,7 @@ public class BlockSpikes extends DirectionalBlock {
 	}
 
 	@Override
-	public void entityInside(BlockState state, Level world, BlockPos pos, Entity entity) {
+	public void entityInside(@Nonnull BlockState state, Level world, @Nonnull BlockPos pos, @Nonnull Entity entity) {
 		if (!world.isClientSide && entity instanceof LivingEntity)
 			entity.hurt(MobGrindingUtils.SPIKE_DAMAGE, 5);
 	}
@@ -67,7 +71,7 @@ public class BlockSpikes extends DirectionalBlock {
 	public static final Method xpPoints = getExperiencePoints();
 
 	public static void dropXP(LivingDropsEvent event) {
-		LivingEntity entity = event.getEntityLiving();
+		LivingEntity entity = event.getEntity();
 		Level world = entity.getCommandSenderWorld();
 		if (entity != null) {
 			if (!world.isClientSide && !event.isRecentlyHit() && event.getSource() == MobGrindingUtils.SPIKE_DAMAGE) {

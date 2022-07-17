@@ -3,6 +3,7 @@ package mob_grinding_utils.blocks;
 import java.util.Random;
 
 import mob_grinding_utils.ModBlocks;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.entity.player.Player;
@@ -16,6 +17,8 @@ import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
+import javax.annotation.Nonnull;
+
 public class BlockEnderInhibitorOff extends BlockEnderInhibitorOn {
 
 	public BlockEnderInhibitorOff(Block.Properties properties) {
@@ -25,11 +28,12 @@ public class BlockEnderInhibitorOff extends BlockEnderInhibitorOn {
 	
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void animateTick(BlockState stateIn, Level world, BlockPos pos, Random rand) {
+	public void animateTick(@Nonnull BlockState stateIn, @Nonnull Level world, @Nonnull BlockPos pos, @Nonnull RandomSource rand) {
 	}
 
+	@Nonnull
 	@Override
-	public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+	public InteractionResult use(@Nonnull BlockState state, Level world, @Nonnull BlockPos pos, @Nonnull Player player, @Nonnull InteractionHand hand, @Nonnull BlockHitResult hit) {
 		if (!world.isClientSide) {
 			BlockState activeState = ModBlocks.ENDER_INHIBITOR_ON.getBlock().defaultBlockState().setValue(BlockEnderInhibitorOn.TYPE, state.getValue(TYPE));
 			world.setBlock(pos, activeState, 3);

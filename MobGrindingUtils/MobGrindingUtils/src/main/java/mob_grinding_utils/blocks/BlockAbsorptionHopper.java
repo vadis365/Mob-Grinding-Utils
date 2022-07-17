@@ -61,17 +61,14 @@ public class BlockAbsorptionHopper extends BaseEntityBlock {
 
 	@Override
 	public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
-		if (world.isClientSide)
-			return InteractionResult.SUCCESS;
 		if (!world.isClientSide) {
 			BlockEntity tile = world.getBlockEntity(pos);
 
-			if (tile instanceof TileEntityAbsorptionHopper) {
-				TileEntityAbsorptionHopper vacuum = (TileEntityAbsorptionHopper) tile;
+			if (tile instanceof TileEntityAbsorptionHopper vacuum) {
 
 				if (!player.isShiftKeyDown()) {
 					world.sendBlockUpdated(pos, state, state, 3);
-					NetworkHooks.openGui((ServerPlayer) player, (TileEntityAbsorptionHopper)vacuum, pos);
+					NetworkHooks.openScreen((ServerPlayer) player, vacuum, pos);
 				} else {
 					vacuum.toggleMode(hit.getDirection());
 					world.playSound(null, pos, SoundEvents.LEVER_CLICK, SoundSource.BLOCKS, 0.3F, 0.6F);
@@ -81,14 +78,6 @@ public class BlockAbsorptionHopper extends BaseEntityBlock {
 		}
 		return InteractionResult.SUCCESS;
 	}
-
-/* TODO
-	@Nullable
-	@Override
-	public Item getItemDropped(IBlockState state, Random rand, int fortune) {
-		return Item.getItemFromBlock(this);
-	}
-*/
 
 	@Override
 	public void playerWillDestroy(Level world, BlockPos pos, BlockState state, Player player) {

@@ -1,30 +1,29 @@
 package mob_grinding_utils.blocks;
 
-import java.util.Random;
-
 import mob_grinding_utils.tile.TileEntityFan;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.Containers;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.DirectionalBlock;
+import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.RenderShape;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.DirectionalBlock;
-import net.minecraft.world.level.block.EntityBlock;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.Containers;
-import net.minecraft.world.item.context.BlockPlaceContext;
-import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.core.Direction;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.level.Level;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraftforge.network.NetworkHooks;
 
 import javax.annotation.Nonnull;
@@ -39,8 +38,9 @@ public class BlockFan extends DirectionalBlock implements EntityBlock {
 		registerDefaultState(this.stateDefinition.any().setValue(POWERED, false));
 	}
 	
+	@Nonnull
 	@Override
-	public RenderShape getRenderShape(BlockState state) {
+	public RenderShape getRenderShape(@Nonnull BlockState state) {
 		return RenderShape.MODEL;
 	}
 
@@ -51,7 +51,7 @@ public class BlockFan extends DirectionalBlock implements EntityBlock {
 
 	@Nullable
 	@Override
-	public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level pLevel, BlockState pState, BlockEntityType<T> pBlockEntityType) {
+	public <T extends BlockEntity> BlockEntityTicker<T> getTicker(@Nonnull Level pLevel, @Nonnull BlockState pState, @Nonnull BlockEntityType<T> pBlockEntityType) {
 		return TileEntityFan::tick;
 	}
 
@@ -66,18 +66,19 @@ public class BlockFan extends DirectionalBlock implements EntityBlock {
 		builder.add(FACING, POWERED);
 	}
 
+	@Nonnull
 	@Override
-	public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+	public InteractionResult use(@Nonnull BlockState state, Level world, @Nonnull BlockPos pos, @Nonnull Player player, @Nonnull InteractionHand hand, @Nonnull BlockHitResult hit) {
 		if (!world.isClientSide) {
 			BlockEntity tileentity = world.getBlockEntity(pos);
 			if (tileentity  instanceof TileEntityFan)
-				NetworkHooks.openGui((ServerPlayer) player, (TileEntityFan)tileentity, pos);
+				NetworkHooks.openScreen((ServerPlayer) player, (TileEntityFan)tileentity, pos);
 		}
 		return InteractionResult.SUCCESS;
 	}
 
 	@Override
-	public void onRemove(BlockState state, Level world, BlockPos pos, BlockState newState, boolean isMoving) {
+	public void onRemove(BlockState state, @Nonnull Level world, @Nonnull BlockPos pos, BlockState newState, boolean isMoving) {
 		if (!state.is(newState.getBlock())) {
 			TileEntityFan tile = (TileEntityFan) world.getBlockEntity(pos);
 			if (tile != null) {
@@ -89,14 +90,14 @@ public class BlockFan extends DirectionalBlock implements EntityBlock {
 	}
 
 	@Override
-	public void neighborChanged(BlockState state, Level world, BlockPos pos, Block block, BlockPos fromPos, boolean isMoving) {
+	public void neighborChanged(BlockState state, Level world, @Nonnull BlockPos pos, @Nonnull Block block, @Nonnull BlockPos fromPos, boolean isMoving) {
 		boolean flag = world.hasNeighborSignal(pos);
 		if (flag != state.getValue(POWERED))
 			world.setBlock(pos, state.setValue(POWERED, flag), 4);
 	}
 
 	@Override
-	public void tick(BlockState state, ServerLevel world, BlockPos pos, Random rand) {
+	public void tick(@Nonnull BlockState state, ServerLevel world, @Nonnull BlockPos pos, @Nonnull RandomSource rand) {
 		if (!world.isClientSide) {
 			boolean flag = !world.hasNeighborSignal(pos);
 			if (flag != state.getValue(POWERED))

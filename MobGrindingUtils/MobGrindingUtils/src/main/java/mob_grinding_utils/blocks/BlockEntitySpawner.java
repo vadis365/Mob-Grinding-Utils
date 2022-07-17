@@ -1,9 +1,8 @@
 package mob_grinding_utils.blocks;
 
-import java.util.Random;
-
 import mob_grinding_utils.ModBlocks;
 import mob_grinding_utils.tile.TileEntityMGUSpawner;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
@@ -25,7 +24,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.Level;
 import net.minecraft.server.level.ServerLevel;
@@ -44,8 +42,9 @@ public class BlockEntitySpawner extends Block implements EntityBlock {
 		registerDefaultState(this.stateDefinition.any().setValue(POWERED, false));
 	}
 
+	@Nonnull
 	@Override
-	public RenderShape getRenderShape(BlockState state) {
+	public RenderShape getRenderShape(@Nonnull BlockState state) {
 		return RenderShape.MODEL;
 	}
 
@@ -56,7 +55,7 @@ public class BlockEntitySpawner extends Block implements EntityBlock {
 
 	@Nullable
 	@Override
-	public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level pLevel, BlockState pState, BlockEntityType<T> pBlockEntityType) {
+	public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level pLevel, @Nonnull BlockState pState, @Nonnull BlockEntityType<T> pBlockEntityType) {
 		return pLevel.isClientSide ? TileEntityMGUSpawner::clientTick : TileEntityMGUSpawner::serverTick;
 	}
 
@@ -71,18 +70,19 @@ public class BlockEntitySpawner extends Block implements EntityBlock {
 		builder.add(FACING, POWERED);
 	}
 
+	@Nonnull
 	@Override
-	public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+	public InteractionResult use(@Nonnull BlockState state, Level world, @Nonnull BlockPos pos, @Nonnull Player player, @Nonnull InteractionHand hand, @Nonnull BlockHitResult hit) {
 		if (!world.isClientSide) {
 			BlockEntity tileentity = world.getBlockEntity(pos);
-			if (tileentity  instanceof TileEntityMGUSpawner)
-			NetworkHooks.openGui((ServerPlayer) player, (TileEntityMGUSpawner)tileentity, pos);
+			if (tileentity instanceof TileEntityMGUSpawner tile)
+				NetworkHooks.openScreen((ServerPlayer) player, tile, pos);
 		}
 		return InteractionResult.SUCCESS;
 	}
 
 	@Override
-	public void playerWillDestroy(Level world, BlockPos pos, BlockState state, Player player) {
+	public void playerWillDestroy(Level world, @Nonnull BlockPos pos, @Nonnull BlockState state, @Nonnull Player player) {
 		if (!world.isClientSide && !player.getAbilities().instabuild) {
 			TileEntityMGUSpawner tile = (TileEntityMGUSpawner) world.getBlockEntity(pos);
 			if (tile != null) {
@@ -102,7 +102,7 @@ public class BlockEntitySpawner extends Block implements EntityBlock {
 	}
 
 	@Override
-	public void onRemove(BlockState state, Level world, BlockPos pos, BlockState newState, boolean isMoving) {
+	public void onRemove(BlockState state, @Nonnull Level world, @Nonnull BlockPos pos, BlockState newState, boolean isMoving) {
 		if (!state.is(newState.getBlock())) {
 			TileEntityMGUSpawner tile = (TileEntityMGUSpawner) world.getBlockEntity(pos);
 			if (tile != null) {
@@ -114,7 +114,7 @@ public class BlockEntitySpawner extends Block implements EntityBlock {
 	}
 
 	@Override
-	public void neighborChanged(BlockState state, Level world, BlockPos pos, Block block, BlockPos fromPos, boolean isMoving) {
+	public void neighborChanged(@Nonnull BlockState state, Level world, @Nonnull BlockPos pos, @Nonnull Block block, @Nonnull BlockPos fromPos, boolean isMoving) {
 		if (!world.isClientSide) {
 			TileEntityMGUSpawner tile = (TileEntityMGUSpawner) world.getBlockEntity(pos);
 			boolean flag = state.getValue(POWERED);
@@ -130,7 +130,7 @@ public class BlockEntitySpawner extends Block implements EntityBlock {
 	}
 
 	@Override
-	public void tick(BlockState state, ServerLevel world, BlockPos pos, Random rand) {
+	public void tick(@Nonnull BlockState state, ServerLevel world, @Nonnull BlockPos pos, @Nonnull RandomSource rand) {
 		if (!world.isClientSide) {
 			TileEntityMGUSpawner tile = (TileEntityMGUSpawner) world.getBlockEntity(pos);
 			if (state.getValue(POWERED) && !world.hasNeighborSignal(pos)) {

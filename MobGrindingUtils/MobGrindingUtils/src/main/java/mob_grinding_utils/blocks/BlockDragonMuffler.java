@@ -1,5 +1,6 @@
 package mob_grinding_utils.blocks;
 
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.entity.player.Player;
@@ -11,7 +12,6 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.level.Level;
 
 public class BlockDragonMuffler extends Block {
@@ -40,7 +40,7 @@ public class BlockDragonMuffler extends Block {
 			world.setBlock(pos, state.setValue(MODE, swap), 3);
 		CompoundTag nbt = player.getPersistentData();
 		nbt.putBoolean("MGU_DragonMuffle" , swap);
-		player.displayClientMessage(new TextComponent(swap ? "Now hiding Dragon boss bars.":"Now showing Dragon boss bars."), true);
+		player.displayClientMessage(Component.literal(swap ? "Now hiding Dragon boss bars.":"Now showing Dragon boss bars."), true);
 		return InteractionResult.SUCCESS;
 	}
 }
