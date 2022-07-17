@@ -1,10 +1,5 @@
 {
   "type": "minecraft:crafting_shaped",
-  "pattern": [
-    "GHG",
-    "IRI",
-    "GHG"
-  ],
   "key": {
     "G": {
       "tag": "forge:nuggets/gold"
@@ -19,6 +14,11 @@
       "tag": "forge:dusts/redstone"
     }
   },
+  "pattern": [
+    "GHG",
+    "IRI",
+    "GHG"
+  ],
   "result": {
     "item": "mob_grinding_utils:saw_upgrade_beheading"
   }

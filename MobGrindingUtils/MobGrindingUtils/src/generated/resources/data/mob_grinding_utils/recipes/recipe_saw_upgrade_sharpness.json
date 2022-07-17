@@ -1,21 +1,21 @@
 {
   "type": "minecraft:crafting_shaped",
+  "key": {
+    "G": {
+      "tag": "forge:nuggets/gold"
+    },
+    "R": {
+      "tag": "forge:dusts/redstone"
+    },
+    "S": {
+      "item": "minecraft:iron_sword"
+    }
+  },
   "pattern": [
     "GSG",
     "SRS",
     "GSG"
   ],
-  "key": {
-    "G": {
-      "tag": "forge:nuggets/gold"
-    },
-    "S": {
-      "item": "minecraft:iron_sword"
-    },
-    "R": {
-      "tag": "forge:dusts/redstone"
-    }
-  },
   "result": {
     "item": "mob_grinding_utils:saw_upgrade_sharpness"
   }

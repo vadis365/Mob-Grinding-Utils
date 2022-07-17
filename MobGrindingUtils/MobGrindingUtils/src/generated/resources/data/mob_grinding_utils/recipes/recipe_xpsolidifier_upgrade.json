@@ -1,19 +1,14 @@
 {
   "type": "minecraft:crafting_shaped",
-  "pattern": [
-    "SRS",
-    "BXB",
-    "SRS"
-  ],
   "key": {
-    "S": {
-      "item": "minecraft:sugar"
+    "B": {
+      "item": "minecraft:blaze_powder"
     },
     "R": {
       "tag": "forge:dusts/redstone"
     },
-    "B": {
-      "item": "minecraft:blaze_powder"
+    "S": {
+      "item": "minecraft:sugar"
     },
     "X": {
       "type": "mob_grinding_utils:fluid",
@@ -21,6 +16,11 @@
       "tag": "forge:experience"
     }
   },
+  "pattern": [
+    "SRS",
+    "BXB",
+    "SRS"
+  ],
   "result": {
     "item": "mob_grinding_utils:xp_solidifier_upgrade"
   }

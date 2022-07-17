@@ -1,21 +1,21 @@
 {
   "type": "minecraft:crafting_shaped",
-  "pattern": [
-    "SIS",
-    "IRI",
-    "SIS"
-  ],
   "key": {
-    "S": {
-      "item": "minecraft:stone_slab"
-    },
     "I": {
       "tag": "forge:ingots/iron"
     },
     "R": {
       "tag": "forge:storage_blocks/redstone"
+    },
+    "S": {
+      "item": "minecraft:stone_slab"
     }
   },
+  "pattern": [
+    "SIS",
+    "IRI",
+    "SIS"
+  ],
   "result": {
     "item": "mob_grinding_utils:fan"
   }

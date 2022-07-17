@@ -1,23 +1,23 @@
 {
   "type": "minecraft:crafting_shaped",
+  "key": {
+    "I": {
+      "tag": "forge:ingots/iron"
+    },
+    "R": {
+      "tag": "forge:dusts/redstone"
+    },
+    "S": {
+      "tag": "forge:slimeballs"
+    }
+  },
   "pattern": [
     " S ",
     "IRI",
     "ISI"
   ],
-  "key": {
-    "I": {
-      "tag": "forge:ingots/iron"
-    },
-    "S": {
-      "tag": "forge:slimeballs"
-    },
-    "R": {
-      "tag": "forge:dusts/redstone"
-    }
-  },
   "result": {
-    "item": "mob_grinding_utils:entity_conveyor",
-    "count": 6
+    "count": 6,
+    "item": "mob_grinding_utils:entity_conveyor"
   }
 }

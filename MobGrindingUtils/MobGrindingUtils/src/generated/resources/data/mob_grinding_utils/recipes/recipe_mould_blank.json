@@ -1,20 +1,20 @@
 {
   "type": "minecraft:crafting_shaped",
+  "key": {
+    "B": {
+      "type": "mob_grinding_utils:fluid",
+      "advanced": false,
+      "tag": "forge:experience"
+    },
+    "X": {
+      "tag": "forge:nuggets/gold"
+    }
+  },
   "pattern": [
     "XXX",
     "XBX",
     "XXX"
   ],
-  "key": {
-    "X": {
-      "tag": "forge:nuggets/gold"
-    },
-    "B": {
-      "type": "mob_grinding_utils:fluid",
-      "advanced": false,
-      "tag": "forge:experience"
-    }
-  },
   "result": {
     "item": "mob_grinding_utils:solid_xp_mould_blank"
   }

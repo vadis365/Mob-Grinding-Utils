@@ -1,18 +1,18 @@
 {
   "type": "minecraft:crafting_shaped",
+  "key": {
+    "G": {
+      "tag": "forge:glass"
+    },
+    "I": {
+      "tag": "forge:ingots/iron"
+    }
+  },
   "pattern": [
     "IGI",
     "GGG",
     "IGI"
   ],
-  "key": {
-    "I": {
-      "tag": "forge:ingots/iron"
-    },
-    "G": {
-      "tag": "forge:glass"
-    }
-  },
   "result": {
     "item": "mob_grinding_utils:tank"
   }

@@ -1,10 +1,5 @@
 {
   "type": "minecraft:crafting_shaped",
-  "pattern": [
-    "BEB",
-    "RSX",
-    "BGB"
-  ],
   "key": {
     "B": {
       "type": "mob_grinding_utils:fluid",
@@ -14,6 +9,9 @@
     "E": {
       "item": "minecraft:spider_eye"
     },
+    "G": {
+      "tag": "forge:gunpowder"
+    },
     "R": {
       "item": "minecraft:rotten_flesh"
     },
@@ -22,11 +20,13 @@
     },
     "X": {
       "tag": "forge:bones"
-    },
-    "G": {
-      "tag": "forge:gunpowder"
     }
   },
+  "pattern": [
+    "BEB",
+    "RSX",
+    "BGB"
+  ],
   "result": {
     "item": "mob_grinding_utils:gm_chicken_feed_cursed"
   }

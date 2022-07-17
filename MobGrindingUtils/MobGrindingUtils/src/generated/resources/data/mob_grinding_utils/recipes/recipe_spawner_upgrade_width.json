@@ -1,16 +1,11 @@
 {
   "type": "minecraft:crafting_shaped",
-  "pattern": [
-    "EEE",
-    "BXB",
-    "EEE"
-  ],
   "key": {
-    "E": {
-      "item": "minecraft:egg"
-    },
     "B": {
       "item": "minecraft:blaze_powder"
+    },
+    "E": {
+      "item": "minecraft:egg"
     },
     "X": {
       "type": "mob_grinding_utils:fluid",
@@ -18,6 +13,11 @@
       "tag": "forge:experience"
     }
   },
+  "pattern": [
+    "EEE",
+    "BXB",
+    "EEE"
+  ],
   "result": {
     "item": "mob_grinding_utils:spawner_upgrade_width"
   }

@@ -1,24 +1,24 @@
 {
   "type": "minecraft:crafting_shaped",
-  "pattern": [
-    " P ",
-    "CHC",
-    " T "
-  ],
   "key": {
-    "P": {
-      "item": "minecraft:piston"
-    },
     "C": {
       "item": "mob_grinding_utils:entity_conveyor"
     },
     "H": {
       "item": "minecraft:hopper"
     },
+    "P": {
+      "item": "minecraft:piston"
+    },
     "T": {
       "item": "mob_grinding_utils:tank"
     }
   },
+  "pattern": [
+    " P ",
+    "CHC",
+    " T "
+  ],
   "result": {
     "item": "mob_grinding_utils:xpsolidifier"
   }

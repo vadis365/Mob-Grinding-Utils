@@ -1,10 +1,5 @@
 {
   "type": "minecraft:crafting_shaped",
-  "pattern": [
-    "BCB",
-    "PSX",
-    "BWB"
-  ],
   "key": {
     "B": {
       "type": "mob_grinding_utils:fluid",
@@ -20,13 +15,18 @@
     "S": {
       "tag": "forge:seeds"
     },
-    "X": {
-      "item": "minecraft:beetroot"
-    },
     "W": {
       "item": "minecraft:wheat"
+    },
+    "X": {
+      "item": "minecraft:beetroot"
     }
   },
+  "pattern": [
+    "BCB",
+    "PSX",
+    "BWB"
+  ],
   "result": {
     "item": "mob_grinding_utils:nutritious_chicken_feed"
   }

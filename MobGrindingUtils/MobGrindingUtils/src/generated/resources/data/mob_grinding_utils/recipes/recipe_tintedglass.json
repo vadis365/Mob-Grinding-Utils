@@ -1,10 +1,5 @@
 {
   "type": "minecraft:crafting_shaped",
-  "pattern": [
-    "CGC",
-    "GCG",
-    "CGC"
-  ],
   "key": {
     "C": {
       "tag": "minecraft:coals"
@@ -13,8 +8,13 @@
       "tag": "forge:glass"
     }
   },
+  "pattern": [
+    "CGC",
+    "GCG",
+    "CGC"
+  ],
   "result": {
-    "item": "mob_grinding_utils:tinted_glass",
-    "count": 4
+    "count": 4,
+    "item": "mob_grinding_utils:tinted_glass"
   }
 }

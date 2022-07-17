@@ -1,21 +1,21 @@
 {
   "type": "minecraft:crafting_shaped",
-  "pattern": [
-    "FIF",
-    "IRI",
-    "FIF"
-  ],
   "key": {
-    "I": {
-      "tag": "forge:ingots/iron"
-    },
     "F": {
       "tag": "forge:feathers"
+    },
+    "I": {
+      "tag": "forge:ingots/iron"
     },
     "R": {
       "tag": "forge:dusts/redstone"
     }
   },
+  "pattern": [
+    "FIF",
+    "IRI",
+    "FIF"
+  ],
   "result": {
     "item": "mob_grinding_utils:fan_upgrade_speed"
   }

@@ -1,18 +1,18 @@
 {
   "type": "minecraft:crafting_shaped",
+  "key": {
+    "F": {
+      "tag": "forge:feathers"
+    },
+    "I": {
+      "tag": "forge:ingots/iron"
+    }
+  },
   "pattern": [
     "I I",
     "FFF",
     "I I"
   ],
-  "key": {
-    "I": {
-      "tag": "forge:ingots/iron"
-    },
-    "F": {
-      "tag": "forge:feathers"
-    }
-  },
   "result": {
     "item": "mob_grinding_utils:fan_upgrade_width"
   }
