@@ -1,11 +1,35 @@
 package mob_grinding_utils;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.annotation.Nonnull;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import mob_grinding_utils.blocks.BlockSpikes;
 import mob_grinding_utils.client.ModelLayers;
 import mob_grinding_utils.datagen.Generator;
-import mob_grinding_utils.events.*;
+import mob_grinding_utils.events.BossBarHidingEvent;
+import mob_grinding_utils.events.ChickenFuseEvent;
+import mob_grinding_utils.events.EntityHeadDropEvent;
+import mob_grinding_utils.events.EntityInteractionEvent;
+import mob_grinding_utils.events.FillXPBottleEvent;
+import mob_grinding_utils.events.FluidTextureStitchEvent;
+import mob_grinding_utils.events.GlobalDragonSoundEvent;
+import mob_grinding_utils.events.GlobalWitherSoundEvent;
+import mob_grinding_utils.events.LocalDragonSoundEvent;
+import mob_grinding_utils.events.LocalWitherSoundEvent;
+import mob_grinding_utils.events.MGUEndermanInhibitEvent;
+import mob_grinding_utils.events.MGUZombieReinforcementEvent;
+import mob_grinding_utils.events.RenderChickenSwell;
 import mob_grinding_utils.fakeplayer.MGUFakePlayer;
-import mob_grinding_utils.inventory.client.*;
+import mob_grinding_utils.inventory.client.GuiAbsorptionHopper;
+import mob_grinding_utils.inventory.client.GuiFan;
+import mob_grinding_utils.inventory.client.GuiMGUSpawner;
+import mob_grinding_utils.inventory.client.GuiSaw;
+import mob_grinding_utils.inventory.client.GuiXPSolidifier;
 import mob_grinding_utils.network.MGUNetwork;
 import mob_grinding_utils.network.MessageFlagSync;
 import mob_grinding_utils.recipe.BeheadingRecipe;
@@ -48,17 +72,11 @@ import net.minecraftforge.network.simple.SimpleChannel;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import javax.annotation.Nonnull;
-import java.util.ArrayList;
-import java.util.List;
 
 
 @Mod(Reference.MOD_ID)
 public class MobGrindingUtils {
-public static final Logger LOGGER = LogManager.getLogger(Reference.MOD_ID);
+public static final Logger LOGGER = LoggerFactory.getLogger(Reference.MOD_ID);
 	public static SimpleChannel NETWORK_WRAPPER;
 	public static DamageSource SPIKE_DAMAGE;
 
