@@ -133,10 +133,10 @@ public class TileEntityMGUSpawner extends BlockEntity implements MenuProvider {
 				for (int x = minX; x < maxX; x++) {
 					for (int y = minY; y < maxY; y++) {
 						for (int z = minZ; z < maxZ; z++) {
-							BlockPos posList = new BlockPos(x, y, z);
-							entity.setPos(posList.getX() + 0.5D, posList.getY(), posList.getZ() + 0.5D);
-							if (isValidSpawnLocation(getLevel(), type, entity, posList)) {
-								posArrayList.add(posList);
+							mutablePos.move(x, y, z);
+							entity.setPos(mutablePos.getX() + 0.5D, mutablePos.getY(), mutablePos.getZ() + 0.5D);
+							if (isValidSpawnLocation(getLevel(), type, entity, mutablePos)) {
+								posArrayList.add(new BlockPos(mutablePos));
 							}
 						}
 					}
