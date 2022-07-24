@@ -1,7 +1,11 @@
 package mob_grinding_utils.recipe;
 
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import com.google.gson.JsonObject;
+
 import mob_grinding_utils.MobGrindingUtils;
 import mob_grinding_utils.ModItems;
 import net.minecraft.network.FriendlyByteBuf;
@@ -10,10 +14,6 @@ import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.ShapelessRecipe;
-import org.apache.logging.log4j.LogManager;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 
 public class ChickenFeedRecipe extends ShapelessRecipe {
@@ -66,7 +66,7 @@ public class ChickenFeedRecipe extends ShapelessRecipe {
                 return new ChickenFeedRecipe(RecipeSerializer.SHAPELESS_RECIPE.fromJson(recipeId, json));
             }
             catch (Exception exception) {
-                LogManager.getLogger().info("Error reading "+ NAME +" Recipe from packet: ", exception);
+            	MobGrindingUtils.LOGGER.info("Error reading "+ NAME +" Recipe from packet: ", exception);
                 throw exception;
             }
         }
@@ -77,7 +77,7 @@ public class ChickenFeedRecipe extends ShapelessRecipe {
                 RecipeSerializer.SHAPELESS_RECIPE.toNetwork(buffer, recipe);
             }
             catch (Exception exception) {
-                LogManager.getLogger().info("Error writing "+ NAME +" Recipe to packet: ", exception);
+            	MobGrindingUtils.LOGGER.info("Error writing "+ NAME +" Recipe to packet: ", exception);
                 throw exception;
             }
         }
