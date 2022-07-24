@@ -144,7 +144,7 @@ public class TileEntityMGUSpawner extends BlockEntity implements MenuProvider {
 				if (!posArrayList.isEmpty()) {
 					Collections.shuffle(posArrayList);
 					entity.setPos(posArrayList.get(0).getX() + 0.5D, posArrayList.get(0).getY(), posArrayList.get(0).getZ() + 0.5D);
-					entity.finalizeSpawn((ServerLevelAccessor) getLevel(), getLevel().getCurrentDifficultyAt(posArrayList.get(0)), MobSpawnType.NATURAL, null, null);
+					entity.finalizeSpawn((ServerLevelAccessor) getLevel(), getLevel().getCurrentDifficultyAt(posArrayList.get(0)), MobSpawnType.SPAWNER, null, null);
 					getLevel().addFreshEntity(entity);
 					return true;
 				}
