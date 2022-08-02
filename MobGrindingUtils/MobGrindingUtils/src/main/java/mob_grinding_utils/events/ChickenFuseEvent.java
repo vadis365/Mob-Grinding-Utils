@@ -17,27 +17,19 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.SpawnEggItem;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.level.Level;
+import net.minecraftforge.common.ForgeSpawnEggItem;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.network.PacketDistributor;
-import net.minecraftforge.registries.ForgeRegistries;
 
 public class ChickenFuseEvent {
 
 	@Nonnull
 	public static ItemStack getSpawnEgg(@Nonnull EntityType<?> entityType) {
-		//Check the spawn egg array
-		for (SpawnEggItem eggItem : SpawnEggItem.eggs()) {
-			if (eggItem.getType(null).equals(entityType)) {
-				return new ItemStack(eggItem);
-			}
-		}
-		//It wasnt there, try grabbing the common naming convention from the item registry.
-		ResourceLocation res = ForgeRegistries.ENTITY_TYPES.getKey(entityType);
-		return new ItemStack(ForgeRegistries.ITEMS.getValue(new ResourceLocation(res + "_spawn_egg")));
+		final SpawnEggItem egg = ForgeSpawnEggItem.fromEntityType(entityType);
+		return egg != null ? new ItemStack(egg) : ItemStack.EMPTY;
 	}
 
 	@SubscribeEvent
