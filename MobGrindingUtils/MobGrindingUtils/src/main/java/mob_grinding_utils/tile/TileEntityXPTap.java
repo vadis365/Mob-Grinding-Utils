@@ -32,7 +32,7 @@ public class TileEntityXPTap extends BlockEntity {
 			if (tileentity != null) {
 				LazyOptional<IFluidHandler> fluidHandler = tileentity.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, world.getBlockState(worldPosition).getValue(BlockXPTap.FACING));
 				fluidHandler.ifPresent((handler) -> {
-					if (handler.getFluidInTank(0).getAmount() >= 20 && handler.getFluidInTank(0).getFluid().is(MobGrindingUtils.EXPERIENCE) && world.getGameTime() % 3 == 0) {
+					if (handler.getTanks() > 0 && handler.getFluidInTank(0).getAmount() >= 20 && handler.getFluidInTank(0).getFluid().is(MobGrindingUtils.EXPERIENCE) && world.getGameTime() % 3 == 0) {
 						int xpAmount = EntityXPOrbFalling.getExperienceValue(Math.min(20, handler.getFluidInTank(0).getAmount() / 20));
 						if (!handler.drain(xpAmount * 20, FluidAction.EXECUTE).isEmpty()) {
 							tileEntityXPTap.spawnXP(world, worldPosition, xpAmount, tileentity);
