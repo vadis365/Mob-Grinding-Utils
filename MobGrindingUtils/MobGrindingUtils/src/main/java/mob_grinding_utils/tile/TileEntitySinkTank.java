@@ -34,6 +34,8 @@ public class TileEntitySinkTank extends TileEntityTank {
 
 	public boolean captureDroppedXP() {
 		for (Player player : getCaptureXP(level, getBlockPos().getX() + 0.5D, getBlockPos().getY() + 0.5D, getBlockPos().getZ() + 0.5D)) {
+			if (player.isSpectator())
+				continue;
 			int xpAmount = getPlayerXP(player);
 			if (xpAmount <= 0)
 				return false;
