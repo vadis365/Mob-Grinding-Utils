@@ -36,7 +36,8 @@ public class TileEntityXPTap extends BlockEntity {
 						int xpAmount = EntityXPOrbFalling.getExperienceValue(Math.min(20, handler.getFluidInTank(0).getAmount() / 20));
 						if (!handler.drain(xpAmount * 20, FluidAction.EXECUTE).isEmpty()) {
 							tileEntityXPTap.spawnXP(world, worldPosition, xpAmount, tileentity);
-							MobGrindingUtils.NETWORK_WRAPPER.send(PacketDistributor.ALL.noArg(), new MessageTapParticle(worldPosition));
+							var particleTarget = new PacketDistributor.TargetPoint(t.getBlockPos().getX(), t.getBlockPos().getY(), t.getBlockPos().getZ(), 30, t.getLevel().dimension());
+							MobGrindingUtils.NETWORK_WRAPPER.send(PacketDistributor.NEAR.with(() -> particleTarget), new MessageTapParticle(worldPosition));
 						}
 					}
 				});
