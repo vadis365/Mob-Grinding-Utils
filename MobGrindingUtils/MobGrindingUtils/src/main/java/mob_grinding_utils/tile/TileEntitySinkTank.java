@@ -43,7 +43,8 @@ public class TileEntitySinkTank extends TileEntityTank {
 				tank.fill(new FluidStack(ModBlocks.FLUID_XP.get(), 20), FluidAction.EXECUTE);
 				addPlayerXP(player, -1);
 				level.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.BOTTLE_FILL, SoundSource.NEUTRAL , 0.1F, 0.5F * ((getLevel().random.nextFloat() - getLevel().random.nextFloat()) * 0.7F + 1.8F));
-				MobGrindingUtils.NETWORK_WRAPPER.send(PacketDistributor.ALL.noArg(), new MessageTapParticle(getBlockPos().above()));
+				var particleTarget = new PacketDistributor.TargetPoint(getBlockPos().getX(), getBlockPos().getY(), getBlockPos().getZ(), 30, level.dimension());
+				MobGrindingUtils.NETWORK_WRAPPER.send(PacketDistributor.NEAR.with(() -> particleTarget), new MessageTapParticle(getBlockPos().above()));
 			}
 			return true;
 		}
