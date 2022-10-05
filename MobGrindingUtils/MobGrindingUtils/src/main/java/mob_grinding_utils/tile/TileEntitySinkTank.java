@@ -1,7 +1,5 @@
 package mob_grinding_utils.tile;
 
-import java.util.List;
-
 import mob_grinding_utils.MobGrindingUtils;
 import mob_grinding_utils.ModBlocks;
 import mob_grinding_utils.network.MessageTapParticle;
@@ -17,6 +15,8 @@ import net.minecraft.world.phys.AABB;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import net.minecraftforge.network.PacketDistributor;
+
+import java.util.List;
 
 public class TileEntitySinkTank extends TileEntityTank {
 
@@ -34,6 +34,8 @@ public class TileEntitySinkTank extends TileEntityTank {
 
 	public boolean captureDroppedXP() {
 		for (Player player : getCaptureXP(level, getBlockPos().getX() + 0.5D, getBlockPos().getY() + 0.5D, getBlockPos().getZ() + 0.5D)) {
+			if (player.isSpectator())
+				continue;
 			int xpAmount = getPlayerXP(player);
 			if (xpAmount <= 0)
 				return false;
