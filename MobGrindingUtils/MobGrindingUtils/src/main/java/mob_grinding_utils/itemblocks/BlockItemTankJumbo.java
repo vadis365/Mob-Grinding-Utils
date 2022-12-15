@@ -31,11 +31,11 @@ public class BlockItemTankJumbo extends BlockItem {
 			FluidStack fluid = FluidStack.loadFluidStackFromNBT(stack.getTag());
 			if(fluid !=null) {
 				list.add(new TranslatableComponent("Contains: "+ fluid.getDisplayName().getString()).withStyle(ChatFormatting.GREEN));
-				list.add(new TranslatableComponent(""+ fluid.getAmount() +"Mb/1024000Mb").withStyle(ChatFormatting.BLUE));
+				list.add(new TranslatableComponent(""+ fluid.getAmount() +"/1024000 mB").withStyle(ChatFormatting.BLUE));
 			}
 		}
 		else
-			list.add(new TranslatableComponent("Holds 1024000Mb (1024 Buckets)").withStyle(ChatFormatting.BLUE));
+			list.add(new TranslatableComponent("Holds 1024000 mB (1024 Buckets)").withStyle(ChatFormatting.BLUE));
 	}
 
 }
