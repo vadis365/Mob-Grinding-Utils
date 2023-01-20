@@ -136,6 +136,8 @@ public class TileEntityMGUSpawner extends BlockEntity implements MenuProvider {
 				}
 				if (!posArrayList.isEmpty()) {
 					Collections.shuffle(posArrayList);
+					// Add a persistent tag to indicate that the mob came from a Mob Grinding Utils spawner.
+					entity.getPersistentData().putBoolean("mob_grinding_utils:entity_spawner", true);
 					entity.setPos(posArrayList.get(0).getX() + 0.5D, posArrayList.get(0).getY(), posArrayList.get(0).getZ() + 0.5D);
 					entity.finalizeSpawn((ServerLevelAccessor) getLevel(), getLevel().getCurrentDifficultyAt(posArrayList.get(0)), MobSpawnType.SPAWNER, null, null);
 					getLevel().addFreshEntity(entity);
