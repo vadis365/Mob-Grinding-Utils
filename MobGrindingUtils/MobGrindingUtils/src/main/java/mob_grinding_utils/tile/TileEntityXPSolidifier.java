@@ -2,12 +2,12 @@ package mob_grinding_utils.tile;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.swing.text.html.Option;
 
 import io.netty.buffer.Unpooled;
 import mob_grinding_utils.MobGrindingUtils;
 import mob_grinding_utils.ModBlocks;
 import mob_grinding_utils.ModItems;
+import mob_grinding_utils.ModTags;
 import mob_grinding_utils.inventory.server.ContainerXPSolidifier;
 import mob_grinding_utils.recipe.SolidifyRecipe;
 import net.minecraft.block.BlockState;
@@ -235,7 +235,7 @@ public class TileEntityXPSolidifier extends TileEntity implements ITickableTileE
 	}
 
 	private boolean hasfluid() {
-		return currentRecipe != null && !tank.getFluid().isEmpty() && tank.getFluid().getAmount() >= currentRecipe.getFluidAmount() && tank.getFluidInTank(0).getFluid().isIn(MobGrindingUtils.EXPERIENCE);
+		return currentRecipe != null && !tank.getFluid().isEmpty() && tank.getFluid().getAmount() >= currentRecipe.getFluidAmount() && tank.getFluidInTank(0).getFluid().isIn(ModTags.Fluids.EXPERIENCE);
 	}
 
 	private boolean canOperate() {

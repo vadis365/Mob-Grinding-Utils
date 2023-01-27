@@ -6,8 +6,8 @@ import java.util.Objects;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import mob_grinding_utils.MobGrindingUtils;
 import mob_grinding_utils.ModItems;
+import mob_grinding_utils.ModTags;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -44,7 +44,7 @@ public class ItemMobSwab extends Item {
 	@Nonnull
 	@Override
 	public ActionResultType itemInteractionForEntity(@Nonnull ItemStack stack, @Nonnull PlayerEntity player, @Nonnull LivingEntity target, @Nonnull Hand hand) {
-		if (!(target instanceof PlayerEntity) && !used && !target.getType().isContained(MobGrindingUtils.NOSWAB)) {
+		if (!(target instanceof PlayerEntity) && !used && !target.getType().isContained(ModTags.Entities.NO_SWAB)) {
 				String mobName = Objects.requireNonNull(target.getType().getRegistryName()).toString();
 				ItemStack stack2 = new ItemStack(ModItems.MOB_SWAB_USED.get(), 1);
 				if (!stack2.getOrCreateTag().contains("mguMobName")) {

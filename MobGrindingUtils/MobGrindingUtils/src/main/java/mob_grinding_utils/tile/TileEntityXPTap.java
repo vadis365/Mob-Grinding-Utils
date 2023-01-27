@@ -2,6 +2,7 @@ package mob_grinding_utils.tile;
 
 import mob_grinding_utils.MobGrindingUtils;
 import mob_grinding_utils.ModBlocks;
+import mob_grinding_utils.ModTags;
 import mob_grinding_utils.blocks.BlockXPTap;
 import mob_grinding_utils.entity.EntityXPOrbFalling;
 import mob_grinding_utils.network.MessageTapParticle;
@@ -34,7 +35,7 @@ public class TileEntityXPTap extends TileEntity implements ITickableTileEntity {
 			if (tileentity != null) {
 				LazyOptional<IFluidHandler> fluidHandler = tileentity.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, getWorld().getBlockState(pos).get(BlockXPTap.FACING));
 				fluidHandler.ifPresent((handler) -> {
-					if (handler.getFluidInTank(0).getAmount() >= 20 && handler.getFluidInTank(0).getFluid().isIn(MobGrindingUtils.EXPERIENCE) && getWorld().getGameTime() % 3 == 0) {
+					if (handler.getFluidInTank(0).getAmount() >= 20 && handler.getFluidInTank(0).getFluid().isIn(ModTags.Fluids.EXPERIENCE) && getWorld().getGameTime() % 3 == 0) {
 						int xpAmount = EntityXPOrbFalling.getXPSplit(Math.min(20, handler.getFluidInTank(0).getAmount() / 20));
 						if (!handler.drain(xpAmount * 20, FluidAction.EXECUTE).isEmpty()) {
 							spawnXP(getWorld(), pos, xpAmount, tileentity);

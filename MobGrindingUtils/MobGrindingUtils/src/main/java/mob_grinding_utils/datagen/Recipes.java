@@ -5,10 +5,7 @@ import java.util.function.Consumer;
 
 import com.google.gson.JsonObject;
 
-import mob_grinding_utils.MobGrindingUtils;
-import mob_grinding_utils.ModBlocks;
-import mob_grinding_utils.ModItems;
-import mob_grinding_utils.Reference;
+import mob_grinding_utils.*;
 import mob_grinding_utils.recipe.FluidIngredient;
 import mob_grinding_utils.recipe.SolidifyRecipe;
 import mob_grinding_utils.recipe.WrappedRecipe;
@@ -19,11 +16,9 @@ import net.minecraft.data.IFinishedRecipe;
 import net.minecraft.data.RecipeProvider;
 import net.minecraft.data.ShapedRecipeBuilder;
 import net.minecraft.data.ShapelessRecipeBuilder;
-import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.tags.FluidTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.Tags;
@@ -303,7 +298,7 @@ public class Recipes extends RecipeProvider {
             .patternLine("BEB")
             .patternLine("RSX")
             .patternLine("BGB")
-            .key('B', new FluidIngredient(MobGrindingUtils.EXPERIENCE, false))
+            .key('B', new FluidIngredient(ModTags.Fluids.EXPERIENCE, false))
             .key('E', Items.SPIDER_EYE)
             .key('R', Items.ROTTEN_FLESH)
             .key('S', Tags.Items.SEEDS)
@@ -345,7 +340,7 @@ public class Recipes extends RecipeProvider {
             .patternLine("XBX")
             .patternLine("XXX")
             .key('X', Tags.Items.NUGGETS_GOLD)
-            .key('B', new FluidIngredient(MobGrindingUtils.EXPERIENCE, false))
+            .key('B', new FluidIngredient(ModTags.Fluids.EXPERIENCE, false))
             .addCriterion("", noneItem)
             .build(consumer, new ResourceLocation(Reference.MOD_ID, "recipe_mould_blank"));
 
@@ -380,7 +375,7 @@ public class Recipes extends RecipeProvider {
             .key('S', Items.SUGAR)
             .key('R', Tags.Items.DUSTS_REDSTONE)
             .key('B', Items.BLAZE_POWDER)
-            .key('X', new FluidIngredient(MobGrindingUtils.EXPERIENCE, false))
+            .key('X', new FluidIngredient(ModTags.Fluids.EXPERIENCE, false))
             .addCriterion("", noneItem)
             .build(consumer, new ResourceLocation(Reference.MOD_ID, "recipe_xpsolidifier_upgrade"));
 
@@ -388,7 +383,7 @@ public class Recipes extends RecipeProvider {
             .patternLine("BCB")
             .patternLine("PSX")
             .patternLine("BWB")
-            .key('B', new FluidIngredient(MobGrindingUtils.EXPERIENCE, false))
+            .key('B', new FluidIngredient(ModTags.Fluids.EXPERIENCE, false))
             .key('C', Items.CARROT)
             .key('P', Items.POTATO)
             .key('S', Tags.Items.SEEDS)
@@ -404,7 +399,7 @@ public class Recipes extends RecipeProvider {
             .patternLine("EEE")
             .key('E', Items.EGG)
             .key('B', Items.BLAZE_POWDER)
-            .key('X', new FluidIngredient(MobGrindingUtils.EXPERIENCE, false))
+            .key('X', new FluidIngredient(ModTags.Fluids.EXPERIENCE, false))
             .addCriterion("", noneItem)
             .build(consumer, new ResourceLocation(Reference.MOD_ID, "recipe_spawner_upgrade_width"));
 
@@ -415,14 +410,14 @@ public class Recipes extends RecipeProvider {
             .patternLine("EBE")
             .key('E', Items.EGG)
             .key('B', Items.BLAZE_POWDER)
-            .key('X', new FluidIngredient(MobGrindingUtils.EXPERIENCE, false))
+            .key('X', new FluidIngredient(ModTags.Fluids.EXPERIENCE, false))
             .addCriterion("", noneItem)
             .build(consumer, new ResourceLocation(Reference.MOD_ID, "recipe_spawner_upgrade_height"));
 
         ShapelessRecipeBuilder.shapelessRecipe(ModItems.GM_CHICKEN_FEED.get())
             .addIngredient(Tags.Items.SEEDS)
             .addIngredient(ModItems.MOB_SWAB_USED.get())
-            .addIngredient(new FluidIngredient(MobGrindingUtils.EXPERIENCE, false))
+            .addIngredient(new FluidIngredient(ModTags.Fluids.EXPERIENCE, false))
             .addCriterion("", noneItem)
             .build(WrappedRecipe.Inject(consumer, MobGrindingUtils.CHICKEN_FEED.get()), new ResourceLocation(Reference.MOD_ID, "gm_chicken_feed"));
 
