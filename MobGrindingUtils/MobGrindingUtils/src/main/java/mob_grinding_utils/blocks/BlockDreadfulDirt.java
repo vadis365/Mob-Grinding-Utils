@@ -1,27 +1,19 @@
 package mob_grinding_utils.blocks;
 
-import java.util.List;
-import java.util.Random;
-
-import mob_grinding_utils.MobGrindingUtils;
+import mob_grinding_utils.ModTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Holder;
+import net.minecraft.core.Registry;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.entity.EntitySelector;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.MobCategory;
-import net.minecraft.world.entity.MobSpawnType;
-import net.minecraft.world.entity.SpawnPlacements;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.monster.Enemy;
-import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.level.LevelReader;
-import net.minecraft.world.level.NaturalSpawner;
+import net.minecraft.world.level.*;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.biome.Biomes;
 import net.minecraft.world.level.biome.MobSpawnSettings.SpawnerData;
 import net.minecraft.world.level.block.BaseFireBlock;
 import net.minecraft.world.level.block.Block;
@@ -30,6 +22,8 @@ import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.AABB;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+
+import java.util.List;
 
 public class BlockDreadfulDirt extends Block {
 
@@ -87,11 +81,16 @@ public class BlockDreadfulDirt extends Block {
 	}
 
 	public void spawnMob(ServerLevel level, BlockPos pos) {
-		List<SpawnerData> spawns = level.getBiome(pos).value().getMobSettings().getMobs(MobCategory.MONSTER).unwrap();
+		Holder<Biome> biomeHolder = level.getBiome(pos);
+		Biome biome = !biomeHolder.is(ModTags.Biomes.HOSTILE_OVERRIDE) ? biomeHolder.value() : level.registryAccess().registry(Registry.BIOME_REGISTRY)
+				.flatMap(reg -> reg.getOptional(Biomes.PLAINS))
+				.orElseGet(biomeHolder::value);
+
+		List<SpawnerData> spawns = biome.getMobSettings().getMobs(MobCategory.MONSTER).unwrap();
 		if (!spawns.isEmpty()) {
 			int indexSize = spawns.size();
 			EntityType<?> type = spawns.get(level.getRandom().nextInt(indexSize)).type;
-			if (type.is(MobGrindingUtils.NOSPAWN))
+			if (type.is(ModTags.Entities.NO_DIRT_SPAWN))
 				return;
 			if (type == null || !NaturalSpawner.isSpawnPositionOk(SpawnPlacements.getPlacementType(type), level, pos.above(), type))
 				return;

@@ -1,7 +1,7 @@
 package mob_grinding_utils.items;
 
-import mob_grinding_utils.MobGrindingUtils;
 import mob_grinding_utils.ModItems;
+import mob_grinding_utils.ModTags;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -43,7 +43,7 @@ public class ItemMobSwab extends Item {
 	@Nonnull
 	@Override
 	public InteractionResult interactLivingEntity(@Nonnull ItemStack stack, @Nonnull Player player, @Nonnull LivingEntity target, @Nonnull InteractionHand hand) {
-		if (!(target instanceof Player) && !used && !target.getType().is(MobGrindingUtils.NOSWAB)) {
+		if (!(target instanceof Player) && !used && !target.getType().is(ModTags.Entities.NO_SWAB)) {
 			String mobName = Objects.requireNonNull(ForgeRegistries.ENTITY_TYPES.getKey(target.getType())).toString();
 			ItemStack stack2 = new ItemStack(ModItems.MOB_SWAB_USED.get(), 1);
 			if (!stack2.getOrCreateTag().contains("mguMobName")) {

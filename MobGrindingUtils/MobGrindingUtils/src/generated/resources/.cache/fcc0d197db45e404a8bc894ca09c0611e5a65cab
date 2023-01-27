@@ -1,3 +1,4 @@
-// 1.19	2022-07-17T13:20:59.4883768	Tags for minecraft:entity_type
-7d8ddddfbbb5cffbba07c755d16781c953c6c151 data/mob_grinding_utils/tags/entity_types/noswab.json
+// 1.19.2	2023-01-27T08:53:55.3772403	Tags for minecraft:entity_type
+82bd38327da3efeeebbc577e3cbb3c2ed856f70d data/mob_grinding_utils/tags/entity_types/no_dirt_spawn.json
 35133e95f1c8fdd7a1c21afcc231fc0bffefb9a8 data/mob_grinding_utils/tags/entity_types/no_spawn.json
+7d8ddddfbbb5cffbba07c755d16781c953c6c151 data/mob_grinding_utils/tags/entity_types/no_swab.json

@@ -1,9 +1,9 @@
 package mob_grinding_utils.tile;
 
 import io.netty.buffer.Unpooled;
-import mob_grinding_utils.MobGrindingUtils;
 import mob_grinding_utils.ModBlocks;
 import mob_grinding_utils.ModItems;
+import mob_grinding_utils.ModTags;
 import mob_grinding_utils.inventory.server.ContainerMGUSpawner;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -111,7 +111,7 @@ public class TileEntityMGUSpawner extends BlockEntity implements MenuProvider {
 		SpawnEggItem eggItem = (SpawnEggItem) eggStack.getItem();
 		type = eggItem.getType(null);
 
-		if (type != null && !(type.is(MobGrindingUtils.NOSWAB) || type.is(MobGrindingUtils.NOSPAWN))) {
+		if (type != null && !type.is(ModTags.Entities.NO_SPAWN)) {
 			AABB axisalignedbb = getAABBWithModifiers();
 			int minX = Mth.floor(axisalignedbb.minX);
 			int maxX = Mth.floor(axisalignedbb.maxX);

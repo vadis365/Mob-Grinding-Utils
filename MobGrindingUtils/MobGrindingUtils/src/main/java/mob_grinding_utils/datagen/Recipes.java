@@ -1,14 +1,7 @@
 package mob_grinding_utils.datagen;
 
-import java.nio.file.Path;
-import java.util.function.Consumer;
-
 import com.google.gson.JsonObject;
-
-import mob_grinding_utils.MobGrindingUtils;
-import mob_grinding_utils.ModBlocks;
-import mob_grinding_utils.ModItems;
-import mob_grinding_utils.Reference;
+import mob_grinding_utils.*;
 import mob_grinding_utils.recipe.BeheadingRecipe;
 import mob_grinding_utils.recipe.FluidIngredient;
 import mob_grinding_utils.recipe.SolidifyRecipe;
@@ -16,23 +9,24 @@ import mob_grinding_utils.recipe.WrappedRecipe;
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataGenerator;
-import net.minecraft.data.HashCache;
 import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.data.recipes.RecipeProvider;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
 import net.minecraft.data.recipes.ShapelessRecipeBuilder;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.tags.ItemTags;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.crafting.ConditionalRecipe;
 import net.minecraftforge.common.crafting.conditions.ModLoadedCondition;
 
 import javax.annotation.Nonnull;
+import java.nio.file.Path;
+import java.util.function.Consumer;
 
 public class Recipes extends RecipeProvider {
     public Recipes(DataGenerator generatorIn) {
@@ -309,7 +303,7 @@ public class Recipes extends RecipeProvider {
             .pattern("BEB")
             .pattern("RSX")
             .pattern("BGB")
-            .define('B', new FluidIngredient(MobGrindingUtils.EXPERIENCE, false))
+            .define('B', new FluidIngredient(ModTags.Fluids.EXPERIENCE, false))
             .define('E', Items.SPIDER_EYE)
             .define('R', Items.ROTTEN_FLESH)
             .define('S', Tags.Items.SEEDS)
@@ -351,7 +345,7 @@ public class Recipes extends RecipeProvider {
             .pattern("XBX")
             .pattern("XXX")
             .define('X', Tags.Items.NUGGETS_GOLD)
-            .define('B', new FluidIngredient(MobGrindingUtils.EXPERIENCE, false))
+            .define('B', new FluidIngredient(ModTags.Fluids.EXPERIENCE, false))
             .unlockedBy("", noneItem)
             .save(consumer, new ResourceLocation(Reference.MOD_ID, "recipe_mould_blank"));
 
@@ -386,7 +380,7 @@ public class Recipes extends RecipeProvider {
             .define('S', Items.SUGAR)
             .define('R', Tags.Items.DUSTS_REDSTONE)
             .define('B', Items.BLAZE_POWDER)
-            .define('X', new FluidIngredient(MobGrindingUtils.EXPERIENCE, false))
+            .define('X', new FluidIngredient(ModTags.Fluids.EXPERIENCE, false))
             .unlockedBy("", noneItem)
             .save(consumer, new ResourceLocation(Reference.MOD_ID, "recipe_xpsolidifier_upgrade"));
 
@@ -394,7 +388,7 @@ public class Recipes extends RecipeProvider {
             .pattern("BCB")
             .pattern("PSX")
             .pattern("BWB")
-            .define('B', new FluidIngredient(MobGrindingUtils.EXPERIENCE, false))
+            .define('B', new FluidIngredient(ModTags.Fluids.EXPERIENCE, false))
             .define('C', Items.CARROT)
             .define('P', Items.POTATO)
             .define('S', Tags.Items.SEEDS)
@@ -410,7 +404,7 @@ public class Recipes extends RecipeProvider {
             .pattern("EEE")
             .define('E', Items.EGG)
             .define('B', Items.BLAZE_POWDER)
-            .define('X', new FluidIngredient(MobGrindingUtils.EXPERIENCE, false))
+            .define('X', new FluidIngredient(ModTags.Fluids.EXPERIENCE, false))
             .unlockedBy("", noneItem)
             .save(consumer, new ResourceLocation(Reference.MOD_ID, "recipe_spawner_upgrade_width"));
 
@@ -421,14 +415,14 @@ public class Recipes extends RecipeProvider {
             .pattern("EBE")
             .define('E', Items.EGG)
             .define('B', Items.BLAZE_POWDER)
-            .define('X', new FluidIngredient(MobGrindingUtils.EXPERIENCE, false))
+            .define('X', new FluidIngredient(ModTags.Fluids.EXPERIENCE, false))
             .unlockedBy("", noneItem)
             .save(consumer, new ResourceLocation(Reference.MOD_ID, "recipe_spawner_upgrade_height"));
 
         ShapelessRecipeBuilder.shapeless(ModItems.GM_CHICKEN_FEED.get())
             .requires(Tags.Items.SEEDS)
             .requires(ModItems.MOB_SWAB_USED.get())
-            .requires(new FluidIngredient(MobGrindingUtils.EXPERIENCE, false))
+            .requires(new FluidIngredient(ModTags.Fluids.EXPERIENCE, false))
             .unlockedBy("", noneItem)
             .save(WrappedRecipe.Inject(consumer, MobGrindingUtils.CHICKEN_FEED.get()), new ResourceLocation(Reference.MOD_ID, "gm_chicken_feed"));
 
