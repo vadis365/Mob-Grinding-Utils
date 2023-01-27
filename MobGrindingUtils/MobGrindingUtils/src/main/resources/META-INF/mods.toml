@@ -13,6 +13,6 @@ A mod that adds a fun ways to farm mobs'''
 [[dependencies.mob_grinding_utils]]
 modId="forge"
 mandatory=true
-versionRange="[43.1.0,)"
+versionRange="[43.2.0,)"
 ordering="NONE"
 side="BOTH"
