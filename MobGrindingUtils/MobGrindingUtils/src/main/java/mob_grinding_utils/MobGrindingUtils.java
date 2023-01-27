@@ -191,7 +191,7 @@ public class MobGrindingUtils {
 		RenderTypeLookup.setRenderLayer(ModBlocks.FLUID_XP.get(), RenderType.getTranslucent());
 		RenderTypeLookup.setRenderLayer(ModBlocks.ENTITY_SPAWNER.getBlock(), RenderType.getCutout());
 
-		ModColourManager.registerColourHandlers();
+		event.enqueueWork(ModColourManager::registerColourHandlers);
 	}
 
 	private void serverReloadListener(final AddReloadListenerEvent event) {
