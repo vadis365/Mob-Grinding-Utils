@@ -11,6 +11,7 @@ import mezz.jei.api.recipe.category.IRecipeCategory;
 import mob_grinding_utils.ModBlocks;
 import mob_grinding_utils.Reference;
 import mob_grinding_utils.recipe.SolidifyRecipe;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
@@ -42,7 +43,7 @@ public class SolidifierCategory implements IRecipeCategory<SolidifyRecipe> {
 
     @Override
     public String getTitle() {
-        return "Solidifier Recipe";
+        return I18n.format("mob_grinding_utiles.jei.solidifier");
     }
 
     @Override
