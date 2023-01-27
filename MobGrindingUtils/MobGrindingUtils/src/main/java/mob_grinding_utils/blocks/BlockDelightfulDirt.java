@@ -3,7 +3,7 @@ package mob_grinding_utils.blocks;
 import java.util.List;
 import java.util.Random;
 
-import mob_grinding_utils.MobGrindingUtils;
+import mob_grinding_utils.ModTags;
 import mob_grinding_utils.network.MGUClientPackets;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -38,7 +38,6 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.IPlantable;
 import net.minecraftforge.common.Tags;
-import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.Nonnull;
 public class BlockDelightfulDirt extends Block {
@@ -113,7 +112,7 @@ public class BlockDelightfulDirt extends Block {
 
 	public void spawnMob(ServerLevel level, BlockPos pos) {
 		Holder<Biome> biomeHolder = level.getBiome(pos);
-		Biome biome = !biomeHolder.is(Tags.Biomes.IS_UNDERGROUND) ? biomeHolder.value() : level.registryAccess().registry(Registry.BIOME_REGISTRY)
+		Biome biome = !biomeHolder.is(ModTags.Biomes.PASSIVE_OVERRIDE) ? biomeHolder.value() : level.registryAccess().registry(Registry.BIOME_REGISTRY)
 				.flatMap(reg -> reg.getOptional(Biomes.PLAINS))
 				.orElseGet(biomeHolder::value);
 
@@ -121,7 +120,7 @@ public class BlockDelightfulDirt extends Block {
 		if (!spawns.isEmpty()) {
 			int indexSize = spawns.size();
 			EntityType<?> type = spawns.get(RANDOM.nextInt(indexSize)).type;
-			if (type.is(MobGrindingUtils.NOSPAWN))
+			if (type.is(ModTags.Entities.NO_DIRT_SPAWN))
 				return;
 			if (type == null || !NaturalSpawner.isSpawnPositionOk(SpawnPlacements.getPlacementType(type), level, pos.above(), type))
 				return;

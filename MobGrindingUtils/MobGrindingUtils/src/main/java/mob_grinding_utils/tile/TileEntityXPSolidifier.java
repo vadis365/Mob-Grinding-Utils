@@ -7,6 +7,7 @@ import io.netty.buffer.Unpooled;
 import mob_grinding_utils.MobGrindingUtils;
 import mob_grinding_utils.ModBlocks;
 import mob_grinding_utils.ModItems;
+import mob_grinding_utils.ModTags;
 import mob_grinding_utils.inventory.server.ContainerXPSolidifier;
 import mob_grinding_utils.recipe.SolidifyRecipe;
 import net.minecraft.core.BlockPos;
@@ -225,7 +226,7 @@ public class TileEntityXPSolidifier extends BlockEntity implements MenuProvider 
 	}
 
 	private boolean hasfluid() {
-		return currentRecipe != null && !tank.getFluid().isEmpty() && tank.getFluid().getAmount() >= currentRecipe.getFluidAmount() && tank.getFluidInTank(0).getFluid().is(MobGrindingUtils.EXPERIENCE);
+		return currentRecipe != null && !tank.getFluid().isEmpty() && tank.getFluid().getAmount() >= currentRecipe.getFluidAmount() && tank.getFluidInTank(0).getFluid().is(ModTags.Fluids.EXPERIENCE);
 	}
 
 	private boolean canOperate() {

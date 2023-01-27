@@ -15,5 +15,6 @@ public class Generator {
         generator.addProvider(new MGUFluidTags(generator, event.getExistingFileHelper()));
         generator.addProvider(new MGUEntityTypeTags(generator, event.getExistingFileHelper()));
         generator.addProvider(new BlockStates(generator, event.getExistingFileHelper()));
+        generator.addProvider(new MGUBiomeTags(generator, event.getExistingFileHelper()));
     }
 }
