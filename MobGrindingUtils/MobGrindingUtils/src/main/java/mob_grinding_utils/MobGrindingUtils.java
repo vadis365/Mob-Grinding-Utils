@@ -183,7 +183,7 @@ public static final Logger LOGGER = LogManager.getLogger(Reference.MOD_ID);
 		ItemBlockRenderTypes.setRenderLayer(ModBlocks.FLUID_XP.get(), RenderType.translucent());
 		ItemBlockRenderTypes.setRenderLayer(ModBlocks.ENTITY_SPAWNER.getBlock(), RenderType.cutout());
 
-		ModColourManager.registerColourHandlers();
+		event.enqueueWork(ModColourManager::registerColourHandlers);
 	}
 
 	private void serverReloadListener(final AddReloadListenerEvent event) {
