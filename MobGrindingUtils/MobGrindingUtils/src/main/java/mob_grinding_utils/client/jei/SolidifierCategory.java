@@ -40,7 +40,7 @@ public class SolidifierCategory implements IRecipeCategory<SolidifyRecipe> {
     @Nonnull
     @Override
     public Component getTitle() {
-        return new TextComponent("Solidifier Recipe");
+        return new TranslatableComponent("mob_grinding_utiles.jei.solidifier");
     }
 
     @Nonnull
