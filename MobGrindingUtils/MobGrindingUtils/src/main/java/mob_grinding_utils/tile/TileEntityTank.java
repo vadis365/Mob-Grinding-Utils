@@ -39,8 +39,10 @@ public class TileEntityTank extends BlockEntity {
 
 	public static <T extends BlockEntity> void serverTick(Level world, BlockPos worldPosition, BlockState blockState, T t) {
 		if (t instanceof TileEntityTank tile) {
-			if(tile.prevTankAmount != tile.tank.getFluidAmount())
+			if(tile.prevTankAmount != tile.tank.getFluidAmount()) {
 				tile.updateBlock();
+				tile.setChanged();
+			}
 			tile.prevTankAmount = tile.tank.getFluidAmount();
 		}
 	}
