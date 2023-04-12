@@ -33,6 +33,8 @@ import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.AABB;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.event.ForgeEventFactory;
+import net.minecraftforge.eventbus.api.Event;
 
 public class BlockDreadfulDirt extends Block {
 
@@ -107,6 +109,10 @@ public class BlockDreadfulDirt extends Block {
 			if (entity != null) {
 				entity.setPos(pos.getX() + 0.5D, pos.getY() + 1D, pos.getZ() + 0.5D);
 				 if(level.getEntities(entity.getType(), entity.getBoundingBox(), EntitySelector.ENTITY_STILL_ALIVE).isEmpty() && level.noCollision(entity)) {
+					Event.Result result = ForgeEventFactory.canEntitySpawn(entity, level, pos.getX() + 0.5D, pos.getY() + 1D, pos.getZ() + 0.5D, null, MobSpawnType.NATURAL);
+					if (result == Event.Result.DENY) {
+						return;
+					}
 					entity.finalizeSpawn(level, level.getCurrentDifficultyAt(pos), MobSpawnType.NATURAL, null, null);
 					level.addFreshEntity(entity);
 				 }
