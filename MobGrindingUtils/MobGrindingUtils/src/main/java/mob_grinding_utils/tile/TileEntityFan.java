@@ -73,6 +73,8 @@ public class TileEntityFan extends TileEntityInventoryHelper implements MenuProv
 	
 	public void setAABBWithModifiers() {
 		BlockState state = getLevel().getBlockState(getBlockPos());
+		if (!(state.getBlock() instanceof BlockFan))
+			return;
 		Direction facing = state.getValue(BlockFan.FACING);
 
 		int distance;
