@@ -54,7 +54,7 @@ import java.util.List;
 
 @Mod(Reference.MOD_ID)
 public class MobGrindingUtils {
-public static final Logger LOGGER = LoggerFactory.getLogger(Reference.MOD_ID);
+	public static final Logger LOGGER = LoggerFactory.getLogger(Reference.MOD_ID);
 	public static SimpleChannel NETWORK_WRAPPER;
 	public static DamageSource SPIKE_DAMAGE;
 
