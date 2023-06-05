@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Random;
 
 import mob_grinding_utils.ModTags;
+import mob_grinding_utils.events.DirtSpawnEvent;
 import mob_grinding_utils.network.MGUClientPackets;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -130,7 +131,7 @@ public class BlockDelightfulDirt extends Block {
 			if (entity != null) {
 				entity.setPos(pos.getX() + 0.5D, pos.getY() + 1D, pos.getZ() + 0.5D);
 				if (level.getEntities(entity.getType(), entity.getBoundingBox(), EntitySelector.ENTITY_STILL_ALIVE).isEmpty() && level.noCollision(entity)) {
-					Event.Result result = ForgeEventFactory.canEntitySpawn(entity, level, pos.getX() + 0.5D, pos.getY() + 1D, pos.getZ() + 0.5D, null, MobSpawnType.NATURAL);
+					Event.Result result = DirtSpawnEvent.checkEvent(entity, level, pos.getX() + 0.5D, pos.getY() + 1D, pos.getZ() + 0.5D, DirtSpawnEvent.DirtType.DELIGHTFUL);
 					if (result == Event.Result.DENY) {
 						return;
 					}
