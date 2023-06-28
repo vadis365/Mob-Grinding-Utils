@@ -1,5 +1,5 @@
 modLoader="javafml"
-loaderVersion="[43,)"
+loaderVersion="[44,)"
 license="All rights reserved"
 [[mods]]
 modId="mob_grinding_utils"
@@ -13,6 +13,6 @@ A mod that adds a fun ways to farm mobs'''
 [[dependencies.mob_grinding_utils]]
 modId="forge"
 mandatory=true
-versionRange="[43.2.0,)"
+versionRange="[44.1.0,)"
 ordering="NONE"
 side="BOTH"

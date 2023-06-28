@@ -18,7 +18,7 @@ public class GuiMGUButton extends Button {
     public int id;
 
     public GuiMGUButton(int x, int y, Size s, int idIn, Component title, OnPress pressedAction) {
-        super(x, y, s.width, s.height, title, pressedAction);
+        super(x, y, s.width, s.height, title, pressedAction, DEFAULT_NARRATION);
         size = s;
         id = idIn;
     }
@@ -31,10 +31,10 @@ public class GuiMGUButton extends Button {
             RenderSystem.setShader(GameRenderer::getPositionTexShader);
             RenderSystem.setShaderTexture(0, getTextures(size));
             RenderSystem.setShaderColor(0.75F, 0.75F, 0.75F, 0.5F);
-            boolean hover = mouseX >= x && mouseY >= y && mouseX < x + width && mouseY < y + height;
+            boolean hover = mouseX >= getX() && mouseY >= getY() && mouseX < getX() + width && mouseY < getY() + height;
             if(hover)
                 RenderSystem.setShaderColor(0.75F, 1F, 0.75F, 1F);
-            blit(matrixStack, x, y, size.u, size.v, width, height);
+            blit(matrixStack, getX(), getY(), size.u, size.v, width, height);
 
             int textColour = 14737632;
             if (getFGColor() != 0)
@@ -43,7 +43,7 @@ public class GuiMGUButton extends Button {
                 textColour = 10526880;
             else if (this.isHoveredOrFocused())
                 textColour = 16777120;
-            drawCenteredString(matrixStack, fontrenderer, getMessage(), this.x + this.width / 2, this.y + (this.height - 8) / 2, textColour);
+            drawCenteredString(matrixStack, fontrenderer, getMessage(), getX() + this.width / 2, getY() + (this.height - 8) / 2, textColour);
         }
     }
     

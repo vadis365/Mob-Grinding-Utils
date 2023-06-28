@@ -2,12 +2,12 @@
     "render_type": "cutout",
     "parent": "block/cube",
     "textures": {
-        "particle": "mob_grinding_utils:blocks/jumbo_tank_top_bottom",
-        "down": "mob_grinding_utils:blocks/jumbo_tank_sides",
-        "up": "mob_grinding_utils:blocks/jumbo_tank_top_bottom",
-        "north": "mob_grinding_utils:blocks/jumbo_tank_sides",
-        "east": "mob_grinding_utils:blocks/jumbo_tank_sides",
-        "south": "mob_grinding_utils:blocks/jumbo_tank_sides",
-        "west": "mob_grinding_utils:blocks/jumbo_tank_sides"
+        "particle": "mob_grinding_utils:block/jumbo_tank_top_bottom",
+        "down": "mob_grinding_utils:block/jumbo_tank_sides",
+        "up": "mob_grinding_utils:block/jumbo_tank_top_bottom",
+        "north": "mob_grinding_utils:block/jumbo_tank_sides",
+        "east": "mob_grinding_utils:block/jumbo_tank_sides",
+        "south": "mob_grinding_utils:block/jumbo_tank_sides",
+        "west": "mob_grinding_utils:block/jumbo_tank_sides"
     }
 }

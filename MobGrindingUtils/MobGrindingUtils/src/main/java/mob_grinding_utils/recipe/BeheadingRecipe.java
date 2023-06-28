@@ -3,7 +3,7 @@ package mob_grinding_utils.recipe;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import mob_grinding_utils.MobGrindingUtils;
-import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
@@ -147,7 +147,7 @@ public class BeheadingRecipe implements Recipe<Container>{
         @Override
         public BeheadingRecipe fromJson(@Nonnull ResourceLocation recipeID, JsonObject json) {
             ResourceLocation entityRes = new ResourceLocation(json.get("entity").getAsString());
-            Optional<EntityType<?>> type = Registry.ENTITY_TYPE.getOptional(entityRes);
+            Optional<EntityType<?>> type = BuiltInRegistries.ENTITY_TYPE.getOptional(entityRes);
             if (type.isEmpty())
                 throw new JsonParseException("unknown entity type");
             ItemStack result = new ItemStack(GsonHelper.getAsItem(json.get("result").getAsJsonObject(), "item"));
@@ -159,7 +159,7 @@ public class BeheadingRecipe implements Recipe<Container>{
         @Override
         public BeheadingRecipe fromNetwork(ResourceLocation recipeID, FriendlyByteBuf buf) {
             ResourceLocation entityRes = new ResourceLocation(buf.readUtf());
-            Optional<EntityType<?>> type = Registry.ENTITY_TYPE.getOptional(entityRes);
+            Optional<EntityType<?>> type = BuiltInRegistries.ENTITY_TYPE.getOptional(entityRes);
             if (type.isEmpty())
                 throw new JsonParseException("unknown entity type");
             ItemStack result = buf.readItem();

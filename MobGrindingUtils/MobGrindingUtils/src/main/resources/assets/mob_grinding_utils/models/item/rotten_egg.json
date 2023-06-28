@@ -1,6 +1,6 @@
 {
     "parent": "item/generated",
     "textures": {
-        "layer0": "mob_grinding_utils:items/rotten_egg"
+        "layer0": "mob_grinding_utils:item/rotten_egg"
     }
 }

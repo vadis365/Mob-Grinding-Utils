@@ -1,11 +1,7 @@
 package mob_grinding_utils.recipe;
 
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import com.google.gson.JsonObject;
-
 import mob_grinding_utils.MobGrindingUtils;
 import mob_grinding_utils.ModItems;
 import net.minecraft.network.FriendlyByteBuf;
@@ -15,11 +11,14 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.ShapelessRecipe;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 
 public class ChickenFeedRecipe extends ShapelessRecipe {
     public static final String NAME = "chicken_feed";
     public ChickenFeedRecipe(ShapelessRecipe recipe) {
-        super(recipe.getId(), recipe.getGroup(), recipe.getResultItem(), recipe.getIngredients());
+        super(recipe.getId(), recipe.getGroup(), recipe.category(), recipe.getResultItem(), recipe.getIngredients());
     }
 
     @Nonnull

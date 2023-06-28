@@ -1,5 +1,6 @@
 {
   "type": "mob_grinding_utils:chicken_feed",
+  "category": "misc",
   "ingredients": [
     {
       "tag": "forge:seeds"

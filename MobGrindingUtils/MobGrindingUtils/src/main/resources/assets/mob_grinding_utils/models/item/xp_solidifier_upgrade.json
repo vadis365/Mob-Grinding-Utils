@@ -1,6 +1,6 @@
 {
     "parent": "item/generated",
     "textures": {
-        "layer0": "mob_grinding_utils:items/xp_solidifier_upgrade"
+        "layer0": "mob_grinding_utils:item/xp_solidifier_upgrade"
     }
 }

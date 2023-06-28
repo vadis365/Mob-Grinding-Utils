@@ -4,7 +4,7 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
 import mob_grinding_utils.ModBlocks;
 import mob_grinding_utils.blocks.BlockXPSolidifier;
 import mob_grinding_utils.client.ModelLayers;
@@ -60,19 +60,19 @@ public class TileEntityXPSolidifierRenderer implements BlockEntityRenderer<TileE
 		switch (tile.outputDirection) {
 		case NONE:
 		case NORTH:
-			matrixStack.mulPose(Vector3f.YP.rotationDegrees(90F));
+			matrixStack.mulPose(Axis.YP.rotationDegrees(90F));
 			break;
 		case SOUTH:
-			matrixStack.mulPose(Vector3f.YN.rotationDegrees(90F));
+			matrixStack.mulPose(Axis.YN.rotationDegrees(90F));
 			break;
 		case WEST:
-			matrixStack.mulPose(Vector3f.YP.rotationDegrees(0F));
+			matrixStack.mulPose(Axis.YP.rotationDegrees(0F));
 			break;
 		case EAST:
-			matrixStack.mulPose(Vector3f.YN.rotationDegrees(180F));
+			matrixStack.mulPose(Axis.YN.rotationDegrees(180F));
 			break;
 		default:
-			matrixStack.mulPose(Vector3f.YP.rotationDegrees(90F));
+			matrixStack.mulPose(Axis.YP.rotationDegrees(90F));
 			break;
 		}
 
@@ -89,16 +89,16 @@ public class TileEntityXPSolidifierRenderer implements BlockEntityRenderer<TileE
 
 		switch (facing) {
 		case NORTH:
-			matrixStack.mulPose(Vector3f.YP.rotationDegrees(0F));
+			matrixStack.mulPose(Axis.YP.rotationDegrees(0F));
 			break;
 		case SOUTH:
-			matrixStack.mulPose(Vector3f.YP.rotationDegrees(180F));
+			matrixStack.mulPose(Axis.YP.rotationDegrees(180F));
 			break;
 		case WEST:
-			matrixStack.mulPose(Vector3f.YN.rotationDegrees(90F));
+			matrixStack.mulPose(Axis.YN.rotationDegrees(90F));
 			break;
 		case EAST:
-			matrixStack.mulPose(Vector3f.YP.rotationDegrees(90F));
+			matrixStack.mulPose(Axis.YP.rotationDegrees(90F));
 			break;
 		default:
 			break;
@@ -120,7 +120,7 @@ public class TileEntityXPSolidifierRenderer implements BlockEntityRenderer<TileE
 		
 		matrixStack.pushPose();
 		matrixStack.translate(0D, 0.60625D, -0.22D);
-		matrixStack.mulPose(Vector3f.XP.rotationDegrees(90.0F));
+		matrixStack.mulPose(Axis.XP.rotationDegrees(90.0F));
 		matrixStack.scale(1.25F, 1.25F, 1.25F);
 		ItemStack stackMould = tile.inputSlots.getStackInSlot(0);
 		if (!stackMould.isEmpty()) {
@@ -139,7 +139,7 @@ public class TileEntityXPSolidifierRenderer implements BlockEntityRenderer<TileE
 		
 		matrixStack.pushPose();
 		matrixStack.translate(0D, 0.79375D, -0.22D);
-		matrixStack.mulPose(Vector3f.XP.rotationDegrees(90.0F));
+		matrixStack.mulPose(Axis.XP.rotationDegrees(90.0F));
 		matrixStack.scale(1.25F, 1.25F, 1.25F);
 		ItemStack stackResult = tile.outputSlot.getStackInSlot(0);
 		if (stackResult.isEmpty() && !tile.getCachedOutPutRenderStack().isEmpty() && tile.getProgress() > 60) { //may want to add some earlier blending fade here

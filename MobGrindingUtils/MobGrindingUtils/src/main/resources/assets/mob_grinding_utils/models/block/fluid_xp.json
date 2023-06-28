@@ -1,6 +1,6 @@
 {
   "render_type": "translucent",
   "textures": {
-    "particle": "mob_grinding_utils:fluids/fluid_xp"
+    "particle": "mob_grinding_utils:block/fluid_xp"
   }
 }

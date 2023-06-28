@@ -6,7 +6,7 @@ import mob_grinding_utils.network.MGUClientPackets;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
-import net.minecraft.core.Registry;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.placement.VegetationPlacements;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
@@ -27,7 +27,6 @@ import net.minecraft.world.phys.AABB;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.IPlantable;
-import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.eventbus.api.Event;
 
 import javax.annotation.Nonnull;
@@ -94,7 +93,7 @@ public class BlockDelightfulDirt extends Block {
 							return;
 						placedfeature = ((RandomPatchConfiguration)list.get(0).config()).feature().value();
 					 } else {
-			               placedfeature = VegetationPlacements.GRASS_BONEMEAL.value();
+							placedfeature = level.registryAccess().registryOrThrow(Registries.PLACED_FEATURE).get(VegetationPlacements.GRASS_BONEMEAL);
 			            }
 					 placedfeature.place(level, level.getChunkSource().getGenerator(), rand, posUp);	
 				}
@@ -104,7 +103,7 @@ public class BlockDelightfulDirt extends Block {
 
 	public void spawnMob(ServerLevel level, BlockPos pos) {
 		Holder<Biome> biomeHolder = level.getBiome(pos);
-		Biome biome = !biomeHolder.is(ModTags.Biomes.PASSIVE_OVERRIDE) ? biomeHolder.value() : level.registryAccess().registry(Registry.BIOME_REGISTRY)
+		Biome biome = !biomeHolder.is(ModTags.Biomes.PASSIVE_OVERRIDE) ? biomeHolder.value() : level.registryAccess().registry(Registries.BIOME)
 				.flatMap(reg -> reg.getOptional(Biomes.PLAINS))
 				.orElseGet(biomeHolder::value);
 

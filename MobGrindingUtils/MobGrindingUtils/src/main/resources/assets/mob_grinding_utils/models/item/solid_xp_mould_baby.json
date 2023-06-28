@@ -1,6 +1,6 @@
 {
     "parent": "item/generated",
     "textures": {
-        "layer0": "mob_grinding_utils:items/solid_xp_mould_baby"
+        "layer0": "mob_grinding_utils:item/solid_xp_mould_baby"
     }
 }

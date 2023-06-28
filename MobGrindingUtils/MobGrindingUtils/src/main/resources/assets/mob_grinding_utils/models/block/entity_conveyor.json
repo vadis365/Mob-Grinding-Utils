@@ -2,12 +2,12 @@
     "parent": "block/cube",
     "render_type": "solid",
     "textures": {
-        "particle": "mob_grinding_utils:blocks/entity_conveyor_top",
-        "down": "mob_grinding_utils:blocks/entity_conveyor_side",
-        "up": "mob_grinding_utils:blocks/entity_conveyor_top",
-        "north": "mob_grinding_utils:blocks/entity_conveyor_side",
-        "east": "mob_grinding_utils:blocks/entity_conveyor_side",
-        "south": "mob_grinding_utils:blocks/entity_conveyor_side",
-        "west": "mob_grinding_utils:blocks/entity_conveyor_side"
+        "particle": "mob_grinding_utils:block/entity_conveyor_top",
+        "down": "mob_grinding_utils:block/entity_conveyor_side",
+        "up": "mob_grinding_utils:block/entity_conveyor_top",
+        "north": "mob_grinding_utils:block/entity_conveyor_side",
+        "east": "mob_grinding_utils:block/entity_conveyor_side",
+        "south": "mob_grinding_utils:block/entity_conveyor_side",
+        "west": "mob_grinding_utils:block/entity_conveyor_side"
     }
 }

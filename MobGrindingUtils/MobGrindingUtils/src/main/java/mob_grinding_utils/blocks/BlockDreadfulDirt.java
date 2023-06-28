@@ -5,8 +5,8 @@ import mob_grinding_utils.events.DirtSpawnEvent;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
-import net.minecraft.core.Registry;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
@@ -23,7 +23,6 @@ import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.AABB;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.eventbus.api.Event;
 
 import java.util.List;
@@ -85,7 +84,7 @@ public class BlockDreadfulDirt extends Block {
 
 	public void spawnMob(ServerLevel level, BlockPos pos) {
 		Holder<Biome> biomeHolder = level.getBiome(pos);
-		Biome biome = !biomeHolder.is(ModTags.Biomes.HOSTILE_OVERRIDE) ? biomeHolder.value() : level.registryAccess().registry(Registry.BIOME_REGISTRY)
+		Biome biome = !biomeHolder.is(ModTags.Biomes.HOSTILE_OVERRIDE) ? biomeHolder.value() : level.registryAccess().registry(Registries.BIOME)
 				.flatMap(reg -> reg.getOptional(Biomes.PLAINS))
 				.orElseGet(biomeHolder::value);
 

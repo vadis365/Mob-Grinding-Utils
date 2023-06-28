@@ -15,10 +15,12 @@ import mob_grinding_utils.recipe.SolidifyRecipe;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.core.Registry;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.particles.SimpleParticleType;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
@@ -31,6 +33,7 @@ import net.minecraftforge.client.event.RecipesUpdatedEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.event.AddReloadListenerEvent;
+import net.minecraftforge.event.CreativeModeTabEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.level.LevelEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -47,7 +50,6 @@ import net.minecraftforge.registries.RegistryObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -60,7 +62,7 @@ public class MobGrindingUtils {
 
 	public static final DeferredRegister<ParticleType<?>> PARTICLES = DeferredRegister.create(ForgeRegistries.PARTICLE_TYPES, Reference.MOD_ID);
 	public static final DeferredRegister<RecipeSerializer<?>> RECIPES = DeferredRegister.create(ForgeRegistries.RECIPE_SERIALIZERS, Reference.MOD_ID);
-	public static final DeferredRegister<RecipeType<?>> RECIPE_TYPES = DeferredRegister.create(Registry.RECIPE_TYPE_REGISTRY, Reference.MOD_ID);
+	public static final DeferredRegister<RecipeType<?>> RECIPE_TYPES = DeferredRegister.create(Registries.RECIPE_TYPE, Reference.MOD_ID);
 
 	public static final RegistryObject<SimpleParticleType> PARTICLE_FLUID_XP = PARTICLES.register("fluid_xp_particles", () -> new SimpleParticleType(true));
 
@@ -73,13 +75,7 @@ public class MobGrindingUtils {
 	public static final RegistryObject<RecipeType<SolidifyRecipe>> SOLIDIFIER_TYPE = RECIPE_TYPES.register("solidify", () -> new RecipeType<>() {});
 	public static final RegistryObject<RecipeType<BeheadingRecipe>> BEHEADING_TYPE = RECIPE_TYPES.register("beheading", () -> new RecipeType<>() {});
 
-	public static final CreativeModeTab TAB = new CreativeModeTab(Reference.MOD_ID) {
-		@Nonnull
-		@Override
-		public ItemStack makeIcon() {
-			return new ItemStack(ModBlocks.SPIKES.getItem());
-		}
-	};
+	public static CreativeModeTab TAB;
 
 	public MobGrindingUtils() {
 		IEventBus modBus = FMLJavaModLoadingContext.get().getModEventBus();
@@ -95,6 +91,7 @@ public class MobGrindingUtils {
 
 		modBus.addListener(this::setup);
 		modBus.addListener(this::doClientStuff);
+		modBus.addListener(MobGrindingUtils::creativeTabEvent);
 
 		MinecraftForge.EVENT_BUS.addListener(BlockSpikes::dropXP);
 		MinecraftForge.EVENT_BUS.register(new EntityInteractionEvent());
@@ -189,5 +186,14 @@ public class MobGrindingUtils {
 		if (event.getLevel() instanceof ServerLevel) {
 			MGUFakePlayer.unload(event.getLevel());
 		}
+	}
+
+	public static void creativeTabEvent(CreativeModeTabEvent.Register event) {
+		TAB = event.registerCreativeModeTab(new ResourceLocation(Reference.MOD_ID, "tab"), builder -> builder
+				.icon(() -> new ItemStack(ModBlocks.SPIKES.get()))
+				.title(Component.translatable("itemGroup.mob_grinding_utils")).displayItems((useless, output, something) -> {
+					ModBlocks.TAB_ORDER.forEach(block -> output.accept(block.getItem()));
+					ModItems.TAB_ORDER.forEach(item -> output.accept(item.get()));
+				}));
 	}
 }

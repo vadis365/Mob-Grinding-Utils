@@ -1,6 +1,7 @@
 package mob_grinding_utils;
 
 
+import com.google.common.collect.ImmutableSet;
 import mob_grinding_utils.blocks.*;
 import mob_grinding_utils.client.render.TileSawStackItemRenderer;
 import mob_grinding_utils.client.render.TileTankStackItemRenderer;
@@ -35,6 +36,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
 import javax.annotation.Nonnull;
+import java.util.Set;
 import java.util.function.Consumer;
 
 public class ModBlocks {
@@ -45,11 +47,11 @@ public class ModBlocks {
 
 	public static MGUBlockReg<BlockFan, MGUBlockItem, TileEntityFan> FAN = new MGUBlockReg<>("fan",
 		() -> new BlockFan(Block.Properties.of(Material.METAL, MaterialColor.STONE).strength(10.0F, 2000.0F).sound(SoundType.METAL)),
-		(b) -> new MGUBlockItem(b, new Item.Properties().tab(MobGrindingUtils.TAB)), TileEntityFan::new);
+		(b) -> new MGUBlockItem(b, new Item.Properties()), TileEntityFan::new);
 
 	public static MGUBlockReg<BlockSaw, MGUBlockItem, TileEntitySaw> SAW = new MGUBlockReg<>("saw",
 		() -> new BlockSaw(Block.Properties.of(Material.METAL, MaterialColor.STONE).strength(10.0F, 2000.0F).sound(SoundType.METAL).noOcclusion()),
-		(b) -> new MGUBlockItem(b, new Item.Properties().tab(MobGrindingUtils.TAB)) {
+		(b) -> new MGUBlockItem(b, new Item.Properties()) {
 			@Override
 			public void initializeClient(Consumer<IClientItemExtensions> consumer) {
 				consumer.accept(new IClientItemExtensions() {
@@ -63,15 +65,15 @@ public class ModBlocks {
 
 	public static MGUBlockReg<BlockAbsorptionHopper, MGUBlockItem, TileEntityAbsorptionHopper> ABSORPTION_HOPPER = new MGUBlockReg<>("absorption_hopper",
 		() -> new BlockAbsorptionHopper(Block.Properties.of(Material.METAL, MaterialColor.STONE).strength(10.0F, 2000.0F).sound(SoundType.METAL).noOcclusion()),
-		(b) -> new MGUBlockItem(b, new Item.Properties().tab(MobGrindingUtils.TAB)), TileEntityAbsorptionHopper::new);
+		(b) -> new MGUBlockItem(b, new Item.Properties()), TileEntityAbsorptionHopper::new);
 
 	public static MGUBlockReg<BlockSpikes, MGUBlockItem, ?> SPIKES = new MGUBlockReg<>("spikes",
 		() -> new BlockSpikes(Block.Properties.of(Material.METAL, MaterialColor.STONE).strength(5.0F, 2000.0F).sound(SoundType.METAL).noOcclusion()),
-		(b) -> new MGUBlockItem(b, new Item.Properties().tab(MobGrindingUtils.TAB)));
+		(b) -> new MGUBlockItem(b, new Item.Properties()));
 
 	public static MGUBlockReg<BlockTank, BlockItemTank, TileEntityTank> TANK = new MGUBlockReg<>("tank",
 		() -> new BlockTank(Block.Properties.of(Material.GLASS, MaterialColor.QUARTZ).strength(1.0F, 2000.0F).sound(SoundType.GLASS).noOcclusion()),
-		(b) -> new BlockItemTank(b, new Item.Properties().tab(MobGrindingUtils.TAB)) {
+		(b) -> new BlockItemTank(b, new Item.Properties()) {
 			@Override
 			public void initializeClient(Consumer<IClientItemExtensions> consumer) {
 				consumer.accept(new IClientItemExtensions() {
@@ -85,7 +87,7 @@ public class ModBlocks {
 
 	public static MGUBlockReg<BlockTankSink, BlockItemTankSink, TileEntitySinkTank> TANK_SINK = new MGUBlockReg<>("tank_sink",
 		() -> new BlockTankSink(Block.Properties.of(Material.GLASS, MaterialColor.QUARTZ).strength(1.0F, 2000.0F).sound(SoundType.GLASS).noOcclusion()),
-		(b) -> new BlockItemTankSink(b, new Item.Properties().tab(MobGrindingUtils.TAB)){
+		(b) -> new BlockItemTankSink(b, new Item.Properties()){
 			@Override
 			public void initializeClient(Consumer<IClientItemExtensions> consumer) {
 				consumer.accept(new IClientItemExtensions() {
@@ -99,39 +101,39 @@ public class ModBlocks {
 
 	public static MGUBlockReg<BlockXPTap, MGUBlockItem, TileEntityXPTap> XP_TAP = new MGUBlockReg<>("xp_tap",
 		() -> new BlockXPTap(Block.Properties.of(Material.BUILDABLE_GLASS, MaterialColor.STONE).strength(1.0F, 2000.0F).sound(SoundType.METAL).noOcclusion()),
-		(b) -> new MGUBlockItem(b, new Item.Properties().tab(MobGrindingUtils.TAB)), TileEntityXPTap::new);
+		(b) -> new MGUBlockItem(b, new Item.Properties()), TileEntityXPTap::new);
 
 	public static MGUBlockReg<BlockWitherMuffler, MGUBlockItem, ?> WITHER_MUFFLER = new MGUBlockReg<>("wither_muffler",
 		() -> new BlockWitherMuffler(Block.Properties.of(Material.WOOL, MaterialColor.STONE).strength(0.5F, 2000F).sound(SoundType.WOOL)),
-		(b) -> new MGUBlockItem(b, new Item.Properties().tab(MobGrindingUtils.TAB)));
+		(b) -> new MGUBlockItem(b, new Item.Properties()));
 
 	public static MGUBlockReg<BlockDragonMuffler, MGUBlockItem, ?> DRAGON_MUFFLER = new MGUBlockReg<>("dragon_muffler",
 		() -> new BlockDragonMuffler(Block.Properties.of(Material.WOOL, MaterialColor.STONE).strength(0.5F, 2000F).sound(SoundType.WOOL)),
-		(b) -> new MGUBlockItem(b, new Item.Properties().tab(MobGrindingUtils.TAB)));
+		(b) -> new MGUBlockItem(b, new Item.Properties()));
 
 	public static MGUBlockReg<BlockDarkOakStone, MGUBlockItem, ?> DARK_OAK_STONE = new MGUBlockReg<>("dark_oak_stone",
 		() -> new BlockDarkOakStone(Block.Properties.of(Material.STONE, MaterialColor.STONE).strength(1.5F, 10F).sound(SoundType.STONE).lightLevel(bState -> 7)),
-		(b) -> new MGUBlockItem(b, new Item.Properties().tab(MobGrindingUtils.TAB)));
+		(b) -> new MGUBlockItem(b, new Item.Properties()));
 
 	public static MGUBlockReg<BlockEntityConveyor, MGUBlockItem, ?> ENTITY_CONVEYOR = new MGUBlockReg<>("entity_conveyor",
 		() -> new BlockEntityConveyor(Block.Properties.of(Material.STONE, MaterialColor.STONE).strength(0.5F, 2000.0F).sound(SoundType.STONE).isValidSpawn((state, reader, pos, entitytype) -> true)),
-		(b) -> new MGUBlockItem(b, new Item.Properties().tab(MobGrindingUtils.TAB)));
+		(b) -> new MGUBlockItem(b, new Item.Properties()));
 
 	public static MGUBlockReg<BlockEnderInhibitorOn, MGUBlockItem, ?> ENDER_INHIBITOR_ON = new MGUBlockReg<>("ender_inhibitor_on",
 		() -> new BlockEnderInhibitorOn(Block.Properties.of(Material.BUILDABLE_GLASS, MaterialColor.STONE).strength(0.2F, 2000F).sound(SoundType.METAL).noOcclusion()),
-		(b) -> new MGUBlockItem(b, new Item.Properties().tab(MobGrindingUtils.TAB)));
+		(b) -> new MGUBlockItem(b, new Item.Properties()));
 
 	public static MGUBlockReg<BlockEnderInhibitorOff, MGUBlockItem, ?> ENDER_INHIBITOR_OFF = new MGUBlockReg<>("ender_inhibitor_off",
 		() -> new BlockEnderInhibitorOff(Block.Properties.of(Material.BUILDABLE_GLASS, MaterialColor.STONE).strength(0.2F, 2000F).sound(SoundType.METAL).noOcclusion()),
-		(b) -> new MGUBlockItem(b, new Item.Properties().tab(MobGrindingUtils.TAB)));
+		(b) -> new MGUBlockItem(b, new Item.Properties()));
 
 	public static MGUBlockReg<BlockTintedGlass, MGUBlockItem, ?> TINTED_GLASS = new MGUBlockReg<>("tinted_glass",
 		() -> new BlockTintedGlass(Block.Properties.of(Material.GLASS, MaterialColor.COLOR_BLACK).strength(1.0F, 2000.0F).sound(SoundType.GLASS).noOcclusion()),
-		(b) -> new MGUBlockItem(b, new Item.Properties().tab(MobGrindingUtils.TAB)));
+		(b) -> new MGUBlockItem(b, new Item.Properties()));
 
 	public static MGUBlockReg<BlockTankJumbo, BlockItemTankJumbo, TileEntityJumboTank> JUMBO_TANK = new MGUBlockReg<>("jumbo_tank",
 		() -> new BlockTankJumbo(Block.Properties.of(Material.METAL, MaterialColor.COLOR_GRAY).strength(1.0F, 2000.0F).sound(SoundType.METAL).noOcclusion()),
-		(b) -> new BlockItemTankJumbo(b, new Item.Properties().tab(MobGrindingUtils.TAB)){
+		(b) -> new BlockItemTankJumbo(b, new Item.Properties()){
 			@Override
 			public void initializeClient(Consumer<IClientItemExtensions> consumer) {
 				consumer.accept(new IClientItemExtensions() {
@@ -145,7 +147,7 @@ public class ModBlocks {
 
 	public static MGUBlockReg<BlockXPSolidifier, MGUBlockItem, TileEntityXPSolidifier> XPSOLIDIFIER = new MGUBlockReg<>("xpsolidifier",
 		() -> new BlockXPSolidifier(Block.Properties.of(Material.METAL, MaterialColor.COLOR_GRAY).strength(1.0F, 2000.0F).sound(SoundType.METAL).noOcclusion()),
-		(b) -> new MGUBlockItem(b, new Item.Properties().tab(MobGrindingUtils.TAB)){
+		(b) -> new MGUBlockItem(b, new Item.Properties()){
 			@Override
 			public void initializeClient(@Nonnull Consumer<IClientItemExtensions> consumer) {
 				consumer.accept(new IClientItemExtensions() {
@@ -160,19 +162,19 @@ public class ModBlocks {
 	public static Material MATERIAL_DREADFUL_DIRT = new Material(MaterialColor.DIRT, false, true, false, true, true, false, PushReaction.NORMAL);
 	public static MGUBlockReg<BlockDreadfulDirt, MGUBlockItem, ?> DREADFUL_DIRT = new MGUBlockReg<>("dreadful_dirt",
 		() -> new BlockDreadfulDirt(Block.Properties.of(MATERIAL_DREADFUL_DIRT, MaterialColor.COLOR_PURPLE).strength(1.0F, 2000.0F).sound(SoundType.GRAVEL).randomTicks()),
-		(b) -> new MGUBlockItem(b, new Item.Properties().tab(MobGrindingUtils.TAB)));
+		(b) -> new MGUBlockItem(b, new Item.Properties()));
 
 	public static MGUBlockReg<BlockSolidXP, MGUBlockItem, ?> SOLID_XP_BLOCK = new MGUBlockReg<>("solid_xp_block",
 		() -> new BlockSolidXP(Block.Properties.of(Material.CLAY, MaterialColor.GRASS).friction(0.8F).sound(ModSounds.SOLID_XP_BLOCK).noOcclusion().strength(1.5F, 10F)),
-		(b) -> new MGUBlockItem(b, new Item.Properties().tab(MobGrindingUtils.TAB)));
+		(b) -> new MGUBlockItem(b, new Item.Properties()));
 
 	public static MGUBlockReg<BlockDelightfulDirt, MGUBlockItem, ?> DELIGHTFUL_DIRT = new MGUBlockReg<>("delightful_dirt",
 		() -> new BlockDelightfulDirt(Block.Properties.of(Material.DIRT, MaterialColor.COLOR_PURPLE).strength(1.0F, 2000.0F).sound(SoundType.GRAVEL).randomTicks()),
-		(b) -> new MGUBlockItem(b, new Item.Properties().tab(MobGrindingUtils.TAB)));
+		(b) -> new MGUBlockItem(b, new Item.Properties()));
 
 	public static MGUBlockReg<BlockEntitySpawner, MGUBlockItem, TileEntityMGUSpawner> ENTITY_SPAWNER = new MGUBlockReg<>("entity_spawner",
 		() -> new BlockEntitySpawner(Block.Properties.of(Material.METAL, MaterialColor.STONE).strength(10.0F, 2000.0F).sound(SoundType.METAL).noOcclusion().randomTicks()),
-		(b) -> new MGUBlockItem(b, new Item.Properties().tab(MobGrindingUtils.TAB)), TileEntityMGUSpawner::new);
+		(b) -> new MGUBlockItem(b, new Item.Properties()), TileEntityMGUSpawner::new);
 
 	public static RegistryObject<FluidType> XPTYPE = FLUID_TYPES.register("fluid_xp", () -> new FluidType(FluidType.Properties.create()
 			.temperature(300)
@@ -186,7 +188,7 @@ public class ModBlocks {
 			.sound(SoundActions.BUCKET_EMPTY, SoundEvents.EXPERIENCE_ORB_PICKUP)
 			.sound(SoundActions.BUCKET_FILL, SoundEvents.PLAYER_LEVELUP))
 			{
-				ResourceLocation texture = new ResourceLocation(Reference.MOD_ID, "fluids/fluid_xp");
+				ResourceLocation texture = new ResourceLocation(Reference.MOD_ID, "block/fluid_xp");
 				@Override
 				public void initializeClient(Consumer<IClientFluidTypeExtensions> consumer) {
 					consumer.accept(new IClientFluidTypeExtensions() {
@@ -224,6 +226,13 @@ public class ModBlocks {
 	private static final ForgeFlowingFluid.Properties xp_properties = new ForgeFlowingFluid.Properties(() -> XPTYPE.get(), () -> FLUID_XP.get(), () -> FLUID_XP_FLOWING.get())
 			.block(() -> FLUID_XP_BLOCK.get())
 			.bucket(() -> ModItems.FLUID_XP_BUCKET.get());
+
+	public static final Set<MGUBlockReg<?,?,?>> TAB_ORDER = ImmutableSet.of(
+		FAN, SAW, SPIKES, ABSORPTION_HOPPER, TANK, TANK_SINK, JUMBO_TANK,
+		XP_TAP, WITHER_MUFFLER, DRAGON_MUFFLER, DARK_OAK_STONE, ENTITY_CONVEYOR, ENTITY_SPAWNER,
+		ENDER_INHIBITOR_ON, ENDER_INHIBITOR_OFF, TINTED_GLASS, DREADFUL_DIRT, DELIGHTFUL_DIRT,
+		XPSOLIDIFIER, SOLID_XP_BLOCK
+	);
 
 	public static void init(IEventBus evt) {
 		BLOCKS.register(evt);

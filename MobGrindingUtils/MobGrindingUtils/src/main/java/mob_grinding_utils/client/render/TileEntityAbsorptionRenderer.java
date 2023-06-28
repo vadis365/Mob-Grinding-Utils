@@ -1,7 +1,7 @@
 package mob_grinding_utils.client.render;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
 import mob_grinding_utils.ModBlocks;
 import mob_grinding_utils.client.ModelLayers;
 import mob_grinding_utils.models.ModelAHConnect;
@@ -75,21 +75,21 @@ public class TileEntityAbsorptionRenderer implements BlockEntityRenderer<TileEnt
 	public void getRotTranslation(PoseStack matrixStack, Direction facing) {
 		switch (facing) {
 		case UP:
-			matrixStack.mulPose(Vector3f.XP.rotationDegrees(180F));
+			matrixStack.mulPose(Axis.XP.rotationDegrees(180F));
 			break;
 		case DOWN:
 			break;
 		case NORTH:
-			matrixStack.mulPose(Vector3f.XP.rotationDegrees(90F));
+			matrixStack.mulPose(Axis.XP.rotationDegrees(90F));
 			break;
 		case SOUTH:
-			matrixStack.mulPose(Vector3f.XN.rotationDegrees(90F));
+			matrixStack.mulPose(Axis.XN.rotationDegrees(90F));
 			break;
 		case WEST:
-			matrixStack.mulPose(Vector3f.ZN.rotationDegrees(90F));
+			matrixStack.mulPose(Axis.ZN.rotationDegrees(90F));
 			break;
 		case EAST:
-			matrixStack.mulPose(Vector3f.ZP.rotationDegrees(90F));
+			matrixStack.mulPose(Axis.ZP.rotationDegrees(90F));
 			break;
 		}
 	}

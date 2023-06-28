@@ -2,6 +2,6 @@
     "parent": "block/cube_all",
     "render_type": "translucent",
     "textures": {
-        "all": "mob_grinding_utils:blocks/tinted_glass_news"
+        "all": "mob_grinding_utils:block/tinted_glass_news"
     }
 }
