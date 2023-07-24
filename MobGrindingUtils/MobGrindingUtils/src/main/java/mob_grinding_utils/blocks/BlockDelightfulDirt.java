@@ -22,7 +22,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.levelgen.feature.configurations.RandomPatchConfiguration;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
-import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.AABB;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -43,7 +42,7 @@ public class BlockDelightfulDirt extends Block {
 	}
 
 	public boolean shouldSpawnMob(Level level, BlockPos pos) {
-		return level.getMaxLocalRawBrightness(pos.above()) >= 10 && level.getBlockState(pos.above()).getMaterial() == Material.AIR;
+		return level.getMaxLocalRawBrightness(pos.above()) >= 10 && level.getBlockState(pos.above()).isAir();
 	}
 
 	@Override
@@ -73,7 +72,7 @@ public class BlockDelightfulDirt extends Block {
 		if (shouldSnowCap(level, pos)) {
 			BlockPos posUp = pos.above();
 			BlockState blockstate = Blocks.SNOW.defaultBlockState();
-			if (level.getBlockState(posUp).getMaterial() == Material.AIR && blockstate.canSurvive(level, posUp))
+			if (level.getBlockState(posUp).isAir() && blockstate.canSurvive(level, posUp))
 				level.setBlock(posUp, blockstate, 11);
 		}
 		if (!shouldSnowCap(level, pos) && shouldSpawnMob(level, pos)) {
@@ -85,7 +84,7 @@ public class BlockDelightfulDirt extends Block {
 
 			if (level.getGameTime() % 20 == 0) {
 				BlockPos posUp = pos.above();
-				if (level.getBlockState(posUp).getMaterial() == Material.AIR) {
+				if (level.getBlockState(posUp).isAir()) {
 					PlacedFeature placedfeature;
 					if (rand.nextInt(8) == 0) {
 						List<ConfiguredFeature<?, ?>> list = level.getBiome(posUp).value().getGenerationSettings().getFlowerFeatures();
@@ -163,7 +162,7 @@ public class BlockDelightfulDirt extends Block {
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void animateTick(BlockState stateIn, Level level, BlockPos pos, RandomSource rand) {
-		if(level.getGameTime()%3 == 0 && level.getBlockState(pos.above()).getMaterial() == Material.AIR) {
+		if(level.getGameTime()%3 == 0 && level.getBlockState(pos.above()).isAir()) {
 			for (int i = 0; i < 4; ++i) {
 				double d0 = (double) ((float) pos.getX( ));
 				double d1 = (double) ((float) pos.getY() + 1D);

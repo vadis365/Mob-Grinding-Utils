@@ -20,10 +20,10 @@ import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidUtil;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 
@@ -89,7 +89,7 @@ public class BlockTank extends BaseEntityBlock {
 			return InteractionResult.SUCCESS;
 		BlockEntity tileentity = world.getBlockEntity(pos);
 		if (tileentity instanceof TileEntityTank) {
-			LazyOptional<IFluidHandler> fluidHandler = tileentity.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, hit.getDirection());
+			LazyOptional<IFluidHandler> fluidHandler = tileentity.getCapability(ForgeCapabilities.FLUID_HANDLER, hit.getDirection());
 			fluidHandler.ifPresent((handler) -> {
 				if (player.getItemInHand(hand).isEmpty() && !handler.getFluidInTank(0).isEmpty())
 					player.displayClientMessage(Component.translatable(handler.getFluidInTank(0).getDisplayName().getString() + ": " + handler.getFluidInTank(0).getAmount() + "/" + handler.getTankCapacity(0)), true);

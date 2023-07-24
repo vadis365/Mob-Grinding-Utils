@@ -27,10 +27,10 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidUtil;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import net.minecraftforge.network.NetworkHooks;
@@ -119,7 +119,7 @@ public class BlockXPSolidifier extends BaseEntityBlock {
 			BlockEntity tileentity = world.getBlockEntity(pos);
 			if (tileentity instanceof TileEntityXPSolidifier) {
 				if (!player.getItemInHand(hand).isEmpty() && player.getItemInHand(hand).getItem() instanceof BucketItem) { // fixy later, Flanks: ?!?
-					LazyOptional<IFluidHandler> fluidHandler = tileentity.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, hit.getDirection());
+					LazyOptional<IFluidHandler> fluidHandler = tileentity.getCapability(ForgeCapabilities.FLUID_HANDLER, hit.getDirection());
 					fluidHandler.ifPresent((handler) -> {
 						if (player.getItemInHand(hand).isEmpty() && !handler.getFluidInTank(0).isEmpty())
 							player.displayClientMessage(Component.translatable(handler.getFluidInTank(0).getDisplayName().getString() + ": "+ handler.getFluidInTank(0).getAmount()+"/"+handler.getTankCapacity(0)), true);

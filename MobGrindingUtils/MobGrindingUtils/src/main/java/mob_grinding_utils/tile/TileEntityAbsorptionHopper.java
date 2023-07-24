@@ -32,13 +32,12 @@ import net.minecraft.world.phys.AABB;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
-import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 
@@ -205,8 +204,8 @@ public class TileEntityAbsorptionHopper extends TileEntityInventoryHelper implem
 			for (Direction facing : Direction.values()) {
 				if (tile.status[facing.ordinal()] == EnumStatus.STATUS_OUTPUT_ITEM) {
 					BlockEntity otherTile = level.getBlockEntity(worldPosition.relative(facing));
-					if (otherTile != null && otherTile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, facing.getOpposite()).isPresent()) {
-						LazyOptional<IItemHandler> tileOptional = otherTile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, facing.getOpposite());
+					if (otherTile != null && otherTile.getCapability(ForgeCapabilities.ITEM_HANDLER, facing.getOpposite()).isPresent()) {
+						LazyOptional<IItemHandler> tileOptional = otherTile.getCapability(ForgeCapabilities.ITEM_HANDLER, facing.getOpposite());
 						tileOptional.ifPresent((handler) -> {
 							if (level.getGameTime() % 8 == 0) {
 								for (int i = 0; i < tile.getContainerSize(); ++i) {
@@ -244,7 +243,7 @@ public class TileEntityAbsorptionHopper extends TileEntityInventoryHelper implem
 				if (tile.status[facing.ordinal()] == EnumStatus.STATUS_OUTPUT_FLUID) {
 					BlockEntity fluidTile = level.getBlockEntity(worldPosition.relative(facing));
 					if (fluidTile != null) {
-						LazyOptional<IFluidHandler> tileOptional = fluidTile.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, facing.getOpposite());
+						LazyOptional<IFluidHandler> tileOptional = fluidTile.getCapability(ForgeCapabilities.FLUID_HANDLER, facing.getOpposite());
 						tileOptional.ifPresent((receptacle) -> {
 							int tanks = receptacle.getTanks();
 							for (int x = 0; x < tanks; x++) {
@@ -455,7 +454,7 @@ public class TileEntityAbsorptionHopper extends TileEntityInventoryHelper implem
 	}
 
 	private static boolean canCombine(ItemStack stack1, ItemStack stack2) {
-		return stack1.getItem() != stack2.getItem() ? false : (stack1.getDamageValue() != stack2.getDamageValue() ? false : (stack1.getCount() > stack1.getMaxStackSize() ? false : ItemStack.tagMatches(stack1, stack2)));
+		return stack1.getItem() != stack2.getItem() ? false : (stack1.getDamageValue() != stack2.getDamageValue() ? false : (stack1.getCount() > stack1.getMaxStackSize() ? false : ItemStack.isSameItemSameTags(stack1, stack2)));
 	}
 
 // FLUID & INVENTORY CAPABILITIES STUFF
@@ -473,10 +472,10 @@ public class TileEntityAbsorptionHopper extends TileEntityInventoryHelper implem
 	@Nonnull
 	public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> capability, @Nullable Direction facing)
 	{
-		if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)
+		if (capability == ForgeCapabilities.FLUID_HANDLER)
 			return tank_holder.cast();
 
-		if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
+		if (capability == ForgeCapabilities.ITEM_HANDLER)
 			return  itemholder.cast();
 		return super.getCapability(capability, facing);
 	}

@@ -24,7 +24,7 @@ import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -103,7 +103,7 @@ public class BlockXPTap extends DirectionalBlock implements EntityBlock {
 		BlockState blockstate = world.getBlockState(pos);
 		boolean isSide = facing.getAxis().isHorizontal();
 		BlockEntity te = world.getBlockEntity(pos);
-		if (te != null && te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY).isPresent() && isSide)
+		if (te != null && te.getCapability(ForgeCapabilities.FLUID_HANDLER).isPresent() && isSide)
 			return true;
 		return isSide && blockstate.getBlock() instanceof BlockTank;
 	}

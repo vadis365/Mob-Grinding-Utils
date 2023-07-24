@@ -12,18 +12,21 @@ import net.minecraft.client.model.geom.EntityModelSet;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.block.model.ItemTransforms.TransformType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.minecraftforge.fluids.FluidStack;
+
+import javax.annotation.Nonnull;
+
 @OnlyIn(Dist.CLIENT)
 public class TileTankStackItemRenderer extends BlockEntityWithoutLevelRenderer {
 
@@ -40,7 +43,7 @@ public class TileTankStackItemRenderer extends BlockEntityWithoutLevelRenderer {
 	}
 
 	@Override
-	public void renderByItem(ItemStack stack, TransformType transformType, PoseStack matrixStack, MultiBufferSource bufferIn, int combinedLight, int combinedOverlayIn) {
+	public void renderByItem(ItemStack stack, @Nonnull ItemDisplayContext transformType, PoseStack matrixStack, MultiBufferSource bufferIn, int combinedLight, int combinedOverlayIn) {
 		matrixStack.pushPose();
 		matrixStack.translate(0.5D, 1.5D, 0.5D);
 		matrixStack.scale(-0.9999F, -0.9999F, 0.9999F);
@@ -66,7 +69,7 @@ public class TileTankStackItemRenderer extends BlockEntityWithoutLevelRenderer {
 		float height = (0.96875F / tankMax) * fluidLevel; // volumes hardcoded until config
 
 		var fluidExtensions = IClientFluidTypeExtensions.of(fluidStack.getFluid());
-		
+
 		TextureAtlasSprite fluidStillSprite = Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(fluidExtensions.getStillTexture());
 		VertexConsumer buffer = bufferIn.getBuffer(RenderType.translucent());
 		int fluidColor = fluidExtensions.getTintColor();

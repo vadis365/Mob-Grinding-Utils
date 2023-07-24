@@ -19,7 +19,6 @@ import net.minecraft.world.level.biome.MobSpawnSettings.SpawnerData;
 import net.minecraft.world.level.block.BaseFireBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.AABB;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -70,7 +69,7 @@ public class BlockDreadfulDirt extends Block {
 		if (shouldCatchFire(level, pos)) {
 			BlockPos posUp = pos.above();
 			BlockState blockstate = BaseFireBlock.getState(level, posUp);
-			if (level.getBlockState(posUp).getMaterial() == Material.AIR && blockstate.canSurvive(level, posUp))
+			if (level.getBlockState(posUp).isAir() && blockstate.canSurvive(level, posUp))
 				level.setBlock(posUp, blockstate, 11);
 		}
 		if (!shouldCatchFire(level, pos) && shouldSpawnMob(level, pos)) {

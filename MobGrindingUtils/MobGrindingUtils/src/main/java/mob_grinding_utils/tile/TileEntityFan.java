@@ -13,6 +13,7 @@ import net.minecraft.network.Connection;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.MenuProvider;
@@ -26,7 +27,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.AirBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
@@ -78,7 +78,7 @@ public class TileEntityFan extends TileEntityInventoryHelper implements MenuProv
 		int distance;
 		for (distance = 1; distance < 5 + getSpeedModifier(); distance++) {
 			BlockState state2 = getLevel().getBlockState(getBlockPos().relative(facing, distance));
-			if (!(state2.getBlock() instanceof AirBlock) && state2.getMaterial() != Material.REPLACEABLE_PLANT)
+			if (!(state2.getBlock() instanceof AirBlock) && state2.is(BlockTags.REPLACEABLE_BY_TREES)) //TODO maybe? .getMaterial() != Material.REPLACEABLE_PLANT
 				break;
 		}
 

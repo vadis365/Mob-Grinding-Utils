@@ -29,12 +29,11 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
-import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.ItemStackHandler;
@@ -144,8 +143,8 @@ public class TileEntityXPSolidifier extends BlockEntity implements MenuProvider 
 
 				if (tile.outputDirection != OutputDirection.NONE && tile.getOutputFacing() != null) {
 					BlockEntity otherTile = level.getBlockEntity(worldPosition.relative(tile.getOutputFacing()));
-					if (otherTile != null && otherTile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, tile.getOutputFacing().getOpposite()).isPresent()) {
-						LazyOptional<IItemHandler> tileOptional = otherTile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, tile.getOutputFacing().getOpposite());
+					if (otherTile != null && otherTile.getCapability(ForgeCapabilities.ITEM_HANDLER, tile.getOutputFacing().getOpposite()).isPresent()) {
+						LazyOptional<IItemHandler> tileOptional = otherTile.getCapability(ForgeCapabilities.ITEM_HANDLER, tile.getOutputFacing().getOpposite());
 						tileOptional.ifPresent((handler) -> {
 							if (!tile.outputSlot.getStackInSlot(0).isEmpty()) {
 								ItemStack stack = tile.outputSlot.getStackInSlot(0).copy();
@@ -319,7 +318,7 @@ public class TileEntityXPSolidifier extends BlockEntity implements MenuProvider 
 	}
 
 	private static boolean canCombine(ItemStack stack1, ItemStack stack2) {
-		return stack1.getItem() != stack2.getItem() ? false : (stack1.getDamageValue() != stack2.getDamageValue() ? false : (stack1.getCount() > stack1.getMaxStackSize() ? false : ItemStack.tagMatches(stack1, stack2)));
+		return stack1.getItem() != stack2.getItem() ? false : (stack1.getDamageValue() != stack2.getDamageValue() ? false : (stack1.getCount() > stack1.getMaxStackSize() ? false : ItemStack.isSameItemSameTags(stack1, stack2)));
 	}
 
 	@Override
@@ -406,9 +405,9 @@ public class TileEntityXPSolidifier extends BlockEntity implements MenuProvider 
 	@Nonnull
 	@Override
 	public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
-		if (cap == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)
+		if (cap == ForgeCapabilities.FLUID_HANDLER)
 			return tank_holder.cast();
-		if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
+		if (cap == ForgeCapabilities.ITEM_HANDLER)
 			return outputCap.cast();
 		return super.getCapability(cap, side);
 	}
