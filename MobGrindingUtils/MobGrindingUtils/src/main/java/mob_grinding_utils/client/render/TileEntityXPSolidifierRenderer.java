@@ -14,7 +14,6 @@ import mob_grinding_utils.tile.TileEntityXPSolidifier.OutputDirection;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider.Context;
 import net.minecraft.client.renderer.texture.OverlayTexture;
@@ -22,6 +21,7 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.InventoryMenu;
+import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
@@ -125,7 +125,7 @@ public class TileEntityXPSolidifierRenderer implements BlockEntityRenderer<TileE
 		ItemStack stackMould = tile.inputSlots.getStackInSlot(0);
 		if (!stackMould.isEmpty()) {
 			Minecraft.getInstance().getTextureManager().bindForSetup(InventoryMenu.BLOCK_ATLAS);
-			Minecraft.getInstance().getItemRenderer().render(stackMould, ItemTransforms.TransformType.GROUND, false, matrixStack, bufferIn, combinedLight, combinedOverlay, Minecraft.getInstance().getItemRenderer().getModel(stackMould, null, null, 0));
+			Minecraft.getInstance().getItemRenderer().render(stackMould, ItemDisplayContext.GROUND, false, matrixStack, bufferIn, combinedLight, combinedOverlay, Minecraft.getInstance().getItemRenderer().getModel(stackMould, null, null, 0));
 		}
 		matrixStack.popPose();
 		
@@ -144,10 +144,10 @@ public class TileEntityXPSolidifierRenderer implements BlockEntityRenderer<TileE
 		ItemStack stackResult = tile.outputSlot.getStackInSlot(0);
 		if (stackResult.isEmpty() && !tile.getCachedOutPutRenderStack().isEmpty() && tile.getProgress() > 60) { //may want to add some earlier blending fade here
 			Minecraft.getInstance().getTextureManager().bindForSetup(InventoryMenu.BLOCK_ATLAS);
-			Minecraft.getInstance().getItemRenderer().render(tile.getCachedOutPutRenderStack(), ItemTransforms.TransformType.GROUND, false, matrixStack, bufferIn, combinedLight, combinedOverlay, Minecraft.getInstance().getItemRenderer() .getModel(tile.getCachedOutPutRenderStack(), null, null, 0));
+			Minecraft.getInstance().getItemRenderer().render(tile.getCachedOutPutRenderStack(), ItemDisplayContext.GROUND, false, matrixStack, bufferIn, combinedLight, combinedOverlay, Minecraft.getInstance().getItemRenderer() .getModel(tile.getCachedOutPutRenderStack(), null, null, 0));
 		} else if (!stackResult.isEmpty()) {
 			Minecraft.getInstance().getTextureManager().bindForSetup(InventoryMenu.BLOCK_ATLAS);
-			Minecraft.getInstance().getItemRenderer().render(stackResult, ItemTransforms.TransformType.GROUND, false, matrixStack, bufferIn, combinedLight, combinedOverlay, Minecraft.getInstance().getItemRenderer().getModel(stackResult, null, null, 0));
+			Minecraft.getInstance().getItemRenderer().render(stackResult, ItemDisplayContext.GROUND, false, matrixStack, bufferIn, combinedLight, combinedOverlay, Minecraft.getInstance().getItemRenderer().getModel(stackResult, null, null, 0));
 		}
 		matrixStack.popPose();
 

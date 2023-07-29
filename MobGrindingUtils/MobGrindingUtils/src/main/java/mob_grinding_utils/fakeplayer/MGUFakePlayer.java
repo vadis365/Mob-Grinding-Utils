@@ -1,16 +1,15 @@
 package mob_grinding_utils.fakeplayer;
 
-import java.lang.ref.WeakReference;
-
 import com.mojang.authlib.GameProfile;
-
 import mob_grinding_utils.Reference;
 import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.util.FakePlayer;
+
+import java.lang.ref.WeakReference;
 
 public class MGUFakePlayer extends FakePlayer {
     public MGUFakePlayer(ServerLevel world, GameProfile name) {
@@ -21,20 +20,20 @@ public class MGUFakePlayer extends FakePlayer {
     protected Vec3 pos = new Vec3(0, 0, 0);
     protected BlockPos.MutableBlockPos blockPos = new BlockPos.MutableBlockPos(0, 0, 0);
 
-    public static WeakReference<MGUFakePlayer> get(ServerLevel world) {
+    public static WeakReference<MGUFakePlayer> get(ServerLevel level) {
         if (INSTANCE == null) {
-            INSTANCE = new MGUFakePlayer(world, Reference.GAME_PROFILE);
+            INSTANCE = new MGUFakePlayer(level, Reference.GAME_PROFILE);
         }
-        INSTANCE.level = world;
+        INSTANCE.setLevel(level);
         return new WeakReference<>(INSTANCE);
     }
 
-    public static WeakReference<MGUFakePlayer> get(ServerLevel world, double x, double y, double z) {
+    public static WeakReference<MGUFakePlayer> get(ServerLevel level, double x, double y, double z) {
         if (INSTANCE == null) {
-            INSTANCE = new MGUFakePlayer(world, Reference.GAME_PROFILE);
-            INSTANCE.connection = new FakeNetHandler(world.getServer(), INSTANCE);
+            INSTANCE = new MGUFakePlayer(level, Reference.GAME_PROFILE);
+            INSTANCE.connection = new FakeNetHandler(level.getServer(), INSTANCE);
         }
-        INSTANCE.level = world;
+        INSTANCE.setLevel(level);
         INSTANCE.setPos(x,y,z);
         INSTANCE.setPosition(x,y,z);
         return new WeakReference<>(INSTANCE);
@@ -53,7 +52,7 @@ public class MGUFakePlayer extends FakePlayer {
     }
 
     public static void unload(LevelAccessor world) {
-        if (INSTANCE != null && INSTANCE.level == world)
+        if (INSTANCE != null && INSTANCE.level() == world)
             INSTANCE = null;
     }
 

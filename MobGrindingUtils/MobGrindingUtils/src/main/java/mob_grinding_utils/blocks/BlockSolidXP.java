@@ -3,7 +3,6 @@ package mob_grinding_utils.blocks;
 import mob_grinding_utils.ModSounds;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.BlockGetter;
@@ -24,7 +23,7 @@ public class BlockSolidXP extends HalfTransparentBlock {
 		if (entity.isSuppressingBounce())
 			super.fallOn(level, state, pos, entity, fallDistance);
 		else {
-			entity.causeFallDamage(fallDistance, 0.0F, DamageSource.FALL);
+			entity.causeFallDamage(fallDistance, 0.0F, level.damageSources().fall());
 			entity.getCommandSenderWorld().playSound(null, entity.blockPosition(), ModSounds.SOLID_XP_BLOCK_BOING.get(), SoundSource.BLOCKS, 0.3F, 1F);
 		}
 	}

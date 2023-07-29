@@ -5,16 +5,18 @@ import net.minecraftforge.data.event.GatherDataEvent;
 
 public class Generator {
     public static void gatherData(GatherDataEvent event) {
-        DataGenerator generator = event.getGenerator();
+        DataGenerator gen = event.getGenerator();
 
-        generator.addProvider(true, new Recipes(generator));
+        gen.addProvider(true, new Recipes(gen));
 
-        MGUBlockTags blockTags = new MGUBlockTags(generator, event.getLookupProvider(), event.getExistingFileHelper());
-        generator.addProvider(true, blockTags);
-        generator.addProvider(true, MGULootTables.getProvider(generator.getPackOutput()));
-        generator.addProvider(true, new MGUFluidTags(generator, event.getLookupProvider(), event.getExistingFileHelper()));
-        generator.addProvider(true, new MGUEntityTypeTags(generator, event.getLookupProvider(), event.getExistingFileHelper()));
-        generator.addProvider(true, new BlockStates(generator, event.getExistingFileHelper()));
-        generator.addProvider(true, new MGUBiomeTags(generator, event.getLookupProvider(), event.getExistingFileHelper()));
+        MGUBlockTags blockTags = new MGUBlockTags(gen, event.getLookupProvider(), event.getExistingFileHelper());
+        gen.addProvider(true, blockTags);
+        gen.addProvider(true, MGULootTables.getProvider(gen.getPackOutput()));
+        gen.addProvider(true, new MGUFluidTags(gen, event.getLookupProvider(), event.getExistingFileHelper()));
+        gen.addProvider(true, new MGUEntityTypeTags(gen, event.getLookupProvider(), event.getExistingFileHelper()));
+        gen.addProvider(true, new BlockStates(gen, event.getExistingFileHelper()));
+        gen.addProvider(true, new MGUBiomeTags(gen, event.getLookupProvider(), event.getExistingFileHelper()));
+        gen.addProvider(true, new MGUDamageType(gen.getPackOutput(), event.getLookupProvider()));
+        gen.addProvider(true, new MGUDamageTags(gen.getPackOutput(), event.getLookupProvider(), event.getExistingFileHelper()));
     }
 }

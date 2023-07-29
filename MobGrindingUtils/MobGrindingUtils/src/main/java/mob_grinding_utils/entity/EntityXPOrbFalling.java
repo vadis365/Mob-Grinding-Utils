@@ -1,7 +1,5 @@
 package mob_grinding_utils.entity;
 
-import java.util.Map.Entry;
-
 import mob_grinding_utils.tile.TileEntitySinkTank;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -12,6 +10,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
+
+import java.util.Map.Entry;
 
 public class EntityXPOrbFalling extends ExperienceOrb {
 	private int age;
@@ -37,12 +37,12 @@ public class EntityXPOrbFalling extends ExperienceOrb {
 		zo = getZ();
 		setDeltaMovement(this.getDeltaMovement().add(0.0D, -0.03D, 0.0D));
 
-	      if (!this.level.noCollision(this.getBoundingBox()))
+	      if (!this.level().noCollision(this.getBoundingBox()))
 	          this.moveTowardsClosestSpace(this.getX(), (this.getBoundingBox().minY + this.getBoundingBox().maxY) / 2.0D, this.getZ());
 
 		this.move(MoverType.SELF, this.getDeltaMovement());
 
-	     if (this.onGround)
+	     if (this.onGround())
 	         this.setDeltaMovement(this.getDeltaMovement().multiply(1.0D, -0.9D, 1.0D));
 
 		++tickCount;
@@ -54,7 +54,7 @@ public class EntityXPOrbFalling extends ExperienceOrb {
 
 	@Override
 	public void playerTouch(Player player) {
-		if (!level.isClientSide) {
+		if (!level().isClientSide) {
 			if (delayBeforeCanPickup == 0 && player.takeXpDelay == 0) {
 				if (net.minecraftforge.common.MinecraftForge.EVENT_BUS.post(new net.minecraftforge.event.entity.player.PlayerXpEvent.PickupXp(player, this)))
 					return;

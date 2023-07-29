@@ -13,8 +13,8 @@ import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import net.minecraftforge.network.PacketDistributor;
@@ -31,7 +31,7 @@ public class TileEntityXPTap extends BlockEntity {
 		if (t instanceof TileEntityXPTap tileEntityXPTap && tileEntityXPTap.active) {
 			BlockEntity tileentity = world.getBlockEntity(worldPosition.relative(world.getBlockState(worldPosition).getValue(BlockXPTap.FACING).getOpposite()));
 			if (tileentity != null) {
-				LazyOptional<IFluidHandler> fluidHandler = tileentity.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, world.getBlockState(worldPosition).getValue(BlockXPTap.FACING));
+				LazyOptional<IFluidHandler> fluidHandler = tileentity.getCapability(ForgeCapabilities.FLUID_HANDLER, world.getBlockState(worldPosition).getValue(BlockXPTap.FACING));
 				fluidHandler.ifPresent((handler) -> {
 					if (handler.getTanks() > 0 && handler.getFluidInTank(0).getAmount() >= 20 && handler.getFluidInTank(0).getFluid().is(ModTags.Fluids.EXPERIENCE) && world.getGameTime() % 3 == 0) {
 						int xpAmount = EntityXPOrbFalling.getExperienceValue(Math.min(20, handler.getFluidInTank(0).getAmount() / 20));

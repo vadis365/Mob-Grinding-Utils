@@ -20,20 +20,22 @@ import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RecipesUpdatedEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.event.AddReloadListenerEvent;
-import net.minecraftforge.event.CreativeModeTabEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.level.LevelEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -58,11 +60,22 @@ import java.util.List;
 public class MobGrindingUtils {
 	public static final Logger LOGGER = LoggerFactory.getLogger(Reference.MOD_ID);
 	public static SimpleChannel NETWORK_WRAPPER;
-	public static DamageSource SPIKE_DAMAGE;
+
+	private static DamageSource SPIKE_DAMAGE;
+	public static final ResourceKey<DamageType> SPIKE_TYPE = ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation(Reference.MOD_ID, "spikes"));
 
 	public static final DeferredRegister<ParticleType<?>> PARTICLES = DeferredRegister.create(ForgeRegistries.PARTICLE_TYPES, Reference.MOD_ID);
 	public static final DeferredRegister<RecipeSerializer<?>> RECIPES = DeferredRegister.create(ForgeRegistries.RECIPE_SERIALIZERS, Reference.MOD_ID);
 	public static final DeferredRegister<RecipeType<?>> RECIPE_TYPES = DeferredRegister.create(Registries.RECIPE_TYPE, Reference.MOD_ID);
+	public static final DeferredRegister<CreativeModeTab> TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, Reference.MOD_ID);
+
+	public static final RegistryObject<CreativeModeTab> TAB = TABS.register("tab", () -> CreativeModeTab.builder()
+				.icon(() -> new ItemStack(ModBlocks.SPIKES.get()))
+				.title(Component.translatable("itemGroup.mob_grinding_utils")).displayItems((params, output) -> {
+					ModBlocks.TAB_ORDER.forEach(block -> output.accept(block.getItem()));
+					ModItems.TAB_ORDER.forEach(item -> output.accept(item.get()));
+				}
+			).build());
 
 	public static final RegistryObject<SimpleParticleType> PARTICLE_FLUID_XP = PARTICLES.register("fluid_xp_particles", () -> new SimpleParticleType(true));
 
@@ -74,8 +87,6 @@ public class MobGrindingUtils {
 	public static final RegistryObject<RecipeSerializer<?>> BEHEADING_RECIPE = RECIPES.register(BeheadingRecipe.NAME, BeheadingRecipe.Serializer::new);
 	public static final RegistryObject<RecipeType<SolidifyRecipe>> SOLIDIFIER_TYPE = RECIPE_TYPES.register("solidify", () -> new RecipeType<>() {});
 	public static final RegistryObject<RecipeType<BeheadingRecipe>> BEHEADING_TYPE = RECIPE_TYPES.register("beheading", () -> new RecipeType<>() {});
-
-	public static CreativeModeTab TAB;
 
 	public MobGrindingUtils() {
 		IEventBus modBus = FMLJavaModLoadingContext.get().getModEventBus();
@@ -91,7 +102,6 @@ public class MobGrindingUtils {
 
 		modBus.addListener(this::setup);
 		modBus.addListener(this::doClientStuff);
-		modBus.addListener(MobGrindingUtils::creativeTabEvent);
 
 		MinecraftForge.EVENT_BUS.addListener(BlockSpikes::dropXP);
 		MinecraftForge.EVENT_BUS.register(new EntityInteractionEvent());
@@ -115,8 +125,6 @@ public class MobGrindingUtils {
 
 	public void setup(FMLCommonSetupEvent event) {
 		event.enqueueWork(() -> CraftingHelper.register(FluidIngredient.Serializer.NAME, FluidIngredient.SERIALIZER));
-
-		SPIKE_DAMAGE = new DamageSource("spikes").bypassArmor();
 
 		NETWORK_WRAPPER = MGUNetwork.getNetworkChannel();
 	}
@@ -188,12 +196,10 @@ public class MobGrindingUtils {
 		}
 	}
 
-	public static void creativeTabEvent(CreativeModeTabEvent.Register event) {
-		TAB = event.registerCreativeModeTab(new ResourceLocation(Reference.MOD_ID, "tab"), builder -> builder
-				.icon(() -> new ItemStack(ModBlocks.SPIKES.get()))
-				.title(Component.translatable("itemGroup.mob_grinding_utils")).displayItems((useless, output, something) -> {
-					ModBlocks.TAB_ORDER.forEach(block -> output.accept(block.getItem()));
-					ModItems.TAB_ORDER.forEach(item -> output.accept(item.get()));
-				}));
+	public static DamageSource getSpikeDamage(Level level) {
+		if (SPIKE_DAMAGE == null)
+			SPIKE_DAMAGE = new DamageSource(level.registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(MobGrindingUtils.SPIKE_TYPE));
+
+		return SPIKE_DAMAGE;
 	}
 }

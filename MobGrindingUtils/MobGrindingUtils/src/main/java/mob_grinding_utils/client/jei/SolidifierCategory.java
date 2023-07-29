@@ -13,6 +13,7 @@ import mob_grinding_utils.ModBlocks;
 import mob_grinding_utils.Reference;
 import mob_grinding_utils.recipe.SolidifyRecipe;
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.fluids.FluidStack;
@@ -67,6 +68,6 @@ public class SolidifierCategory implements IRecipeCategory<SolidifyRecipe> {
                 });
             });
         builder.addSlot(RecipeIngredientRole.OUTPUT, 70, 5)
-            .addItemStack(recipe.getResultItem());
+            .addItemStack(recipe.getResultItem(RegistryAccess.EMPTY));
     }
 }

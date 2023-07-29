@@ -1,7 +1,10 @@
 package mob_grinding_utils.inventory.client;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.*;
+import com.mojang.blaze3d.vertex.BufferBuilder;
+import com.mojang.blaze3d.vertex.DefaultVertexFormat;
+import com.mojang.blaze3d.vertex.Tesselator;
+import com.mojang.blaze3d.vertex.VertexFormat;
 import mob_grinding_utils.MobGrindingUtils;
 import mob_grinding_utils.inventory.server.ContainerAbsorptionHopper;
 import mob_grinding_utils.network.MessageAbsorptionHopper;
@@ -9,6 +12,7 @@ import mob_grinding_utils.tile.TileEntityAbsorptionHopper;
 import mob_grinding_utils.tile.TileEntityAbsorptionHopper.EnumStatus;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.GameRenderer;
@@ -73,33 +77,30 @@ public class GuiAbsorptionHopper extends AbstractContainerScreen<ContainerAbsorp
 	}
 
 	@Override
-	public void render(PoseStack stack, int mouseX, int mouseY, float partialTicks) {
-		this.renderBackground(stack);
-		super.render(stack, mouseX, mouseY, partialTicks);
-		renderTooltip(stack, mouseX, mouseY);
+	public void render(GuiGraphics gg, int mouseX, int mouseY, float partialTicks) {
+		this.renderBackground(gg);
+		super.render(gg, mouseX, mouseY, partialTicks);
+		renderTooltip(gg, mouseX, mouseY);
 	}
 
 	@Override
-	protected void renderLabels(PoseStack stack, int mouseX, int mouseY) {
-		fontRenderer.draw(stack, Component.translatable("block.mob_grinding_utils.absorption_hopper").getString(), 8, imageHeight - 220, 4210752);
+	protected void renderLabels(GuiGraphics gg, int mouseX, int mouseY) {
+		gg.drawString(font, Component.translatable("block.mob_grinding_utils.absorption_hopper").getString(), 8, imageHeight - 220, 4210752, false);
 		
-		fontRenderer.draw(stack, Component.translatable("block.mob_grinding_utils.absorption_hopper_d_u").getString(), 174, imageHeight - 212, 4210752);
+		gg.drawString(font, Component.translatable("block.mob_grinding_utils.absorption_hopper_d_u").getString(), 174, imageHeight - 212, 4210752, false);
 		
-		fontRenderer.draw(stack, Component.translatable("block.mob_grinding_utils.absorption_hopper_n_s").getString(), 174, imageHeight - 178, 4210752);
-		fontRenderer.draw(stack, Component.translatable("block.mob_grinding_utils.absorption_hopper_w_e").getString(), 174, imageHeight - 144, 4210752);
+		gg.drawString(font, Component.translatable("block.mob_grinding_utils.absorption_hopper_n_s").getString(), 174, imageHeight - 178, 4210752, false);
+		gg.drawString(font, Component.translatable("block.mob_grinding_utils.absorption_hopper_w_e").getString(), 174, imageHeight - 144, 4210752, false);
 
-		fontRenderer.drawShadow(stack, !tile.showRenderBox ? "Show Area" : "Hide Area", imageWidth - 41 - fontRenderer.width(!tile.showRenderBox ? "Show Area" : "Hide Area") / 2.0f, imageHeight - 109, 14737632);
+		gg.drawString(font, !tile.showRenderBox ? "Show Area" : "Hide Area", imageWidth - 41 - fontRenderer.width(!tile.showRenderBox ? "Show Area" : "Hide Area") / 2.0f, imageHeight - 109, 14737632, true);
 	}
 
 	@Override
-	protected void renderBg(PoseStack stack, float partialTicks, int mouseX, int mouseY) {
-		RenderSystem.setShader(GameRenderer::getPositionTexShader);
-		RenderSystem.setShaderTexture(0, GUI_ABSORPTION_HOPPER);
-		RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+	protected void renderBg(GuiGraphics gg, float partialTicks, int mouseX, int mouseY) {
 		int xOffSet = (width - imageWidth) / 2;
 		int yOffSet = (height - imageHeight) / 2;
 		int zLevel = 0; /// this may need increasing depending on layers
-		this.blit(stack, xOffSet, yOffSet, 0, 0, imageWidth, imageHeight);
+		gg.blit(GUI_ABSORPTION_HOPPER, xOffSet, yOffSet, 0, 0, imageWidth, imageHeight);
 
 		EnumStatus DOWN = tile.getSideStatus(Direction.DOWN);
 		EnumStatus UP = tile.getSideStatus(Direction.UP);
@@ -111,15 +112,15 @@ public class GuiAbsorptionHopper extends AbstractContainerScreen<ContainerAbsorp
 		String OFFSETY = String.valueOf(tile.getoffsetY());
 		String OFFSETZ = String.valueOf(tile.getoffsetZ());
 
-		fontRenderer.draw(stack, I18n.get(DOWN.getSerializedName()), xOffSet + 58 - fontRenderer.width(I18n.get(DOWN.getSerializedName())) / 2.0f, yOffSet + 21, getModeColour(DOWN.ordinal()));
-		fontRenderer.draw(stack, I18n.get(UP.getSerializedName()), xOffSet + 58 - fontRenderer.width(I18n.get(UP.getSerializedName())) / 2.0f, yOffSet + 38, getModeColour(UP.ordinal()));
-		fontRenderer.draw(stack, I18n.get(NORTH.getSerializedName()), xOffSet + 58 - fontRenderer.width(I18n.get(NORTH.getSerializedName())) / 2.0f, yOffSet + 55, getModeColour(NORTH.ordinal()));
-		fontRenderer.draw(stack, I18n.get(SOUTH.getSerializedName()), xOffSet + 133 - fontRenderer.width(I18n.get(SOUTH.getSerializedName())) / 2.0f, yOffSet + 21, getModeColour(SOUTH.ordinal()));
-		fontRenderer.draw(stack, I18n.get(WEST.getSerializedName()), xOffSet + 133 - fontRenderer.width(I18n.get(WEST.getSerializedName())) / 2.0f, yOffSet + 38, getModeColour(WEST.ordinal()));
-		fontRenderer.draw(stack, I18n.get(EAST.getSerializedName()), xOffSet + 133 - fontRenderer.width(I18n.get(EAST.getSerializedName())) / 2.0f, yOffSet + 55, getModeColour(EAST.ordinal()));
-		fontRenderer.draw(stack, I18n.get(OFFSETY), xOffSet + 207 - fontRenderer.width(I18n.get(OFFSETY)) / 2.0f, yOffSet + 29, 5285857);//NS
-		fontRenderer.draw(stack, I18n.get(OFFSETZ), xOffSet + 207 - fontRenderer.width(I18n.get(OFFSETZ)) / 2.0f, yOffSet + 63, 5285857);//WE
-		fontRenderer.draw(stack, I18n.get(OFFSETX), xOffSet + 207 - fontRenderer.width(I18n.get(OFFSETX)) / 2.0f, yOffSet + 97, 5285857);//DU
+		gg.drawString(font, I18n.get(DOWN.getSerializedName()), xOffSet + 58 - fontRenderer.width(I18n.get(DOWN.getSerializedName())) / 2.0f, yOffSet + 21, getModeColour(DOWN.ordinal()), false);
+		gg.drawString(font, I18n.get(UP.getSerializedName()), xOffSet + 58 - fontRenderer.width(I18n.get(UP.getSerializedName())) / 2.0f, yOffSet + 38, getModeColour(UP.ordinal()), false);
+		gg.drawString(font, I18n.get(NORTH.getSerializedName()), xOffSet + 58 - fontRenderer.width(I18n.get(NORTH.getSerializedName())) / 2.0f, yOffSet + 55, getModeColour(NORTH.ordinal()), false);
+		gg.drawString(font, I18n.get(SOUTH.getSerializedName()), xOffSet + 133 - fontRenderer.width(I18n.get(SOUTH.getSerializedName())) / 2.0f, yOffSet + 21, getModeColour(SOUTH.ordinal()), false);
+		gg.drawString(font, I18n.get(WEST.getSerializedName()), xOffSet + 133 - fontRenderer.width(I18n.get(WEST.getSerializedName())) / 2.0f, yOffSet + 38, getModeColour(WEST.ordinal()), false);
+		gg.drawString(font, I18n.get(EAST.getSerializedName()), xOffSet + 133 - fontRenderer.width(I18n.get(EAST.getSerializedName())) / 2.0f, yOffSet + 55, getModeColour(EAST.ordinal()), false);
+		gg.drawString(font, I18n.get(OFFSETY), xOffSet + 207 - fontRenderer.width(I18n.get(OFFSETY)) / 2.0f, yOffSet + 29, 5285857, false);//NS
+		gg.drawString(font, I18n.get(OFFSETZ), xOffSet + 207 - fontRenderer.width(I18n.get(OFFSETZ)) / 2.0f, yOffSet + 63, 5285857, false);//WE
+		gg.drawString(font, I18n.get(OFFSETX), xOffSet + 207 - fontRenderer.width(I18n.get(OFFSETX)) / 2.0f, yOffSet + 97, 5285857, false);//DU
 
 		int fluid = tile.getScaledFluid(120);
 		if (fluid >= 1) {
@@ -139,10 +140,7 @@ public class GuiAbsorptionHopper extends AbstractContainerScreen<ContainerAbsorp
 			buffer.vertex(xOffSet + 156, yOffSet + 128 - fluid, zLevel).uv(sprite.getU0(), sprite.getV1()).endVertex();
 			tessellator.end();
 		}
-        RenderSystem.setShader(GameRenderer::getPositionTexShader);
-        RenderSystem.setShaderTexture(0, GUI_ABSORPTION_HOPPER);
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-		this.blit(stack, xOffSet + 153, yOffSet + 8 , 248, 0, 6, 120);
+		gg.blit(GUI_ABSORPTION_HOPPER, xOffSet + 153, yOffSet + 8 , 248, 0, 6, 120);
 	}
 
 	public int getModeColour(int index) {

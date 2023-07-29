@@ -11,6 +11,7 @@ import net.minecraft.network.protocol.game.*;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
+import net.minecraft.world.entity.RelativeMovement;
 
 import javax.annotation.Nonnull;
 import javax.crypto.Cipher;
@@ -162,7 +163,7 @@ public class FakeNetHandler extends ServerGamePacketListenerImpl {
     public void teleport(double x, double y, double z, float yaw, float pitch) {}
 
     @Override
-    public void teleport(double x, double y, double z, float yaw, float pitch, Set<ClientboundPlayerPositionPacket.RelativeArgument> relativeSet) {}
+    public void teleport(double x, double y, double z, float yaw, float pitch, Set<RelativeMovement> relativeSet) {}
 
     @Override
     public void handlePlayerAction(ServerboundPlayerActionPacket packetIn) {}
@@ -241,14 +242,6 @@ public class FakeNetHandler extends ServerGamePacketListenerImpl {
 
     @Override
     public void handleLockDifficulty(ServerboundLockDifficultyPacket p_217261_1_) {}
-
-    @Override
-    public void dismount(double p_143612_, double p_143613_, double p_143614_, float p_143615_, float p_143616_) {
-    }
-
-    @Override
-    public void teleport(double p_143618_, double p_143619_, double p_143620_, float p_143621_, float p_143622_, Set<ClientboundPlayerPositionPacket.RelativeArgument> p_143623_, boolean p_143624_) {
-    }
 
     @Override
     public void handlePong(ServerboundPongPacket p_143652_) {

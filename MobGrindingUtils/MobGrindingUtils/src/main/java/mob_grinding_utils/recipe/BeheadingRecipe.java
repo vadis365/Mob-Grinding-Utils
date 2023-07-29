@@ -3,6 +3,7 @@ package mob_grinding_utils.recipe;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import mob_grinding_utils.MobGrindingUtils;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.network.FriendlyByteBuf;
@@ -45,7 +46,7 @@ public class BeheadingRecipe implements Recipe<Container>{
 
     @Nonnull
     @Override
-    public ItemStack assemble(@Nonnull Container container) {
+    public ItemStack assemble(@Nonnull Container container, RegistryAccess pointless) {
         return ItemStack.EMPTY;
     }
 
@@ -56,7 +57,7 @@ public class BeheadingRecipe implements Recipe<Container>{
 
     @Nonnull
     @Override
-    public ItemStack getResultItem() {
+    public ItemStack getResultItem(RegistryAccess pointless) {
         return result.copy();
     }
 

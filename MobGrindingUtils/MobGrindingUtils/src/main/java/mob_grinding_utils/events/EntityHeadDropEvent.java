@@ -1,13 +1,11 @@
 package mob_grinding_utils.events;
 
-import java.util.Collection;
-import java.util.Optional;
-
 import com.mojang.authlib.GameProfile;
-
 import mob_grinding_utils.MobGrindingUtils;
 import mob_grinding_utils.fakeplayer.MGUFakePlayer;
 import mob_grinding_utils.items.ItemImaginaryInvisibleNotReallyThereSword;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtUtils;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -16,18 +14,19 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.NbtUtils;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModList;
 
+import java.util.Collection;
+import java.util.Optional;
+
 public class EntityHeadDropEvent {
 
 	@SubscribeEvent(priority = EventPriority.LOWEST)
 	public void dropEvent(LivingDropsEvent event) {
-		if (event.getEntity().level.isClientSide)
+		if (event.getEntity().level().isClientSide)
 			return;
 		if (event.getEntity().getHealth() > 0.0F)
 			return;

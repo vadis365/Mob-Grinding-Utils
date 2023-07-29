@@ -35,13 +35,13 @@ public class BlockSpikes extends DirectionalBlock {
 	
 	@Nonnull
 	@Override
-	public VoxelShape getShape(@Nonnull BlockState state, @Nonnull BlockGetter worldIn, @Nonnull BlockPos pos, @Nonnull CollisionContext context) {
+	public VoxelShape getShape(@Nonnull BlockState state, @Nonnull BlockGetter level, @Nonnull BlockPos pos, @Nonnull CollisionContext context) {
 		return SPIKES_AABB;
 	}
 
 	@Nonnull
 	@Override
-	public VoxelShape getInteractionShape(@Nonnull BlockState state, @Nonnull BlockGetter worldIn, @Nonnull BlockPos pos) {
+	public VoxelShape getInteractionShape(@Nonnull BlockState state, @Nonnull BlockGetter level, @Nonnull BlockPos pos) {
 		return Shapes.block();
 	}
 
@@ -65,19 +65,19 @@ public class BlockSpikes extends DirectionalBlock {
 	@Override
 	public void entityInside(@Nonnull BlockState state, Level world, @Nonnull BlockPos pos, @Nonnull Entity entity) {
 		if (!world.isClientSide && entity instanceof LivingEntity)
-			entity.hurt(MobGrindingUtils.SPIKE_DAMAGE, 5);
+			entity.hurt(MobGrindingUtils.getSpikeDamage(world), 5);
 	}
 
 	public static final Method xpPoints = getExperiencePoints();
 
 	public static void dropXP(LivingDropsEvent event) {
 		LivingEntity entity = event.getEntity();
-		Level world = entity.getCommandSenderWorld();
+		Level level = entity.getCommandSenderWorld();
 		if (entity != null) {
-			if (!world.isClientSide && !event.isRecentlyHit() && event.getSource() == MobGrindingUtils.SPIKE_DAMAGE) {
+			if (!level.isClientSide && !event.isRecentlyHit() && event.getSource() == MobGrindingUtils.getSpikeDamage(level)) {
 				int xp = 0;
 				try {
-					xp = (Integer) xpPoints.invoke(entity, FakePlayerFactory.getMinecraft((ServerLevel) world));
+					xp = (Integer) xpPoints.invoke(entity, FakePlayerFactory.getMinecraft((ServerLevel) level));
 				} catch (Exception e) {
 				}
 				while (xp > 0) {

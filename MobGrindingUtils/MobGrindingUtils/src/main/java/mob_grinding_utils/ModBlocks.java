@@ -21,8 +21,7 @@ import net.minecraft.world.level.block.LiquidBlock;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.material.Fluid;
-import net.minecraft.world.level.material.Material;
-import net.minecraft.world.level.material.MaterialColor;
+import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.material.PushReaction;
 import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
@@ -46,11 +45,11 @@ public class ModBlocks {
 	public static DeferredRegister<BlockEntityType<?>> TILE_ENTITIES = DeferredRegister.create(ForgeRegistries.BLOCK_ENTITY_TYPES, Reference.MOD_ID);
 
 	public static MGUBlockReg<BlockFan, MGUBlockItem, TileEntityFan> FAN = new MGUBlockReg<>("fan",
-		() -> new BlockFan(Block.Properties.of(Material.METAL, MaterialColor.STONE).strength(10.0F, 2000.0F).sound(SoundType.METAL)),
+		() -> new BlockFan(Block.Properties.of().mapColor(MapColor.COLOR_GRAY).strength(10.0F, 2000.0F).sound(SoundType.METAL)),
 		(b) -> new MGUBlockItem(b, new Item.Properties()), TileEntityFan::new);
 
 	public static MGUBlockReg<BlockSaw, MGUBlockItem, TileEntitySaw> SAW = new MGUBlockReg<>("saw",
-		() -> new BlockSaw(Block.Properties.of(Material.METAL, MaterialColor.STONE).strength(10.0F, 2000.0F).sound(SoundType.METAL).noOcclusion()),
+		() -> new BlockSaw(Block.Properties.of().mapColor(MapColor.COLOR_GRAY).strength(10.0F, 2000.0F).sound(SoundType.METAL).noOcclusion()),
 		(b) -> new MGUBlockItem(b, new Item.Properties()) {
 			@Override
 			public void initializeClient(Consumer<IClientItemExtensions> consumer) {
@@ -64,15 +63,15 @@ public class ModBlocks {
 		}, TileEntitySaw::new);
 
 	public static MGUBlockReg<BlockAbsorptionHopper, MGUBlockItem, TileEntityAbsorptionHopper> ABSORPTION_HOPPER = new MGUBlockReg<>("absorption_hopper",
-		() -> new BlockAbsorptionHopper(Block.Properties.of(Material.METAL, MaterialColor.STONE).strength(10.0F, 2000.0F).sound(SoundType.METAL).noOcclusion()),
+		() -> new BlockAbsorptionHopper(Block.Properties.of().mapColor(MapColor.COLOR_BLACK).strength(10.0F, 2000.0F).sound(SoundType.METAL).noOcclusion()),
 		(b) -> new MGUBlockItem(b, new Item.Properties()), TileEntityAbsorptionHopper::new);
 
 	public static MGUBlockReg<BlockSpikes, MGUBlockItem, ?> SPIKES = new MGUBlockReg<>("spikes",
-		() -> new BlockSpikes(Block.Properties.of(Material.METAL, MaterialColor.STONE).strength(5.0F, 2000.0F).sound(SoundType.METAL).noOcclusion()),
+		() -> new BlockSpikes(Block.Properties.of().mapColor(MapColor.COLOR_GRAY).strength(5.0F, 2000.0F).sound(SoundType.METAL).noOcclusion()),
 		(b) -> new MGUBlockItem(b, new Item.Properties()));
 
 	public static MGUBlockReg<BlockTank, BlockItemTank, TileEntityTank> TANK = new MGUBlockReg<>("tank",
-		() -> new BlockTank(Block.Properties.of(Material.GLASS, MaterialColor.QUARTZ).strength(1.0F, 2000.0F).sound(SoundType.GLASS).noOcclusion()),
+		() -> new BlockTank(Block.Properties.of().mapColor(MapColor.COLOR_GRAY).strength(1.0F, 2000.0F).sound(SoundType.GLASS).noOcclusion()),
 		(b) -> new BlockItemTank(b, new Item.Properties()) {
 			@Override
 			public void initializeClient(Consumer<IClientItemExtensions> consumer) {
@@ -86,7 +85,7 @@ public class ModBlocks {
 		}, TileEntityTank::new);
 
 	public static MGUBlockReg<BlockTankSink, BlockItemTankSink, TileEntitySinkTank> TANK_SINK = new MGUBlockReg<>("tank_sink",
-		() -> new BlockTankSink(Block.Properties.of(Material.GLASS, MaterialColor.QUARTZ).strength(1.0F, 2000.0F).sound(SoundType.GLASS).noOcclusion()),
+		() -> new BlockTankSink(Block.Properties.of().mapColor(MapColor.COLOR_GRAY).strength(1.0F, 2000.0F).sound(SoundType.GLASS).noOcclusion()),
 		(b) -> new BlockItemTankSink(b, new Item.Properties()){
 			@Override
 			public void initializeClient(Consumer<IClientItemExtensions> consumer) {
@@ -100,39 +99,39 @@ public class ModBlocks {
 		}, TileEntitySinkTank::new);
 
 	public static MGUBlockReg<BlockXPTap, MGUBlockItem, TileEntityXPTap> XP_TAP = new MGUBlockReg<>("xp_tap",
-		() -> new BlockXPTap(Block.Properties.of(Material.BUILDABLE_GLASS, MaterialColor.STONE).strength(1.0F, 2000.0F).sound(SoundType.METAL).noOcclusion()),
+		() -> new BlockXPTap(Block.Properties.of().mapColor(MapColor.NONE).strength(1.0F, 2000.0F).sound(SoundType.METAL).noOcclusion()),
 		(b) -> new MGUBlockItem(b, new Item.Properties()), TileEntityXPTap::new);
 
 	public static MGUBlockReg<BlockWitherMuffler, MGUBlockItem, ?> WITHER_MUFFLER = new MGUBlockReg<>("wither_muffler",
-		() -> new BlockWitherMuffler(Block.Properties.of(Material.WOOL, MaterialColor.STONE).strength(0.5F, 2000F).sound(SoundType.WOOL)),
+		() -> new BlockWitherMuffler(Block.Properties.of().mapColor(MapColor.COLOR_BLACK).strength(0.5F, 2000F).sound(SoundType.WOOL)),
 		(b) -> new MGUBlockItem(b, new Item.Properties()));
 
 	public static MGUBlockReg<BlockDragonMuffler, MGUBlockItem, ?> DRAGON_MUFFLER = new MGUBlockReg<>("dragon_muffler",
-		() -> new BlockDragonMuffler(Block.Properties.of(Material.WOOL, MaterialColor.STONE).strength(0.5F, 2000F).sound(SoundType.WOOL)),
+		() -> new BlockDragonMuffler(Block.Properties.of().mapColor(MapColor.COLOR_BLACK).strength(0.5F, 2000F).sound(SoundType.WOOL)),
 		(b) -> new MGUBlockItem(b, new Item.Properties()));
 
 	public static MGUBlockReg<BlockDarkOakStone, MGUBlockItem, ?> DARK_OAK_STONE = new MGUBlockReg<>("dark_oak_stone",
-		() -> new BlockDarkOakStone(Block.Properties.of(Material.STONE, MaterialColor.STONE).strength(1.5F, 10F).sound(SoundType.STONE).lightLevel(bState -> 7)),
+		() -> new BlockDarkOakStone(Block.Properties.of().mapColor(MapColor.COLOR_BROWN).strength(1.5F, 10F).sound(SoundType.STONE).lightLevel(bState -> 7)),
 		(b) -> new MGUBlockItem(b, new Item.Properties()));
 
 	public static MGUBlockReg<BlockEntityConveyor, MGUBlockItem, ?> ENTITY_CONVEYOR = new MGUBlockReg<>("entity_conveyor",
-		() -> new BlockEntityConveyor(Block.Properties.of(Material.STONE, MaterialColor.STONE).strength(0.5F, 2000.0F).sound(SoundType.STONE).isValidSpawn((state, reader, pos, entitytype) -> true)),
+		() -> new BlockEntityConveyor(Block.Properties.of().mapColor(MapColor.COLOR_GRAY).strength(0.5F, 2000.0F).sound(SoundType.STONE).isValidSpawn((state, reader, pos, entitytype) -> true)),
 		(b) -> new MGUBlockItem(b, new Item.Properties()));
 
 	public static MGUBlockReg<BlockEnderInhibitorOn, MGUBlockItem, ?> ENDER_INHIBITOR_ON = new MGUBlockReg<>("ender_inhibitor_on",
-		() -> new BlockEnderInhibitorOn(Block.Properties.of(Material.BUILDABLE_GLASS, MaterialColor.STONE).strength(0.2F, 2000F).sound(SoundType.METAL).noOcclusion()),
+		() -> new BlockEnderInhibitorOn(Block.Properties.of().mapColor(MapColor.COLOR_GRAY).strength(0.2F, 2000F).sound(SoundType.METAL).noOcclusion()),
 		(b) -> new MGUBlockItem(b, new Item.Properties()));
 
 	public static MGUBlockReg<BlockEnderInhibitorOff, MGUBlockItem, ?> ENDER_INHIBITOR_OFF = new MGUBlockReg<>("ender_inhibitor_off",
-		() -> new BlockEnderInhibitorOff(Block.Properties.of(Material.BUILDABLE_GLASS, MaterialColor.STONE).strength(0.2F, 2000F).sound(SoundType.METAL).noOcclusion()),
+		() -> new BlockEnderInhibitorOff(Block.Properties.of().mapColor(MapColor.COLOR_GRAY).strength(0.2F, 2000F).sound(SoundType.METAL).noOcclusion()),
 		(b) -> new MGUBlockItem(b, new Item.Properties()));
 
 	public static MGUBlockReg<BlockTintedGlass, MGUBlockItem, ?> TINTED_GLASS = new MGUBlockReg<>("tinted_glass",
-		() -> new BlockTintedGlass(Block.Properties.of(Material.GLASS, MaterialColor.COLOR_BLACK).strength(1.0F, 2000.0F).sound(SoundType.GLASS).noOcclusion()),
+		() -> new BlockTintedGlass(Block.Properties.of().mapColor(MapColor.COLOR_BLACK).strength(1.0F, 2000.0F).sound(SoundType.GLASS).noOcclusion()),
 		(b) -> new MGUBlockItem(b, new Item.Properties()));
 
 	public static MGUBlockReg<BlockTankJumbo, BlockItemTankJumbo, TileEntityJumboTank> JUMBO_TANK = new MGUBlockReg<>("jumbo_tank",
-		() -> new BlockTankJumbo(Block.Properties.of(Material.METAL, MaterialColor.COLOR_GRAY).strength(1.0F, 2000.0F).sound(SoundType.METAL).noOcclusion()),
+		() -> new BlockTankJumbo(Block.Properties.of().mapColor(MapColor.COLOR_GRAY).strength(1.0F, 2000.0F).sound(SoundType.METAL).noOcclusion()),
 		(b) -> new BlockItemTankJumbo(b, new Item.Properties()){
 			@Override
 			public void initializeClient(Consumer<IClientItemExtensions> consumer) {
@@ -146,7 +145,7 @@ public class ModBlocks {
 		}, TileEntityJumboTank::new);
 
 	public static MGUBlockReg<BlockXPSolidifier, MGUBlockItem, TileEntityXPSolidifier> XPSOLIDIFIER = new MGUBlockReg<>("xpsolidifier",
-		() -> new BlockXPSolidifier(Block.Properties.of(Material.METAL, MaterialColor.COLOR_GRAY).strength(1.0F, 2000.0F).sound(SoundType.METAL).noOcclusion()),
+		() -> new BlockXPSolidifier(Block.Properties.of().mapColor(MapColor.COLOR_GRAY).strength(1.0F, 2000.0F).sound(SoundType.METAL).noOcclusion()),
 		(b) -> new MGUBlockItem(b, new Item.Properties()){
 			@Override
 			public void initializeClient(@Nonnull Consumer<IClientItemExtensions> consumer) {
@@ -159,21 +158,21 @@ public class ModBlocks {
 			}
 		}, TileEntityXPSolidifier::new);
 
-	public static Material MATERIAL_DREADFUL_DIRT = new Material(MaterialColor.DIRT, false, true, false, true, true, false, PushReaction.NORMAL);
+	//public static Material MATERIAL_DREADFUL_DIRT = new Material(MaterialColor.DIRT, false, true, false, true, true, false, PushReaction.NORMAL); //TODO
 	public static MGUBlockReg<BlockDreadfulDirt, MGUBlockItem, ?> DREADFUL_DIRT = new MGUBlockReg<>("dreadful_dirt",
-		() -> new BlockDreadfulDirt(Block.Properties.of(MATERIAL_DREADFUL_DIRT, MaterialColor.COLOR_PURPLE).strength(1.0F, 2000.0F).sound(SoundType.GRAVEL).randomTicks()),
+		() -> new BlockDreadfulDirt(Block.Properties.of().mapColor(MapColor.COLOR_PURPLE).strength(1.0F, 2000.0F).sound(SoundType.GRAVEL).randomTicks()),
 		(b) -> new MGUBlockItem(b, new Item.Properties()));
 
 	public static MGUBlockReg<BlockSolidXP, MGUBlockItem, ?> SOLID_XP_BLOCK = new MGUBlockReg<>("solid_xp_block",
-		() -> new BlockSolidXP(Block.Properties.of(Material.CLAY, MaterialColor.GRASS).friction(0.8F).sound(ModSounds.SOLID_XP_BLOCK).noOcclusion().strength(1.5F, 10F)),
+		() -> new BlockSolidXP(Block.Properties.of().mapColor(MapColor.COLOR_GREEN).friction(0.8F).sound(ModSounds.SOLID_XP_BLOCK).noOcclusion().strength(1.5F, 10F)),
 		(b) -> new MGUBlockItem(b, new Item.Properties()));
 
 	public static MGUBlockReg<BlockDelightfulDirt, MGUBlockItem, ?> DELIGHTFUL_DIRT = new MGUBlockReg<>("delightful_dirt",
-		() -> new BlockDelightfulDirt(Block.Properties.of(Material.DIRT, MaterialColor.COLOR_PURPLE).strength(1.0F, 2000.0F).sound(SoundType.GRAVEL).randomTicks()),
+		() -> new BlockDelightfulDirt(Block.Properties.of().mapColor(MapColor.COLOR_LIGHT_GREEN).strength(1.0F, 2000.0F).sound(SoundType.GRAVEL).randomTicks()),
 		(b) -> new MGUBlockItem(b, new Item.Properties()));
 
 	public static MGUBlockReg<BlockEntitySpawner, MGUBlockItem, TileEntityMGUSpawner> ENTITY_SPAWNER = new MGUBlockReg<>("entity_spawner",
-		() -> new BlockEntitySpawner(Block.Properties.of(Material.METAL, MaterialColor.STONE).strength(10.0F, 2000.0F).sound(SoundType.METAL).noOcclusion().randomTicks()),
+		() -> new BlockEntitySpawner(Block.Properties.of().mapColor(MapColor.COLOR_GRAY).strength(10.0F, 2000.0F).sound(SoundType.METAL).noOcclusion().randomTicks()),
 		(b) -> new MGUBlockItem(b, new Item.Properties()), TileEntityMGUSpawner::new);
 
 	public static RegistryObject<FluidType> XPTYPE = FLUID_TYPES.register("fluid_xp", () -> new FluidType(FluidType.Properties.create()
@@ -221,7 +220,7 @@ public class ModBlocks {
 	public static RegistryObject<ForgeFlowingFluid> FLUID_XP_FLOWING = FLUIDS.register("fluid_xp_flowing",
 		() -> new ForgeFlowingFluid.Flowing(ModBlocks.xp_properties) );
 	public static RegistryObject<LiquidBlock> FLUID_XP_BLOCK = BLOCKS.register("fluid_xp",
-		() -> new MGUFlowingFluidBlock(FLUID_XP,Block.Properties.of(Material.WATER)));
+		() -> new MGUFlowingFluidBlock(FLUID_XP,Block.Properties.of().liquid().noCollission().replaceable().strength(100.0F).pushReaction(PushReaction.DESTROY).noLootTable())); //TODO hopefully
 
 	private static final ForgeFlowingFluid.Properties xp_properties = new ForgeFlowingFluid.Properties(() -> XPTYPE.get(), () -> FLUID_XP.get(), () -> FLUID_XP_FLOWING.get())
 			.block(() -> FLUID_XP_BLOCK.get())
