@@ -1,12 +1,10 @@
 package mob_grinding_utils.inventory.client;
 
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import mob_grinding_utils.inventory.server.ContainerSaw;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
-import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
@@ -24,25 +22,22 @@ public class GuiSaw extends AbstractContainerScreen<ContainerSaw> {
 	}
 
 	@Override
-	public void render(@Nonnull PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
-		this.renderBackground(matrixStack);
-		super.render(matrixStack, mouseX, mouseY, partialTicks);
-		renderTooltip(matrixStack, mouseX, mouseY);
+	public void render(@Nonnull GuiGraphics gg, int mouseX, int mouseY, float partialTicks) {
+		this.renderBackground(gg);
+		super.render(gg, mouseX, mouseY, partialTicks);
+		renderTooltip(gg, mouseX, mouseY);
 	}
 
 	@Override
-	protected void renderLabels(@Nonnull PoseStack matrixStack, int x, int y) {
+	protected void renderLabels(@Nonnull GuiGraphics gg, int x, int y) {
 		String title = Component.translatable("block.mob_grinding_utils.saw").getString();
-		fontRenderer.draw(matrixStack, title, imageWidth / 2.0f - fontRenderer.width(title) / 2.0f, imageHeight - 218, 4210752);
+		gg.drawString(font, title, imageWidth / 2.0f - fontRenderer.width(title) / 2.0f, imageHeight - 218, 4210752, false);
 	}
 
 	@Override
-	protected void renderBg(@Nonnull PoseStack matrixStack, float partialTicks, int x, int y) {
-		RenderSystem.setShader(GameRenderer::getPositionTexShader);
-		RenderSystem.setShaderTexture(0, GUI_SAW);
-		RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+	protected void renderBg(@Nonnull GuiGraphics gg, float partialTicks, int x, int y) {
 		int xOffSet = (width - imageWidth) / 2;
 		int yOffSet = (height - imageHeight) / 2;
-		this.blit(matrixStack, xOffSet, yOffSet, 0, 0, imageWidth, imageHeight);
+		gg.blit(GUI_SAW, xOffSet, yOffSet, 0, 0, imageWidth, imageHeight);
 	}
 }

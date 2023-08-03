@@ -92,7 +92,7 @@ public class ContainerFan extends AbstractContainerMenu {
 				slot = this.slots.get(slotIndex);
 				slotstack = slot.getItem();
 
-				if (!slotstack.isEmpty() && slotstack.getItem() == stack.getItem() && stack.getDamageValue() == slotstack.getDamageValue() && ItemStack.tagMatches(stack, slotstack) && slotstack.getCount() < slot.getMaxStackSize()) {
+				if (!slotstack.isEmpty() && slotstack.getItem() == stack.getItem() && stack.getDamageValue() == slotstack.getDamageValue() && ItemStack.isSameItemSameTags(stack, slotstack) && slotstack.getCount() < slot.getMaxStackSize()) {
 					int mergedStackSize = stack.getCount() + Math.min(slotstack.getCount(), slot.getMaxStackSize());
 
 					if (mergedStackSize <= stack.getMaxStackSize() && mergedStackSize <= slot.getMaxStackSize()) {

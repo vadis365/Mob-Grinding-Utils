@@ -4,6 +4,7 @@ import com.mojang.authlib.GameProfile;
 import mob_grinding_utils.MobGrindingUtils;
 import mob_grinding_utils.fakeplayer.MGUFakePlayer;
 import mob_grinding_utils.items.ItemImaginaryInvisibleNotReallyThereSword;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.world.entity.Entity;
@@ -52,7 +53,7 @@ public class EntityHeadDropEvent {
 
 		var recipeOptional = MobGrindingUtils.BEHEADING_RECIPES.stream().filter(recipe -> recipe.matches(target.getType())).findFirst();
 		if (recipeOptional.isPresent()) {
-			return recipeOptional.get().getResultItem();
+			return recipeOptional.get().getResultItem(RegistryAccess.EMPTY);
 		}
 		
 		if (target instanceof Mob) {

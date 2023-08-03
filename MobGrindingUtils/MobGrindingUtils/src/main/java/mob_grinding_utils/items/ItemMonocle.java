@@ -16,7 +16,7 @@ import java.util.List;
 
 public class ItemMonocle extends ArmorItem {
 
-	public ItemMonocle(ArmorMaterials material, EquipmentSlot slot, Properties properties) {
+	public ItemMonocle(ArmorMaterials material, ArmorItem.Type slot, Properties properties) {
 		super(material, slot, properties);
 	}
 

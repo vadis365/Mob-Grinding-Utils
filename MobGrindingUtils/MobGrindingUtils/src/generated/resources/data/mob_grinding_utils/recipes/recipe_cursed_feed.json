@@ -30,5 +30,6 @@
   ],
   "result": {
     "item": "mob_grinding_utils:gm_chicken_feed_cursed"
-  }
+  },
+  "show_notification": true
 }

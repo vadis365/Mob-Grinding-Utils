@@ -4,6 +4,7 @@ package mob_grinding_utils.recipe;
 import com.google.gson.JsonObject;
 import mob_grinding_utils.MobGrindingUtils;
 import mob_grinding_utils.ModItems;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.CraftingContainer;
@@ -18,13 +19,13 @@ import javax.annotation.Nullable;
 public class ChickenFeedRecipe extends ShapelessRecipe {
     public static final String NAME = "chicken_feed";
     public ChickenFeedRecipe(ShapelessRecipe recipe) {
-        super(recipe.getId(), recipe.getGroup(), recipe.category(), recipe.getResultItem(), recipe.getIngredients());
+        super(recipe.getId(), recipe.getGroup(), recipe.category(), recipe.getResultItem(RegistryAccess.EMPTY), recipe.getIngredients());
     }
 
     @Nonnull
     @Override
-    public ItemStack assemble(@Nonnull CraftingContainer inv) {
-        ItemStack result = super.assemble(inv);
+    public ItemStack assemble(@Nonnull CraftingContainer inv, RegistryAccess lol) {
+        ItemStack result = super.assemble(inv, lol);
 
         ItemStack swabItem = ItemStack.EMPTY;
 

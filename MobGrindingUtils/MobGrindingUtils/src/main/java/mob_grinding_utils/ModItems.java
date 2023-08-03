@@ -2,12 +2,8 @@ package mob_grinding_utils;
 
 import com.google.common.collect.ImmutableSet;
 import mob_grinding_utils.items.*;
-import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.food.FoodProperties;
-import net.minecraft.world.item.ArmorMaterials;
-import net.minecraft.world.item.BucketItem;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.Items;
+import net.minecraft.world.item.*;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -47,7 +43,7 @@ public class ModItems {
 	public static RegistryObject<Item> XP_SOLIDIFIER_UPGRADE = ITEMS.register("xp_solidifier_upgrade", () -> new ItemSolidifierUpgrade(new Item.Properties().stacksTo(64)));
 	public static RegistryObject<Item> SPAWNER_UPGRADE_WIDTH = ITEMS.register("spawner_upgrade_width", () -> new ItemSpawnerUpgrade(new Item.Properties().stacksTo(64), "width"));
 	public static RegistryObject<Item> SPAWNER_UPGRADE_HEIGHT = ITEMS.register("spawner_upgrade_height", () -> new ItemSpawnerUpgrade(new Item.Properties().stacksTo(64), "height"));
-	public static RegistryObject<Item> MONOCLE = ITEMS.register("monocle", () -> new ItemMonocle(ArmorMaterials.CHAIN, EquipmentSlot.HEAD, new Item.Properties().stacksTo(1).durability(256).defaultDurability(ArmorMaterials.CHAIN.getDurabilityForSlot(EquipmentSlot.HEAD)))); // pointless shit
+	public static RegistryObject<Item> MONOCLE = ITEMS.register("monocle", () -> new ItemMonocle(ArmorMaterials.CHAIN, ArmorItem.Type.HELMET, new Item.Properties().stacksTo(1).durability(256).defaultDurability(ArmorMaterials.CHAIN.getDurabilityForType(ArmorItem.Type.HELMET)))); // pointless shit
 	//public static RegistryObject<Item> SPAWNEGG = ITEMS.register("witheregg", () -> new SpawnEggItem(EntityType.WITHER, 0x0, 0xffffff, new Item.Properties().group(MobGrindingUtils.TAB)));
 
 	public static final Set<RegistryObject<Item>> TAB_ORDER = ImmutableSet.of(

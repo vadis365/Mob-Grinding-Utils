@@ -21,5 +21,6 @@
   ],
   "result": {
     "item": "mob_grinding_utils:spawner_upgrade_width"
-  }
+  },
+  "show_notification": true
 }

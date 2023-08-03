@@ -30,5 +30,6 @@
   ],
   "result": {
     "item": "mob_grinding_utils:nutritious_chicken_feed"
-  }
+  },
+  "show_notification": true
 }

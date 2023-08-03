@@ -16,5 +16,6 @@
   ],
   "result": {
     "item": "mob_grinding_utils:jumbo_tank"
-  }
+  },
+  "show_notification": true
 }

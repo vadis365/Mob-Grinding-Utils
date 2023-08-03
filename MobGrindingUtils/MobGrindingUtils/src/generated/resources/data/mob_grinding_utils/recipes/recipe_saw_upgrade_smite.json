@@ -19,5 +19,6 @@
   ],
   "result": {
     "item": "mob_grinding_utils:saw_upgrade_smite"
-  }
+  },
+  "show_notification": true
 }

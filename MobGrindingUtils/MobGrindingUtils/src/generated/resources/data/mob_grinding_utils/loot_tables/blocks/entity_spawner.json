@@ -16,5 +16,6 @@
       ],
       "rolls": 1.0
     }
-  ]
+  ],
+  "random_sequence": "mob_grinding_utils:blocks/entity_spawner"
 }

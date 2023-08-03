@@ -16,5 +16,6 @@
   ],
   "result": {
     "item": "mob_grinding_utils:dragon_muffler"
-  }
+  },
+  "show_notification": true
 }

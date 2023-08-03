@@ -1,14 +1,14 @@
 package mob_grinding_utils.network;
 
-import java.util.function.Supplier;
-
 import mob_grinding_utils.tile.TileEntityXPSolidifier;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.network.NetworkEvent;
+
+import java.util.function.Supplier;
 
 public class MessageSolidifier {
     public int buttonID;
@@ -37,7 +37,7 @@ public class MessageSolidifier {
         ctx.get().enqueueWork(() -> {
 
             ServerPlayer player = ctx.get().getSender();
-            ServerLevel world = player.getLevel();
+            ServerLevel world = player.serverLevel();
             TileEntityXPSolidifier solidifier = (TileEntityXPSolidifier) world.getBlockEntity(message.tilePos);
             if (solidifier != null) {
                 if (message.buttonID == 0)

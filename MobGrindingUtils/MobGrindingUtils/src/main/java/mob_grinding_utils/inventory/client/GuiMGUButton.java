@@ -1,11 +1,9 @@
 package mob_grinding_utils.inventory.client;
 
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
-import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 
@@ -24,17 +22,19 @@ public class GuiMGUButton extends Button {
     }
 
     @Override
-    public void renderButton(@Nonnull PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+    public void render(@Nonnull GuiGraphics gg, int mouseX, int mouseY, float partialTicks) {
         Minecraft mc = Minecraft.getInstance();
         Font fontrenderer = mc.font;
         if (visible) {
-            RenderSystem.setShader(GameRenderer::getPositionTexShader);
-            RenderSystem.setShaderTexture(0, getTextures(size));
-            RenderSystem.setShaderColor(0.75F, 0.75F, 0.75F, 0.5F);
             boolean hover = mouseX >= getX() && mouseY >= getY() && mouseX < getX() + width && mouseY < getY() + height;
             if(hover)
-                RenderSystem.setShaderColor(0.75F, 1F, 0.75F, 1F);
-            blit(matrixStack, getX(), getY(), size.u, size.v, width, height);
+                gg.setColor(0.75f, 1f, 0.75f, 1f);
+            else
+                gg.setColor(0.75f, 0.75f, 0.75f, 0.5f);
+
+            gg.blit(getTextures(size), getX(), getY(), size.u, size.v, width, height);
+
+            gg.setColor(1.0f, 1.0f, 1.0f, 1.0f);
 
             int textColour = 14737632;
             if (getFGColor() != 0)
@@ -43,7 +43,7 @@ public class GuiMGUButton extends Button {
                 textColour = 10526880;
             else if (this.isHoveredOrFocused())
                 textColour = 16777120;
-            drawCenteredString(matrixStack, fontrenderer, getMessage(), getX() + this.width / 2, getY() + (this.height - 8) / 2, textColour);
+            gg.drawCenteredString(fontrenderer, getMessage(), getX() + this.width / 2, getY() + (this.height - 8) / 2, textColour);
         }
     }
     

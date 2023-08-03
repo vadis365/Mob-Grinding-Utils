@@ -1,7 +1,6 @@
 package mob_grinding_utils.items;
 
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -23,7 +22,7 @@ public class ItemImaginaryInvisibleNotReallyThereSword extends SwordItem {
 
 	@Override
 	public boolean hurtEnemy(ItemStack stack, LivingEntity target, LivingEntity attacker) {
-		target.hurt(DamageSource.playerAttack((Player) attacker), getDamage() + EnchantmentHelper.getDamageBonus(stack, target.getMobType()));
+		target.hurt(target.level().damageSources().playerAttack((Player) attacker), getDamage() + EnchantmentHelper.getDamageBonus(stack, target.getMobType()));
 		return true;
 	}
 

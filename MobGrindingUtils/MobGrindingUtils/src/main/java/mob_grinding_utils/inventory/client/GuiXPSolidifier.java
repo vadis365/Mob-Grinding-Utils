@@ -1,16 +1,19 @@
 package mob_grinding_utils.inventory.client;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.*;
+import com.mojang.blaze3d.vertex.BufferBuilder;
+import com.mojang.blaze3d.vertex.DefaultVertexFormat;
+import com.mojang.blaze3d.vertex.Tesselator;
+import com.mojang.blaze3d.vertex.VertexFormat;
 import mob_grinding_utils.MobGrindingUtils;
 import mob_grinding_utils.inventory.server.ContainerXPSolidifier;
 import mob_grinding_utils.network.MessageSolidifier;
 import mob_grinding_utils.tile.TileEntityXPSolidifier;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
@@ -20,7 +23,6 @@ import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 public class GuiXPSolidifier extends AbstractContainerScreen<ContainerXPSolidifier> {
     private static final ResourceLocation GUI_TEX = new ResourceLocation("mob_grinding_utils:textures/gui/solidifier_gui.png");
@@ -50,23 +52,20 @@ public class GuiXPSolidifier extends AbstractContainerScreen<ContainerXPSolidifi
     }
 
     @Override
-    protected void renderLabels(@Nonnull PoseStack matrixStack, int x, int y) {
-        this.font.draw(matrixStack, I18n.get("block.mob_grinding_utils.xpsolidifier"), 7, 6, 0x404040);
-        this.font.draw(matrixStack, I18n.get("container.inventory"), 8, this.imageHeight - 96 + 2, 4210752);
-        this.font.drawShadow(matrixStack, tile.isOn ? "On" : "Off", 158 - font.width(tile.isOn ? "On" : "Off") / 2.0f, 12, 14737632);
+    protected void renderLabels(@Nonnull GuiGraphics gg, int x, int y) {
+        gg.drawString(font, Component.translatable("block.mob_grinding_utils.xpsolidifier"), 7, 6, 0x404040, false);
+        gg.drawString(font, Component.translatable("container.inventory"), 8, this.imageHeight - 96 + 2, 4210752, false);
+        gg.drawString(font, tile.isOn ? "On" : "Off", 158 - font.width(tile.isOn ? "On" : "Off") / 2.0f, 12, 14737632, true);
     }
 
     @Override
-    protected void renderBg(@Nonnull PoseStack stack, float partialTicks, int mouseX, int mouseY) {
-        RenderSystem.setShader(GameRenderer::getPositionTexShader);
-        RenderSystem.setShaderTexture(0, GUI_TEX);
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+    protected void renderBg(@Nonnull GuiGraphics gg, float partialTicks, int mouseX, int mouseY) {
         int xOffSet = (width - imageWidth) / 2;
         int yOffSet = (height - imageHeight) / 2;
         int zLevel = 0;
-        this.blit(stack, xOffSet, yOffSet, 0, 0, imageWidth, imageHeight);
+        gg.blit(GUI_TEX, xOffSet, yOffSet, 0, 0, imageWidth, imageHeight);
 
-        font.draw(stack, tile.outputDirection.getSerializedName(), xOffSet + 124 - font.width(tile.outputDirection.getSerializedName()) / 2.0f, yOffSet + 76, 5285857);
+        gg.drawString(font, tile.outputDirection.getSerializedName(), xOffSet + 124 - font.width(tile.outputDirection.getSerializedName()) / 2.0f, yOffSet + 76, 5285857, false);
 
         int fluid = tile.getScaledFluid(70);
 
@@ -86,31 +85,28 @@ public class GuiXPSolidifier extends AbstractContainerScreen<ContainerXPSolidifi
             buffer.vertex(xOffSet + 8, yOffSet + 88 - fluid, zLevel).uv(sprite.getU0(), sprite.getV1()).endVertex();
             tessellator.end();
         }
-        RenderSystem.setShader(GameRenderer::getPositionTexShader);
-        RenderSystem.setShaderTexture(0, GUI_TEX);
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        this.blit(stack, xOffSet + 7, yOffSet + 17 , 178, 0, 6, 71);
+        gg.blit(GUI_TEX, xOffSet + 7, yOffSet + 17 , 178, 0, 6, 71);
 
-        this.blit(stack, xOffSet + 91, yOffSet + 36, 178, 73, tile.getProgressScaled(24), 17);
+        gg.blit(GUI_TEX, xOffSet + 91, yOffSet + 36, 178, 73, tile.getProgressScaled(24), 17);
     }
 
     @Override
-    public void render(@Nonnull PoseStack stack, int mouseX, int mouseY, float partialTicks) {
-        this.renderBackground(stack);
-        super.render(stack, mouseX, mouseY, partialTicks);
-        renderTooltip(stack, mouseX, mouseY);
+    public void render(@Nonnull GuiGraphics gg, int mouseX, int mouseY, float partialTicks) {
+        this.renderBackground(gg);
+        super.render(gg, mouseX, mouseY, partialTicks);
+        renderTooltip(gg, mouseX, mouseY);
     }
 
     @Override
-    protected void renderTooltip(@Nonnull PoseStack matrixStack, int x, int y) {
-        super.renderTooltip(matrixStack, x, y);
+    protected void renderTooltip(@Nonnull GuiGraphics gg, int x, int y) {
+        super.renderTooltip(gg, x, y);
         int xOffSet = (width - imageWidth) / 2;
         int yOffSet = (height - imageHeight) / 2;
         if (x > xOffSet + 8 && x < xOffSet + 20 && y > yOffSet + 20 && y < yOffSet + 88) {
             List<Component> tooltip = new ArrayList<>();
             tooltip.add(tile.tank.getFluid().getDisplayName());
             tooltip.add(Component.literal(tile.tank.getFluidAmount() + "/" + tile.tank.getCapacity()));
-            this.renderTooltip(matrixStack, tooltip, Optional.empty(), x, y, this.font);
+            gg.renderComponentTooltip(font, tooltip, x, y);
         }
     }
 }

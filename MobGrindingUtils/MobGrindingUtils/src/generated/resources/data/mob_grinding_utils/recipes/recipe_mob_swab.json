@@ -16,5 +16,6 @@
   ],
   "result": {
     "item": "mob_grinding_utils:mob_swab"
-  }
+  },
+  "show_notification": true
 }

@@ -1,4 +1,4 @@
-// 1.19.3	2023-06-26T16:35:43.2227574	Tags for minecraft:entity_type mod id mob_grinding_utils
+// 1.20.1	2023-08-03T14:50:15.6661115	Tags for minecraft:entity_type mod id mob_grinding_utils
 82bd38327da3efeeebbc577e3cbb3c2ed856f70d data/mob_grinding_utils/tags/entity_types/no_dirt_spawn.json
 35133e95f1c8fdd7a1c21afcc231fc0bffefb9a8 data/mob_grinding_utils/tags/entity_types/no_spawn.json
 7d8ddddfbbb5cffbba07c755d16781c953c6c151 data/mob_grinding_utils/tags/entity_types/no_swab.json

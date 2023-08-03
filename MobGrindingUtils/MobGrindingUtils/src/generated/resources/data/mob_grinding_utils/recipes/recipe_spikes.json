@@ -15,5 +15,6 @@
   ],
   "result": {
     "item": "mob_grinding_utils:spikes"
-  }
+  },
+  "show_notification": true
 }

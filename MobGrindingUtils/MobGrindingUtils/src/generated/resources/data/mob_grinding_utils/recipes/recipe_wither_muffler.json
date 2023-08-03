@@ -16,5 +16,6 @@
   ],
   "result": {
     "item": "mob_grinding_utils:wither_muffler"
-  }
+  },
+  "show_notification": true
 }

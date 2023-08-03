@@ -18,5 +18,6 @@
   ],
   "result": {
     "item": "mob_grinding_utils:solid_xp_mould_blank"
-  }
+  },
+  "show_notification": true
 }
