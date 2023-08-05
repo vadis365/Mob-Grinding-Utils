@@ -96,6 +96,7 @@ public class MobGrindingUtils {
 		PARTICLES.register(modBus);
 		RECIPES.register(modBus);
 		RECIPE_TYPES.register(modBus);
+		TABS.register(modBus);
 		ModSounds.init(modBus);
 
 		DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> ModelLayers.init(modBus));

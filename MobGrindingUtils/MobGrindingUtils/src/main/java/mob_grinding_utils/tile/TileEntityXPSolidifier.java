@@ -393,7 +393,7 @@ public class TileEntityXPSolidifier extends BlockEntity implements MenuProvider 
 	@Nonnull
 	@Override
 	public Component getDisplayName() {
-		return Component.literal("block.mob_grinding_utils.xpsolidifier");
+		return Component.translatable("block.mob_grinding_utils.xpsolidifier");
 	}
 
 	@Nullable
