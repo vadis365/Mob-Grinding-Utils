@@ -50,13 +50,13 @@ public class TileEntityAbsorptionHopper extends TileEntityInventoryHelper implem
 	public FluidTank tank = new FluidTank(1000 *  16);
 	private final LazyOptional<IFluidHandler> tank_holder = LazyOptional.of(() -> tank);
 	private final IItemHandler itemHandler;
-	private LazyOptional<IItemHandler> itemholder = LazyOptional.empty();
+	private final LazyOptional<IItemHandler> itemHolder;
 	private static final int[] SLOTS = new int[] {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16};
 	public int prevTankAmount;
 	public TileEntityAbsorptionHopper(BlockPos pos, BlockState state) {
 		super(ModBlocks.ABSORPTION_HOPPER.getTileEntityType(), 17, pos, state);
 		itemHandler = createUnSidedHandler();
-		itemholder = LazyOptional.of(() -> itemHandler);
+		itemHolder = LazyOptional.of(() -> itemHandler);
 	}
 
 	public enum EnumStatus implements StringRepresentable {
@@ -476,7 +476,7 @@ public class TileEntityAbsorptionHopper extends TileEntityInventoryHelper implem
 			return tank_holder.cast();
 
 		if (capability == ForgeCapabilities.ITEM_HANDLER)
-			return  itemholder.cast();
+			return  itemHolder.cast();
 		return super.getCapability(capability, facing);
 	}
 
@@ -488,7 +488,7 @@ public class TileEntityAbsorptionHopper extends TileEntityInventoryHelper implem
 	@Nonnull
 	@Override
 	public Component getDisplayName() {
-		return Component.literal("Absorption Hopper"); //TODO localise
+		return Component.translatable("block.mob_grinding_utils.absorption_hopper");
 	}
 
 }

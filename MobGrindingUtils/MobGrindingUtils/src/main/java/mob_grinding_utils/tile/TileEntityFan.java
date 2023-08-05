@@ -284,6 +284,6 @@ public class TileEntityFan extends TileEntityInventoryHelper implements MenuProv
 	@Nonnull
 	@Override
 	public Component getDisplayName() {
-		return Component.literal("block.mob_grinding_utils.fan");
+		return Component.translatable("block.mob_grinding_utils.fan");
 	}
 }

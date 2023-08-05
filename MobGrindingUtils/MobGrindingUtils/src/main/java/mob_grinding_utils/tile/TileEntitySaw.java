@@ -30,6 +30,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 public class TileEntitySaw extends TileEntityInventoryHelper implements MenuProvider {
@@ -219,8 +220,9 @@ public class TileEntitySaw extends TileEntityInventoryHelper implements MenuProv
 		return new ContainerSaw(windowID, playerInventory, new FriendlyByteBuf(Unpooled.buffer()).writeBlockPos(worldPosition));
 	}
 
+	@Nonnull
 	@Override
 	public Component getDisplayName() {
-		return Component.literal("Mob Masher"); //TODO localise
+		return Component.translatable("block.mob_grinding_utils.saw");
 	}
 }
