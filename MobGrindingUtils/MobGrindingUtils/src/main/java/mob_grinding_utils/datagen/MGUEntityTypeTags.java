@@ -24,6 +24,7 @@ public class MGUEntityTypeTags extends EntityTypeTagsProvider {
         this.tag(ModTags.Entities.NO_SWAB).add(EntityType.ENDER_DRAGON);
 
         getOrCreateRawBuilder(ModTags.Entities.NO_SPAWN);
-        tag(ModTags.Entities.NO_DIRT_SPAWN).addOptional(new ResourceLocation("alexmobs", "farseer"));
+        tag(ModTags.Entities.NO_DIRT_SPAWN).addOptional(new ResourceLocation("alexsmobs", "farseer"));
+        tag(ModTags.Entities.NO_DIRT_SPAWN).addOptional(new ResourceLocation("alexsmobs", "centipede_head"));
     }
 }

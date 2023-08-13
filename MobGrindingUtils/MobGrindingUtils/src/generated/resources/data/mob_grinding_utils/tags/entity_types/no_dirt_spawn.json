@@ -1,7 +1,11 @@
 {
   "values": [
     {
-      "id": "alexmobs:farseer",
+      "id": "alexsmobs:farseer",
+      "required": false
+    },
+    {
+      "id": "alexsmobs:centipede_head",
       "required": false
     }
   ]
