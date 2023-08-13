@@ -74,7 +74,7 @@ public class BlockSpikes extends DirectionalBlock {
 		LivingEntity entity = event.getEntity();
 		Level level = entity.getCommandSenderWorld();
 		if (entity != null) {
-			if (!level.isClientSide && !event.isRecentlyHit() && event.getSource() == MobGrindingUtils.getSpikeDamage(level)) {
+			if (!level.isClientSide && !event.isRecentlyHit() && event.getSource().is(MobGrindingUtils.SPIKE_TYPE)) {
 				int xp = 0;
 				try {
 					xp = (Integer) xpPoints.invoke(entity, FakePlayerFactory.getMinecraft((ServerLevel) level));

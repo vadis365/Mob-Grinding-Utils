@@ -194,6 +194,7 @@ public class MobGrindingUtils {
 	private void worldUnload(final LevelEvent.Unload event) {
 		if (event.getLevel() instanceof ServerLevel) {
 			MGUFakePlayer.unload(event.getLevel());
+			SPIKE_DAMAGE = null;
 		}
 	}
 
