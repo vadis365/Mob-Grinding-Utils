@@ -63,7 +63,7 @@ public class ModBlocks {
 		}, TileEntitySaw::new);
 
 	public static MGUBlockReg<BlockAbsorptionHopper, MGUBlockItem, TileEntityAbsorptionHopper> ABSORPTION_HOPPER = new MGUBlockReg<>("absorption_hopper",
-		() -> new BlockAbsorptionHopper(Block.Properties.of().mapColor(MapColor.COLOR_BLACK).strength(10.0F, 2000.0F).sound(SoundType.METAL).noOcclusion()),
+		() -> new BlockAbsorptionHopper(Block.Properties.of().mapColor(MapColor.COLOR_BLACK).forceSolidOn().strength(10.0F, 2000.0F).sound(SoundType.METAL).noOcclusion()),
 		(b) -> new MGUBlockItem(b, new Item.Properties()), TileEntityAbsorptionHopper::new);
 
 	public static MGUBlockReg<BlockSpikes, MGUBlockItem, ?> SPIKES = new MGUBlockReg<>("spikes",
@@ -99,7 +99,7 @@ public class ModBlocks {
 		}, TileEntitySinkTank::new);
 
 	public static MGUBlockReg<BlockXPTap, MGUBlockItem, TileEntityXPTap> XP_TAP = new MGUBlockReg<>("xp_tap",
-		() -> new BlockXPTap(Block.Properties.of().mapColor(MapColor.NONE).strength(1.0F, 2000.0F).sound(SoundType.METAL).noOcclusion()),
+		() -> new BlockXPTap(Block.Properties.of().mapColor(MapColor.NONE).strength(1.0F, 2000.0F).forceSolidOn().sound(SoundType.METAL).noOcclusion()),
 		(b) -> new MGUBlockItem(b, new Item.Properties()), TileEntityXPTap::new);
 
 	public static MGUBlockReg<BlockWitherMuffler, MGUBlockItem, ?> WITHER_MUFFLER = new MGUBlockReg<>("wither_muffler",
@@ -119,11 +119,11 @@ public class ModBlocks {
 		(b) -> new MGUBlockItem(b, new Item.Properties()));
 
 	public static MGUBlockReg<BlockEnderInhibitorOn, MGUBlockItem, ?> ENDER_INHIBITOR_ON = new MGUBlockReg<>("ender_inhibitor_on",
-		() -> new BlockEnderInhibitorOn(Block.Properties.of().mapColor(MapColor.COLOR_GRAY).strength(0.2F, 2000F).sound(SoundType.METAL).noOcclusion()),
+		() -> new BlockEnderInhibitorOn(Block.Properties.of().mapColor(MapColor.COLOR_GRAY).forceSolidOn().strength(0.2F, 2000F).sound(SoundType.METAL).noOcclusion()),
 		(b) -> new MGUBlockItem(b, new Item.Properties()));
 
 	public static MGUBlockReg<BlockEnderInhibitorOff, MGUBlockItem, ?> ENDER_INHIBITOR_OFF = new MGUBlockReg<>("ender_inhibitor_off",
-		() -> new BlockEnderInhibitorOff(Block.Properties.of().mapColor(MapColor.COLOR_GRAY).strength(0.2F, 2000F).sound(SoundType.METAL).noOcclusion()),
+		() -> new BlockEnderInhibitorOff(Block.Properties.of().mapColor(MapColor.COLOR_GRAY).forceSolidOn().strength(0.2F, 2000F).sound(SoundType.METAL).noOcclusion()),
 		(b) -> new MGUBlockItem(b, new Item.Properties()));
 
 	public static MGUBlockReg<BlockTintedGlass, MGUBlockItem, ?> TINTED_GLASS = new MGUBlockReg<>("tinted_glass",
