@@ -1,5 +1,10 @@
 package mob_grinding_utils.datagen;
 
+import java.util.concurrent.CompletableFuture;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import mob_grinding_utils.ModTags;
 import mob_grinding_utils.Reference;
 import net.minecraft.core.HolderLookup;
@@ -8,10 +13,6 @@ import net.minecraft.data.tags.BiomeTagsProvider;
 import net.minecraft.tags.BiomeTags;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.data.ExistingFileHelper;
-import org.jetbrains.annotations.Nullable;
-
-import javax.annotation.Nonnull;
-import java.util.concurrent.CompletableFuture;
 
 public class MGUBiomeTags extends BiomeTagsProvider {
     public MGUBiomeTags(DataGenerator generator, CompletableFuture<HolderLookup.Provider> something, @Nullable ExistingFileHelper existingFileHelper) {
