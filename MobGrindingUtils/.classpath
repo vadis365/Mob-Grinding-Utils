@@ -13,11 +13,6 @@
 			<attribute name="gradle_used_by_scope" value="main,test"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="C:/Users/Dave/.gradle/caches/modules-2/files-2.1/net.minecraftforge/mergetool/1.1.5/f3da18e12c696d35a47c82cbb2cc8b5aa15e1154/mergetool-1.1.5-api.jar" sourcepath="C:/Users/Dave/.gradle/caches/modules-2/files-2.1/net.minecraftforge/mergetool/1.1.5/43e6a124292079d99f7f20fb57b8c8b17dc28c8e/mergetool-1.1.5-sources.jar">
-		<attributes>
-			<attribute name="gradle_used_by_scope" value="main,test"/>
-		</attributes>
-	</classpathentry>
 	<classpathentry kind="lib" path="C:/Users/Dave/.gradle/caches/modules-2/files-2.1/net.minecraftforge/eventbus/6.0.5/699143dd438431d06b57416944f7cedbe52e1475/eventbus-6.0.5.jar" sourcepath="C:/Users/Dave/.gradle/caches/modules-2/files-2.1/net.minecraftforge/eventbus/6.0.5/9e63113e81f9d25c5082ba61df851935d510957/eventbus-6.0.5-sources.jar">
 		<attributes>
 			<attribute name="gradle_used_by_scope" value="main,test"/>
@@ -55,11 +50,6 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="lib" path="C:/Users/Dave/.gradle/caches/modules-2/files-2.1/org.joml/joml/1.10.5/22566d58af70ad3d72308bab63b8339906deb649/joml-1.10.5.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Dave/.gradle/caches/modules-2/files-2.1/com.google.code.gson/gson/2.10/dd9b193aef96e973d5a11ab13cd17430c2e4306b/gson-2.10.jar" sourcepath="C:/Users/Dave/.gradle/caches/modules-2/files-2.1/com.google.code.gson/gson/2.10/6ed5748c6f0860e81e09d4d2582fe914cfa41d1e/gson-2.10-sources.jar">
-		<attributes>
-			<attribute name="gradle_used_by_scope" value="main,test"/>
-		</attributes>
-	</classpathentry>
 	<classpathentry kind="lib" path="C:/Users/Dave/.gradle/caches/modules-2/files-2.1/io.netty/netty-transport/4.1.82.Final/e431a218d91acb6476ccad5f5aafde50aa3945ca/netty-transport-4.1.82.Final.jar" sourcepath="C:/Users/Dave/.gradle/caches/modules-2/files-2.1/io.netty/netty-transport/4.1.82.Final/a7d580e125df85b115e42a00ee7adfb2b81b3367/netty-transport-4.1.82.Final-sources.jar">
 		<attributes>
 			<attribute name="gradle_used_by_scope" value="main,test"/>
@@ -74,5 +64,7 @@
 	<classpathentry kind="lib" path="C:/Users/Dave/.gradle/caches/modules-2/files-2.1/io.netty/netty-buffer/4.1.82.Final/a544270cf1ae8b8077082f5036436a9a9971ea71/netty-buffer-4.1.82.Final.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Dave/.gradle/caches/modules-2/files-2.1/com.mojang/brigadier/1.1.8/5244ce82c3337bba4a196a3ce858bfaecc74404a/brigadier-1.1.8.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Dave/Desktop/Modding/jei-1.20.1-forge-15.2.0.27.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Dave/.gradle/caches/modules-2/files-2.1/com.google.code.gson/gson/2.10.1/b3add478d4382b78ea20b1671390a858002feb6c/gson-2.10.1.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Dave/.gradle/caches/modules-2/files-2.1/net.minecraftforge/mergetool/1.1.7/aa7c6d9d187d585a8a215c288d65b0038be80b2a/mergetool-1.1.7-api.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
