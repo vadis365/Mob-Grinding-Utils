@@ -2,6 +2,7 @@ package mob_grinding_utils;
 
 import mob_grinding_utils.blocks.BlockSpikes;
 import mob_grinding_utils.client.ModelLayers;
+import mob_grinding_utils.config.ServerConfig;
 import mob_grinding_utils.datagen.Generator;
 import mob_grinding_utils.events.*;
 import mob_grinding_utils.fakeplayer.MGUFakePlayer;
@@ -40,7 +41,9 @@ import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.level.LevelEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.DistExecutor;
+import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
@@ -103,6 +106,8 @@ public class MobGrindingUtils {
 
 		modBus.addListener(this::setup);
 		modBus.addListener(this::doClientStuff);
+
+		ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, ServerConfig.SERVER_CONFIG);
 
 		MinecraftForge.EVENT_BUS.addListener(BlockSpikes::dropXP);
 		MinecraftForge.EVENT_BUS.register(new EntityInteractionEvent());
