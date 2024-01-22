@@ -25,6 +25,8 @@ public class MGUEntityTypeTags extends EntityTypeTagsProvider {
 
         getOrCreateRawBuilder(ModTags.Entities.NO_SPAWN);
 
+        getOrCreateRawBuilder(ModTags.Entities.NO_DREADFUL_SPAWN);
+        getOrCreateRawBuilder(ModTags.Entities.NO_DELIGHTFUL_SPAWN);
         tag(ModTags.Entities.NO_DIRT_SPAWN).addOptional(new ResourceLocation("alexmobs", "farseer"));
     }
 }

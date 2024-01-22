@@ -113,7 +113,7 @@ public class BlockDelightfulDirt extends Block {
 		if (!spawns.isEmpty()) {
 			int indexSize = spawns.size();
 			EntityType<?> type = spawns.get(level.random.nextInt(indexSize)).type;
-			if (type.is(ModTags.Entities.NO_DIRT_SPAWN))
+			if (type.is(ModTags.Entities.NO_DIRT_SPAWN) || type.is(ModTags.Entities.NO_DELIGHTFUL_SPAWN))
 				return;
 			if (type == null || !NaturalSpawner.isSpawnPositionOk(SpawnPlacements.getPlacementType(type), level, pos.above(), type))
 				return;

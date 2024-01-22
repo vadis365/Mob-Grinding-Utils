@@ -16,6 +16,8 @@ public class ModTags {
         public static final TagKey<EntityType<?>> NO_SWAB = TagKey.create(Registries.ENTITY_TYPE, new ResourceLocation(Reference.MOD_NAME, "no_swab"));
         public static final TagKey<EntityType<?>> NO_SPAWN = TagKey.create(Registries.ENTITY_TYPE, new ResourceLocation(Reference.MOD_NAME, "no_spawn"));
         public static final TagKey<EntityType<?>> NO_DIRT_SPAWN = TagKey.create(Registries.ENTITY_TYPE, new ResourceLocation(Reference.MOD_NAME, "no_dirt_spawn"));
+        public static final TagKey<EntityType<?>> NO_DREADFUL_SPAWN = TagKey.create(Registries.ENTITY_TYPE, new ResourceLocation(Reference.MOD_NAME, "no_dreadful_spawn"));
+        public static final TagKey<EntityType<?>> NO_DELIGHTFUL_SPAWN = TagKey.create(Registries.ENTITY_TYPE, new ResourceLocation(Reference.MOD_NAME, "no_delightful_spawn"));
     }
     public static class Biomes {
         public static final TagKey<Biome> PASSIVE_OVERRIDE = TagKey.create(Registries.BIOME, new ResourceLocation(Reference.MOD_ID, "passive_override"));
