@@ -2,6 +2,7 @@ package mob_grinding_utils.inventory.server;
 
 import mob_grinding_utils.ModContainers;
 import mob_grinding_utils.ModItems;
+import mob_grinding_utils.config.ServerConfig;
 import mob_grinding_utils.tile.TileEntitySaw;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
@@ -29,12 +30,12 @@ public class ContainerSaw extends AbstractContainerMenu {
 		saw = (TileEntitySaw) tile;
 		int i = (numRows - 4) * 18;
 
-		addSlot(new SlotRestriction((Container) tile, 0, 18, 18, new ItemStack(ModItems.SAW_UPGRADE_SHARPNESS.get(), 1), 10));
-		addSlot(new SlotRestriction((Container) tile, 1, 43, 18, new ItemStack(ModItems.SAW_UPGRADE_LOOTING.get(), 1), 10));
-		addSlot(new SlotRestriction((Container) tile, 2, 68, 18, new ItemStack(ModItems.SAW_UPGRADE_FIRE.get(), 1), 10));
-		addSlot(new SlotRestriction((Container) tile, 3, 93, 18, new ItemStack(ModItems.SAW_UPGRADE_SMITE.get(), 1), 10));
-		addSlot(new SlotRestriction((Container) tile, 4, 118, 18, new ItemStack(ModItems.SAW_UPGRADE_ARTHROPOD.get(), 1), 10));
-		addSlot(new SlotRestriction((Container) tile, 5, 143, 18, new ItemStack(ModItems.SAW_UPGRADE_BEHEADING.get(), 1), 10));
+		addSlot(new SlotRestriction((Container) tile, 0, 18, 18, new ItemStack(ModItems.SAW_UPGRADE_SHARPNESS.get(), 1), ServerConfig.MASHER_MAX_UPGRADES.get()));
+		addSlot(new SlotRestriction((Container) tile, 1, 43, 18, new ItemStack(ModItems.SAW_UPGRADE_LOOTING.get(), 1), ServerConfig.MASHER_MAX_UPGRADES.get()));
+		addSlot(new SlotRestriction((Container) tile, 2, 68, 18, new ItemStack(ModItems.SAW_UPGRADE_FIRE.get(), 1), ServerConfig.MASHER_MAX_UPGRADES.get()));
+		addSlot(new SlotRestriction((Container) tile, 3, 93, 18, new ItemStack(ModItems.SAW_UPGRADE_SMITE.get(), 1), ServerConfig.MASHER_MAX_UPGRADES.get()));
+		addSlot(new SlotRestriction((Container) tile, 4, 118, 18, new ItemStack(ModItems.SAW_UPGRADE_ARTHROPOD.get(), 1), ServerConfig.MASHER_MAX_UPGRADES.get()));
+		addSlot(new SlotRestriction((Container) tile, 5, 143, 18, new ItemStack(ModItems.SAW_UPGRADE_BEHEADING.get(), 1), ServerConfig.MASHER_MAX_UPGRADES.get()));
 
 		for (int j = 0; j < 3; j++)
 			for (int k = 0; k < 9; k++)
