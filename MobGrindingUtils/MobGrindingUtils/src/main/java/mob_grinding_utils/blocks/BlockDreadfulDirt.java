@@ -91,7 +91,7 @@ public class BlockDreadfulDirt extends Block {
 		if (!spawns.isEmpty()) {
 			int indexSize = spawns.size();
 			EntityType<?> type = spawns.get(level.getRandom().nextInt(indexSize)).type;
-			if (type.is(ModTags.Entities.NO_DIRT_SPAWN))
+			if (type.is(ModTags.Entities.NO_DIRT_SPAWN) || type.is(ModTags.Entities.NO_DREADFUL_SPAWN))
 				return;
 			if (type == null || !NaturalSpawner.isSpawnPositionOk(SpawnPlacements.getPlacementType(type), level, pos.above(), type))
 				return;
