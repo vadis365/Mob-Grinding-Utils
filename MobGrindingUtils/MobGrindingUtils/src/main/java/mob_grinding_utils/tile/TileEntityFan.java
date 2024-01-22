@@ -4,6 +4,7 @@ import io.netty.buffer.Unpooled;
 import mob_grinding_utils.ModBlocks;
 import mob_grinding_utils.ModItems;
 import mob_grinding_utils.blocks.BlockFan;
+import mob_grinding_utils.config.ServerConfig;
 import mob_grinding_utils.inventory.server.ContainerFan;
 import mob_grinding_utils.items.ItemFanUpgrade;
 import net.minecraft.core.BlockPos;
@@ -74,11 +75,12 @@ public class TileEntityFan extends TileEntityInventoryHelper implements MenuProv
 		if (!(state.getBlock() instanceof BlockFan))
 			return;
 		Direction facing = state.getValue(BlockFan.FACING);
+		boolean strongBlades = ServerConfig.FAN_REINFORCED_BLADES.get();
 
 		int distance;
 		for (distance = 1; distance < 5 + getSpeedModifier(); distance++) {
 			BlockState state2 = getLevel().getBlockState(getBlockPos().relative(facing, distance));
-			if (!(state2.getBlock() instanceof AirBlock) && state2.getMaterial() != Material.REPLACEABLE_PLANT)
+			if (!(state2.getBlock() instanceof AirBlock) && (strongBlades ? state2.canOcclude() : state2.getMaterial() != Material.REPLACEABLE_PLANT))
 				break;
 		}
 
