@@ -9,12 +9,12 @@ public class Generator {
 
         generator.addProvider(true, new Recipes(generator));
 
-        MGUBlockTags blockTags = new MGUBlockTags(generator, event.getLookupProvider(), event.getExistingFileHelper());
+        MGUBlockTags blockTags = new MGUBlockTags(generator, event.getExistingFileHelper());
         generator.addProvider(true, blockTags);
-        generator.addProvider(true, MGULootTables.getProvider(generator.getPackOutput()));
-        generator.addProvider(true, new MGUFluidTags(generator, event.getLookupProvider(), event.getExistingFileHelper()));
-        generator.addProvider(true, new MGUEntityTypeTags(generator, event.getLookupProvider(), event.getExistingFileHelper()));
+        generator.addProvider(true, new MGULootTables(generator));
+        generator.addProvider(true, new MGUFluidTags(generator, event.getExistingFileHelper()));
+        generator.addProvider(true, new MGUEntityTypeTags(generator, event.getExistingFileHelper()));
         generator.addProvider(true, new BlockStates(generator, event.getExistingFileHelper()));
-        generator.addProvider(true, new MGUBiomeTags(generator, event.getLookupProvider(), event.getExistingFileHelper()));
+        generator.addProvider(true, new MGUBiomeTags(generator, event.getExistingFileHelper()));
     }
 }

@@ -18,7 +18,7 @@ import javax.annotation.Nullable;
 public class ChickenFeedRecipe extends ShapelessRecipe {
     public static final String NAME = "chicken_feed";
     public ChickenFeedRecipe(ShapelessRecipe recipe) {
-        super(recipe.getId(), recipe.getGroup(), recipe.category(), recipe.getResultItem(), recipe.getIngredients());
+        super(recipe.getId(), recipe.getGroup(), recipe.getResultItem(), recipe.getIngredients());
     }
 
     @Nonnull

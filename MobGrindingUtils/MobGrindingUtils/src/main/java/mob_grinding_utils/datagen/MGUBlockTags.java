@@ -2,22 +2,21 @@ package mob_grinding_utils.datagen;
 
 import mob_grinding_utils.ModBlocks;
 import mob_grinding_utils.Reference;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.data.DataGenerator;
+import net.minecraft.data.tags.BlockTagsProvider;
 import net.minecraft.tags.BlockTags;
-import net.minecraftforge.common.data.BlockTagsProvider;
 import net.minecraftforge.common.data.ExistingFileHelper;
 
 import javax.annotation.Nonnull;
 import java.util.concurrent.CompletableFuture;
 
 public class  MGUBlockTags extends BlockTagsProvider {
-    public MGUBlockTags(DataGenerator generatorIn, CompletableFuture<HolderLookup.Provider> something, ExistingFileHelper existingFileHelper) {
-        super(generatorIn.getPackOutput(), something, Reference.MOD_ID, existingFileHelper);
+    public MGUBlockTags(DataGenerator generatorIn, ExistingFileHelper existingFileHelper) {
+        super(generatorIn, Reference.MOD_ID, existingFileHelper);
     }
 
     @Override
-    protected void addTags(@Nonnull HolderLookup.Provider pointless) {
+    protected void addTags() {
         var witherTag = this.tag(BlockTags.WITHER_IMMUNE);
         var dragonTag = this.tag(BlockTags.DRAGON_IMMUNE);
         var pickaxeTag = this.tag(BlockTags.MINEABLE_WITH_PICKAXE);

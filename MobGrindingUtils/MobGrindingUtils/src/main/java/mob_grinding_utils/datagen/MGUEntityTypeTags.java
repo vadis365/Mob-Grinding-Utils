@@ -14,12 +14,12 @@ import javax.annotation.Nullable;
 import java.util.concurrent.CompletableFuture;
 
 public class MGUEntityTypeTags extends EntityTypeTagsProvider {
-    public MGUEntityTypeTags(DataGenerator p_i50784_1_, CompletableFuture<HolderLookup.Provider> something, @Nullable ExistingFileHelper existingFileHelper) {
-        super(p_i50784_1_.getPackOutput(), something, Reference.MOD_ID, existingFileHelper);
+    public MGUEntityTypeTags(DataGenerator generator, @Nullable ExistingFileHelper existingFileHelper) {
+        super(generator, Reference.MOD_ID, existingFileHelper);
     }
 
     @Override
-    protected void addTags(@Nonnull HolderLookup.Provider useless) {
+    protected void addTags() {
         this.tag(ModTags.Entities.NO_SWAB).add(EntityType.WITHER);
         this.tag(ModTags.Entities.NO_SWAB).add(EntityType.ENDER_DRAGON);
 

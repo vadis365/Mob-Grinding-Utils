@@ -2,7 +2,7 @@ package mob_grinding_utils.network;
 
 import mob_grinding_utils.tile.TileEntityMGUSpawner;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.registries.Registries;
+import net.minecraft.core.Registry;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -35,7 +35,7 @@ public class MessageEntitySpawner {
 	}
 
 	public MessageEntitySpawner(ResourceLocation dimensionKey, int entityID, int buttonID, BlockPos tilePos) {
-		this.dimension = ResourceKey.create(Registries.DIMENSION, dimensionKey);
+		this.dimension = ResourceKey.create(Registry.DIMENSION_REGISTRY, dimensionKey);
 		this.entityID = entityID;
 		this.buttonID = buttonID;
 		this.tilePos = tilePos;

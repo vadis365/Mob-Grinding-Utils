@@ -22,18 +22,19 @@ import net.minecraftforge.common.crafting.ConditionalRecipe;
 import net.minecraftforge.common.crafting.conditions.ModLoadedCondition;
 
 import javax.annotation.Nonnull;
+import java.nio.file.Path;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
 public class Recipes extends RecipeProvider {
     public Recipes(DataGenerator generatorIn) {
-        super(generatorIn.getPackOutput());
+        super(generatorIn);
     }
     @Override
-    protected void buildRecipes(@Nonnull Consumer<FinishedRecipe> consumer) {
+    protected void buildCraftingRecipes(@Nonnull Consumer<FinishedRecipe> consumer) {
         //Absorbtion Hopper
         InventoryChangeTrigger.TriggerInstance noneItem = has(Items.AIR);
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModBlocks.ABSORPTION_HOPPER.getItem())
+        ShapedRecipeBuilder.shaped(ModBlocks.ABSORPTION_HOPPER.getItem())
             .pattern(" E ")
             .pattern(" O ")
             .pattern("OHO")
@@ -44,7 +45,7 @@ public class Recipes extends RecipeProvider {
             .save(consumer, new ResourceLocation(Reference.MOD_ID, "recipe_absorbtion_hopper"));
 
         // Absorption Hopper Upgrade
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.ABSORPTION_UPGRADE.get())
+        ShapedRecipeBuilder.shaped(ModItems.ABSORPTION_UPGRADE.get())
             .pattern(" E ")
             .pattern("ERE")
             .pattern("OHO")
@@ -56,7 +57,7 @@ public class Recipes extends RecipeProvider {
             .save(consumer, new ResourceLocation(Reference.MOD_ID, "recipe_absorbtion_upgrade"));
 
         // Spikes
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModBlocks.SPIKES.getItem())
+        ShapedRecipeBuilder.shaped(ModBlocks.SPIKES.getItem())
             .pattern(" S ")
             .pattern("SIS")
             .define('S', Items.IRON_SWORD)
@@ -65,7 +66,7 @@ public class Recipes extends RecipeProvider {
             .save(consumer, new ResourceLocation(Reference.MOD_ID, "recipe_spikes"));
 
         // Tank
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModBlocks.TANK.getItem())
+        ShapedRecipeBuilder.shaped(ModBlocks.TANK.getItem())
             .pattern("IGI")
             .pattern("GGG")
             .pattern("IGI")
@@ -74,12 +75,12 @@ public class Recipes extends RecipeProvider {
             .unlockedBy("", noneItem)
             .save(consumer, new ResourceLocation(Reference.MOD_ID, "recipe_tank"));
 
-        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ModBlocks.TANK.getItem()).requires(ModBlocks.TANK.getItem(),1)
+        ShapelessRecipeBuilder.shapeless(ModBlocks.TANK.getItem()).requires(ModBlocks.TANK.getItem(),1)
             .unlockedBy("", noneItem)
             .save(consumer, new ResourceLocation(Reference.MOD_ID, "recipe_tank_reset"));
 
         // Tank Sink
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModBlocks.TANK_SINK.getItem())
+        ShapedRecipeBuilder.shaped(ModBlocks.TANK_SINK.getItem())
             .pattern(" I ")
             .pattern("EHE")
             .pattern(" T ")
@@ -90,12 +91,12 @@ public class Recipes extends RecipeProvider {
             .unlockedBy("", noneItem)
             .save(consumer, new ResourceLocation(Reference.MOD_ID, "recipe_tank_sink"));
 
-        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ModBlocks.TANK_SINK.getItem()).requires(ModBlocks.TANK_SINK.getItem(),1)
+        ShapelessRecipeBuilder.shapeless(ModBlocks.TANK_SINK.getItem()).requires(ModBlocks.TANK_SINK.getItem(),1)
             .unlockedBy("", noneItem)
             .save(consumer, new ResourceLocation(Reference.MOD_ID, "recipe_tank_sink_reset"));
 
         // XP TAP
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModBlocks.XP_TAP.getItem())
+        ShapedRecipeBuilder.shaped(ModBlocks.XP_TAP.getItem())
             .pattern("O ")
             .pattern("II")
             .pattern("I ")
@@ -105,7 +106,7 @@ public class Recipes extends RecipeProvider {
             .save(consumer, new ResourceLocation(Reference.MOD_ID, "recipe_xp_tap"));
 
         // Fan
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModBlocks.FAN.getItem())
+        ShapedRecipeBuilder.shaped(ModBlocks.FAN.getItem())
             .pattern("SIS")
             .pattern("IRI")
             .pattern("SIS")
@@ -116,7 +117,7 @@ public class Recipes extends RecipeProvider {
             .save(consumer, new ResourceLocation(Reference.MOD_ID, "recipe_fan"));
 
         // Fan Upgrades
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.FAN_UPGRADE_WIDTH.get())
+        ShapedRecipeBuilder.shaped(ModItems.FAN_UPGRADE_WIDTH.get())
             .pattern("I I")
             .pattern("FFF")
             .pattern("I I")
@@ -125,7 +126,7 @@ public class Recipes extends RecipeProvider {
             .unlockedBy("", noneItem)
             .save(consumer, new ResourceLocation(Reference.MOD_ID, "recipe_fan_upgrade_width"));
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.FAN_UPGRADE_HEIGHT.get())
+        ShapedRecipeBuilder.shaped(ModItems.FAN_UPGRADE_HEIGHT.get())
             .pattern("IFI")
             .pattern(" F ")
             .pattern("IFI")
@@ -134,7 +135,7 @@ public class Recipes extends RecipeProvider {
             .unlockedBy("", noneItem)
             .save(consumer, new ResourceLocation(Reference.MOD_ID, "recipe_fan_upgrade_height"));
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.FAN_UPGRADE_SPEED.get())
+        ShapedRecipeBuilder.shaped(ModItems.FAN_UPGRADE_SPEED.get())
             .pattern("FIF")
             .pattern("IRI")
             .pattern("FIF")
@@ -145,7 +146,7 @@ public class Recipes extends RecipeProvider {
             .save(consumer, new ResourceLocation(Reference.MOD_ID, "recipe_fan_upgrade_speed"));
 
         // Mob Swab
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.MOB_SWAB.get())
+        ShapedRecipeBuilder.shaped(ModItems.MOB_SWAB.get())
             .pattern("  W")
             .pattern(" S ")
             .pattern("W  ")
@@ -155,7 +156,7 @@ public class Recipes extends RecipeProvider {
             .save(consumer, new ResourceLocation(Reference.MOD_ID, "recipe_mob_swab"));
 
         // Wither Muffler
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModBlocks.WITHER_MUFFLER.getItem())
+        ShapedRecipeBuilder.shaped(ModBlocks.WITHER_MUFFLER.getItem())
             .pattern("WWW")
             .pattern("WSW")
             .pattern("WWW")
@@ -165,7 +166,7 @@ public class Recipes extends RecipeProvider {
             .save(consumer, new ResourceLocation(Reference.MOD_ID, "recipe_wither_muffler"));
 
         // Dragon Muffler
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModBlocks.DRAGON_MUFFLER.getItem())
+        ShapedRecipeBuilder.shaped(ModBlocks.DRAGON_MUFFLER.getItem())
             .pattern("WWW")
             .pattern("WEW")
             .pattern("WWW")
@@ -175,7 +176,7 @@ public class Recipes extends RecipeProvider {
             .save(consumer, new ResourceLocation(Reference.MOD_ID, "recipe_dragon_muffler"));
 
         // Mob Masher
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModBlocks.SAW.getItem())
+        ShapedRecipeBuilder.shaped(ModBlocks.SAW.getItem())
             .pattern("SDS")
             .pattern("VRV")
             .pattern("DID")
@@ -188,7 +189,7 @@ public class Recipes extends RecipeProvider {
             .save(consumer, new ResourceLocation(Reference.MOD_ID, "recipe_saw"));
 
         // Mob Masher Upgrades
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.SAW_UPGRADE_SHARPNESS.get())
+        ShapedRecipeBuilder.shaped(ModItems.SAW_UPGRADE_SHARPNESS.get())
             .pattern("GSG")
             .pattern("SRS")
             .pattern("GSG")
@@ -198,7 +199,7 @@ public class Recipes extends RecipeProvider {
             .unlockedBy("", noneItem)
             .save(consumer, new ResourceLocation(Reference.MOD_ID, "recipe_saw_upgrade_sharpness"));
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.SAW_UPGRADE_LOOTING.get())
+        ShapedRecipeBuilder.shaped(ModItems.SAW_UPGRADE_LOOTING.get())
             .pattern("GLG")
             .pattern("LRL")
             .pattern("GLG")
@@ -208,7 +209,7 @@ public class Recipes extends RecipeProvider {
             .unlockedBy("", noneItem)
             .save(consumer, new ResourceLocation(Reference.MOD_ID, "recipe_saw_upgrade_looting"));
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.SAW_UPGRADE_FIRE.get())
+        ShapedRecipeBuilder.shaped(ModItems.SAW_UPGRADE_FIRE.get())
             .pattern("GFG")
             .pattern("FRF")
             .pattern("GFG")
@@ -218,7 +219,7 @@ public class Recipes extends RecipeProvider {
             .unlockedBy("", noneItem)
             .save(consumer, new ResourceLocation(Reference.MOD_ID, "recipe_saw_upgrade_fire"));
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.SAW_UPGRADE_SMITE.get())
+        ShapedRecipeBuilder.shaped(ModItems.SAW_UPGRADE_SMITE.get())
             .pattern("GFG")
             .pattern("FRF")
             .pattern("GFG")
@@ -228,7 +229,7 @@ public class Recipes extends RecipeProvider {
             .unlockedBy("", noneItem)
             .save(consumer, new ResourceLocation(Reference.MOD_ID, "recipe_saw_upgrade_smite"));
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.SAW_UPGRADE_ARTHROPOD.get())
+        ShapedRecipeBuilder.shaped(ModItems.SAW_UPGRADE_ARTHROPOD.get())
             .pattern("GSG")
             .pattern("SRS")
             .pattern("GSG")
@@ -238,7 +239,7 @@ public class Recipes extends RecipeProvider {
             .unlockedBy("", noneItem)
             .save(consumer, new ResourceLocation(Reference.MOD_ID, "recipe_saw_upgrade_arthropod"));
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.SAW_UPGRADE_BEHEADING.get())
+        ShapedRecipeBuilder.shaped(ModItems.SAW_UPGRADE_BEHEADING.get())
             .pattern("GHG")
             .pattern("IRI")
             .pattern("GHG")
@@ -250,7 +251,7 @@ public class Recipes extends RecipeProvider {
             .save(consumer, new ResourceLocation(Reference.MOD_ID, "recipe_saw_upgrade_beheading"));
 
         // Entity Conveyor
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModBlocks.ENTITY_CONVEYOR.getItem(),6)
+        ShapedRecipeBuilder.shaped(ModBlocks.ENTITY_CONVEYOR.getItem(),6)
             .pattern(" S ")
             .pattern("IRI")
             .pattern("ISI")
@@ -261,7 +262,7 @@ public class Recipes extends RecipeProvider {
             .save(consumer, new ResourceLocation(Reference.MOD_ID, "recipe_entity_conveyor"));
 
         // Ender Inhibitor
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModBlocks.ENDER_INHIBITOR_ON.getItem())
+        ShapedRecipeBuilder.shaped(ModBlocks.ENDER_INHIBITOR_ON.getItem())
             .pattern(" R ")
             .pattern("IEI")
             .pattern(" G ")
@@ -273,7 +274,7 @@ public class Recipes extends RecipeProvider {
             .save(consumer, new ResourceLocation(Reference.MOD_ID, "recipe_ender_inhibitor"));
 
         //Jumbo Tank
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModBlocks.JUMBO_TANK.getItem())
+        ShapedRecipeBuilder.shaped(ModBlocks.JUMBO_TANK.getItem())
             .pattern("ITI")
             .pattern("T T")
             .pattern("ITI")
@@ -282,12 +283,12 @@ public class Recipes extends RecipeProvider {
             .unlockedBy("", noneItem)
             .save(consumer, new ResourceLocation(Reference.MOD_ID, "recipe_jumbotank"));
 
-        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ModBlocks.JUMBO_TANK.getItem()).requires(ModBlocks.JUMBO_TANK.getItem(),1)
+        ShapelessRecipeBuilder.shapeless(ModBlocks.JUMBO_TANK.getItem()).requires(ModBlocks.JUMBO_TANK.getItem(),1)
             .unlockedBy("", noneItem)
             .save(consumer, new ResourceLocation(Reference.MOD_ID, "recipe_jumbo_tank_reset"));
 
         //Tinted Glass
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModBlocks.TINTED_GLASS.getItem(), 4)
+        ShapedRecipeBuilder.shaped(ModBlocks.TINTED_GLASS.getItem(), 4)
             .pattern("CGC")
             .pattern("GCG")
             .pattern("CGC")
@@ -296,7 +297,7 @@ public class Recipes extends RecipeProvider {
             .unlockedBy("", noneItem)
             .save(consumer, new ResourceLocation(Reference.MOD_ID, "recipe_tintedglass"));
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.GM_CHICKEN_FEED_CURSED.get())
+        ShapedRecipeBuilder.shaped(ModItems.GM_CHICKEN_FEED_CURSED.get())
             .pattern("BEB")
             .pattern("RSX")
             .pattern("BGB")
@@ -309,7 +310,7 @@ public class Recipes extends RecipeProvider {
             .unlockedBy("", noneItem)
             .save(consumer, new ResourceLocation(Reference.MOD_ID, "recipe_cursed_feed"));
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModBlocks.XPSOLIDIFIER.getItem())
+        ShapedRecipeBuilder.shaped(ModBlocks.XPSOLIDIFIER.getItem())
             .pattern(" P ")
             .pattern("CHC")
             .pattern(" T ")
@@ -320,11 +321,11 @@ public class Recipes extends RecipeProvider {
             .unlockedBy("", noneItem)
             .save(consumer, new ResourceLocation(Reference.MOD_ID, "recipe_solidifier"));
 
-        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ModBlocks.XPSOLIDIFIER.getItem()).requires(ModBlocks.XPSOLIDIFIER.getItem(),1)
+        ShapelessRecipeBuilder.shapeless(ModBlocks.XPSOLIDIFIER.getItem()).requires(ModBlocks.XPSOLIDIFIER.getItem(),1)
             .unlockedBy("", noneItem)
             .save(consumer, new ResourceLocation(Reference.MOD_ID, "recipe_solidifier_reset"));
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModBlocks.ENTITY_SPAWNER.getItem())
+        ShapedRecipeBuilder.shaped(ModBlocks.ENTITY_SPAWNER.getItem())
             .pattern("EEE")
             .pattern("XRX")
             .pattern("IPI")
@@ -337,7 +338,7 @@ public class Recipes extends RecipeProvider {
             .save(consumer, new ResourceLocation(Reference.MOD_ID, "recipe_entity_spawner"));
 
         //Blank Mould
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.SOLID_XP_MOULD_BLANK.get())
+        ShapedRecipeBuilder.shaped(ModItems.SOLID_XP_MOULD_BLANK.get())
             .pattern("XXX")
             .pattern("XBX")
             .pattern("XXX")
@@ -347,30 +348,30 @@ public class Recipes extends RecipeProvider {
             .save(consumer, new ResourceLocation(Reference.MOD_ID, "recipe_mould_blank"));
 
         //Mould upgrade chain, starting with blank
-        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ModItems.SOLID_XP_MOULD_BABY.get())
+        ShapelessRecipeBuilder.shapeless(ModItems.SOLID_XP_MOULD_BABY.get())
             .requires(ModItems.SOLID_XP_MOULD_BLANK.get())
             .unlockedBy("", noneItem)
             .save(consumer, new ResourceLocation(Reference.MOD_ID, "recipe_mould_baby_upgrade"));
 
         //Last one in the chain should reset to blank
-        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ModItems.SOLID_XP_MOULD_BLANK.get())
+        ShapelessRecipeBuilder.shapeless(ModItems.SOLID_XP_MOULD_BLANK.get())
             .requires(ModItems.SOLID_XP_MOULD_BABY.get())
             .unlockedBy("", noneItem)
             .save(consumer, new ResourceLocation(Reference.MOD_ID, "recipe_mould_reset"));
 
         //Solid XP Block
-        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ModBlocks.SOLID_XP_BLOCK.getItem())
+        ShapelessRecipeBuilder.shapeless(ModBlocks.SOLID_XP_BLOCK.getItem())
             .requires(ModItems.SOLID_XP_BABY.get(), 9)
             .unlockedBy("", noneItem)
             .save(consumer, new ResourceLocation(Reference.MOD_ID, "recipe_xp_block"));
         //Uncraft
-        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ModItems.SOLID_XP_BABY.get(), 9)
+        ShapelessRecipeBuilder.shapeless(ModItems.SOLID_XP_BABY.get(), 9)
             .requires(ModBlocks.SOLID_XP_BLOCK.getItem())
             .unlockedBy("", noneItem)
             .save(consumer, new ResourceLocation(Reference.MOD_ID, "recipe_xp_block_uncraft"));
 
         //Solidifier upgrade
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.XP_SOLIDIFIER_UPGRADE.get())
+        ShapedRecipeBuilder.shaped(ModItems.XP_SOLIDIFIER_UPGRADE.get())
             .pattern("SRS")
             .pattern("BXB")
             .pattern("SRS")
@@ -381,7 +382,7 @@ public class Recipes extends RecipeProvider {
             .unlockedBy("", noneItem)
             .save(consumer, new ResourceLocation(Reference.MOD_ID, "recipe_xpsolidifier_upgrade"));
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.NUTRITIOUS_CHICKEN_FEED.get())
+        ShapedRecipeBuilder.shaped(ModItems.NUTRITIOUS_CHICKEN_FEED.get())
             .pattern("BCB")
             .pattern("PSX")
             .pattern("BWB")
@@ -395,7 +396,7 @@ public class Recipes extends RecipeProvider {
             .save(consumer, new ResourceLocation(Reference.MOD_ID, "recipe_nutritious_feed"));
 
         //Spawner width upgrade
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.SPAWNER_UPGRADE_WIDTH.get())
+        ShapedRecipeBuilder.shaped(ModItems.SPAWNER_UPGRADE_WIDTH.get())
             .pattern("EEE")
             .pattern("BXB")
             .pattern("EEE")
@@ -406,7 +407,7 @@ public class Recipes extends RecipeProvider {
             .save(consumer, new ResourceLocation(Reference.MOD_ID, "recipe_spawner_upgrade_width"));
 
         //Spawner height upgrade
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.SPAWNER_UPGRADE_HEIGHT.get())
+        ShapedRecipeBuilder.shaped(ModItems.SPAWNER_UPGRADE_HEIGHT.get())
             .pattern("EBE")
             .pattern("EXE")
             .pattern("EBE")
@@ -416,7 +417,7 @@ public class Recipes extends RecipeProvider {
             .unlockedBy("", noneItem)
             .save(consumer, new ResourceLocation(Reference.MOD_ID, "recipe_spawner_upgrade_height"));
 
-        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ModItems.GM_CHICKEN_FEED.get())
+        ShapelessRecipeBuilder.shapeless(ModItems.GM_CHICKEN_FEED.get())
             .requires(Tags.Items.SEEDS)
             .requires(ModItems.MOB_SWAB_USED.get())
             .requires(new FluidIngredient(ModTags.Fluids.EXPERIENCE, false))
@@ -465,8 +466,7 @@ public class Recipes extends RecipeProvider {
     }
 
     @Override
-    protected CompletableFuture<?> saveAdvancement(@Nonnull CachedOutput cachedOutput, @Nonnull FinishedRecipe finished, @Nonnull JsonObject object) {
+    protected void saveAdvancement(@Nonnull CachedOutput cachedOutput, @Nonnull JsonObject object, @Nonnull Path path) {
         // No thank you, good day sir.
-        return null;
     }
 }

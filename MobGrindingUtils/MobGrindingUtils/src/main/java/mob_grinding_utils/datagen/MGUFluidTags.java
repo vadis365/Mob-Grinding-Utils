@@ -13,12 +13,12 @@ import javax.annotation.Nonnull;
 import java.util.concurrent.CompletableFuture;
 
 public class MGUFluidTags extends FluidTagsProvider {
-    public MGUFluidTags(DataGenerator generatorIn, CompletableFuture<HolderLookup.Provider> something, ExistingFileHelper existingFileHelper) {
-        super(generatorIn.getPackOutput(), something, Reference.MOD_ID, existingFileHelper);
+    public MGUFluidTags(DataGenerator generatorIn, ExistingFileHelper existingFileHelper) {
+        super(generatorIn, Reference.MOD_ID, existingFileHelper);
     }
 
     @Override
-    protected void addTags(@Nonnull HolderLookup.Provider useless) {
+    protected void addTags() {
         tag(ModTags.Fluids.EXPERIENCE).add(ModBlocks.FLUID_XP.get());
         tag(ModTags.Fluids.XPJUICE).add(ModBlocks.FLUID_XP.get());
 

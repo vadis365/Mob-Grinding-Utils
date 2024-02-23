@@ -2,7 +2,7 @@ package mob_grinding_utils.client.render;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Axis;
+import com.mojang.math.Vector3f;
 import mob_grinding_utils.ModBlocks;
 import mob_grinding_utils.blocks.BlockSaw;
 import mob_grinding_utils.client.ModelLayers;
@@ -54,12 +54,12 @@ public class TileEntitySawRenderer implements BlockEntityRenderer<TileEntitySaw>
 		matrixStack.scale(-1, -1, 1);
 
 		switch (facing) {
-			case UP -> matrixStack.mulPose(Axis.YP.rotationDegrees(0F));
-			case DOWN -> matrixStack.mulPose(Axis.XP.rotationDegrees(180F));
-			case NORTH -> matrixStack.mulPose(Axis.XP.rotationDegrees(90F));
-			case SOUTH -> matrixStack.mulPose(Axis.XP.rotationDegrees(-90F));
-			case WEST -> matrixStack.mulPose(Axis.ZP.rotationDegrees(90F));
-			case EAST -> matrixStack.mulPose(Axis.ZP.rotationDegrees(-90F));
+			case UP -> matrixStack.mulPose(Vector3f.YP.rotationDegrees(0F));
+			case DOWN -> matrixStack.mulPose(Vector3f.XP.rotationDegrees(180F));
+			case NORTH -> matrixStack.mulPose(Vector3f.XP.rotationDegrees(90F));
+			case SOUTH -> matrixStack.mulPose(Vector3f.XP.rotationDegrees(-90F));
+			case WEST -> matrixStack.mulPose(Vector3f.ZP.rotationDegrees(90F));
+			case EAST -> matrixStack.mulPose(Vector3f.ZP.rotationDegrees(-90F));
 		}
 		matrixStack.translate(0F, -1F, 0F);
 		saw_base.renderToBuffer(matrixStack, ivertexbuilder, combinedLight, OverlayTexture.NO_OVERLAY, 1F, 1F, 1F, 1.0F);
@@ -67,39 +67,39 @@ public class TileEntitySawRenderer implements BlockEntityRenderer<TileEntitySaw>
 		matrixStack.pushPose();
 
 		float ticks = tile.animationTicks + (tile.animationTicks - tile.prevAnimationTicks)  * partialTicks;
-		matrixStack.mulPose(Axis.YP.rotationDegrees(ticks));
+		matrixStack.mulPose(Vector3f.YP.rotationDegrees(ticks));
 		saw_base.renderAxle(matrixStack, ivertexbuilder, combinedLight, OverlayTexture.NO_OVERLAY, 1F, 1F, 1F, 1.0F);
 		
 		matrixStack.pushPose();
-		matrixStack.mulPose(Axis.YP.rotationDegrees(45F));
+		matrixStack.mulPose(Vector3f.YP.rotationDegrees(45F));
 		saw_base.renderMace(matrixStack, ivertexbuilder, combinedLight, OverlayTexture.NO_OVERLAY, 1F, 1F, 1F, 1.0F);
 		matrixStack.popPose();
 		
 		matrixStack.pushPose();
-		matrixStack.mulPose(Axis.YP.rotationDegrees(165F));
+		matrixStack.mulPose(Vector3f.YP.rotationDegrees(165F));
 		saw_base.renderMace(matrixStack, ivertexbuilder, combinedLight, OverlayTexture.NO_OVERLAY, 1F, 1F, 1F, 1.0F);
 		matrixStack.popPose();
 		
 		matrixStack.pushPose();
-		matrixStack.mulPose(Axis.YP.rotationDegrees(285F));
+		matrixStack.mulPose(Vector3f.YP.rotationDegrees(285F));
 		saw_base.renderMace(matrixStack, ivertexbuilder, combinedLight, OverlayTexture.NO_OVERLAY, 1F, 1F, 1F, 1.0F);
 		matrixStack.popPose();
 		
 		matrixStack.pushPose();
 		matrixStack.translate(0F, 0.2F, -0.16F);
-		matrixStack.mulPose(Axis.XP.rotationDegrees(8F));
+		matrixStack.mulPose(Vector3f.XP.rotationDegrees(8F));
 		saw_blade.renderToBuffer(matrixStack, buffer.getBuffer(RenderType.entitySolid(BLADE_TEXTURE)), combinedLight, OverlayTexture.NO_OVERLAY, 1F, 1F, 1F, 1.0F);
 		matrixStack.popPose();
 
 		matrixStack.pushPose();
 		matrixStack.translate(0F, 0.00F, 0.16F);
-		matrixStack.mulPose(Axis.XP.rotationDegrees(-8F));
+		matrixStack.mulPose(Vector3f.XP.rotationDegrees(-8F));
 		saw_blade.renderToBuffer(matrixStack, buffer.getBuffer(RenderType.entitySolid(BLADE_TEXTURE)), combinedLight, OverlayTexture.NO_OVERLAY, 1F, 1F, 1F, 1.0F);
 		matrixStack.popPose();
 
 		matrixStack.pushPose();
 		matrixStack.translate(0F, -0.2F, -0.16F);
-		matrixStack.mulPose(Axis.XP.rotationDegrees(8F));
+		matrixStack.mulPose(Vector3f.XP.rotationDegrees(8F));
 		saw_blade.renderToBuffer(matrixStack, buffer.getBuffer(RenderType.entitySolid(BLADE_TEXTURE)), combinedLight, OverlayTexture.NO_OVERLAY, 1F, 1F, 1F, 1.0F);
 		matrixStack.popPose();
 

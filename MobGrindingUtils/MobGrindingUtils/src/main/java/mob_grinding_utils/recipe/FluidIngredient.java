@@ -9,7 +9,7 @@ import it.unimi.dsi.fastutil.ints.IntComparators;
 import it.unimi.dsi.fastutil.ints.IntList;
 import mob_grinding_utils.Reference;
 import mob_grinding_utils.TagLookup;
-import net.minecraft.core.registries.Registries;
+import net.minecraft.core.Registry;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
@@ -154,7 +154,7 @@ public class FluidIngredient extends Ingredient {
             boolean advanced = json.has("advanced") && GsonHelper.getAsBoolean(json, "advanced");
             if (json.has("tag")) {
                 ResourceLocation tagRes = new ResourceLocation(GsonHelper.getAsString(json, "tag"));
-                TagKey<Fluid> fluidTag = TagKey.create(Registries.FLUID, tagRes);
+                TagKey<Fluid> fluidTag = TagKey.create(Registry.FLUID_REGISTRY, tagRes);
                 return new FluidIngredient(fluidTag, advanced);
             }
             else if (json.has("fluid")) {
