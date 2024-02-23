@@ -14,6 +14,7 @@ import net.minecraft.network.Connection;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.MenuProvider;
@@ -79,7 +80,7 @@ public class TileEntityFan extends TileEntityInventoryHelper implements MenuProv
 		int distance;
 		for (distance = 1; distance < 5 + getSpeedModifier(); distance++) {
 			BlockState state2 = getLevel().getBlockState(getBlockPos().relative(facing, distance));
-			if (!(state2.getBlock() instanceof AirBlock) && (strongBlades ? state2.canOcclude() : state2.getMaterial() != Material.REPLACEABLE_PLANT))
+			if (!(state2.getBlock() instanceof AirBlock) && (strongBlades ? state2.canOcclude() : !state2.is(BlockTags.REPLACEABLE_BY_TREES)))
 				break;
 		}
 
@@ -285,6 +286,6 @@ public class TileEntityFan extends TileEntityInventoryHelper implements MenuProv
 	@Nonnull
 	@Override
 	public Component getDisplayName() {
-		return Component.literal("block.mob_grinding_utils.fan");
+		return Component.translatable("block.mob_grinding_utils.fan");
 	}
 }
