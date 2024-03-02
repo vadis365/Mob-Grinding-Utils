@@ -1,13 +1,15 @@
 package mob_grinding_utils.datagen;
 
-import com.google.gson.JsonObject;
-import mob_grinding_utils.*;
+import mob_grinding_utils.ModBlocks;
+import mob_grinding_utils.ModItems;
+import mob_grinding_utils.ModTags;
+import mob_grinding_utils.Reference;
 import mob_grinding_utils.recipe.BeheadingRecipe;
+import mob_grinding_utils.recipe.ChickenFeedRecipe;
 import mob_grinding_utils.recipe.FluidIngredient;
 import mob_grinding_utils.recipe.SolidifyRecipe;
-import mob_grinding_utils.recipe.WrappedRecipe;
-import net.minecraft.advancements.critereon.InventoryChangeTrigger;
-import net.minecraft.data.CachedOutput;
+import mob_grinding_utils.util.NoAdvRecipeOutput;
+import mob_grinding_utils.util.RecipeInjector;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.recipes.*;
 import net.minecraft.resources.ResourceLocation;
@@ -17,22 +19,20 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraftforge.common.Tags;
-import net.minecraftforge.common.crafting.ConditionalRecipe;
-import net.minecraftforge.common.crafting.conditions.ModLoadedCondition;
+import net.minecraft.world.item.crafting.ShapelessRecipe;
+import net.neoforged.neoforge.common.Tags;
 
 import javax.annotation.Nonnull;
-import java.util.concurrent.CompletableFuture;
-import java.util.function.Consumer;
 
 public class Recipes extends RecipeProvider {
     public Recipes(DataGenerator generatorIn) {
         super(generatorIn.getPackOutput());
     }
     @Override
-    protected void buildRecipes(@Nonnull Consumer<FinishedRecipe> consumer) {
-        //Absorbtion Hopper
-        InventoryChangeTrigger.TriggerInstance noneItem = has(Items.AIR);
+    protected void buildRecipes(@Nonnull RecipeOutput theirConsumer) {
+        var consumer = new NoAdvRecipeOutput(theirConsumer);
+        //Absorption Hopper
+        var noneItem = has(Items.AIR);
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModBlocks.ABSORPTION_HOPPER.getItem())
             .pattern(" E ")
             .pattern(" O ")
@@ -300,7 +300,7 @@ public class Recipes extends RecipeProvider {
             .pattern("BEB")
             .pattern("RSX")
             .pattern("BGB")
-            .define('B', new FluidIngredient(ModTags.Fluids.EXPERIENCE, false))
+            .define('B', new FluidIngredient(ModTags.Fluids.EXPERIENCE))
             .define('E', Items.SPIDER_EYE)
             .define('R', Items.ROTTEN_FLESH)
             .define('S', Tags.Items.SEEDS)
@@ -342,7 +342,7 @@ public class Recipes extends RecipeProvider {
             .pattern("XBX")
             .pattern("XXX")
             .define('X', Tags.Items.NUGGETS_GOLD)
-            .define('B', new FluidIngredient(ModTags.Fluids.EXPERIENCE, false))
+            .define('B', new FluidIngredient(ModTags.Fluids.EXPERIENCE))
             .unlockedBy("", noneItem)
             .save(consumer, new ResourceLocation(Reference.MOD_ID, "recipe_mould_blank"));
 
@@ -377,7 +377,7 @@ public class Recipes extends RecipeProvider {
             .define('S', Items.SUGAR)
             .define('R', Tags.Items.DUSTS_REDSTONE)
             .define('B', Items.BLAZE_POWDER)
-            .define('X', new FluidIngredient(ModTags.Fluids.EXPERIENCE, false))
+            .define('X', new FluidIngredient(ModTags.Fluids.EXPERIENCE))
             .unlockedBy("", noneItem)
             .save(consumer, new ResourceLocation(Reference.MOD_ID, "recipe_xpsolidifier_upgrade"));
 
@@ -385,7 +385,7 @@ public class Recipes extends RecipeProvider {
             .pattern("BCB")
             .pattern("PSX")
             .pattern("BWB")
-            .define('B', new FluidIngredient(ModTags.Fluids.EXPERIENCE, false))
+            .define('B', new FluidIngredient(ModTags.Fluids.EXPERIENCE))
             .define('C', Items.CARROT)
             .define('P', Items.POTATO)
             .define('S', Tags.Items.SEEDS)
@@ -401,7 +401,7 @@ public class Recipes extends RecipeProvider {
             .pattern("EEE")
             .define('E', Items.EGG)
             .define('B', Items.BLAZE_POWDER)
-            .define('X', new FluidIngredient(ModTags.Fluids.EXPERIENCE, false))
+            .define('X', new FluidIngredient(ModTags.Fluids.EXPERIENCE))
             .unlockedBy("", noneItem)
             .save(consumer, new ResourceLocation(Reference.MOD_ID, "recipe_spawner_upgrade_width"));
 
@@ -412,31 +412,32 @@ public class Recipes extends RecipeProvider {
             .pattern("EBE")
             .define('E', Items.EGG)
             .define('B', Items.BLAZE_POWDER)
-            .define('X', new FluidIngredient(ModTags.Fluids.EXPERIENCE, false))
+            .define('X', new FluidIngredient(ModTags.Fluids.EXPERIENCE))
             .unlockedBy("", noneItem)
             .save(consumer, new ResourceLocation(Reference.MOD_ID, "recipe_spawner_upgrade_height"));
 
         ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ModItems.GM_CHICKEN_FEED.get())
             .requires(Tags.Items.SEEDS)
             .requires(ModItems.MOB_SWAB_USED.get())
-            .requires(new FluidIngredient(ModTags.Fluids.EXPERIENCE, false))
+            .requires(new FluidIngredient(ModTags.Fluids.EXPERIENCE))
             .unlockedBy("", noneItem)
-            .save(WrappedRecipe.Inject(consumer, MobGrindingUtils.CHICKEN_FEED.get()), new ResourceLocation(Reference.MOD_ID, "gm_chicken_feed"));
+            .save(new RecipeInjector<ShapelessRecipe>(consumer, ChickenFeedRecipe::new), new ResourceLocation(Reference.MOD_ID, "gm_chicken_feed"));
 
 
         //Solidifier recipes
-        consumer.accept(new SolidifyRecipe.DataRecipe(new ResourceLocation(Reference.MOD_ID, "solidify/jelly_baby"), Ingredient.of(ModItems.SOLID_XP_MOULD_BABY.get()), new ItemStack(ModItems.SOLID_XP_BABY.get()), 1000));
+        consumer.accept(new ResourceLocation(Reference.MOD_ID, "solidify/jelly_baby"), new SolidifyRecipe(Ingredient.of(ModItems.SOLID_XP_MOULD_BABY.get()), new ItemStack(ModItems.SOLID_XP_BABY.get()), 1000), null);
 
         generateBeheading(consumer);
     }
 
-    private void generateBeheading(Consumer<FinishedRecipe> consumer) {
-        consumer.accept(HeadRecipe("creeper", EntityType.CREEPER, Items.CREEPER_HEAD));
-        consumer.accept(HeadRecipe("skeleton", EntityType.SKELETON, Items.SKELETON_SKULL));
-        consumer.accept(HeadRecipe("wither_skeleton", EntityType.WITHER_SKELETON, Items.WITHER_SKELETON_SKULL));
-        consumer.accept(HeadRecipe("zombie", EntityType.ZOMBIE, Items.ZOMBIE_HEAD));
-        consumer.accept(HeadRecipe("dragon", EntityType.ENDER_DRAGON, Items.DRAGON_HEAD));
+    private void generateBeheading(RecipeOutput consumer) {
+        Head(consumer,"creeper", EntityType.CREEPER, Items.CREEPER_HEAD);
+        Head(consumer,"skeleton", EntityType.SKELETON, Items.SKELETON_SKULL);
+        Head(consumer,"wither_skeleton", EntityType.WITHER_SKELETON, Items.WITHER_SKELETON_SKULL);
+        Head(consumer,"zombie", EntityType.ZOMBIE, Items.ZOMBIE_HEAD);
+        Head(consumer,"dragon", EntityType.ENDER_DRAGON, Items.DRAGON_HEAD);
 
+/*
         //Heads
         OptionalHead(consumer, "blaze", "tconstruct", EntityType.BLAZE, new ResourceLocation("tconstruct", "blaze_head"));
         OptionalHead(consumer, "enderman", "tconstruct", EntityType.ENDERMAN, new ResourceLocation("tconstruct", "enderman_head"));
@@ -447,26 +448,22 @@ public class Recipes extends RecipeProvider {
         OptionalHead(consumer, "piglin", "tconstruct", EntityType.PIGLIN, new ResourceLocation("tconstruct", "piglin_head"));
         OptionalHead(consumer, "piglin_brute", "tconstruct", EntityType.PIGLIN_BRUTE, new ResourceLocation("tconstruct", "piglin_brute_head"));
         OptionalHead(consumer, "zombified_piglin_brute", "tconstruct", EntityType.ZOMBIFIED_PIGLIN, new ResourceLocation("tconstruct", "zombified_piglin_head"));
+*/
     }
 
-    private BeheadingRecipe.DataRecipe HeadRecipe(String name, EntityType<?> type, Item item) {
-        return new BeheadingRecipe.DataRecipe(new ResourceLocation(Reference.MOD_ID, "beheading/" + name), type, new ItemStack(item));
+    private BeheadingRecipe HeadRecipe(EntityType<?> type, Item item) {
+        return new BeheadingRecipe(type, new ItemStack(item));
     }
 
-    private BeheadingRecipe.DataRecipe HeadRecipe(String name, EntityType<?> type, ResourceLocation item) {
-        return new BeheadingRecipe.DataRecipe(new ResourceLocation(Reference.MOD_ID, "beheading/" + name), type, item);
-    }
+/*    private BeheadingRecipe HeadRecipe(EntityType<?> type, ResourceLocation item) {
+        return new BeheadingRecipe(type, item);
+    }*/
 
-    private void OptionalHead(Consumer<FinishedRecipe> consumer, String name, String modid, EntityType<?> type, ResourceLocation item) {
-        ConditionalRecipe.builder()
-            .addCondition(new ModLoadedCondition(modid))
-            .addRecipe(HeadRecipe(name, type, item))
-            .build(consumer, new ResourceLocation(Reference.MOD_ID, "beheading/" + name));
-    }
-
-    @Override
-    protected CompletableFuture<?> saveAdvancement(@Nonnull CachedOutput cachedOutput, @Nonnull FinishedRecipe finished, @Nonnull JsonObject object) {
-        // No thank you, good day sir.
-        return null;
+/*    private void OptionalHead(RecipeOutput consumer, String name, String modid, EntityType<?> type, ResourceLocation item) {
+        consumer.accept(new ResourceLocation(Reference.MOD_ID, "beheading/" + name), HeadRecipe(type, item), null,
+                new ModLoadedCondition(modid));
+    }*/
+    private void Head(RecipeOutput consumer, String name, EntityType<?> type, Item item) {
+        consumer.accept(new ResourceLocation(Reference.MOD_ID, "beheading/" + name), HeadRecipe(type, item), null);
     }
 }

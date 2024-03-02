@@ -3,7 +3,7 @@ package mob_grinding_utils.tile;
 import mob_grinding_utils.ModBlocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.fluids.capability.templates.FluidTank;
+import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
 
 public class TileEntityJumboTank extends TileEntityTank {
 

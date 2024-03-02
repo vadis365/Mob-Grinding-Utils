@@ -4,10 +4,11 @@ import com.mojang.authlib.GameProfile;
 import mob_grinding_utils.Reference;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.network.CommonListenerCookie;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.util.FakePlayer;
+import net.neoforged.neoforge.common.util.FakePlayer;
 
 import java.lang.ref.WeakReference;
 
@@ -31,7 +32,7 @@ public class MGUFakePlayer extends FakePlayer {
     public static WeakReference<MGUFakePlayer> get(ServerLevel level, double x, double y, double z) {
         if (INSTANCE == null) {
             INSTANCE = new MGUFakePlayer(level, Reference.GAME_PROFILE);
-            INSTANCE.connection = new FakeNetHandler(level.getServer(), INSTANCE);
+            INSTANCE.connection = new FakeNetHandler(level.getServer(), INSTANCE, CommonListenerCookie.createInitial(Reference.GAME_PROFILE));
         }
         INSTANCE.setLevel(level);
         INSTANCE.setPos(x,y,z);

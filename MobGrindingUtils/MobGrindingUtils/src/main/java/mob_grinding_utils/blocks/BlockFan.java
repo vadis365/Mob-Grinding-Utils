@@ -1,5 +1,6 @@
 package mob_grinding_utils.blocks;
 
+import com.mojang.serialization.MapCodec;
 import mob_grinding_utils.tile.TileEntityFan;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -24,20 +25,25 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraftforge.network.NetworkHooks;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 @SuppressWarnings("deprecation")
 public class BlockFan extends DirectionalBlock implements EntityBlock {
+	public static final MapCodec<BlockFan> CODEC = simpleCodec(BlockFan::new);
 	public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
 
 	public BlockFan(Block.Properties properties) {
 		super(properties);
 		registerDefaultState(this.stateDefinition.any().setValue(POWERED, false));
 	}
-	
+
+	@Override
+	protected MapCodec<? extends DirectionalBlock> codec() {
+		return CODEC;
+	}
+
 	@Nonnull
 	@Override
 	public RenderShape getRenderShape(@Nonnull BlockState state) {
@@ -72,7 +78,7 @@ public class BlockFan extends DirectionalBlock implements EntityBlock {
 		if (!world.isClientSide) {
 			BlockEntity tileentity = world.getBlockEntity(pos);
 			if (tileentity  instanceof TileEntityFan)
-				NetworkHooks.openScreen((ServerPlayer) player, (TileEntityFan)tileentity, pos);
+				player.openMenu((TileEntityFan)tileentity, pos);
 		}
 		return InteractionResult.SUCCESS;
 	}

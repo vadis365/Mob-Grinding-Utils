@@ -1,0 +1,14 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "tconstruct"
+    }
+  ],
+  "type": "mob_grinding_utils:beheading",
+  "entity": "minecraft:cave_spider",
+  "result": {
+    "Count": 1,
+    "id": "tconstruct:cave_spider_head"
+  }
+}

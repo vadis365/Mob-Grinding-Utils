@@ -2,25 +2,35 @@ package mob_grinding_utils.fakeplayer;
 
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.ChannelPipeline;
 import net.minecraft.network.Connection;
-import net.minecraft.network.ConnectionProtocol;
+import net.minecraft.network.PacketListener;
+import net.minecraft.network.PacketSendListener;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.PacketFlow;
+import net.minecraft.network.protocol.common.*;
 import net.minecraft.network.protocol.game.*;
+import net.minecraft.network.protocol.handshake.ClientIntent;
+import net.minecraft.network.protocol.login.ClientLoginPacketListener;
+import net.minecraft.network.protocol.status.ClientStatusPacketListener;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.network.CommonListenerCookie;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
+import net.minecraft.util.SampleLogger;
 import net.minecraft.world.entity.RelativeMovement;
+import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.Nonnull;
 import javax.crypto.Cipher;
 import java.net.SocketAddress;
 import java.util.Set;
+import java.util.function.Consumer;
 
 public class FakeNetHandler extends ServerGamePacketListenerImpl {
-    public FakeNetHandler(MinecraftServer server, ServerPlayer playerIn) {
-        super(server, new FakeManager(PacketFlow.CLIENTBOUND), playerIn);
+    public FakeNetHandler(MinecraftServer pServer, ServerPlayer pPlayer, CommonListenerCookie pCookie) {
+        super(pServer, new FakeConnection(), pPlayer, pCookie);
     }
 
     private static class FakeManager extends Connection {
@@ -29,13 +39,84 @@ public class FakeNetHandler extends ServerGamePacketListenerImpl {
         }
 
         @Override
+        public void setListener(PacketListener pHandler) {}
+
+        @Override
+        public void setListenerForServerboundHandshake(PacketListener pPacketListener) {}
+
+        @Override
+        public void initiateServerboundStatusConnection(String pHostName, int pPort, ClientStatusPacketListener pDisconnectListener) {}
+
+        @Override
+        public void initiateServerboundPlayConnection(String pHostName, int pPort, ClientLoginPacketListener pDisconnectListener) {}
+
+        @Override
+        public void setClientboundProtocolAfterHandshake(ClientIntent pIntention) {}
+
+        @Override
+        public void send(Packet<?> pPacket, @Nullable PacketSendListener pSendListener) {}
+
+        @Override
+        public void send(Packet<?> pPacket, @Nullable PacketSendListener pListener, boolean pFlush) {}
+
+        @Override
+        public void runOnceConnected(Consumer<Connection> pAction) {}
+
+        @Override
+        public void flushChannel() {}
+
+        @Override
+        public String getLoggableAddress(boolean pLogIps) {
+            return "";
+        }
+
+        @Override
+        public void configurePacketHandler(ChannelPipeline pPipeline) {}
+
+        @Override
+        public boolean isEncrypted() {
+            return false;
+        }
+
+        @Nullable
+        @Override
+        public PacketListener getPacketListener() {
+            return null;
+        }
+
+        @Nullable
+        @Override
+        public Component getDisconnectedReason() {
+            return null;
+        }
+
+        @Override
+        public void setupCompression(int pThreshold, boolean pValidateDecompressed) {}
+
+        @Override
+        public float getAverageReceivedPackets() {
+            return 0.0f;
+        }
+
+        @Override
+        public float getAverageSentPackets() {
+            return 0.0f;
+        }
+
+        @Override
+        public void setBandwidthLogger(SampleLogger pBandwithLogger) {}
+
+        @Override
+        public void resumeInboundAfterProtocolChange() {}
+
+        @Override
+        public void suspendInboundAfterProtocolChange() {}
+
+        @Override
         public void channelActive(@Nonnull ChannelHandlerContext p_channelActive_1_) throws Exception {}
 
         @Override
         public void channelInactive(@Nonnull ChannelHandlerContext p_channelInactive_1_) {}
-
-        @Override
-        public void setProtocol(@Nonnull ConnectionProtocol newState) {}
 
         @Override
         public void exceptionCaught(@Nonnull ChannelHandlerContext p_exceptionCaught_1_, @Nonnull Throwable p_exceptionCaught_2_) {}
@@ -245,5 +326,14 @@ public class FakeNetHandler extends ServerGamePacketListenerImpl {
 
     @Override
     public void handlePong(ServerboundPongPacket p_143652_) {
+    }
+
+    private static final class FakeConnection extends Connection {
+        public FakeConnection() {
+            super(PacketFlow.SERVERBOUND);
+        }
+
+        @Override
+        public void setListener(PacketListener listener) {}
     }
 }

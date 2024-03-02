@@ -5,6 +5,7 @@ import mob_grinding_utils.ModBlocks;
 import mob_grinding_utils.ModItems;
 import mob_grinding_utils.inventory.server.ContainerAbsorptionHopper;
 import mob_grinding_utils.inventory.server.InventoryWrapperAH;
+import mob_grinding_utils.util.CapHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -29,34 +30,45 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
-import net.minecraftforge.fluids.capability.templates.FluidTank;
-import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.ItemHandlerHelper;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
+import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.items.ItemHandlerHelper;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.Optional;
 
 
-public class TileEntityAbsorptionHopper extends TileEntityInventoryHelper implements MenuProvider {
+public class TileEntityAbsorptionHopper extends TileEntityInventoryHelper implements MenuProvider, BEGuiLink {
 	public FluidTank tank = new FluidTank(1000 *  16);
-	private final LazyOptional<IFluidHandler> tank_holder = LazyOptional.of(() -> tank);
 	private final IItemHandler itemHandler;
-	private final LazyOptional<IItemHandler> itemHolder;
 	private static final int[] SLOTS = new int[] {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16};
 	public int prevTankAmount;
 	public TileEntityAbsorptionHopper(BlockPos pos, BlockState state) {
 		super(ModBlocks.ABSORPTION_HOPPER.getTileEntityType(), 17, pos, state);
 		itemHandler = createUnSidedHandler();
-		itemHolder = LazyOptional.of(() -> itemHandler);
+	}
+
+	@Override
+	public void buttonClicked(int buttonID) {
+		switch (buttonID) {
+			case 0,1,2,3,4,5 -> toggleMode(Direction.values()[buttonID]);
+			case 6 -> toggleRenderBox();
+			case 7,8,9,10,11,12 -> toggleOffset(buttonID);
+		};
+		updateBlock();
+	}
+
+	public IItemHandler getItemHandler(@Nullable Direction side) {
+		return itemHandler;
+	}
+	public FluidTank getTank(final Direction side) {
+		return tank;
 	}
 
 	public enum EnumStatus implements StringRepresentable {
@@ -204,9 +216,9 @@ public class TileEntityAbsorptionHopper extends TileEntityInventoryHelper implem
 			for (Direction facing : Direction.values()) {
 				if (tile.status[facing.ordinal()] == EnumStatus.STATUS_OUTPUT_ITEM) {
 					BlockEntity otherTile = level.getBlockEntity(worldPosition.relative(facing));
-					if (otherTile != null && otherTile.getCapability(ForgeCapabilities.ITEM_HANDLER, facing.getOpposite()).isPresent()) {
-						LazyOptional<IItemHandler> tileOptional = otherTile.getCapability(ForgeCapabilities.ITEM_HANDLER, facing.getOpposite());
-						tileOptional.ifPresent((handler) -> {
+					Optional<IItemHandler> handlerOptional = CapHelper.getItemHandler(level, worldPosition.relative(facing), facing.getOpposite());
+					if (otherTile != null && handlerOptional.isPresent()) {
+						handlerOptional.ifPresent((handler) -> {
 							if (level.getGameTime() % 8 == 0) {
 								for (int i = 0; i < tile.getContainerSize(); ++i) {
 									if (!tile.getItem(i).isEmpty() && i != 0) {
@@ -241,24 +253,21 @@ public class TileEntityAbsorptionHopper extends TileEntityInventoryHelper implem
 				}
 
 				if (tile.status[facing.ordinal()] == EnumStatus.STATUS_OUTPUT_FLUID) {
-					BlockEntity fluidTile = level.getBlockEntity(worldPosition.relative(facing));
-					if (fluidTile != null) {
-						LazyOptional<IFluidHandler> tileOptional = fluidTile.getCapability(ForgeCapabilities.FLUID_HANDLER, facing.getOpposite());
-						tileOptional.ifPresent((receptacle) -> {
-							int tanks = receptacle.getTanks();
-							for (int x = 0; x < tanks; x++) {
-								if (receptacle.getTankCapacity(x) > 0) {
-									FluidStack contents = receptacle.getFluidInTank(x);
-									if (!tile.tank.getFluid().isEmpty()) {
-										if (contents.isEmpty() || contents.getAmount() <= receptacle.getTankCapacity(x) - 100 && contents.containsFluid(new FluidStack(tile.tank.getFluid(), 1))) {
-											receptacle.fill(tile.tank.drain(new FluidStack(tile.tank.getFluid(), 100), FluidAction.EXECUTE), FluidAction.EXECUTE);
-											tile.setChanged();
-										}
+					Optional<IFluidHandler> handlerOptional = CapHelper.getFluidHandler(level, worldPosition.relative(facing), facing.getOpposite());
+					handlerOptional.ifPresent((receptacle) -> {
+						int tanks = receptacle.getTanks();
+						for (int x = 0; x < tanks; x++) {
+							if (receptacle.getTankCapacity(x) > 0) {
+								FluidStack contents = receptacle.getFluidInTank(x);
+								if (!tile.tank.getFluid().isEmpty()) {
+									if (contents.isEmpty() || contents.getAmount() <= receptacle.getTankCapacity(x) - 100 && contents.containsFluid(new FluidStack(tile.tank.getFluid(), 1))) {
+										receptacle.fill(tile.tank.drain(new FluidStack(tile.tank.getFluid(), 100), IFluidHandler.FluidAction.EXECUTE), IFluidHandler.FluidAction.EXECUTE);
+										tile.setChanged();
 									}
 								}
 							}
-						});
-					}
+						}
+					});
 				}
 			}
 
@@ -296,7 +305,7 @@ public class TileEntityAbsorptionHopper extends TileEntityInventoryHelper implem
 		for (ExperienceOrb entity : getCaptureXP()) {
 			int xpAmount = entity.getValue();
 			if (tank.getFluidAmount() < tank.getCapacity() - xpAmount * 20) {
-				tank.fill(new FluidStack(ModBlocks.FLUID_XP.get(), xpAmount * 20), FluidAction.EXECUTE);
+				tank.fill(new FluidStack(ModBlocks.FLUID_XP.get(), xpAmount * 20), IFluidHandler.FluidAction.EXECUTE);
 				entity.value = 0;
 				entity.remove(Entity.RemovalReason.DISCARDED);
 			}
@@ -319,12 +328,6 @@ public class TileEntityAbsorptionHopper extends TileEntityInventoryHelper implem
 	@OnlyIn(Dist.CLIENT)
 	public AABB getAABBForRender() {
 		return new AABB(- 3D - getModifierAmount(), - 3D - getModifierAmount(), - 3D - getModifierAmount(), 4D + getModifierAmount(), 4D + getModifierAmount(), 4D + getModifierAmount()).move(getoffsetX(), getoffsetY(), getoffsetZ());
-	}
-
-	@Override
-	@OnlyIn(Dist.CLIENT)
-	public AABB getRenderBoundingBox() {
-		return getAABBWithModifiers();
 	}
 
 	public int getoffsetX() {
@@ -465,19 +468,6 @@ public class TileEntityAbsorptionHopper extends TileEntityInventoryHelper implem
 
 	public int getScaledFluid(int scale) {
 		return tank.getFluid() != null ? (int) ((float) tank.getFluid().getAmount() / (float) tank.getCapacity() * scale) : 0;
-	}
-
-	@SuppressWarnings("unchecked")
-	@Override
-	@Nonnull
-	public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> capability, @Nullable Direction facing)
-	{
-		if (capability == ForgeCapabilities.FLUID_HANDLER)
-			return tank_holder.cast();
-
-		if (capability == ForgeCapabilities.ITEM_HANDLER)
-			return  itemHolder.cast();
-		return super.getCapability(capability, facing);
 	}
 
 	@Override

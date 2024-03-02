@@ -15,10 +15,10 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraftforge.event.entity.living.LivingDropsEvent;
-import net.minecraftforge.eventbus.api.EventPriority;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.ModList;
+import net.neoforged.bus.api.EventPriority;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.ModList;
+import net.neoforged.neoforge.event.entity.living.LivingDropsEvent;
 
 import java.util.Collection;
 import java.util.Optional;
@@ -51,9 +51,9 @@ public class EntityHeadDropEvent {
 		if (target.isBaby())
 			return ItemStack.EMPTY;
 
-		var recipeOptional = MobGrindingUtils.BEHEADING_RECIPES.stream().filter(recipe -> recipe.matches(target.getType())).findFirst();
+		var recipeOptional = MobGrindingUtils.BEHEADING_RECIPES.stream().filter(recipe -> recipe.value().matches(target.getType())).findFirst();
 		if (recipeOptional.isPresent()) {
-			return recipeOptional.get().getResultItem(RegistryAccess.EMPTY);
+			return recipeOptional.get().value().getResultItem(RegistryAccess.EMPTY);
 		}
 		
 		if (target instanceof Mob) {

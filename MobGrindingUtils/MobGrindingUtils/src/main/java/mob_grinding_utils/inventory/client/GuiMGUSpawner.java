@@ -1,8 +1,7 @@
 package mob_grinding_utils.inventory.client;
 
-import mob_grinding_utils.MobGrindingUtils;
 import mob_grinding_utils.inventory.server.ContainerMGUSpawner;
-import mob_grinding_utils.network.MessageEntitySpawner;
+import mob_grinding_utils.network.BELinkClick;
 import mob_grinding_utils.tile.TileEntityMGUSpawner;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
@@ -10,19 +9,18 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
+import net.neoforged.neoforge.network.PacketDistributor;
 
 import javax.annotation.Nonnull;
 
 public class GuiMGUSpawner extends MGUScreen<ContainerMGUSpawner> {
 	protected final ContainerMGUSpawner container;
 	private final TileEntityMGUSpawner tile;
-	private final Player player;
 
 	public GuiMGUSpawner(ContainerMGUSpawner container, Inventory playerInventory, Component name) {
 		super(container, playerInventory, name, new ResourceLocation("mob_grinding_utils:textures/gui/entity_spawner_gui.png"));
 		this.container = container;
 		this.tile = this.container.tile;
-		this.player = playerInventory.player;
 		imageHeight = 226;
 		imageWidth = 176;
 	}
@@ -34,11 +32,11 @@ public class GuiMGUSpawner extends MGUScreen<ContainerMGUSpawner> {
 
 		Button.OnPress message = button -> {
 			if (button instanceof GuiMGUButton)
-				MobGrindingUtils.NETWORK_WRAPPER.sendToServer(new MessageEntitySpawner(player, ((GuiMGUButton)button).id, tile.getBlockPos()));
+				PacketDistributor.SERVER.noArg().send(new BELinkClick(tile.getBlockPos(), ((GuiMGUButton)button).id));
 		};
 
 		addRenderableWidget(new GuiMGUButton(leftPos + 101, topPos + 113, GuiMGUButton.Size.LARGE, 0, Component.empty(), (button) -> {
-			MobGrindingUtils.NETWORK_WRAPPER.sendToServer(new MessageEntitySpawner(player, 0, tile.getBlockPos()));
+			PacketDistributor.SERVER.noArg().send(new BELinkClick(tile.getBlockPos(), 0));
 			tile.showRenderBox = !tile.showRenderBox;
 		}));
 

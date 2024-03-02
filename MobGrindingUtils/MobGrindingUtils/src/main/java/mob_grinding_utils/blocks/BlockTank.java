@@ -1,6 +1,8 @@
 package mob_grinding_utils.blocks;
 
+import com.mojang.serialization.MapCodec;
 import mob_grinding_utils.tile.TileEntityTank;
+import mob_grinding_utils.util.CapHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -20,19 +22,24 @@ import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidUtil;
-import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.FluidUtil;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Optional;
 
 public class BlockTank extends BaseEntityBlock {
+	public static final MapCodec<BlockTank> CODEC = simpleCodec(BlockTank::new);
 	public BlockTank(Block.Properties properties) {
 		super(properties);
+	}
+
+	@Nonnull
+	@Override
+	protected MapCodec<? extends BaseEntityBlock> codec() {
+		return CODEC;
 	}
 
 	@Override
@@ -53,7 +60,7 @@ public class BlockTank extends BaseEntityBlock {
 	}
 
 	@Override
-	public void playerWillDestroy(Level world, BlockPos pos, BlockState state, Player player) {
+	public BlockState playerWillDestroy(Level world, BlockPos pos, BlockState state, Player player) {
 		if (!world.isClientSide && !player.getAbilities().instabuild) {
 			BlockEntity tileentity = world.getBlockEntity(pos);
 			if (tileentity instanceof TileEntityTank) {
@@ -66,17 +73,18 @@ public class BlockTank extends BaseEntityBlock {
 				world.removeBlockEntity(pos);
 			}
 		}
+		return super.playerWillDestroy(world, pos, state, player);
 	}
 
 	@Override
 	public void setPlacedBy(@Nonnull Level world, @Nonnull BlockPos pos, @Nonnull BlockState state, LivingEntity placer, @Nonnull ItemStack stack) {
 		super.setPlacedBy(world, pos, state, placer, stack);
 		if (!world.isClientSide && stack.hasTag()) {
-			BlockEntity tileentity = world.getBlockEntity(pos);
-			if (tileentity instanceof TileEntityTank) {
+			BlockEntity blockEntity = world.getBlockEntity(pos);
+			if (blockEntity instanceof TileEntityTank) {
 				if (!stack.getTag().contains("Empty")) {
 					FluidStack fluid = FluidStack.loadFluidStackFromNBT(stack.getTag());
-					((TileEntityTank) tileentity).tank.fill(fluid, FluidAction.EXECUTE);
+					((TileEntityTank) blockEntity).tank.fill(fluid, IFluidHandler.FluidAction.EXECUTE);
 				}
 			}
 		}
@@ -89,7 +97,7 @@ public class BlockTank extends BaseEntityBlock {
 			return InteractionResult.SUCCESS;
 		BlockEntity tileentity = world.getBlockEntity(pos);
 		if (tileentity instanceof TileEntityTank) {
-			LazyOptional<IFluidHandler> fluidHandler = tileentity.getCapability(ForgeCapabilities.FLUID_HANDLER, hit.getDirection());
+			Optional<IFluidHandler> fluidHandler = CapHelper.getFluidHandler(world, pos, hit.getDirection());
 			fluidHandler.ifPresent((handler) -> {
 				if (player.getItemInHand(hand).isEmpty() && !handler.getFluidInTank(0).isEmpty())
 					player.displayClientMessage(Component.translatable(handler.getFluidInTank(0).getDisplayName().getString() + ": " + handler.getFluidInTank(0).getAmount() + "/" + handler.getTankCapacity(0)), true);

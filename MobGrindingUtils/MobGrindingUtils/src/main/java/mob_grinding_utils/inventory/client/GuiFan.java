@@ -1,15 +1,15 @@
 package mob_grinding_utils.inventory.client;
 
-import mob_grinding_utils.MobGrindingUtils;
 import mob_grinding_utils.inventory.server.ContainerFan;
-import mob_grinding_utils.network.MessageFan;
+import mob_grinding_utils.network.BELinkClick;
 import mob_grinding_utils.tile.TileEntityFan;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.network.PacketDistributor;
 
 import javax.annotation.Nonnull;
 
@@ -30,7 +30,7 @@ public class GuiFan extends MGUScreen<ContainerFan> {
 		super.init();
 
 		addRenderableWidget(new GuiMGUButton(leftPos + 54, topPos + 42, GuiMGUButton.Size.LARGE, 0, Component.empty(), (button) -> {
-			MobGrindingUtils.NETWORK_WRAPPER.sendToServer(new MessageFan(0, tile.getBlockPos()));
+			PacketDistributor.SERVER.noArg().send(new BELinkClick(tile.getBlockPos(), 0));
 			tile.showRenderBox = !tile.showRenderBox;
 		}));
 	}

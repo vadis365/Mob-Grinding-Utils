@@ -10,14 +10,16 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraftforge.registries.RegistryObject;
+import net.neoforged.neoforge.registries.DeferredBlock;
+import net.neoforged.neoforge.registries.DeferredHolder;
+import net.neoforged.neoforge.registries.DeferredItem;
 
 
 public class MGUBlockReg<B extends Block,I extends Item, T extends BlockEntity> implements Supplier<B> {
-    private String name;
-    private RegistryObject<B> block;
-    private RegistryObject<I> item;
-    private RegistryObject<BlockEntityType<T>> tile;
+    private final String name;
+    private final DeferredBlock<B> block;
+    private final DeferredItem<I> item;
+    private DeferredHolder<BlockEntityType<?>, BlockEntityType<T>> tile;
 
     @Override
     public B get() {

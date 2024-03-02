@@ -1,6 +1,9 @@
 package mob_grinding_utils.blocks;
 
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import mob_grinding_utils.tile.TileEntityAbsorptionHopper;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
@@ -8,7 +11,6 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Containers;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.InteractionResult;
@@ -21,16 +23,21 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.network.NetworkHooks;
 
 import javax.annotation.Nullable;
 
 public class BlockAbsorptionHopper extends BaseEntityBlock {
 
 	public static final VoxelShape HOPPER_AABB = Block.box(4D, 4D, 4D, 12D, 12D, 12D);
+	public static final MapCodec<BlockAbsorptionHopper> CODEC = simpleCodec(BlockAbsorptionHopper::new);
 
 	public BlockAbsorptionHopper(Block.Properties properties) {
 		super(properties);
+	}
+
+	@Override
+	protected MapCodec<? extends BaseEntityBlock> codec() {
+		return CODEC;
 	}
 
 	@Override
@@ -68,7 +75,7 @@ public class BlockAbsorptionHopper extends BaseEntityBlock {
 
 				if (!player.isShiftKeyDown()) {
 					world.sendBlockUpdated(pos, state, state, 3);
-					NetworkHooks.openScreen((ServerPlayer) player, vacuum, pos);
+					player.openMenu(vacuum, pos);
 				} else {
 					vacuum.toggleMode(hit.getDirection());
 					world.playSound(null, pos, SoundEvents.LEVER_CLICK, SoundSource.BLOCKS, 0.3F, 0.6F);
@@ -80,7 +87,7 @@ public class BlockAbsorptionHopper extends BaseEntityBlock {
 	}
 
 	@Override
-	public void playerWillDestroy(Level world, BlockPos pos, BlockState state, Player player) {
+	public BlockState playerWillDestroy(Level world, BlockPos pos, BlockState state, Player player) {
 		if (!world.isClientSide) {
 			TileEntityAbsorptionHopper tile = (TileEntityAbsorptionHopper) world.getBlockEntity(pos);
 			if (tile != null) {
@@ -88,5 +95,6 @@ public class BlockAbsorptionHopper extends BaseEntityBlock {
 				world.removeBlockEntity(pos);
 			}
 		}
+		return super.playerWillDestroy(world, pos, state, player);
 	}
 }

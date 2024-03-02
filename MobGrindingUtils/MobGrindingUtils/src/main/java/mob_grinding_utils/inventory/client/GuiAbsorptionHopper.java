@@ -7,7 +7,7 @@ import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import mob_grinding_utils.MobGrindingUtils;
 import mob_grinding_utils.inventory.server.ContainerAbsorptionHopper;
-import mob_grinding_utils.network.MessageAbsorptionHopper;
+import mob_grinding_utils.network.BELinkClick;
 import mob_grinding_utils.tile.TileEntityAbsorptionHopper;
 import mob_grinding_utils.tile.TileEntityAbsorptionHopper.EnumStatus;
 import net.minecraft.client.Minecraft;
@@ -21,7 +21,8 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.InventoryMenu;
-import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
+import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
+import net.neoforged.neoforge.network.PacketDistributor;
 
 public class GuiAbsorptionHopper extends MGUScreen<ContainerAbsorptionHopper> {
 
@@ -45,7 +46,7 @@ public class GuiAbsorptionHopper extends MGUScreen<ContainerAbsorptionHopper> {
 
 		Button.OnPress message = button -> {
 			if (button instanceof GuiMGUButton)
-				MobGrindingUtils.NETWORK_WRAPPER.sendToServer(new MessageAbsorptionHopper(player, ((GuiMGUButton)button).id, tile.getBlockPos()));
+				PacketDistributor.SERVER.noArg().send(new BELinkClick(tile.getBlockPos(), ((GuiMGUButton)button).id));
 		};
 
 		addRenderableWidget(new GuiMGUButton(leftPos + 7, topPos + 17, GuiMGUButton.Size.MEDIUM, 0, Component.literal("Down"), message));
@@ -56,7 +57,7 @@ public class GuiAbsorptionHopper extends MGUScreen<ContainerAbsorptionHopper> {
 		addRenderableWidget(new GuiMGUButton(leftPos + 82, topPos + 51, GuiMGUButton.Size.MEDIUM, 5, Component.literal("East"), message));
 
 		addRenderableWidget(new GuiMGUButton(leftPos + 173, topPos + 113, GuiMGUButton.Size.LARGE, 6, Component.empty(), (button) -> {
-			MobGrindingUtils.NETWORK_WRAPPER.sendToServer(new MessageAbsorptionHopper(player, 6, tile.getBlockPos()));
+			PacketDistributor.SERVER.noArg().send(new BELinkClick(tile.getBlockPos(), 6));
 			tile.showRenderBox = !tile.showRenderBox;
 		}));
 

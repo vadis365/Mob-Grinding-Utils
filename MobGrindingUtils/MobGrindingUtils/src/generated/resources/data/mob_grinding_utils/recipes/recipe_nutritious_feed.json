@@ -5,7 +5,10 @@
     "B": {
       "type": "mob_grinding_utils:fluid",
       "advanced": false,
-      "tag": "forge:experience"
+      "value": {
+        "Amount": 1000,
+        "Tag": "forge:experience"
+      }
     },
     "C": {
       "item": "minecraft:carrot"
@@ -30,6 +33,5 @@
   ],
   "result": {
     "item": "mob_grinding_utils:nutritious_chicken_feed"
-  },
-  "show_notification": true
+  }
 }

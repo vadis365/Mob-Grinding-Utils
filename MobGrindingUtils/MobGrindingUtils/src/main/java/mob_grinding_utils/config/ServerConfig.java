@@ -1,13 +1,13 @@
 package mob_grinding_utils.config;
 
-import net.minecraftforge.common.ForgeConfigSpec;
+import net.neoforged.neoforge.common.ModConfigSpec;
 
 public class ServerConfig {
-    private static final ForgeConfigSpec.Builder SERVER_BUILDER = new ForgeConfigSpec.Builder();
-    public static ForgeConfigSpec SERVER_CONFIG;
+    private static final ModConfigSpec.Builder SERVER_BUILDER = new ModConfigSpec.Builder();
+    public static ModConfigSpec SERVER_CONFIG;
 
-    public static ForgeConfigSpec.IntValue MASHER_MAX_UPGRADES;
-    public static ForgeConfigSpec.BooleanValue FAN_REINFORCED_BLADES;
+    public static ModConfigSpec.IntValue MASHER_MAX_UPGRADES;
+    public static ModConfigSpec.BooleanValue FAN_REINFORCED_BLADES;
 
     static {
         MASHER_MAX_UPGRADES = SERVER_BUILDER.comment("Max upgrades for masher").defineInRange("masherMaxUpgrade", 10,0,10);

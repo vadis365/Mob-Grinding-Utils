@@ -11,7 +11,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.HorizontalDirectionalBlock;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Containers;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
@@ -27,7 +26,6 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.Level;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraftforge.network.NetworkHooks;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -76,13 +74,13 @@ public class BlockEntitySpawner extends Block implements EntityBlock {
 		if (!world.isClientSide) {
 			BlockEntity tileentity = world.getBlockEntity(pos);
 			if (tileentity instanceof TileEntityMGUSpawner tile)
-				NetworkHooks.openScreen((ServerPlayer) player, tile, pos);
+				player.openMenu(tile, pos);
 		}
 		return InteractionResult.SUCCESS;
 	}
 
 	@Override
-	public void playerWillDestroy(Level world, @Nonnull BlockPos pos, @Nonnull BlockState state, @Nonnull Player player) {
+	public BlockState playerWillDestroy(Level world, @Nonnull BlockPos pos, @Nonnull BlockState state, @Nonnull Player player) {
 		if (!world.isClientSide && !player.getAbilities().instabuild) {
 			TileEntityMGUSpawner tile = (TileEntityMGUSpawner) world.getBlockEntity(pos);
 			if (tile != null) {
@@ -99,6 +97,7 @@ public class BlockEntitySpawner extends Block implements EntityBlock {
 				world.removeBlockEntity(pos);
 			}
 		}
+		return super.playerWillDestroy(world, pos, state, player);
 	}
 
 	@Override

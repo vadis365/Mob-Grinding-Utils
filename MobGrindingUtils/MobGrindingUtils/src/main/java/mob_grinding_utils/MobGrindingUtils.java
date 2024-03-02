@@ -7,17 +7,21 @@ import mob_grinding_utils.datagen.Generator;
 import mob_grinding_utils.events.*;
 import mob_grinding_utils.fakeplayer.MGUFakePlayer;
 import mob_grinding_utils.inventory.client.*;
+import mob_grinding_utils.network.FlagSyncPacket;
 import mob_grinding_utils.network.MGUNetwork;
-import mob_grinding_utils.network.MessageFlagSync;
 import mob_grinding_utils.recipe.BeheadingRecipe;
 import mob_grinding_utils.recipe.ChickenFeedRecipe;
 import mob_grinding_utils.recipe.FluidIngredient;
 import mob_grinding_utils.recipe.SolidifyRecipe;
-import net.minecraft.client.gui.screens.MenuScreens;
+import mob_grinding_utils.tile.TileEntityAbsorptionHopper;
+import mob_grinding_utils.tile.TileEntityMGUSpawner;
+import mob_grinding_utils.tile.TileEntityTank;
+import mob_grinding_utils.tile.TileEntityXPSolidifier;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.particles.SimpleParticleType;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -29,50 +33,54 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.RecipesUpdatedEvent;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.crafting.CraftingHelper;
-import net.minecraftforge.event.AddReloadListenerEvent;
-import net.minecraftforge.event.entity.player.PlayerEvent;
-import net.minecraftforge.event.level.LevelEvent;
-import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.fml.ModLoadingContext;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.config.ModConfig;
-import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
-import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.network.PacketDistributor;
-import net.minecraftforge.network.simple.SimpleChannel;
-import net.minecraftforge.registries.DeferredRegister;
-import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.RegistryObject;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.fml.ModLoadingContext;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.config.ModConfig;
+import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
+import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.neoforged.fml.loading.FMLEnvironment;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
+import net.neoforged.neoforge.client.event.RecipesUpdatedEvent;
+import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.common.crafting.IngredientType;
+import net.neoforged.neoforge.event.AddReloadListenerEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerEvent;
+import net.neoforged.neoforge.event.level.LevelEvent;
+import net.neoforged.neoforge.network.PacketDistributor;
+import net.neoforged.neoforge.registries.DeferredHolder;
+import net.neoforged.neoforge.registries.DeferredRegister;
+import net.neoforged.neoforge.registries.NeoForgeRegistries;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Supplier;
 
 
 @Mod(Reference.MOD_ID)
 public class MobGrindingUtils {
 	public static final Logger LOGGER = LoggerFactory.getLogger(Reference.MOD_ID);
-	public static SimpleChannel NETWORK_WRAPPER;
 
 	private static DamageSource SPIKE_DAMAGE;
 	public static final ResourceKey<DamageType> SPIKE_TYPE = ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation(Reference.MOD_ID, "spikes"));
 
-	public static final DeferredRegister<ParticleType<?>> PARTICLES = DeferredRegister.create(ForgeRegistries.PARTICLE_TYPES, Reference.MOD_ID);
-	public static final DeferredRegister<RecipeSerializer<?>> RECIPES = DeferredRegister.create(ForgeRegistries.RECIPE_SERIALIZERS, Reference.MOD_ID);
+	public static final DeferredRegister<ParticleType<?>> PARTICLES = DeferredRegister.create(BuiltInRegistries.PARTICLE_TYPE, Reference.MOD_ID);
+	public static final DeferredRegister<RecipeSerializer<?>> RECIPES = DeferredRegister.create(BuiltInRegistries.RECIPE_SERIALIZER, Reference.MOD_ID);
 	public static final DeferredRegister<RecipeType<?>> RECIPE_TYPES = DeferredRegister.create(Registries.RECIPE_TYPE, Reference.MOD_ID);
+	public static final DeferredRegister<IngredientType<?>> INGREDIENTS = DeferredRegister.create(NeoForgeRegistries.Keys.INGREDIENT_TYPES, Reference.MOD_ID);
+	public static DeferredHolder<IngredientType<?>, IngredientType<FluidIngredient>> FLUID_INGREDIENT = INGREDIENTS.register("fluid", () -> new IngredientType<>(FluidIngredient.CODEC));
+
 	public static final DeferredRegister<CreativeModeTab> TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, Reference.MOD_ID);
 
-	public static final RegistryObject<CreativeModeTab> TAB = TABS.register("tab", () -> CreativeModeTab.builder()
+	public static final Supplier<CreativeModeTab> TAB = TABS.register("tab", () -> CreativeModeTab.builder()
 				.icon(() -> new ItemStack(ModBlocks.SPIKES.get()))
 				.title(Component.translatable("itemGroup.mob_grinding_utils")).displayItems((params, output) -> {
 					ModBlocks.TAB_ORDER.forEach(block -> output.accept(block.getItem()));
@@ -80,19 +88,19 @@ public class MobGrindingUtils {
 				}
 			).build());
 
-	public static final RegistryObject<SimpleParticleType> PARTICLE_FLUID_XP = PARTICLES.register("fluid_xp_particles", () -> new SimpleParticleType(true));
+	public static final DeferredHolder<ParticleType<?>, SimpleParticleType> PARTICLE_FLUID_XP = PARTICLES.register("fluid_xp_particles", () -> new SimpleParticleType(true));
 
-	public static final RegistryObject<RecipeSerializer<?>> CHICKEN_FEED = RECIPES.register(ChickenFeedRecipe.NAME, ChickenFeedRecipe.Serializer::new);
+	public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<?>> CHICKEN_FEED = RECIPES.register(ChickenFeedRecipe.NAME, ChickenFeedRecipe.Serializer::new);
 
-	public static final List<SolidifyRecipe> SOLIDIFIER_RECIPES = new ArrayList<>();
-	public static final List<BeheadingRecipe> BEHEADING_RECIPES = new ArrayList<>();
-	public static final RegistryObject<RecipeSerializer<?>> SOLIDIFIER_RECIPE = RECIPES.register(SolidifyRecipe.NAME, SolidifyRecipe.Serializer::new);
-	public static final RegistryObject<RecipeSerializer<?>> BEHEADING_RECIPE = RECIPES.register(BeheadingRecipe.NAME, BeheadingRecipe.Serializer::new);
-	public static final RegistryObject<RecipeType<SolidifyRecipe>> SOLIDIFIER_TYPE = RECIPE_TYPES.register("solidify", () -> new RecipeType<>() {});
-	public static final RegistryObject<RecipeType<BeheadingRecipe>> BEHEADING_TYPE = RECIPE_TYPES.register("beheading", () -> new RecipeType<>() {});
+	public static final List<RecipeHolder<SolidifyRecipe>> SOLIDIFIER_RECIPES = new ArrayList<>();
+	public static final List<RecipeHolder<BeheadingRecipe>> BEHEADING_RECIPES = new ArrayList<>();
+	public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<?>> SOLIDIFIER_RECIPE = RECIPES.register(SolidifyRecipe.NAME, SolidifyRecipe.Serializer::new);
+	public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<?>> BEHEADING_RECIPE = RECIPES.register(BeheadingRecipe.NAME, BeheadingRecipe.Serializer::new);
+	public static final DeferredHolder<RecipeType<?>, RecipeType<SolidifyRecipe>> SOLIDIFIER_TYPE = RECIPE_TYPES.register("solidify", () -> new RecipeType<>() {});
+	public static final DeferredHolder<RecipeType<?>, RecipeType<BeheadingRecipe>> BEHEADING_TYPE = RECIPE_TYPES.register("beheading", () -> new RecipeType<>() {});
 
-	public MobGrindingUtils() {
-		IEventBus modBus = FMLJavaModLoadingContext.get().getModEventBus();
+	public MobGrindingUtils(IEventBus modBus) {
+		IEventBus neoBus = NeoForge.EVENT_BUS;
 		ModBlocks.init(modBus);
 		ModItems.init(modBus);
 		ModContainers.init(modBus);
@@ -100,59 +108,69 @@ public class MobGrindingUtils {
 		RECIPES.register(modBus);
 		RECIPE_TYPES.register(modBus);
 		TABS.register(modBus);
+		INGREDIENTS.register(modBus);
 		ModSounds.init(modBus);
 
-		DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> ModelLayers.init(modBus));
+		if (FMLEnvironment.dist.isClient()) {
+			ModelLayers.init(modBus);
+			modBus.addListener(this::doClientStuff);
+			modBus.addListener(this::menuScreenEvent);
+		}
 
 		modBus.addListener(this::setup);
-		modBus.addListener(this::doClientStuff);
+
 
 		ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, ServerConfig.SERVER_CONFIG);
 
-		MinecraftForge.EVENT_BUS.addListener(BlockSpikes::dropXP);
-		MinecraftForge.EVENT_BUS.register(new EntityInteractionEvent());
-		MinecraftForge.EVENT_BUS.register(new ChickenFuseEvent());
-		MinecraftForge.EVENT_BUS.register(new LocalWitherSoundEvent());
-		MinecraftForge.EVENT_BUS.register(new LocalDragonSoundEvent());
-		MinecraftForge.EVENT_BUS.register(new EntityHeadDropEvent());
-		MinecraftForge.EVENT_BUS.register(new MGUZombieReinforcementEvent());
-		MinecraftForge.EVENT_BUS.register(new FillXPBottleEvent());
-		MinecraftForge.EVENT_BUS.register(new MGUEndermanInhibitEvent());
-		MinecraftForge.EVENT_BUS.addListener(this::playerConnected);
-		MinecraftForge.EVENT_BUS.addListener(this::changedDimension);
-		MinecraftForge.EVENT_BUS.addListener(this::playerRespawn);
-		MinecraftForge.EVENT_BUS.addListener(this::cloneEvent);
-		MinecraftForge.EVENT_BUS.addListener(this::serverReloadListener);
-		MinecraftForge.EVENT_BUS.addListener(this::clientRecipeReload);
+		neoBus.addListener(BlockSpikes::dropXP);
+		neoBus.register(new EntityInteractionEvent());
+		neoBus.register(new ChickenFuseEvent());
+		neoBus.register(new LocalWitherSoundEvent());
+		neoBus.register(new LocalDragonSoundEvent());
+		neoBus.register(new EntityHeadDropEvent());
+		neoBus.register(new MGUZombieReinforcementEvent());
+		neoBus.register(new FillXPBottleEvent());
+		neoBus.register(new MGUEndermanInhibitEvent());
+		neoBus.addListener(this::playerConnected);
+		neoBus.addListener(this::changedDimension);
+		neoBus.addListener(this::playerRespawn);
+		neoBus.addListener(this::cloneEvent);
+		neoBus.addListener(this::serverReloadListener);
+		neoBus.addListener(this::clientRecipeReload);
+		modBus.addListener(this::registerCaps);
+
+		modBus.addListener(MGUNetwork::register);
 
 		//Central Data generator, called on runData
 		modBus.addListener(Generator::gatherData);
 	}
 
 	public void setup(FMLCommonSetupEvent event) {
-		event.enqueueWork(() -> CraftingHelper.register(FluidIngredient.Serializer.NAME, FluidIngredient.SERIALIZER));
-
-		NETWORK_WRAPPER = MGUNetwork.getNetworkChannel();
+		//event.enqueueWork(() -> CraftingHelper.register(FluidIngredient.Serializer.NAME, FluidIngredient.SERIALIZER));
 	}
 
 	private void doClientStuff(final FMLClientSetupEvent event) {
-		MinecraftForge.EVENT_BUS.register(new FluidTextureStitchEvent());
-		MinecraftForge.EVENT_BUS.register(new RenderChickenSwell());
-		MinecraftForge.EVENT_BUS.register(new GlobalWitherSoundEvent());
-		MinecraftForge.EVENT_BUS.register(new GlobalDragonSoundEvent());
-		MinecraftForge.EVENT_BUS.register(new BossBarHidingEvent());
-		MinecraftForge.EVENT_BUS.addListener(this::worldUnload);
+		IEventBus neoBus = NeoForge.EVENT_BUS;
 
-		MenuScreens.register(ModContainers.ABSORPTION_HOPPER.get(), GuiAbsorptionHopper::new);
-		MenuScreens.register(ModContainers.SOLIDIFIER.get(), GuiXPSolidifier::new);
-		MenuScreens.register(ModContainers.FAN.get(), GuiFan::new);
-		MenuScreens.register(ModContainers.SAW.get(), GuiSaw::new);
-		MenuScreens.register(ModContainers.ENTITY_SPAWNER.get(), GuiMGUSpawner::new);
+		//neoBus.register(new FluidTextureStitchEvent());
+		neoBus.register(new RenderChickenSwell());
+		neoBus.register(new GlobalWitherSoundEvent());
+		neoBus.register(new GlobalDragonSoundEvent());
+		neoBus.register(new BossBarHidingEvent());
+		neoBus.addListener(this::worldUnload);
 
 		ItemBlockRenderTypes.setRenderLayer(ModBlocks.FLUID_XP_FLOWING.get(), RenderType.translucent());
 		ItemBlockRenderTypes.setRenderLayer(ModBlocks.FLUID_XP.get(), RenderType.translucent());
 
 		event.enqueueWork(ModColourManager::registerColourHandlers);
+	}
+
+	private void menuScreenEvent(final RegisterMenuScreensEvent event) {
+		event.register(ModContainers.ABSORPTION_HOPPER.get(), GuiAbsorptionHopper::new);
+		event.register(ModContainers.SOLIDIFIER.get(), GuiXPSolidifier::new);
+		event.register(ModContainers.FAN.get(), GuiFan::new);
+		event.register(ModContainers.SAW.get(), GuiSaw::new);
+		event.register(ModContainers.ENTITY_SPAWNER.get(), GuiMGUSpawner::new);
 	}
 
 	private void serverReloadListener(final AddReloadListenerEvent event) {
@@ -183,7 +201,7 @@ public class MobGrindingUtils {
 	private void sendPersistentData(ServerPlayer playerEntity) {
 		CompoundTag nbt = playerEntity.getPersistentData();
 		if (nbt.contains("MGU_WitherMuffle") || nbt.contains("MGU_DragonMuffle")) {
-			NETWORK_WRAPPER.send(PacketDistributor.PLAYER.with(() -> playerEntity), new MessageFlagSync(nbt.getBoolean("MGU_WitherMuffle"), nbt.getBoolean("MGU_DragonMuffle")));
+			PacketDistributor.PLAYER.with(playerEntity).send(new FlagSyncPacket(nbt.getBoolean("MGU_WitherMuffle"), nbt.getBoolean("MGU_DragonMuffle")));
 		}
 	}
 
@@ -208,5 +226,16 @@ public class MobGrindingUtils {
 			SPIKE_DAMAGE = new DamageSource(level.registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(MobGrindingUtils.SPIKE_TYPE));
 
 		return SPIKE_DAMAGE;
+	}
+
+	public void registerCaps(final RegisterCapabilitiesEvent evt) {
+		evt.registerBlockEntity(Capabilities.FluidHandler.BLOCK, ModBlocks.TANK.getTileEntityType(), TileEntityTank::getTank);
+		evt.registerBlockEntity(Capabilities.FluidHandler.BLOCK, ModBlocks.JUMBO_TANK.getTileEntityType(), TileEntityTank::getTank);
+		evt.registerBlockEntity(Capabilities.FluidHandler.BLOCK, ModBlocks.TANK_SINK.getTileEntityType(), TileEntityTank::getTank);
+		evt.registerBlockEntity(Capabilities.FluidHandler.BLOCK, ModBlocks.XPSOLIDIFIER.getTileEntityType(), TileEntityXPSolidifier::getTank);
+		evt.registerBlockEntity(Capabilities.ItemHandler.BLOCK, ModBlocks.XPSOLIDIFIER.getTileEntityType(), TileEntityXPSolidifier::getOutput);
+		evt.registerBlockEntity(Capabilities.ItemHandler.BLOCK, ModBlocks.ENTITY_SPAWNER.getTileEntityType(), TileEntityMGUSpawner::getFuelSlot);
+		evt.registerBlockEntity(Capabilities.ItemHandler.BLOCK, ModBlocks.ABSORPTION_HOPPER.getTileEntityType(), TileEntityAbsorptionHopper::getItemHandler);
+		evt.registerBlockEntity(Capabilities.FluidHandler.BLOCK, ModBlocks.ABSORPTION_HOPPER.getTileEntityType(), TileEntityAbsorptionHopper::getTank);
 	}
 }

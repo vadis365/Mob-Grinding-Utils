@@ -30,13 +30,13 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import javax.annotation.Nonnull;
 import java.util.List;
 
-public class TileEntityFan extends TileEntityInventoryHelper implements MenuProvider {
+public class TileEntityFan extends TileEntityInventoryHelper implements MenuProvider, BEGuiLink {
 
 	private static final int[] SLOTS = new int[] {0, 1, 2};
 	public boolean showRenderBox;
@@ -144,12 +144,9 @@ public class TileEntityFan extends TileEntityInventoryHelper implements MenuProv
 		return new AABB(- xNeg, - yNeg, - zNeg, 1D + xPos, 1D + yPos, 1D + zPos);
 	}
 
-	@Override
-	@OnlyIn(Dist.CLIENT)
 	public AABB getRenderBoundingBox() {
 		return new AABB(getBlockPos().getX() - xNeg, getBlockPos().getY() - yNeg, getBlockPos().getZ() - zNeg, getBlockPos().getX() + 1D + xPos, getBlockPos().getY() + 1D + yPos, getBlockPos().getZ() + 1D + zPos);
 	}
-
 	public void toggleRenderBox() {
 		showRenderBox = !showRenderBox;
 		setChanged();
@@ -287,5 +284,13 @@ public class TileEntityFan extends TileEntityInventoryHelper implements MenuProv
 	@Override
 	public Component getDisplayName() {
 		return Component.translatable("block.mob_grinding_utils.fan");
+	}
+
+	@Override
+	public void buttonClicked(int buttonID) {
+		if (buttonID == 0) {
+			toggleRenderBox();
+			getLevel().sendBlockUpdated(worldPosition, getLevel().getBlockState(worldPosition), getLevel().getBlockState(worldPosition), 3);
+		}
 	}
 }

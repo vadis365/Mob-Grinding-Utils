@@ -1,20 +1,20 @@
 package mob_grinding_utils;
 
+import net.minecraft.core.HolderSet;
+import net.minecraft.core.Registry;
 import net.minecraft.tags.TagKey;
-import net.minecraftforge.common.util.Lazy;
-import net.minecraftforge.registries.IForgeRegistry;
-import net.minecraftforge.registries.tags.ITag;
+import net.neoforged.neoforge.common.util.Lazy;
 
 public class TagLookup<T> {
     private final TagKey<T> tagKey;
-    private final Lazy<ITag<T>> lazy;
+    private final Lazy<HolderSet.Named<T>> lazy;
 
-    public TagLookup(IForgeRegistry<T> registry, TagKey<T> key) {
+    public TagLookup(Registry<T> registry, TagKey<T> key) {
         this.tagKey = key;
-        this.lazy = Lazy.of(() -> registry.tags().getTag(key));
+        this.lazy = Lazy.of(() -> registry.getOrCreateTag(key));
     }
 
-    public ITag<T> get() {
+    public HolderSet.Named<T> get() {
         return this.lazy.get();
     }
 
@@ -23,10 +23,10 @@ public class TagLookup<T> {
     }
 
     public boolean contains(T entry) {
-        return this.get().contains(entry);
+        return this.get().stream().anyMatch($ -> $.value() == entry);
     }
 
     public boolean isEmpty() {
-        return this.get().isEmpty();
+        return this.get().stream().findAny().isPresent();
     }
 }

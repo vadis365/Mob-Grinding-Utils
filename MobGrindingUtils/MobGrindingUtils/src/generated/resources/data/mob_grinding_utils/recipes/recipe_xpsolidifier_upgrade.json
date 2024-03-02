@@ -14,7 +14,10 @@
     "X": {
       "type": "mob_grinding_utils:fluid",
       "advanced": false,
-      "tag": "forge:experience"
+      "value": {
+        "Amount": 1000,
+        "Tag": "forge:experience"
+      }
     }
   },
   "pattern": [
@@ -24,6 +27,5 @@
   ],
   "result": {
     "item": "mob_grinding_utils:xp_solidifier_upgrade"
-  },
-  "show_notification": true
+  }
 }

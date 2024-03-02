@@ -1,10 +1,9 @@
 package mob_grinding_utils.events;
 
-import mob_grinding_utils.MobGrindingUtils;
 import mob_grinding_utils.ModItems;
 import mob_grinding_utils.items.ItemGMChickenFeed;
 import mob_grinding_utils.items.ItemMobSwab;
-import mob_grinding_utils.network.MessageChickenSync;
+import mob_grinding_utils.network.ChickenSyncPacket;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
@@ -13,15 +12,14 @@ import net.minecraft.world.entity.npc.WanderingTrader;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent.EntityInteract;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.network.PacketDistributor;
-import net.minecraftforge.network.PacketDistributor.TargetPoint;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
+import net.neoforged.neoforge.network.PacketDistributor;
 
 public class EntityInteractionEvent {
 
 	@SubscribeEvent
-	public void clickOnEntity(EntityInteract event) {
+	public void clickOnEntity(PlayerInteractEvent.EntityInteract event) {
 		if (event.getTarget() instanceof LivingEntity) {
 			LivingEntity entity = (LivingEntity) event.getTarget();
 
@@ -47,8 +45,8 @@ public class EntityInteractionEvent {
 							if (eventItem.getItem() == ModItems.NUTRITIOUS_CHICKEN_FEED.get())
 								nbt.putBoolean("nutritious", true);
 							if (event.getEntity() instanceof ServerPlayer) {
-								TargetPoint target = new TargetPoint(entity.getX(), entity.getY(), entity.getZ(), 32, entity.getCommandSenderWorld().dimension());
-								MobGrindingUtils.NETWORK_WRAPPER.send(PacketDistributor.NEAR.with(()->target), new MessageChickenSync(entity, nbt));
+								PacketDistributor.TargetPoint target = new PacketDistributor.TargetPoint(entity.getX(), entity.getY(), entity.getZ(), 32, entity.getCommandSenderWorld().dimension());
+								PacketDistributor.NEAR.with(target).send(new ChickenSyncPacket(entity, nbt));
 							}
 						}
 						Vec3 vec3d = entity.getDeltaMovement();

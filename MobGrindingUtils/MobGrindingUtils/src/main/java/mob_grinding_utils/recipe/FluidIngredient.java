@@ -1,82 +1,80 @@
 package mob_grinding_utils.recipe;
 
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParseException;
-import com.google.gson.JsonSyntaxException;
+import com.mojang.datafixers.util.Either;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntComparators;
 import it.unimi.dsi.fastutil.ints.IntList;
-import mob_grinding_utils.Reference;
-import mob_grinding_utils.TagLookup;
+import mob_grinding_utils.MobGrindingUtils;
+import net.minecraft.core.Holder;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
-import net.minecraft.util.GsonHelper;
+import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.entity.player.StackedContents;
 import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.material.Fluid;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.crafting.IIngredientSerializer;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidUtil;
-import net.minecraftforge.fluids.capability.IFluidHandlerItem;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.FluidUtil;
+import net.neoforged.neoforge.fluids.capability.IFluidHandlerItem;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Stream;
 
 public class FluidIngredient extends Ingredient {
-
+    public static final Codec<FluidIngredient> CODEC = RecordCodecBuilder.create(instance -> instance
+            .group(FluidValue.CODEC.fieldOf("value")
+                            .forGetter($ -> $.value),
+                    Codec.BOOL.fieldOf("advanced")
+                            .forGetter($ -> $.advanced))
+            .apply(instance, FluidIngredient::new));
     private final Boolean advanced;
     private final List<Fluid> matchingFluids = new ArrayList<>();
-    private final TagLookup<Fluid> fluidTag;
-
     private ItemStack[] bucketCache = null;
     private IntList matchingStacksPacked;
+    public final FluidValue value;
 
     private List<Fluid> getMatchingFluids() {
         if (!matchingFluids.isEmpty())
             return matchingFluids;
 
-        if (fluidTag != null)
-            matchingFluids.addAll(fluidTag.get().stream().toList());
+        if (value instanceof FluidTagValue fluidTagValue)
+            BuiltInRegistries.FLUID.getTagOrEmpty(fluidTagValue.tag).forEach(fluid -> matchingFluids.add(fluid.value()));
 
         return matchingFluids;
     }
 
 
-    public FluidIngredient(TagKey<Fluid> tagIn, boolean advancedIn) {
-        super(Stream.empty());
+    public FluidIngredient(TagKey<Fluid> tagIn, int amount, boolean advancedIn) {
+        super(Stream.of(), MobGrindingUtils.FLUID_INGREDIENT);
 
         advanced = advancedIn;
-
-        fluidTag = new TagLookup<>(ForgeRegistries.FLUIDS, tagIn);
+        value = new FluidTagValue(tagIn, amount);
     }
-    public FluidIngredient(Fluid fluidIn, boolean advancedIn) {
-        super(Stream.empty());
+    public FluidIngredient(TagKey<Fluid> tagIn) {
+        this(tagIn, 1000, false);
+    }
+    public FluidIngredient(Fluid fluidIn, int amount, boolean advancedIn) {
+        super(Stream.of(), MobGrindingUtils.FLUID_INGREDIENT);
 
+        value = new SpecificFluidValue(new FluidStack(fluidIn, amount));
         advanced = advancedIn;
         matchingFluids.add(fluidIn);
-        fluidTag = null;
-
+    }
+    public FluidIngredient(Fluid fluidIn) {
+        this(fluidIn, 1000, false);
     }
 
-    public FluidIngredient(List<Fluid> fluidList, boolean advancedIn) {
-        super(Stream.empty());
-
+    public FluidIngredient(FluidValue value, boolean advancedIn) {
+        super(Stream.of(), MobGrindingUtils.FLUID_INGREDIENT);
+        this.value = value;
         advanced = advancedIn;
-        fluidTag = null;
-
-        matchingFluids.addAll(fluidList);
     }
 
     @Override
@@ -84,6 +82,7 @@ public class FluidIngredient extends Ingredient {
         return false;
     }
 
+    @Nonnull
     @Override
     public IntList getStackingIds() {
         if (this.matchingStacksPacked == null) {
@@ -94,23 +93,6 @@ public class FluidIngredient extends Ingredient {
             this.matchingStacksPacked.sort(IntComparators.NATURAL_COMPARATOR);
         }
         return this.matchingStacksPacked;
-    }
-
-    @Override
-    public JsonElement toJson() {
-        JsonObject json = new JsonObject();
-
-        json.addProperty("type", Serializer.NAME.toString());
-
-        json.addProperty("advanced", advanced);
-        if (fluidTag != null) {
-            json.addProperty("tag", fluidTag.getKey().location().toString());
-        }
-        else {
-            json.addProperty("fluid", Objects.requireNonNull(ForgeRegistries.FLUIDS.getKey(getMatchingFluids().get(0))).toString());
-        }
-
-        return json;
     }
 
     @Nonnull
@@ -128,66 +110,77 @@ public class FluidIngredient extends Ingredient {
         return bucketCache;
     }
 
-    @Override
-    public IIngredientSerializer<? extends Ingredient> getSerializer() {
-        return SERIALIZER;
+    public interface FluidValue {
+        Codec<FluidValue> CODEC = ExtraCodecs.xor(SpecificFluidValue.CODEC, FluidTagValue.CODEC)
+                .xmap($ -> $.map(value1 -> value1, value2 -> value2), fluidValue -> {
+                    if (fluidValue instanceof FluidTagValue fluidTagValue) {
+                        return Either.right(fluidTagValue);
+                    } else if (fluidValue instanceof SpecificFluidValue specificFluidValue) {
+                        return Either.left(specificFluidValue);
+                    } else {
+                        throw new UnsupportedOperationException("This is neither a fluid nor a fluid tag.");
+                    }
+                });
+        int getAmount();
+        Collection<FluidStack> getFluids();
     }
-    public static Serializer SERIALIZER = new Serializer();
-    public static class Serializer implements IIngredientSerializer<FluidIngredient> {
-        public static ResourceLocation NAME = new ResourceLocation(Reference.MOD_ID, "fluid");
+
+    public record SpecificFluidValue(FluidStack fluidStack) implements FluidValue {
+        public static final Codec<SpecificFluidValue> CODEC = RecordCodecBuilder.create((p_300958_) -> p_300958_
+                .group(FluidStack.CODEC.fieldOf("fluid")
+                        .forGetter((p_300960_) -> p_300960_.fluidStack))
+                .apply(p_300958_, SpecificFluidValue::new));
+
         @Override
-        public FluidIngredient parse(FriendlyByteBuf buffer) {
-            boolean buckets = buffer.readBoolean();
-            int fluidCount = buffer.readVarInt();
-
-            List<Fluid> fluids = new ArrayList<>();
-
-            for (int i = 0; i < fluidCount; i++) {
-                fluids.add(ForgeRegistries.FLUIDS.getValue(new ResourceLocation(buffer.readUtf())));
-            }
-
-            return new FluidIngredient(fluids, buckets);
+        public int getAmount() {
+            return fluidStack.getAmount();
         }
 
         @Override
-        public FluidIngredient parse(JsonObject json) {
-            boolean advanced = json.has("advanced") && GsonHelper.getAsBoolean(json, "advanced");
-            if (json.has("tag")) {
-                ResourceLocation tagRes = new ResourceLocation(GsonHelper.getAsString(json, "tag"));
-                TagKey<Fluid> fluidTag = TagKey.create(Registries.FLUID, tagRes);
-                return new FluidIngredient(fluidTag, advanced);
-            }
-            else if (json.has("fluid")) {
-                ResourceLocation fluidRes = new ResourceLocation(GsonHelper.getAsString(json, "fluid"));
-                Fluid fluid = ForgeRegistries.FLUIDS.getValue(fluidRes);
-                if (fluid != null) {
-                    return new FluidIngredient(fluid, advanced);
-                }
-            }
-            else {
-                throw new JsonSyntaxException("invalid FluidIngredient, must specify either a fluid, or a fluid tag.");
-            }
-            throw new JsonParseException("FluidIngredient needs either a fluid or a fluid tag.");
+        public Collection<FluidStack> getFluids() {
+            return Collections.singleton(fluidStack);
+        }
+    }
+
+    public record FluidTagValue(TagKey<Fluid> tag, int amount) implements FluidValue {
+        public static final Codec<FluidTagValue> CODEC = RecordCodecBuilder.create((p_300962_) -> p_300962_
+                .group(TagKey.codec(Registries.FLUID).fieldOf("Tag")
+                                .forGetter((p_300964_) -> p_300964_.tag),
+                        Codec.INT.fieldOf("Amount")
+                                .forGetter((p_300966_) -> p_300966_.amount))
+                .apply(p_300962_, FluidTagValue::new));
+
+        @Override
+        public int getAmount() {
+            return amount;
         }
 
         @Override
-        public void write(FriendlyByteBuf buffer, FluidIngredient ingredient) {
-            buffer.writeBoolean(ingredient.advanced);
-            buffer.writeVarInt(ingredient.getMatchingFluids().size());
-            ingredient.getMatchingFluids().forEach((fluid -> buffer.writeUtf(Objects.requireNonNull(ForgeRegistries.FLUIDS.getKey(fluid)).toString())));
+        public Collection<FluidStack> getFluids() {
+            List<FluidStack> list = new ArrayList<>();
+
+            for (Holder<Fluid> holder : BuiltInRegistries.FLUID.getTagOrEmpty(tag)) {
+                list.add(new FluidStack(holder.value(), 1000));
+            }
+            if (list.isEmpty())
+                list.add(FluidStack.EMPTY);
+
+            return list;
         }
     }
 
     @Override
     public boolean test(@Nullable ItemStack stack) {
-        LazyOptional<IFluidHandlerItem> cap = stack.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM);
+        if (stack == null)
+            return false;
+        Optional<IFluidHandlerItem> cap = Optional.ofNullable(stack.getCapability(Capabilities.FluidHandler.ITEM));
 
         if (cap.isPresent()) {
             if (!advanced && !(stack.getItem() instanceof BucketItem))
                 return false;
 
-            FluidStack fluid = cap.resolve().get().getFluidInTank(0);
-            return getMatchingFluids().contains(fluid.getFluid()) && fluid.getAmount() >= 1000;
+            FluidStack fluid = cap.get().getFluidInTank(0);
+            return getMatchingFluids().contains(fluid.getFluid()) && fluid.getAmount() >= value.getAmount();
         }
 
         return false;

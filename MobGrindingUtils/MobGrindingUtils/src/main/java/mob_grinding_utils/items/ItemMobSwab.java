@@ -3,6 +3,7 @@ package mob_grinding_utils.items;
 import mob_grinding_utils.ModItems;
 import mob_grinding_utils.ModTags;
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
@@ -13,9 +14,8 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -44,7 +44,7 @@ public class ItemMobSwab extends Item {
 	@Override
 	public InteractionResult interactLivingEntity(@Nonnull ItemStack stack, @Nonnull Player player, @Nonnull LivingEntity target, @Nonnull InteractionHand hand) {
 		if (!(target instanceof Player) && !used && !target.getType().is(ModTags.Entities.NO_SWAB)) {
-			String mobName = Objects.requireNonNull(ForgeRegistries.ENTITY_TYPES.getKey(target.getType())).toString();
+			String mobName = Objects.requireNonNull(BuiltInRegistries.ENTITY_TYPE.getKey(target.getType())).toString();
 			ItemStack stack2 = new ItemStack(ModItems.MOB_SWAB_USED.get(), 1);
 			if (!stack2.getOrCreateTag().contains("mguMobName")) {
 				stack2.getTag().putString("mguMobName", mobName);

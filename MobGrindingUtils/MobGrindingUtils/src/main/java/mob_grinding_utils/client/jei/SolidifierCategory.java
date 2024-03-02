@@ -1,10 +1,10 @@
 package mob_grinding_utils.client.jei;
 
-import mezz.jei.api.forge.ForgeTypes;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.drawable.IDrawableStatic;
 import mezz.jei.api.helpers.IGuiHelper;
+import mezz.jei.api.neoforge.NeoForgeTypes;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.RecipeType;
@@ -16,7 +16,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.FluidStack;
 
 import javax.annotation.Nonnull;
 import java.util.List;
@@ -56,12 +56,12 @@ public class SolidifierCategory implements IRecipeCategory<SolidifyRecipe> {
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, SolidifyRecipe recipe, @Nonnull IFocusGroup focuses) {
         builder.addSlot(RecipeIngredientRole.CATALYST, 5,5)
-            .addIngredients(recipe.getMould());
+            .addIngredients(recipe.mould());
 
         builder.addSlot(RecipeIngredientRole.INPUT, 37, 5)
-            .addIngredients(ForgeTypes.FLUID_STACK, List.of(new FluidStack(ModBlocks.FLUID_XP.get(), recipe.getFluidAmount())))
+            .addIngredients(NeoForgeTypes.FLUID_STACK, List.of(new FluidStack(ModBlocks.FLUID_XP.get(), recipe.fluidAmount())))
             .addTooltipCallback((recipeSlot, tooltip) -> {
-                var ingredient = recipeSlot.getDisplayedIngredient(ForgeTypes.FLUID_STACK);
+                var ingredient = recipeSlot.getDisplayedIngredient(NeoForgeTypes.FLUID_STACK);
                 ingredient.ifPresent(fluidStack -> {
                     tooltip.add(Component.literal(fluidStack.getAmount() + " mB"));
                     tooltip.add(Component.translatable("mob_grinding_utils.jei.any_experience").withStyle(ChatFormatting.GRAY));

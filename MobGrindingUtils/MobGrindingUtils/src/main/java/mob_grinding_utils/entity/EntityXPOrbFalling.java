@@ -10,6 +10,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.event.entity.player.PlayerXpEvent;
 
 import java.util.Map.Entry;
 
@@ -56,7 +58,7 @@ public class EntityXPOrbFalling extends ExperienceOrb {
 	public void playerTouch(Player player) {
 		if (!level().isClientSide) {
 			if (delayBeforeCanPickup == 0 && player.takeXpDelay == 0) {
-				if (net.minecraftforge.common.MinecraftForge.EVENT_BUS.post(new net.minecraftforge.event.entity.player.PlayerXpEvent.PickupXp(player, this)))
+				if (NeoForge.EVENT_BUS.post(new PlayerXpEvent.PickupXp(player, this)).isCanceled()) //TODO maybe?
 					return;
 				player.takeXpDelay = 2;
 				player.take(this, 1);

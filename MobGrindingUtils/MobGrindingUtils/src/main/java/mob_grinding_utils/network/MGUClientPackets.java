@@ -9,20 +9,20 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.world.level.Level;
 
 public class MGUClientPackets {
-    public static void HandleChickenSync(MessageChickenSync message) {
+    public static void HandleChickenSync(ChickenSyncPacket message) {
         Level world = Minecraft.getInstance().level;
 
         if (world == null)
             return;
 
         else if (world.isClientSide) {
-            LivingEntity chicken = (Chicken) world.getEntity(message.chickenID);
+            LivingEntity chicken = (Chicken) world.getEntity(message.chickenID());
             if (chicken != null) {
                 CompoundTag nbt = new CompoundTag();
                 nbt = chicken.getPersistentData();
-                nbt.putBoolean("shouldExplode", message.nbt.getBoolean("shouldExplode"));
-                nbt.putInt("countDown", message.nbt.getInt("countDown"));
-                if (message.nbt.getInt("countDown") >= 20) {
+                nbt.putBoolean("shouldExplode", message.nbt().getBoolean("shouldExplode"));
+                nbt.putInt("countDown", message.nbt().getInt("countDown"));
+                if (message.nbt().getInt("countDown") >= 20) {
                     for (int k = 0; k < 20; ++k) {
                         double xSpeed = world.random.nextGaussian() * 0.02D;
                         double ySpeed = world.random.nextGaussian() * 0.02D;

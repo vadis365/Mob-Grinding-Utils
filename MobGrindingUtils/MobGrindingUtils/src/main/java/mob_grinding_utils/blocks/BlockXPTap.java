@@ -1,8 +1,10 @@
 package mob_grinding_utils.blocks;
 
+import com.mojang.serialization.MapCodec;
 import mob_grinding_utils.ModBlocks;
 import mob_grinding_utils.ModSounds;
 import mob_grinding_utils.tile.TileEntityXPTap;
+import mob_grinding_utils.util.CapHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.sounds.SoundSource;
@@ -24,12 +26,12 @@ import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public class BlockXPTap extends DirectionalBlock implements EntityBlock {
+	public static final MapCodec<BlockXPTap> CODEC = simpleCodec(BlockXPTap::new);
 
 	public static final VoxelShape XP_TAP_WEST_AABB = Block.box(7D, 6D, 4D, 16D, 16D, 12D);
 	public static final VoxelShape XP_TAP_EAST_AABB = Block.box(0D, 6D, 4D, 9D, 16D, 12D);
@@ -40,6 +42,11 @@ public class BlockXPTap extends DirectionalBlock implements EntityBlock {
 	public BlockXPTap(Block.Properties properties) {
 		super(properties);
 		registerDefaultState(this.stateDefinition.any().setValue(POWERED, false));
+	}
+
+	@Override
+	protected MapCodec<? extends DirectionalBlock> codec() {
+		return CODEC;
 	}
 
 	@Nonnull
@@ -103,7 +110,7 @@ public class BlockXPTap extends DirectionalBlock implements EntityBlock {
 		BlockState blockstate = world.getBlockState(pos);
 		boolean isSide = facing.getAxis().isHorizontal();
 		BlockEntity te = world.getBlockEntity(pos);
-		if (te != null && te.getCapability(ForgeCapabilities.FLUID_HANDLER).isPresent() && isSide)
+		if (te != null && te.getLevel() != null && CapHelper.getFluidHandler(te.getLevel(), pos, facing).isPresent() && isSide)
 			return true;
 		return isSide && blockstate.getBlock() instanceof BlockTank;
 	}

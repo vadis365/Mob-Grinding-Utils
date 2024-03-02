@@ -18,7 +18,7 @@ public class MGUScreen<T extends AbstractContainerMenu> extends AbstractContaine
 
     @Override
     public void render(@Nonnull GuiGraphics gg, int mouseX, int mouseY, float partialTicks) {
-        this.renderBackground(gg);
+        this.renderBackground(gg, mouseX, mouseY, partialTicks);
         super.render(gg, mouseX, mouseY, partialTicks);
         renderTooltip(gg, mouseX, mouseY);
     }

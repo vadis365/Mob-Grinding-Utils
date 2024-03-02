@@ -2,6 +2,7 @@
   "type": "mob_grinding_utils:beheading",
   "entity": "minecraft:creeper",
   "result": {
-    "item": "minecraft:creeper_head"
+    "Count": 1,
+    "id": "minecraft:creeper_head"
   }
 }

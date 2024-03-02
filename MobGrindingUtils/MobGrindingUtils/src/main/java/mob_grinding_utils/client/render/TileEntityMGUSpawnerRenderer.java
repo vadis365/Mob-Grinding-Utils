@@ -12,8 +12,9 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider.Context;
 import net.minecraft.world.entity.Entity;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraft.world.phys.AABB;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import javax.annotation.Nonnull;
 
@@ -55,4 +56,8 @@ public class TileEntityMGUSpawnerRenderer implements BlockEntityRenderer<TileEnt
 		matrixStack.popPose();
 	}
 
+	@Override
+	public AABB getRenderBoundingBox(TileEntityMGUSpawner blockEntity) {
+		return blockEntity.getAABBWithModifiers();
+	}
 }

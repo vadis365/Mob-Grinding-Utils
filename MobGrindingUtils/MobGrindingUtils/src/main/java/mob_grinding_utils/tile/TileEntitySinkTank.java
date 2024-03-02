@@ -1,8 +1,7 @@
 package mob_grinding_utils.tile;
 
-import mob_grinding_utils.MobGrindingUtils;
 import mob_grinding_utils.ModBlocks;
-import mob_grinding_utils.network.MessageTapParticle;
+import mob_grinding_utils.network.TapParticlePacket;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -12,9 +11,9 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
-import net.minecraftforge.network.PacketDistributor;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.network.PacketDistributor;
 
 import java.util.List;
 
@@ -40,11 +39,11 @@ public class TileEntitySinkTank extends TileEntityTank {
 			if (xpAmount <= 0)
 				return false;
 			if (tank.getFluidAmount() < tank.getCapacity()) {
-				tank.fill(new FluidStack(ModBlocks.FLUID_XP.get(), 20), FluidAction.EXECUTE);
+				tank.fill(new FluidStack(ModBlocks.FLUID_XP.get(), 20), IFluidHandler.FluidAction.EXECUTE);
 				addPlayerXP(player, -1);
 				level.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.BOTTLE_FILL, SoundSource.NEUTRAL , 0.1F, 0.5F * ((getLevel().random.nextFloat() - getLevel().random.nextFloat()) * 0.7F + 1.8F));
 				var particleTarget = new PacketDistributor.TargetPoint(getBlockPos().getX(), getBlockPos().getY(), getBlockPos().getZ(), 30, level.dimension());
-				MobGrindingUtils.NETWORK_WRAPPER.send(PacketDistributor.NEAR.with(() -> particleTarget), new MessageTapParticle(getBlockPos().above()));
+				PacketDistributor.NEAR.with((particleTarget)).send(new TapParticlePacket(getBlockPos().above()));
 			}
 			return true;
 		}

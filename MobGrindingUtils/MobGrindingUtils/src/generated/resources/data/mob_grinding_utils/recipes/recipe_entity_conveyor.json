@@ -20,6 +20,5 @@
   "result": {
     "count": 6,
     "item": "mob_grinding_utils:entity_conveyor"
-  },
-  "show_notification": true
+  }
 }

@@ -15,8 +15,8 @@ import mob_grinding_utils.models.ModelTankBlock;
 import mob_grinding_utils.models.ModelXPSolidifier;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.client.event.EntityRenderersEvent;
-import net.minecraftforge.eventbus.api.IEventBus;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 
 public class ModelLayers {
     public static final ModelLayerLocation SAW_BASE = new ModelLayerLocation(new ResourceLocation(Reference.MOD_ID, "saw_base"), "saw_base");

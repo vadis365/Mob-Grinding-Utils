@@ -26,13 +26,10 @@ import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.ItemStackHandler;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.items.ItemStackHandler;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -40,7 +37,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class TileEntityMGUSpawner extends BlockEntity implements MenuProvider {
+public class TileEntityMGUSpawner extends BlockEntity implements MenuProvider, BEGuiLink {
 
 	public int spawning_progress = 0;
 	public int MAX_SPAWNING_TIME = 100;
@@ -53,7 +50,6 @@ public class TileEntityMGUSpawner extends BlockEntity implements MenuProvider {
 			return stack.getItem() == ModItems.SOLID_XP_BABY.get();
 		}
 	};
-	private final LazyOptional<IItemHandler> fuelSlotCap = LazyOptional.of(() -> fuelSlot);
 
 	public int animationTicks, prevAnimationTicks;
 	public boolean showRenderBox;
@@ -61,6 +57,10 @@ public class TileEntityMGUSpawner extends BlockEntity implements MenuProvider {
 
 	public TileEntityMGUSpawner(BlockPos pos, BlockState state) {
 		super(ModBlocks.ENTITY_SPAWNER.getTileEntityType(), pos, state);
+	}
+
+	public IItemHandler getFuelSlot(@Nullable Direction side) {
+		return fuelSlot;
 	}
 
 	public void toggleOnOff() {
@@ -238,12 +238,6 @@ public class TileEntityMGUSpawner extends BlockEntity implements MenuProvider {
 		return new AABB(- 1D - getWidthModifierAmount(), - 0D - getHeightModifierAmount(), - 1D - getWidthModifierAmount(), 2D + getWidthModifierAmount(), 1D + getHeightModifierAmount(), 2D + getWidthModifierAmount()).move(getoffsetX(), getoffsetY(), getoffsetZ());
 	}
 
-	@Override
-	@OnlyIn(Dist.CLIENT)
-	public AABB getRenderBoundingBox() {
-		return getAABBWithModifiers();
-	}
-
 	public int getoffsetX() {
 		return Math.max(- 2 - getWidthModifierAmount(), Math.min(offsetX, 2 + getWidthModifierAmount()));
 	}
@@ -337,12 +331,12 @@ public class TileEntityMGUSpawner extends BlockEntity implements MenuProvider {
 		return entity;
 	}
 
-	@Nonnull
 	@Override
-	public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
-		if (cap == ForgeCapabilities.ITEM_HANDLER)
-			return fuelSlotCap.cast();
-		return super.getCapability(cap, side);
+	public void buttonClicked(int buttonID) {
+		switch (buttonID) {
+			case 0 -> toggleRenderBox();
+			case 1,2,3,4,5,6 -> toggleOffset(buttonID);
+		}
+		updateBlock();
 	}
-
 }

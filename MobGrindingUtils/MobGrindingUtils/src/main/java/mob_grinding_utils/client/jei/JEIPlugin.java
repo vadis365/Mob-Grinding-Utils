@@ -17,6 +17,7 @@ import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.Level;
 
 import javax.annotation.Nonnull;
@@ -41,7 +42,7 @@ public class JEIPlugin implements IModPlugin {
             }
         });
         Level level = Minecraft.getInstance().level;
-        registration.addRecipes(SOLIDIFY_TYPE, level.getRecipeManager().getAllRecipesFor(MobGrindingUtils.SOLIDIFIER_TYPE.get()));
+        registration.addRecipes(SOLIDIFY_TYPE, level.getRecipeManager().getAllRecipesFor(MobGrindingUtils.SOLIDIFIER_TYPE.get()).stream().map(RecipeHolder::value).toList());
     }
 
     @Override

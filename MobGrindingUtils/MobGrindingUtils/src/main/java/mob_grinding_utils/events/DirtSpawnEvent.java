@@ -3,8 +3,8 @@ package mob_grinding_utils.events;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.level.LevelAccessor;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.eventbus.api.Event;
+import net.neoforged.bus.api.Event;
+import net.neoforged.neoforge.common.NeoForge;
 
 public class DirtSpawnEvent extends Event {
     private final LevelAccessor world;
@@ -57,7 +57,7 @@ public class DirtSpawnEvent extends Event {
         if (entity == null)
             return Result.DEFAULT;
         DirtSpawnEvent event = new DirtSpawnEvent(level, x, y, z, entity, type);
-        MinecraftForge.EVENT_BUS.post(event);
+        NeoForge.EVENT_BUS.post(event);
 
         return event.getResult();
     }

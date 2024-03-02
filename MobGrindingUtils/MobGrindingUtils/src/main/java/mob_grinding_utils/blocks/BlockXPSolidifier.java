@@ -1,11 +1,12 @@
 package mob_grinding_utils.blocks;
 
+import com.mojang.serialization.MapCodec;
 import mob_grinding_utils.tile.TileEntityXPSolidifier;
+import mob_grinding_utils.util.CapHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -27,25 +28,28 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidUtil;
-import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
-import net.minecraftforge.network.NetworkHooks;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.FluidUtil;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Optional;
 
 
 public class BlockXPSolidifier extends BaseEntityBlock {
+	public static final MapCodec<BlockXPSolidifier> CODEC = simpleCodec(BlockXPSolidifier::new);
 	public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
     public BlockXPSolidifier(Properties properties) {
         super(properties);
     }
 
-    @Nullable
+	@Override
+	protected MapCodec<? extends BaseEntityBlock> codec() {
+		return CODEC;
+	}
+
+	@Nullable
     @Override
     public BlockEntity newBlockEntity(@Nonnull BlockPos pos, @Nonnull BlockState state) {
         return new TileEntityXPSolidifier(pos, state);
@@ -70,7 +74,7 @@ public class BlockXPSolidifier extends BaseEntityBlock {
 	}
 
 	@Override
-	public void playerWillDestroy(Level world, @Nonnull BlockPos pos, @Nonnull BlockState state, @Nonnull Player player) {
+	public BlockState playerWillDestroy(Level world, @Nonnull BlockPos pos, @Nonnull BlockState state, @Nonnull Player player) {
 		if (!world.isClientSide && !player.getAbilities().instabuild) {
 			TileEntityXPSolidifier tile = (TileEntityXPSolidifier) world.getBlockEntity(pos);
 			if (tile != null) {
@@ -89,6 +93,7 @@ public class BlockXPSolidifier extends BaseEntityBlock {
 				world.removeBlockEntity(pos);
 			}
 		}
+		return super.playerWillDestroy(world, pos, state, player);
 	}
 
 	@Override
@@ -99,7 +104,7 @@ public class BlockXPSolidifier extends BaseEntityBlock {
 			if (tileentity instanceof TileEntityXPSolidifier) {
 				if (!stack.getTag().contains("Empty")) {
 					FluidStack fluid = FluidStack.loadFluidStackFromNBT(stack.getTag());
-					((TileEntityXPSolidifier) tileentity).tank.fill(fluid, FluidAction.EXECUTE);
+					((TileEntityXPSolidifier) tileentity).tank.fill(fluid, IFluidHandler.FluidAction.EXECUTE);
 				}
 			}
 		}
@@ -119,7 +124,7 @@ public class BlockXPSolidifier extends BaseEntityBlock {
 			BlockEntity tileentity = world.getBlockEntity(pos);
 			if (tileentity instanceof TileEntityXPSolidifier) {
 				if (!player.getItemInHand(hand).isEmpty() && player.getItemInHand(hand).getItem() instanceof BucketItem) { // fixy later, Flanks: ?!?
-					LazyOptional<IFluidHandler> fluidHandler = tileentity.getCapability(ForgeCapabilities.FLUID_HANDLER, hit.getDirection());
+					Optional<IFluidHandler> fluidHandler = CapHelper.getFluidHandler(world, pos, hit.getDirection());
 					fluidHandler.ifPresent((handler) -> {
 						if (player.getItemInHand(hand).isEmpty() && !handler.getFluidInTank(0).isEmpty())
 							player.displayClientMessage(Component.translatable(handler.getFluidInTank(0).getDisplayName().getString() + ": "+ handler.getFluidInTank(0).getAmount()+"/"+handler.getTankCapacity(0)), true);
@@ -129,7 +134,7 @@ public class BlockXPSolidifier extends BaseEntityBlock {
 					return InteractionResult.SUCCESS;
 				}
 				else {
-					NetworkHooks.openScreen((ServerPlayer) player, (TileEntityXPSolidifier) tileentity, pos);
+					player.openMenu((TileEntityXPSolidifier) tileentity, pos);
 					return InteractionResult.SUCCESS;
 				}
 			}

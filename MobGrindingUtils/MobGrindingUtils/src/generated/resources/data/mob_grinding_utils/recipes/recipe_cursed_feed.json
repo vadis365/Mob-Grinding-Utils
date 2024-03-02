@@ -5,7 +5,10 @@
     "B": {
       "type": "mob_grinding_utils:fluid",
       "advanced": false,
-      "tag": "forge:experience"
+      "value": {
+        "Amount": 1000,
+        "Tag": "forge:experience"
+      }
     },
     "E": {
       "item": "minecraft:spider_eye"
@@ -30,6 +33,5 @@
   ],
   "result": {
     "item": "mob_grinding_utils:gm_chicken_feed_cursed"
-  },
-  "show_notification": true
+  }
 }

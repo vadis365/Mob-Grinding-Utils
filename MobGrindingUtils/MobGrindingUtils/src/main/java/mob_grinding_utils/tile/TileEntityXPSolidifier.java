@@ -7,6 +7,7 @@ import mob_grinding_utils.ModItems;
 import mob_grinding_utils.ModTags;
 import mob_grinding_utils.inventory.server.ContainerXPSolidifier;
 import mob_grinding_utils.recipe.SolidifyRecipe;
+import mob_grinding_utils.util.CapHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -23,42 +24,47 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
-import net.minecraftforge.fluids.capability.templates.FluidTank;
-import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.ItemHandlerHelper;
-import net.minecraftforge.items.ItemStackHandler;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
+import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.items.ItemHandlerHelper;
+import net.neoforged.neoforge.items.ItemStackHandler;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Optional;
 
-public class TileEntityXPSolidifier extends BlockEntity implements MenuProvider {
+public class TileEntityXPSolidifier extends BlockEntity implements MenuProvider, BEGuiLink {
 	public FluidTank tank = new FluidTank(1000 *  16);
-	private final LazyOptional<IFluidHandler> tank_holder = LazyOptional.of(() -> tank);
 	private int prevFluidLevel = 0;
 	public int moulding_progress = 0;
 	public int MAX_MOULDING_TIME = 100;
 	public boolean isOn = false;
-	private SolidifyRecipe currentRecipe = null;
+	private RecipeHolder<SolidifyRecipe> currentRecipe = null;
 
 	public ItemStackHandler inputSlots = new ItemStackHandler(2);
 	public ItemStackHandler outputSlot = new ItemStackHandler(1);
-	private final LazyOptional<IItemHandler> outputCap = LazyOptional.of(() -> outputSlot);
 
 	public boolean active;
 	public int animationTicks, prevAnimationTicks;
 
 	public TileEntityXPSolidifier(BlockPos pos, BlockState state) {
 		super(ModBlocks.XPSOLIDIFIER.getTileEntityType(), pos, state);
+	}
+
+	@Override
+	public void buttonClicked(int buttonID) {
+		switch (buttonID) {
+			case 0 -> toggleOutput();
+			case 1 -> toggleOnOff();
+		}
+		updateBlock();
 	}
 
 	public enum OutputDirection implements StringRepresentable {
@@ -80,6 +86,13 @@ public class TileEntityXPSolidifier extends BlockEntity implements MenuProvider 
 					return direction;
 			return OutputDirection.NONE;
 		}
+	}
+
+	public FluidTank getTank(@Nullable Direction side) {
+		return tank;
+	}
+	public IItemHandler getOutput(@Nullable Direction side) {
+		return outputSlot;
 	}
 
 	public OutputDirection outputDirection = OutputDirection.NONE;
@@ -117,7 +130,7 @@ public class TileEntityXPSolidifier extends BlockEntity implements MenuProvider 
 					tile.prevAnimationTicks = tile.animationTicks = 0;
 
 				if (tile.currentRecipe != null) {
-					if (!tile.currentRecipe.matches(tile.inputSlots.getStackInSlot(0)))
+					if (!tile.currentRecipe.value().matches(tile.inputSlots.getStackInSlot(0)))
 						tile.currentRecipe = null;
 				} else {
 					if (!tile.inputSlots.getStackInSlot(0).isEmpty())
@@ -130,8 +143,8 @@ public class TileEntityXPSolidifier extends BlockEntity implements MenuProvider 
 					tile.setProgress(tile.getProgress() + 1 + tile.getModifierAmount());
 					if (tile.getProgress() >= tile.MAX_MOULDING_TIME) {
 						tile.setActive(false);
-						tile.outputSlot.setStackInSlot(0, tile.currentRecipe.getResult());
-						tile.tank.drain(tile.currentRecipe.getFluidAmount(), FluidAction.EXECUTE);
+						tile.outputSlot.setStackInSlot(0, tile.currentRecipe.value().result());
+						tile.tank.drain(tile.currentRecipe.value().fluidAmount(), IFluidHandler.FluidAction.EXECUTE);
 						return;
 					}
 				} else {
@@ -143,9 +156,9 @@ public class TileEntityXPSolidifier extends BlockEntity implements MenuProvider 
 
 				if (tile.outputDirection != OutputDirection.NONE && tile.getOutputFacing() != null) {
 					BlockEntity otherTile = level.getBlockEntity(worldPosition.relative(tile.getOutputFacing()));
-					if (otherTile != null && otherTile.getCapability(ForgeCapabilities.ITEM_HANDLER, tile.getOutputFacing().getOpposite()).isPresent()) {
-						LazyOptional<IItemHandler> tileOptional = otherTile.getCapability(ForgeCapabilities.ITEM_HANDLER, tile.getOutputFacing().getOpposite());
-						tileOptional.ifPresent((handler) -> {
+					Optional<IItemHandler> handlerOptional = CapHelper.getItemHandler(level, worldPosition.relative(tile.getOutputFacing()), tile.getOutputFacing().getOpposite());
+					if (otherTile != null && handlerOptional.isPresent()) {
+						handlerOptional.ifPresent((handler) -> {
 							if (!tile.outputSlot.getStackInSlot(0).isEmpty()) {
 								ItemStack stack = tile.outputSlot.getStackInSlot(0).copy();
 								stack.setCount(1);
@@ -223,7 +236,7 @@ public class TileEntityXPSolidifier extends BlockEntity implements MenuProvider 
 	}
 
 	private boolean hasfluid() {
-		return currentRecipe != null && !tank.getFluid().isEmpty() && tank.getFluid().getAmount() >= currentRecipe.getFluidAmount() && tank.getFluidInTank(0).getFluid().is(ModTags.Fluids.EXPERIENCE);
+		return currentRecipe != null && !tank.getFluid().isEmpty() && tank.getFluid().getAmount() >= currentRecipe.value().fluidAmount() && tank.getFluidInTank(0).getFluid().is(ModTags.Fluids.EXPERIENCE);
 	}
 
 	private boolean canOperate() {
@@ -231,12 +244,12 @@ public class TileEntityXPSolidifier extends BlockEntity implements MenuProvider 
 	}
 
 	private boolean hasMould() {
-		return currentRecipe != null && currentRecipe.matches(inputSlots.getStackInSlot(0));
+		return currentRecipe != null && currentRecipe.value().matches(inputSlots.getStackInSlot(0));
 	}
 
 	@Nullable
-	public static SolidifyRecipe getRecipeForMould(ItemStack stack) {
-		return MobGrindingUtils.SOLIDIFIER_RECIPES.stream().filter(recipe -> recipe.matches(stack)).findFirst().orElse(null);
+	public static RecipeHolder<SolidifyRecipe> getRecipeForMould(ItemStack stack) {
+		return MobGrindingUtils.SOLIDIFIER_RECIPES.stream().filter(recipe -> recipe.value().matches(stack)).findFirst().orElse(null);
 	}
 
 	private boolean isOutputEmpty() {
@@ -333,7 +346,7 @@ public class TileEntityXPSolidifier extends BlockEntity implements MenuProvider 
 		moulding_progress = nbt.getInt("moulding_progress");
 		if (nbt.contains("currentRecipe")) {
 			ResourceLocation id = new ResourceLocation(nbt.getString("currentRecipe"));
-			MobGrindingUtils.SOLIDIFIER_RECIPES.stream().filter(recipe -> recipe.getId().equals(id))
+			MobGrindingUtils.SOLIDIFIER_RECIPES.stream().filter(recipe -> recipe.id().equals(id))
 				.findFirst().ifPresent(recipe -> this.currentRecipe = recipe);
 		}
 	}
@@ -349,7 +362,7 @@ public class TileEntityXPSolidifier extends BlockEntity implements MenuProvider 
 		nbt.putBoolean("active", active);
 		nbt.putInt("moulding_progress", moulding_progress);
 		if (currentRecipe != null)
-			nbt.putString("currentRecipe", currentRecipe.getId().toString());
+			nbt.putString("currentRecipe", currentRecipe.id().toString());
 	}
 
 	@Nonnull
@@ -401,16 +414,4 @@ public class TileEntityXPSolidifier extends BlockEntity implements MenuProvider 
 	public AbstractContainerMenu createMenu(int windowID, Inventory playerInventory, Player player) {
 		return new ContainerXPSolidifier(windowID, playerInventory, new FriendlyByteBuf(Unpooled.buffer()).writeBlockPos(worldPosition));
 	}
-
-	@Nonnull
-	@Override
-	public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
-		if (cap == ForgeCapabilities.FLUID_HANDLER)
-			return tank_holder.cast();
-		if (cap == ForgeCapabilities.ITEM_HANDLER)
-			return outputCap.cast();
-		return super.getCapability(cap, side);
-	}
-
-
 }

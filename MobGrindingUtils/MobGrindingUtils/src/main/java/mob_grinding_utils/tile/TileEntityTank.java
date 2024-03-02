@@ -10,18 +10,15 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.templates.FluidTank;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Optional;
 
 public class TileEntityTank extends BlockEntity {
 	public FluidTank tank = new FluidTank(1000 *  32);
-	private final LazyOptional<IFluidHandler> tank_holder = LazyOptional.of(() -> tank);
 	public int prevTankAmount;
 
 	public TileEntityTank(BlockPos pos, BlockState state) {
@@ -83,16 +80,10 @@ public class TileEntityTank extends BlockEntity {
 		tank.writeToNBT(nbt);
 	}
 
-	@Override
-	@Nonnull
-	public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> capability, @Nullable Direction facing)
-	{
-		if (capability == ForgeCapabilities.FLUID_HANDLER)
-			return tank_holder.cast();
-		return super.getCapability(capability, facing);
-	}
-
 	public FluidTank getTank(){
+		return this.tank;
+	}
+	public FluidTank getTank(@Nullable Direction direction){
 		return this.tank;
 	}
 

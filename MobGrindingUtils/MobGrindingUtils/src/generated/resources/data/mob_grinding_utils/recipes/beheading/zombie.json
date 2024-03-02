@@ -2,6 +2,7 @@
   "type": "mob_grinding_utils:beheading",
   "entity": "minecraft:zombie",
   "result": {
-    "item": "minecraft:zombie_head"
+    "Count": 1,
+    "id": "minecraft:zombie_head"
   }
 }

@@ -1,5 +1,6 @@
 package mob_grinding_utils.blocks;
 
+import com.mojang.serialization.MapCodec;
 import mob_grinding_utils.ModBlocks;
 import mob_grinding_utils.tile.TileEntitySaw;
 import net.minecraft.core.BlockPos;
@@ -32,18 +33,23 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.network.NetworkHooks;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public class BlockSaw extends DirectionalBlock implements EntityBlock {
+	public static final MapCodec<BlockSaw> CODEC = simpleCodec(BlockSaw::new);
 	public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
 	public static final VoxelShape SAW_AABB = Block.box(1D, 1D, 1D, 15D, 15D, 15D);
 	
 	public BlockSaw(Block.Properties properties) {
 		super(properties);
 		registerDefaultState(this.stateDefinition.any().setValue(POWERED, false));
+	}
+
+	@Override
+	protected MapCodec<? extends DirectionalBlock> codec() {
+		return CODEC;
 	}
 
 	@Override
@@ -100,7 +106,7 @@ public class BlockSaw extends DirectionalBlock implements EntityBlock {
 		if (!world.isClientSide) {
 			BlockEntity tileentity = world.getBlockEntity(pos);
 			if (tileentity instanceof TileEntitySaw)
-				NetworkHooks.openScreen((ServerPlayer) player, (TileEntitySaw) tileentity, pos);
+				player.openMenu((TileEntitySaw) tileentity, pos);
 		}
 		return InteractionResult.SUCCESS;
 	}

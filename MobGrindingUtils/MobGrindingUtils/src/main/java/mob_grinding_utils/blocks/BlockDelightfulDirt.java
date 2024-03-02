@@ -9,7 +9,6 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.placement.VegetationPlacements;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.level.*;
@@ -23,10 +22,10 @@ import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.levelgen.feature.configurations.RandomPatchConfiguration;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.IPlantable;
-import net.minecraftforge.eventbus.api.Event;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.bus.api.Event;
+import net.neoforged.neoforge.common.IPlantable;
 
 import javax.annotation.Nonnull;
 import java.util.List;
@@ -47,28 +46,27 @@ public class BlockDelightfulDirt extends Block {
 
 	@Override
 	public void onPlace(BlockState state, Level level, BlockPos pos, BlockState oldState, boolean isMoving) {
-		if (shouldSnowCap(level, pos) || shouldSpawnMob(level, pos))
-			level.scheduleTick(pos, this, Mth.nextInt(level.random, 20,60));
+/*		if (shouldSnowCap(level, pos) || shouldSpawnMob(level, pos))
+			level.scheduleTick(pos, this, Mth.nextInt(level.random, 20,60));*/
 	}
 
 	@SuppressWarnings("deprecation")
 	@Override
 	public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, LevelAccessor level, BlockPos pos, BlockPos facingPos) {
-		if (shouldSnowCap((Level) level, pos) || shouldSpawnMob((Level) level, pos))
-			level.scheduleTick(pos, this, Mth.nextInt(level.getRandom(), 20, 60));
+/*		if (shouldSnowCap((Level) level, pos) || shouldSpawnMob((Level) level, pos))
+			level.scheduleTick(pos, this, Mth.nextInt(level.getRandom(), 20, 60));*/
 		return super.updateShape(stateIn, facing, facingState, level, pos, facingPos);
 	}
 
 	@Override
 	public void neighborChanged(BlockState state, Level level, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving) {
-		if (shouldSnowCap((Level) level, pos) || shouldSpawnMob((Level) level, pos))
-			level.scheduleTick(pos, this, Mth.nextInt(level.random, 20, 60));
+/*		if (shouldSnowCap((Level) level, pos) || shouldSpawnMob((Level) level, pos))
+			level.scheduleTick(pos, this, Mth.nextInt(level.random, 20, 60));*/
 	}
 
 	@SuppressWarnings("unchecked")
-	@Deprecated
 	@Override
-	public void tick(@Nonnull BlockState state, @Nonnull ServerLevel level, @Nonnull BlockPos pos, @Nonnull RandomSource rand) {
+	public void randomTick(@Nonnull BlockState state, @Nonnull ServerLevel level, @Nonnull BlockPos pos, @Nonnull RandomSource rand) {
 		if (shouldSnowCap(level, pos)) {
 			BlockPos posUp = pos.above();
 			BlockState blockstate = Blocks.SNOW.defaultBlockState();

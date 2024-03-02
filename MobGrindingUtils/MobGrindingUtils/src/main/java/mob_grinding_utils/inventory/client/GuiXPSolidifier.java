@@ -7,7 +7,7 @@ import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import mob_grinding_utils.MobGrindingUtils;
 import mob_grinding_utils.inventory.server.ContainerXPSolidifier;
-import mob_grinding_utils.network.MessageSolidifier;
+import mob_grinding_utils.network.BELinkClick;
 import mob_grinding_utils.tile.TileEntityXPSolidifier;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -17,7 +17,8 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.InventoryMenu;
-import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
+import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
+import net.neoforged.neoforge.network.PacketDistributor;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -41,10 +42,10 @@ public class GuiXPSolidifier extends MGUScreen<ContainerXPSolidifier> {
         super.init();
 
         addRenderableWidget(new GuiMGUButton(leftPos + 62, topPos + 72, GuiMGUButton.Size.SOLIDIFIER, 0, Component.literal("Push") ,
-            (button) -> MobGrindingUtils.NETWORK_WRAPPER.sendToServer(new MessageSolidifier(0, tile.getBlockPos()))));
+            (button) -> PacketDistributor.SERVER.noArg().send(new BELinkClick(tile.getBlockPos(), 0))));
 
         addRenderableWidget(new GuiMGUButton(leftPos + 148, topPos + 8, GuiMGUButton.Size.SOLIDIFIER_ON, 0, Component.literal("") ,
-            (button) -> MobGrindingUtils.NETWORK_WRAPPER.sendToServer(new MessageSolidifier(1, tile.getBlockPos()))));
+            (button) -> PacketDistributor.SERVER.noArg().send(new BELinkClick(tile.getBlockPos(), 1))));
     }
 
     @Override

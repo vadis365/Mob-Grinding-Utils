@@ -1,39 +1,36 @@
 package mob_grinding_utils.events;
 
-import java.util.Optional;
-
-import javax.annotation.Nonnull;
-
-import mob_grinding_utils.MobGrindingUtils;
 import mob_grinding_utils.ModItems;
 import mob_grinding_utils.ModSounds;
-import mob_grinding_utils.network.MessageChickenSync;
+import mob_grinding_utils.network.ChickenSyncPacket;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.animal.Chicken;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.SpawnEggItem;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.common.ForgeSpawnEggItem;
-import net.minecraftforge.event.entity.living.LivingEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.network.PacketDistributor;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.event.entity.living.LivingEvent;
+import net.neoforged.neoforge.network.PacketDistributor;
+
+import javax.annotation.Nonnull;
+import java.util.Optional;
 
 public class ChickenFuseEvent {
 
 	@Nonnull
 	public static ItemStack getSpawnEgg(@Nonnull EntityType<?> entityType) {
-		final SpawnEggItem egg = ForgeSpawnEggItem.fromEntityType(entityType);
+		final SpawnEggItem egg = SpawnEggItem.byId(entityType);
 		return egg != null ? new ItemStack(egg) : ItemStack.EMPTY;
 	}
 
 	@SubscribeEvent
-	public void startChickenFuse(LivingEvent event) {
+	public void startChickenFuse(LivingEvent.LivingTickEvent event) { // TODO uh oh? is this right?!
 		LivingEntity entity = event.getEntity();
 		if (entity instanceof Chicken) {
 			Level world = entity.getCommandSenderWorld();
@@ -44,7 +41,7 @@ public class ChickenFuseEvent {
 
 					if (startTime <= 19) {
 						nbt.putInt("countDown", nbt.getInt("countDown") + 1);
-						MobGrindingUtils.NETWORK_WRAPPER.send(PacketDistributor.ALL.noArg(), new MessageChickenSync(entity, nbt));
+						PacketDistributor.ALL.noArg().send(new ChickenSyncPacket(entity, nbt));
 					}
 
 					if (startTime >= 20) {

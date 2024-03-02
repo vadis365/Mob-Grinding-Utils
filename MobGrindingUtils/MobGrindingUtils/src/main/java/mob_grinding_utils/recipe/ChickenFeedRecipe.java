@@ -1,12 +1,11 @@
 package mob_grinding_utils.recipe;
 
 
-import com.google.gson.JsonObject;
+import com.mojang.serialization.Codec;
 import mob_grinding_utils.MobGrindingUtils;
 import mob_grinding_utils.ModItems;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeSerializer;
@@ -19,7 +18,7 @@ import javax.annotation.Nullable;
 public class ChickenFeedRecipe extends ShapelessRecipe {
     public static final String NAME = "chicken_feed";
     public ChickenFeedRecipe(ShapelessRecipe recipe) {
-        super(recipe.getId(), recipe.getGroup(), recipe.category(), recipe.getResultItem(RegistryAccess.EMPTY), recipe.getIngredients());
+        super(recipe.getGroup(), recipe.category(), recipe.getResultItem(RegistryAccess.EMPTY), recipe.getIngredients());
     }
 
     @Nonnull
@@ -53,22 +52,18 @@ public class ChickenFeedRecipe extends ShapelessRecipe {
     }
 
     public static class Serializer implements RecipeSerializer<ChickenFeedRecipe> {
-        @Nullable
-        @Override
-        public ChickenFeedRecipe fromNetwork(@Nonnull ResourceLocation recipeId, @Nonnull FriendlyByteBuf buffer) {
-            return new ChickenFeedRecipe(RecipeSerializer.SHAPELESS_RECIPE.fromNetwork(recipeId, buffer));
-        }
+        public static final Codec<ChickenFeedRecipe> CODEC = ShapelessRecipe.Serializer.CODEC.xmap(ChickenFeedRecipe::new, recipe -> recipe);
 
         @Nonnull
         @Override
-        public ChickenFeedRecipe fromJson(@Nonnull ResourceLocation recipeId, @Nonnull JsonObject json) {
-            try {
-                return new ChickenFeedRecipe(RecipeSerializer.SHAPELESS_RECIPE.fromJson(recipeId, json));
-            }
-            catch (Exception exception) {
-            	MobGrindingUtils.LOGGER.info("Error reading "+ NAME +" Recipe from packet: ", exception);
-                throw exception;
-            }
+        public Codec<ChickenFeedRecipe> codec() {
+            return CODEC;
+        }
+
+        @Nullable
+        @Override
+        public ChickenFeedRecipe fromNetwork(@Nonnull FriendlyByteBuf buffer) {
+            return new ChickenFeedRecipe(RecipeSerializer.SHAPELESS_RECIPE.fromNetwork(buffer));
         }
 
         @Override
@@ -77,7 +72,7 @@ public class ChickenFeedRecipe extends ShapelessRecipe {
                 RecipeSerializer.SHAPELESS_RECIPE.toNetwork(buffer, recipe);
             }
             catch (Exception exception) {
-            	MobGrindingUtils.LOGGER.info("Error writing "+ NAME +" Recipe to packet: ", exception);
+                MobGrindingUtils.LOGGER.info("Error writing "+ NAME +" Recipe to packet: ", exception);
                 throw exception;
             }
         }

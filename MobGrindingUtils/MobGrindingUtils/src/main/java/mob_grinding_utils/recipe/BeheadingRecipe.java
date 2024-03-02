@@ -1,14 +1,13 @@
 package mob_grinding_utils.recipe;
 
-import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import mob_grinding_utils.MobGrindingUtils;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.GsonHelper;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.ItemStack;
@@ -16,21 +15,16 @@ import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.util.Objects;
 import java.util.Optional;
 
 public class BeheadingRecipe implements Recipe<Container>{
-    private final ResourceLocation id;
     public static final String NAME = "beheading";
     private final EntityType<?> entityType;
     private final ItemStack result;
 
-    public BeheadingRecipe(ResourceLocation id, EntityType<?> type, ItemStack output) {
-        this.id = id;
+    public BeheadingRecipe(EntityType<?> type, ItemStack output) {
         this.entityType = type;
         this.result = output;
     }
@@ -63,12 +57,6 @@ public class BeheadingRecipe implements Recipe<Container>{
 
     @Nonnull
     @Override
-    public ResourceLocation getId() {
-        return id;
-    }
-
-    @Nonnull
-    @Override
     public RecipeSerializer<?> getSerializer() {
         return MobGrindingUtils.BEHEADING_RECIPE.get();
     }
@@ -79,98 +67,35 @@ public class BeheadingRecipe implements Recipe<Container>{
         return MobGrindingUtils.BEHEADING_TYPE.get();
     }
 
-    public static class DataRecipe implements FinishedRecipe {
-        private final ResourceLocation id;
-        private final ResourceLocation entityRes;
-        private final ResourceLocation resultRes;
-
-        public DataRecipe(ResourceLocation id, EntityType<?> entityType, ItemStack result) {
-            this.id = id;
-            this.entityRes = ForgeRegistries.ENTITY_TYPES.getKey(entityType);
-            this.resultRes = ForgeRegistries.ITEMS.getKey(result.getItem());
-        }
-
-        public DataRecipe(ResourceLocation id, ResourceLocation entityRes, ItemStack result) {
-            this.id = id;
-            this.entityRes = entityRes;
-            this.resultRes = ForgeRegistries.ITEMS.getKey(result.getItem());
-        }
-
-        public DataRecipe(ResourceLocation id, ResourceLocation entityRes, ResourceLocation result) {
-            this.id = id;
-            this.entityRes = entityRes;
-            this.resultRes = result;
-        }
-
-        public DataRecipe(ResourceLocation id, EntityType<?> entityType, ResourceLocation result) {
-            this.id = id;
-            this.entityRes = ForgeRegistries.ENTITY_TYPES.getKey(entityType);
-            this.resultRes = result;
-        }
-
-        @Override
-        public void serializeRecipeData(@Nonnull JsonObject json) {
-            json.addProperty("entity", entityRes.toString());
-            JsonObject resultJson = new JsonObject();
-            resultJson.addProperty("item", this.resultRes.toString());
-            json.add("result", resultJson);
-        }
-
-        @Nonnull
-        @Override
-        public ResourceLocation getId() {
-            return id;
-        }
-
-        @Nonnull
-        @Override
-        public RecipeSerializer<?> getType() {
-            return MobGrindingUtils.BEHEADING_RECIPE.get();
-        }
-
-        @Nullable
-        @Override
-        public JsonObject serializeAdvancement() {
-            return null;
-        }
-
-        @Nullable
-        @Override
-        public ResourceLocation getAdvancementId() {
-            return null;
-        }
-    }
-
 
     public static class Serializer implements RecipeSerializer<BeheadingRecipe> {
+        public static final Codec<BeheadingRecipe> CODEC = RecordCodecBuilder.create((p_300958_) -> p_300958_
+                .group(BuiltInRegistries.ENTITY_TYPE.byNameCodec().fieldOf("entity")
+                                .forGetter((p_300960_) -> p_300960_.entityType),
+                        ItemStack.CODEC.fieldOf("result")
+                                .forGetter((p_300962_) -> p_300962_.result))
+                .apply(p_300958_, BeheadingRecipe::new));
 
         @Nonnull
         @Override
-        public BeheadingRecipe fromJson(@Nonnull ResourceLocation recipeID, JsonObject json) {
-            ResourceLocation entityRes = new ResourceLocation(json.get("entity").getAsString());
-            Optional<EntityType<?>> type = BuiltInRegistries.ENTITY_TYPE.getOptional(entityRes);
-            if (type.isEmpty())
-                throw new JsonParseException("unknown entity type");
-            ItemStack result = new ItemStack(GsonHelper.getAsItem(json.get("result").getAsJsonObject(), "item"));
-
-            return new BeheadingRecipe(recipeID, type.get(), result);
-        }
-
-        @Nullable
-        @Override
-        public BeheadingRecipe fromNetwork(ResourceLocation recipeID, FriendlyByteBuf buf) {
+        public BeheadingRecipe fromNetwork(FriendlyByteBuf buf) {
             ResourceLocation entityRes = new ResourceLocation(buf.readUtf());
             Optional<EntityType<?>> type = BuiltInRegistries.ENTITY_TYPE.getOptional(entityRes);
             if (type.isEmpty())
                 throw new JsonParseException("unknown entity type");
             ItemStack result = buf.readItem();
 
-            return new BeheadingRecipe(recipeID, type.get(), result);
+            return new BeheadingRecipe(type.get(), result);
+        }
+
+        @Override
+        public Codec<BeheadingRecipe> codec() {
+            return CODEC;
         }
 
         @Override
         public void toNetwork(FriendlyByteBuf buf, BeheadingRecipe recipe) {
-            buf.writeUtf(Objects.requireNonNull(ForgeRegistries.ENTITY_TYPES.getKey(recipe.entityType)).toString());
+            buf.writeUtf(BuiltInRegistries.ENTITY_TYPE.getKey(recipe.entityType).toString());
             buf.writeItem(recipe.result);
         }
     }

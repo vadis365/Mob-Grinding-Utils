@@ -1,5 +1,6 @@
 package mob_grinding_utils.blocks;
 
+import com.mojang.serialization.MapCodec;
 import mob_grinding_utils.MobGrindingUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -19,20 +20,26 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.common.util.FakePlayerFactory;
-import net.minecraftforge.event.entity.living.LivingDropsEvent;
+import net.neoforged.neoforge.common.util.FakePlayerFactory;
+import net.neoforged.neoforge.event.entity.living.LivingDropsEvent;
 
 import javax.annotation.Nonnull;
 import java.lang.reflect.Method;
 
 public class BlockSpikes extends DirectionalBlock {
+	public static final MapCodec<BlockSpikes> CODEC = simpleCodec(BlockSpikes::new);
 
 	public static final VoxelShape SPIKES_AABB = Block.box(1D, 1D, 1D, 15D, 15D, 15D);
 
 	public BlockSpikes(Block.Properties properties) {
 		super(properties);
 	}
-	
+
+	@Override
+	protected MapCodec<? extends DirectionalBlock> codec() {
+		return CODEC;
+	}
+
 	@Nonnull
 	@Override
 	public VoxelShape getShape(@Nonnull BlockState state, @Nonnull BlockGetter level, @Nonnull BlockPos pos, @Nonnull CollisionContext context) {

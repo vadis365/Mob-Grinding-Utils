@@ -12,6 +12,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
 import javax.annotation.Nonnull;
@@ -42,8 +43,8 @@ public class ContainerXPSolidifier extends AbstractContainerMenu {
         int originX = 7;
         int originY = 103;
         Predicate<ItemStack> mouldPredicate = stack -> {
-            for (SolidifyRecipe recipe : MobGrindingUtils.SOLIDIFIER_RECIPES) {
-                if(recipe.matches(stack))
+            for (RecipeHolder<SolidifyRecipe> recipe : MobGrindingUtils.SOLIDIFIER_RECIPES) {
+                if(recipe.value().matches(stack))
                     return true;
             }
             return false;

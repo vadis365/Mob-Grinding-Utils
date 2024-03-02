@@ -16,8 +16,9 @@ import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraft.world.phys.AABB;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import javax.annotation.Nonnull;
 
@@ -92,5 +93,10 @@ public class TileEntityAbsorptionRenderer implements BlockEntityRenderer<TileEnt
 			matrixStack.mulPose(Axis.ZP.rotationDegrees(90F));
 			break;
 		}
+	}
+
+	@Override
+	public AABB getRenderBoundingBox(TileEntityAbsorptionHopper blockEntity) {
+		return blockEntity.getAABBWithModifiers();
 	}
 }

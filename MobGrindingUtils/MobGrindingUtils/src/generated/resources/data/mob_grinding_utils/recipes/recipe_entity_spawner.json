@@ -25,6 +25,5 @@
   ],
   "result": {
     "item": "mob_grinding_utils:entity_spawner"
-  },
-  "show_notification": true
+  }
 }

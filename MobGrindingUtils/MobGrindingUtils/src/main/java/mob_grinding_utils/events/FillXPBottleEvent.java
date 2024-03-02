@@ -8,15 +8,15 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent.RightClickBlock;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 
 public class FillXPBottleEvent {
 
 	@SubscribeEvent
-	public void clickBottle(RightClickBlock event) {
+	public void clickBottle(PlayerInteractEvent.RightClickBlock event) {
 		if (!event.getLevel().isClientSide && event.getEntity() != null) {
 			Player player = event.getEntity();
 			ItemStack handItem = player.getItemInHand(event.getHand());
@@ -27,7 +27,7 @@ public class FillXPBottleEvent {
 						if (tileentity != null) {
 							if (tileentity.tank.getFluid() != null && tileentity.tank.getFluid().containsFluid(new FluidStack(ModBlocks.FLUID_XP.get(), 220))) {
 								if (tileentity.tank.getFluidAmount() >= 200) {
-									tileentity.tank.drain(new FluidStack(tileentity.tank.getFluid(), 200), FluidAction.EXECUTE);
+									tileentity.tank.drain(new FluidStack(tileentity.tank.getFluid(), 200), IFluidHandler.FluidAction.EXECUTE);
 									event.getLevel().playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.BOTTLE_FILL, SoundSource.NEUTRAL, 1.0F, 1.0F);
 									turnBottleIntoItem(handItem, player, new ItemStack(Items.EXPERIENCE_BOTTLE));
 									handItem.shrink(1);

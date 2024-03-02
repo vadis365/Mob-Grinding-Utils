@@ -22,7 +22,7 @@ public class GuiMGUButton extends Button {
     }
 
     @Override
-    public void render(@Nonnull GuiGraphics gg, int mouseX, int mouseY, float partialTicks) {
+    public void renderWidget(@Nonnull GuiGraphics gg, int mouseX, int mouseY, float partialTicks) {
         Minecraft mc = Minecraft.getInstance();
         Font fontrenderer = mc.font;
         if (visible) {

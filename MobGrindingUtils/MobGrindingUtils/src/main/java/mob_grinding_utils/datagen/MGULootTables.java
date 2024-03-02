@@ -9,7 +9,7 @@ import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
-import net.minecraftforge.registries.RegistryObject;
+import net.neoforged.neoforge.registries.DeferredHolder;
 
 import javax.annotation.Nonnull;
 import java.util.List;
@@ -56,7 +56,7 @@ public class MGULootTables extends BlockLootSubProvider {
             ModBlocks.FLUID_XP_BLOCK.get()
         );
 
-        return ModBlocks.BLOCKS.getEntries().stream().map(RegistryObject::get)
+        return ModBlocks.BLOCKS.getEntries().stream().map(DeferredHolder::get)
             .filter(e -> !ignoreList.contains(e)).collect(Collectors.toList());
     }
 }
