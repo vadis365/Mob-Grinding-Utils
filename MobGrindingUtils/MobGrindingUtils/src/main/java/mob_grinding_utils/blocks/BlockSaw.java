@@ -92,6 +92,9 @@ public class BlockSaw extends DirectionalBlock implements EntityBlock {
 		BlockEntity be = world.getBlockEntity(pos);
 		if (state.getValue(POWERED) && be instanceof TileEntitySaw tile) {
 			tile.setActive(true);
+			if (placer instanceof Player player) {
+				tile.setPlacer(player);
+			}
 		}
 	}
 

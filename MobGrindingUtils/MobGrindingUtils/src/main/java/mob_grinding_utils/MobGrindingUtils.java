@@ -5,7 +5,6 @@ import mob_grinding_utils.client.ModelLayers;
 import mob_grinding_utils.config.ServerConfig;
 import mob_grinding_utils.datagen.Generator;
 import mob_grinding_utils.events.*;
-import mob_grinding_utils.fakeplayer.MGUFakePlayer;
 import mob_grinding_utils.inventory.client.*;
 import mob_grinding_utils.network.FlagSyncPacket;
 import mob_grinding_utils.network.MGUNetwork;
@@ -17,6 +16,7 @@ import mob_grinding_utils.tile.TileEntityAbsorptionHopper;
 import mob_grinding_utils.tile.TileEntityMGUSpawner;
 import mob_grinding_utils.tile.TileEntityTank;
 import mob_grinding_utils.tile.TileEntityXPSolidifier;
+import mob_grinding_utils.util.FakePlayerHandler;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.particles.ParticleType;
@@ -37,6 +37,7 @@ import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
+import net.neoforged.bus.api.Event;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModLoadingContext;
 import net.neoforged.fml.common.Mod;
@@ -50,7 +51,9 @@ import net.neoforged.neoforge.client.event.RecipesUpdatedEvent;
 import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.common.crafting.IngredientType;
+import net.neoforged.neoforge.common.util.FakePlayer;
 import net.neoforged.neoforge.event.AddReloadListenerEvent;
+import net.neoforged.neoforge.event.entity.living.MobEffectEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.level.LevelEvent;
 import net.neoforged.neoforge.network.PacketDistributor;
@@ -137,6 +140,7 @@ public class MobGrindingUtils {
 		neoBus.addListener(this::cloneEvent);
 		neoBus.addListener(this::serverReloadListener);
 		neoBus.addListener(this::clientRecipeReload);
+		neoBus.addListener(this::effectApplicable);
 		modBus.addListener(this::registerCaps);
 
 		modBus.addListener(MGUNetwork::register);
@@ -216,7 +220,6 @@ public class MobGrindingUtils {
 
 	private void worldUnload(final LevelEvent.Unload event) {
 		if (event.getLevel() instanceof ServerLevel) {
-			MGUFakePlayer.unload(event.getLevel());
 			SPIKE_DAMAGE = null;
 		}
 	}
@@ -237,5 +240,12 @@ public class MobGrindingUtils {
 		evt.registerBlockEntity(Capabilities.ItemHandler.BLOCK, ModBlocks.ENTITY_SPAWNER.getTileEntityType(), TileEntityMGUSpawner::getFuelSlot);
 		evt.registerBlockEntity(Capabilities.ItemHandler.BLOCK, ModBlocks.ABSORPTION_HOPPER.getTileEntityType(), TileEntityAbsorptionHopper::getItemHandler);
 		evt.registerBlockEntity(Capabilities.FluidHandler.BLOCK, ModBlocks.ABSORPTION_HOPPER.getTileEntityType(), TileEntityAbsorptionHopper::getTank);
+	}
+
+	public void effectApplicable(MobEffectEvent.Applicable event) {
+		//Makes it so that the mob masher cant have effects applied to it
+		if (event.getEntity() instanceof FakePlayer fakePlayer && FakePlayerHandler.isMGUFakePlayer(fakePlayer)) {
+			event.setResult(Event.Result.DENY);
+		}
 	}
 }
