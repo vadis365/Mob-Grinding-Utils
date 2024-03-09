@@ -3,6 +3,7 @@
 	<name>MGU</name>
 	<comment></comment>
 	<projects>
+		<project>MDK-main</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>
