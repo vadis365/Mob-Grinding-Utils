@@ -5,9 +5,8 @@ import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.blaze3d.vertex.VertexFormat;
-import mob_grinding_utils.MobGrindingUtils;
 import mob_grinding_utils.inventory.server.ContainerXPSolidifier;
-import mob_grinding_utils.network.BELinkClick;
+import mob_grinding_utils.network.BEGuiClick;
 import mob_grinding_utils.tile.TileEntityXPSolidifier;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -42,10 +41,10 @@ public class GuiXPSolidifier extends MGUScreen<ContainerXPSolidifier> {
         super.init();
 
         addRenderableWidget(new GuiMGUButton(leftPos + 62, topPos + 72, GuiMGUButton.Size.SOLIDIFIER, 0, Component.literal("Push") ,
-            (button) -> PacketDistributor.SERVER.noArg().send(new BELinkClick(tile.getBlockPos(), 0))));
+            (button) -> PacketDistributor.SERVER.noArg().send(new BEGuiClick(tile.getBlockPos(), 0))));
 
         addRenderableWidget(new GuiMGUButton(leftPos + 148, topPos + 8, GuiMGUButton.Size.SOLIDIFIER_ON, 0, Component.literal("") ,
-            (button) -> PacketDistributor.SERVER.noArg().send(new BELinkClick(tile.getBlockPos(), 1))));
+            (button) -> PacketDistributor.SERVER.noArg().send(new BEGuiClick(tile.getBlockPos(), 1))));
     }
 
     @Override

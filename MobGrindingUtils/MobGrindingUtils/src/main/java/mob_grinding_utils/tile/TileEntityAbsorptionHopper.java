@@ -44,7 +44,7 @@ import java.util.List;
 import java.util.Optional;
 
 
-public class TileEntityAbsorptionHopper extends TileEntityInventoryHelper implements MenuProvider, BEGuiLink {
+public class TileEntityAbsorptionHopper extends TileEntityInventoryHelper implements MenuProvider, BEGuiClickable {
 	public FluidTank tank = new FluidTank(1000 *  16);
 	private final IItemHandler itemHandler;
 	private static final int[] SLOTS = new int[] {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16};

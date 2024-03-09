@@ -37,7 +37,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class TileEntityMGUSpawner extends BlockEntity implements MenuProvider, BEGuiLink {
+public class TileEntityMGUSpawner extends BlockEntity implements MenuProvider, BEGuiClickable {
 
 	public int spawning_progress = 0;
 	public int MAX_SPAWNING_TIME = 100;

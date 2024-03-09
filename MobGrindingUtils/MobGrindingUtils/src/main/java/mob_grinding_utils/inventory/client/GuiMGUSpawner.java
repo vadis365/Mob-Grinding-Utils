@@ -1,14 +1,13 @@
 package mob_grinding_utils.inventory.client;
 
 import mob_grinding_utils.inventory.server.ContainerMGUSpawner;
-import mob_grinding_utils.network.BELinkClick;
+import mob_grinding_utils.network.BEGuiClick;
 import mob_grinding_utils.tile.TileEntityMGUSpawner;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.entity.player.Player;
 import net.neoforged.neoforge.network.PacketDistributor;
 
 import javax.annotation.Nonnull;
@@ -32,11 +31,11 @@ public class GuiMGUSpawner extends MGUScreen<ContainerMGUSpawner> {
 
 		Button.OnPress message = button -> {
 			if (button instanceof GuiMGUButton)
-				PacketDistributor.SERVER.noArg().send(new BELinkClick(tile.getBlockPos(), ((GuiMGUButton)button).id));
+				PacketDistributor.SERVER.noArg().send(new BEGuiClick(tile.getBlockPos(), ((GuiMGUButton)button).id));
 		};
 
 		addRenderableWidget(new GuiMGUButton(leftPos + 101, topPos + 113, GuiMGUButton.Size.LARGE, 0, Component.empty(), (button) -> {
-			PacketDistributor.SERVER.noArg().send(new BELinkClick(tile.getBlockPos(), 0));
+			PacketDistributor.SERVER.noArg().send(new BEGuiClick(tile.getBlockPos(), 0));
 			tile.showRenderBox = !tile.showRenderBox;
 		}));
 

@@ -8,6 +8,7 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.monster.Enemy;
@@ -25,7 +26,7 @@ import net.neoforged.bus.api.Event;
 
 import java.util.List;
 
-public class BlockDreadfulDirt extends Block {
+public class BlockDreadfulDirt extends BlockDirtSpawner {
 
 	public BlockDreadfulDirt(Block.Properties properties) {
 		super(properties);
@@ -42,8 +43,8 @@ public class BlockDreadfulDirt extends Block {
 
 	@Override
 	public void onPlace(BlockState state, Level level, BlockPos pos, BlockState oldState, boolean isMoving) {
-/*		if (shouldCatchFire(level, pos) || shouldSpawnMob(level, pos))
-			level.scheduleTick(pos, this, Mth.nextInt(level.getRandom(), 20,60));*/
+		if (shouldCatchFire(level, pos) || shouldSpawnMob(level, pos))
+			level.scheduleTick(pos, this, Mth.nextInt(level.getRandom(), 20,60));
 		//List<SpawnerData> spawns = level.getBiome(pos).value().getMobSettings().getMobs(MobCategory.MONSTER).unwrap();
 		//spawns.forEach(spawn -> MobGrindingUtils.LOGGER.info(spawn.type.getRegistryName().toString()));
 	}
@@ -51,15 +52,15 @@ public class BlockDreadfulDirt extends Block {
 	@SuppressWarnings("deprecation")
 	@Override
 	public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, LevelAccessor level, BlockPos pos, BlockPos facingPos) {
-/*		if (shouldCatchFire((Level) level, pos) || shouldSpawnMob((Level) level, pos))
-			level.scheduleTick(pos, this, Mth.nextInt(level.getRandom(), 20, 60));*/
+		if (shouldCatchFire((Level) level, pos) || shouldSpawnMob((Level) level, pos))
+			level.scheduleTick(pos, this, Mth.nextInt(level.getRandom(), 20, 60));
 		return super.updateShape(stateIn, facing, facingState, level, pos, facingPos);
 	}
 
 	@Override
 	public void neighborChanged(BlockState state, Level level, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving) {
-/*		if (shouldCatchFire((Level) level, pos) || shouldSpawnMob((Level) level, pos))
-			level.scheduleTick(pos, this, Mth.nextInt(level.getRandom(), 20, 60));*/
+		if (shouldCatchFire((Level) level, pos) || shouldSpawnMob((Level) level, pos))
+			level.scheduleTick(pos, this, Mth.nextInt(level.getRandom(), 20, 60));
 	}
 
 	@Override

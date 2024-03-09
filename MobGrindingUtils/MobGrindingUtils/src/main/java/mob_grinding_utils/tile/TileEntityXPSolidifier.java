@@ -40,7 +40,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Optional;
 
-public class TileEntityXPSolidifier extends BlockEntity implements MenuProvider, BEGuiLink {
+public class TileEntityXPSolidifier extends BlockEntity implements MenuProvider, BEGuiClickable {
 	public FluidTank tank = new FluidTank(1000 *  16);
 	private int prevFluidLevel = 0;
 	public int moulding_progress = 0;

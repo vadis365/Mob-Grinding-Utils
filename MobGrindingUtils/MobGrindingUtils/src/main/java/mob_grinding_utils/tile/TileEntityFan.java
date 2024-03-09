@@ -36,7 +36,7 @@ import net.neoforged.api.distmarker.OnlyIn;
 import javax.annotation.Nonnull;
 import java.util.List;
 
-public class TileEntityFan extends TileEntityInventoryHelper implements MenuProvider, BEGuiLink {
+public class TileEntityFan extends TileEntityInventoryHelper implements MenuProvider, BEGuiClickable {
 
 	private static final int[] SLOTS = new int[] {0, 1, 2};
 	public boolean showRenderBox;

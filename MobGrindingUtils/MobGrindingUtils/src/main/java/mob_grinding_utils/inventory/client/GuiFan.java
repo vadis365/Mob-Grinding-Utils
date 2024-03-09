@@ -1,7 +1,7 @@
 package mob_grinding_utils.inventory.client;
 
 import mob_grinding_utils.inventory.server.ContainerFan;
-import mob_grinding_utils.network.BELinkClick;
+import mob_grinding_utils.network.BEGuiClick;
 import mob_grinding_utils.tile.TileEntityFan;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
@@ -30,7 +30,7 @@ public class GuiFan extends MGUScreen<ContainerFan> {
 		super.init();
 
 		addRenderableWidget(new GuiMGUButton(leftPos + 54, topPos + 42, GuiMGUButton.Size.LARGE, 0, Component.empty(), (button) -> {
-			PacketDistributor.SERVER.noArg().send(new BELinkClick(tile.getBlockPos(), 0));
+			PacketDistributor.SERVER.noArg().send(new BEGuiClick(tile.getBlockPos(), 0));
 			tile.showRenderBox = !tile.showRenderBox;
 		}));
 	}
