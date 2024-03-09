@@ -96,8 +96,8 @@ public class MobGrindingUtils {
 	public static final List<RecipeHolder<BeheadingRecipe>> BEHEADING_RECIPES = new ArrayList<>();
 	public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<?>> SOLIDIFIER_RECIPE = RECIPES.register(SolidifyRecipe.NAME, SolidifyRecipe.Serializer::new);
 	public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<?>> BEHEADING_RECIPE = RECIPES.register(BeheadingRecipe.NAME, BeheadingRecipe.Serializer::new);
-	public static final DeferredHolder<RecipeType<?>, RecipeType<SolidifyRecipe>> SOLIDIFIER_TYPE = RECIPE_TYPES.register("solidify", () -> new RecipeType<>() {});
-	public static final DeferredHolder<RecipeType<?>, RecipeType<BeheadingRecipe>> BEHEADING_TYPE = RECIPE_TYPES.register("beheading", () -> new RecipeType<>() {});
+	public static final DeferredHolder<RecipeType<?>, RecipeType<SolidifyRecipe>> SOLIDIFIER_TYPE = RECIPE_TYPES.register("solidify", RecipeType::simple);
+	public static final DeferredHolder<RecipeType<?>, RecipeType<BeheadingRecipe>> BEHEADING_TYPE = RECIPE_TYPES.register("beheading", RecipeType::simple);
 
 	public MobGrindingUtils(IEventBus modBus) {
 		IEventBus neoBus = NeoForge.EVENT_BUS;
