@@ -1,7 +1,5 @@
 package mob_grinding_utils.client.render;
 
-import com.mojang.blaze3d.platform.GlStateManager;
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import mob_grinding_utils.client.ModelLayers;
@@ -12,6 +10,7 @@ import mob_grinding_utils.tile.TileEntityTank;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider.Context;
 import net.minecraft.client.renderer.texture.OverlayTexture;
@@ -41,11 +40,7 @@ public class TileEntityTankRenderer implements BlockEntityRenderer<TileEntityTan
 		matrixStack.pushPose();
 		matrixStack.translate(0.5D, 1.5D, 0.5D);
 		matrixStack.scale(-0.9999F, -0.9999F, 0.9999F); //don't want to cull, but also don't want z-fighty nonsense
-		RenderSystem.enableBlend();
-		RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
 		tank_model.renderToBuffer(matrixStack, bufferIn.getBuffer(RenderType.entitySmoothCutout(getTexture(tile))), combinedLight, OverlayTexture.NO_OVERLAY, 1F, 1F, 1F, 1.0F);
-		RenderSystem.disableBlend();
-	    RenderSystem.defaultBlendFunc();
 		matrixStack.popPose();
 
 		if (tile.tank.getFluid().isEmpty())
@@ -59,7 +54,7 @@ public class TileEntityTankRenderer implements BlockEntityRenderer<TileEntityTan
 		var fluidExtensions = IClientFluidTypeExtensions.of(fluidStack.getFluid());
 		
 		TextureAtlasSprite fluidStillSprite = Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(fluidExtensions.getStillTexture());
-		VertexConsumer buffer = bufferIn.getBuffer(RenderType.translucent());
+		VertexConsumer buffer = bufferIn.getBuffer(Sheets.translucentCullBlockSheet());
 		int fluidColor = fluidExtensions.getTintColor();
 		matrixStack.pushPose();
 		matrixStack.translate(0D, 0D, 0D);
@@ -129,7 +124,7 @@ public class TileEntityTankRenderer implements BlockEntityRenderer<TileEntityTan
 	}
 
 	private void addVertexWithUV(VertexConsumer buffer, PoseStack matrixStack, float x, float y, float z, float u, float v, float red, float green, float blue, float alpha, int combinedLight) {
-		buffer.vertex(matrixStack.last().pose(), x / 2f, y, z / 2f).color(red, green, blue, alpha).uv(u, v).uv2(combinedLight, 240).normal(1, 0, 0).endVertex();
+		buffer.vertex(matrixStack.last().pose(), x / 2f, y, z / 2f).color(red, green, blue, alpha).uv(u, v).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(combinedLight, 240).normal(1, 0, 0).endVertex();
 	}
 
 }
