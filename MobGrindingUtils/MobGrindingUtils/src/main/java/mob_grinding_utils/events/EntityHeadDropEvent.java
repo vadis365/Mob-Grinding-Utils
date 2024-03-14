@@ -2,8 +2,8 @@ package mob_grinding_utils.events;
 
 import com.mojang.authlib.GameProfile;
 import mob_grinding_utils.MobGrindingUtils;
-import mob_grinding_utils.fakeplayer.MGUFakePlayer;
 import mob_grinding_utils.items.ItemImaginaryInvisibleNotReallyThereSword;
+import mob_grinding_utils.util.FakePlayerHandler;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
@@ -18,6 +18,7 @@ import net.minecraft.world.item.Items;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModList;
+import net.neoforged.neoforge.common.util.FakePlayer;
 import net.neoforged.neoforge.event.entity.living.LivingDropsEvent;
 
 import java.util.Collection;
@@ -32,7 +33,7 @@ public class EntityHeadDropEvent {
 		if (event.getEntity().getHealth() > 0.0F)
 			return;
 		int beheadingLevel = 0;
-		if (event.getSource().getEntity() instanceof MGUFakePlayer fakePlayer) {
+		if (event.getSource().getEntity() instanceof FakePlayer fakePlayer && FakePlayerHandler.isMGUFakePlayer(fakePlayer)) {
 			if (fakePlayer.getMainHandItem().getItem() instanceof ItemImaginaryInvisibleNotReallyThereSword) {
 				ItemStack tempSword = fakePlayer.getMainHandItem();
 				if (tempSword.hasTag() && tempSword.getTag().contains("beheadingValue"))

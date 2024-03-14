@@ -4,9 +4,9 @@ import io.netty.buffer.Unpooled;
 import mob_grinding_utils.ModBlocks;
 import mob_grinding_utils.ModItems;
 import mob_grinding_utils.blocks.BlockSaw;
-import mob_grinding_utils.fakeplayer.MGUFakePlayer;
 import mob_grinding_utils.inventory.server.ContainerSaw;
 import mob_grinding_utils.items.ItemSawUpgrade;
+import mob_grinding_utils.util.FakePlayerHandler;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -29,15 +29,21 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
+import net.neoforged.neoforge.common.util.FakePlayer;
 
 import javax.annotation.Nonnull;
+import java.lang.ref.WeakReference;
 import java.util.List;
+import java.util.UUID;
 
 public class TileEntitySaw extends TileEntityInventoryHelper implements MenuProvider {
 
 	public boolean active;
 	public int animationTicks, prevAnimationTicks;
 	private static final int[] SLOTS = new int[] {0, 1, 2, 3, 4, 5};
+
+	private UUID placer = null;
+	private WeakReference<FakePlayer> fakePlayer = new WeakReference<>(null);
 
 	public TileEntitySaw(BlockPos pos, BlockState state) {
 		super(ModBlocks.SAW.getTileEntityType(), 6, pos, state);
@@ -76,7 +82,9 @@ public class TileEntitySaw extends TileEntityInventoryHelper implements MenuProv
 			Entity entity = list.get(i);
 			if (entity != null) {
 				if (entity instanceof LivingEntity) {
-					MGUFakePlayer fakePlayer = MGUFakePlayer.get((ServerLevel)getLevel(), this.worldPosition.getX(), -100D, this.worldPosition.getZ()).get();
+					fakePlayer = FakePlayerHandler.get(fakePlayer, (ServerLevel) getLevel(), placer, this.worldPosition.atY(-100));
+					FakePlayer fakePlayer = this.fakePlayer.get();
+					if (fakePlayer == null) return null;
 					ItemStack tempSword = new ItemStack(ModItems.NULL_SWORD.get(), 1);
 
 					if(!tempSword.hasTag())
@@ -133,12 +141,14 @@ public class TileEntitySaw extends TileEntityInventoryHelper implements MenuProv
 	public void load(CompoundTag nbt) {
 		super.load(nbt);
 		active = nbt.getBoolean("active");
+		placer = nbt.hasUUID("placer") ? nbt.getUUID("placer") : null;
 	}
 
 	@Override
 	public void saveAdditional(CompoundTag nbt) {
 		super.saveAdditional(nbt);
 		nbt.putBoolean("active", active);
+		if (placer != null) nbt.putUUID("placer", placer);
 	}
 
 	@Override
@@ -224,5 +234,9 @@ public class TileEntitySaw extends TileEntityInventoryHelper implements MenuProv
 	@Override
 	public Component getDisplayName() {
 		return Component.translatable("block.mob_grinding_utils.saw");
+	}
+
+	public void setPlacer(Player player) {
+		placer = player.getUUID();
 	}
 }
