@@ -41,4 +41,10 @@ public class MGUClientPackets {
         Level world = Minecraft.getInstance().level;
         world.addParticle(MobGrindingUtils.PARTICLE_FLUID_XP.get(), false, x, y, z, vecX, vecY, vecZ);
     }
+
+    public static void handleFlagSyncPacket(FlagSyncPacket packet) {
+        CompoundTag nbt = Minecraft.getInstance().player.getPersistentData();
+        nbt.putBoolean("MGU_WitherMuffle", packet.wither());
+        nbt.putBoolean("MGU_DragonMuffle", packet.dragon());
+    }
 }

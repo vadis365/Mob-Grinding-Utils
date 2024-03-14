@@ -1,7 +1,6 @@
 package mob_grinding_utils.network;
 
 import mob_grinding_utils.Reference;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
@@ -16,13 +15,7 @@ public record FlagSyncPacket(boolean wither, boolean dragon) implements CustomPa
     }
 
     public static void handle(FlagSyncPacket message, final PlayPayloadContext ctx) {
-            ctx.workHandler().submitAsync(() -> {
-                ctx.player().ifPresent(player -> {
-                    CompoundTag nbt = player.getPersistentData();
-                    nbt.putBoolean("MGU_WitherMuffle", message.wither);
-                    nbt.putBoolean("MGU_DragonMuffle", message.dragon);
-                });
-            });
+        ctx.workHandler().submitAsync(() -> MGUClientPackets.handleFlagSyncPacket(message));
     }
 
     @Override

@@ -12,7 +12,7 @@ repositories {
     maven { url "https://www.cursemaven.com" }
 }
 
-version = "${minecraft_version}-${mod_version}"
+version = "${mod_version}+mc${minecraft_version}"
 group = 'com.vadis365.mob_grinding_utils'
 base {
     archivesName = "mob_grinding_utils"
