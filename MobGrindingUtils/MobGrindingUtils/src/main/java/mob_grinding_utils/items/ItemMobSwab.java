@@ -3,17 +3,22 @@ package mob_grinding_utils.items;
 import mob_grinding_utils.ModItems;
 import mob_grinding_utils.ModTags;
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.SpawnerBlock;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.SpawnerBlockEntity;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 
@@ -48,8 +53,6 @@ public class ItemMobSwab extends Item {
 			ItemStack stack2 = new ItemStack(ModItems.MOB_SWAB_USED.get(), 1);
 			if (!stack2.getOrCreateTag().contains("mguMobName")) {
 				stack2.getTag().putString("mguMobName", mobName);
-				CompoundTag nbt = new CompoundTag();
-				target.addAdditionalSaveData(nbt);
 			}
 			player.setItemInHand(hand, stack2);
 			return InteractionResult.SUCCESS;
@@ -58,4 +61,31 @@ public class ItemMobSwab extends Item {
 		}
 	}
 
+	@Override
+	public InteractionResult useOn(UseOnContext pContext) {
+		if (used || pContext.getPlayer() == null)
+			return InteractionResult.PASS;
+		Level level = pContext.getLevel();
+		BlockPos blockPos = pContext.getClickedPos();
+		var block = level.getBlockState(blockPos);
+
+		if(block.getBlock() instanceof SpawnerBlock) {
+			BlockEntity blockEntity = level.getBlockEntity(blockPos);
+			if(blockEntity instanceof SpawnerBlockEntity spawnerBlockEntity) {
+				Entity entity = spawnerBlockEntity.getSpawner().getOrCreateDisplayEntity(level, blockPos);
+				if (entity != null && !entity.getType().is(ModTags.Entities.NO_SWAB)) {
+					String mobName = Objects.requireNonNull(BuiltInRegistries.ENTITY_TYPE.getKey(entity.getType())).toString();
+					ItemStack stack2 = new ItemStack(ModItems.MOB_SWAB_USED.get(), 1);
+					if (!stack2.getOrCreateTag().contains("mguMobName")) {
+						stack2.getTag().putString("mguMobName", mobName);
+					}
+					pContext.getPlayer().setItemInHand(pContext.getHand(), stack2);
+					return InteractionResult.SUCCESS;
+				}
+			}
+		}
+
+
+		return super.useOn(pContext);
+	}
 }
