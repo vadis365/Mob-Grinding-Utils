@@ -18,7 +18,7 @@ public class MGUEndermanInhibitEvent {
 	public void teleportEvent(EntityTeleportEvent event) {
 		if (event.getEntity().getCommandSenderWorld().isClientSide || event instanceof EntityTeleportEvent.TeleportCommand || event instanceof EntityTeleportEvent.SpreadPlayersCommand)
 			return;
-		if (event.getEntity() instanceof LivingEntity) {
+		if (event.getEntity() instanceof LivingEntity && !event.getEntity() instanceof PlayerEntity) {
 			LivingEntity entity = (LivingEntity) event.getEntity();
 			if (getIsInhibited(entity))
 				event.setCanceled(true);
