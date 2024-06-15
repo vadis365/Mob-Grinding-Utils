@@ -5,6 +5,7 @@ import mob_grinding_utils.blocks.BlockEnderInhibitorOn;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraftforge.event.entity.EntityTeleportEvent;
@@ -18,7 +19,7 @@ public class MGUEndermanInhibitEvent {
 	public void teleportEvent(EntityTeleportEvent event) {
 		if (event.getEntity().getCommandSenderWorld().isClientSide || event instanceof EntityTeleportEvent.TeleportCommand || event instanceof EntityTeleportEvent.SpreadPlayersCommand)
 			return;
-		if (event.getEntity() instanceof LivingEntity && !(event.getEntity() instanceof PlayerEntity)) {
+		if (event.getEntity() instanceof LivingEntity && !(event.getEntity() instanceof Player)) {
 			LivingEntity entity = (LivingEntity) event.getEntity();
 			if (getIsInhibited(entity))
 				event.setCanceled(true);
