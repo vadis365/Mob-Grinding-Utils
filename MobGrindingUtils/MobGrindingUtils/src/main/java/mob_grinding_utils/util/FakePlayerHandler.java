@@ -20,8 +20,11 @@ public class FakePlayerHandler {
 
     private static FakePlayer get(ServerLevel level, @Nullable UUID placer) {
         FakePlayer fakePlayer;
-        if (placer == null) fakePlayer = getDefault(level);
-        else fakePlayer = FakePlayerFactory.get(level, new GameProfile(placer, Component.translatable("fakeplayer.mob_masher").getString()));
+        if (placer == null)
+            fakePlayer = getDefault(level);
+        else
+            fakePlayer = FakePlayerFactory.get(level, new GameProfile(placer, Component.translatable("fakeplayer.mob_masher").getString()));
+
         fakePlayer.getPersistentData().putBoolean(Reference.MOD_ID, true);
         return fakePlayer;
     }

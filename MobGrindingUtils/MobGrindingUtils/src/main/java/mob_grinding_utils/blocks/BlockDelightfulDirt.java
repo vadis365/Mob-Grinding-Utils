@@ -25,8 +25,8 @@ import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 import net.minecraft.world.phys.AABB;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
-import net.neoforged.bus.api.Event;
-import net.neoforged.neoforge.common.IPlantable;
+import net.neoforged.neoforge.common.util.TriState;
+import net.neoforged.neoforge.event.EventHooks;
 
 import javax.annotation.Nonnull;
 import java.util.List;
@@ -119,12 +119,11 @@ public class BlockDelightfulDirt extends BlockDirtSpawner {
 			if (entity != null) {
 				entity.setPos(pos.getX() + 0.5D, pos.getY() + 1D, pos.getZ() + 0.5D);
 				if (level.getEntities(entity.getType(), entity.getBoundingBox(), EntitySelector.ENTITY_STILL_ALIVE).isEmpty() && level.noCollision(entity)) {
-					Event.Result result = DirtSpawnEvent.checkEvent(entity, level, pos.getX() + 0.5D, pos.getY() + 1D, pos.getZ() + 0.5D, DirtSpawnEvent.DirtType.DELIGHTFUL);
-					if (result == Event.Result.DENY) {
+					TriState result = DirtSpawnEvent.checkEvent(entity, level, pos.getX() + 0.5D, pos.getY() + 1D, pos.getZ() + 0.5D, DirtSpawnEvent.DirtType.DELIGHTFUL);
+					if (result == TriState.FALSE) {
 						return;
 					}
-
-					entity.finalizeSpawn(level, level.getCurrentDifficultyAt(pos), MobSpawnType.NATURAL, null, null);
+					EventHooks.finalizeMobSpawn(entity, level, level.getCurrentDifficultyAt(pos), MobSpawnType.NATURAL, null);
 					level.addFreshEntity(entity);
 				 }
 			}

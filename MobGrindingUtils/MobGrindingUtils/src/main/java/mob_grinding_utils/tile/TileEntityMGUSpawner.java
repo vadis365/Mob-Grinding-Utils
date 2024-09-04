@@ -7,6 +7,7 @@ import mob_grinding_utils.ModTags;
 import mob_grinding_utils.inventory.server.ContainerMGUSpawner;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
 import net.minecraft.network.FriendlyByteBuf;
@@ -28,6 +29,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.event.EventHooks;
 import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.ItemStackHandler;
 
@@ -137,7 +139,7 @@ public class TileEntityMGUSpawner extends BlockEntity implements MenuProvider, B
 				if (!posArrayList.isEmpty()) {
 					Collections.shuffle(posArrayList);
 					entity.setPos(posArrayList.get(0).getX() + 0.5D, posArrayList.get(0).getY(), posArrayList.get(0).getZ() + 0.5D);
-					entity.finalizeSpawn((ServerLevelAccessor) getLevel(), getLevel().getCurrentDifficultyAt(posArrayList.get(0)), MobSpawnType.SPAWNER, null, null);
+					EventHooks.finalizeMobSpawn(entity, (ServerLevelAccessor) getLevel(), getLevel().getCurrentDifficultyAt(posArrayList.getFirst()), MobSpawnType.SPAWNER, null);
 					getLevel().addFreshEntity(entity);
 					return true;
 				}
@@ -260,10 +262,10 @@ public class TileEntityMGUSpawner extends BlockEntity implements MenuProvider, B
 	}
 
 	@Override
-	public void load(CompoundTag nbt) {
-		super.load(nbt);
-		inputSlots.deserializeNBT(nbt.getCompound("inputSlots"));
-		fuelSlot.deserializeNBT(nbt.getCompound("fuelSlot"));
+	public void loadAdditional(@Nonnull CompoundTag nbt, @Nonnull HolderLookup.Provider registries) {
+		super.loadAdditional(nbt, registries);
+		inputSlots.deserializeNBT(registries, nbt.getCompound("inputSlots"));
+		fuelSlot.deserializeNBT(registries, nbt.getCompound("fuelSlot"));
 		isOn = nbt.getBoolean("isOn");
 		showRenderBox = nbt.getBoolean("showRenderBox");
 		offsetX = nbt.getInt("offsetX");
@@ -273,10 +275,10 @@ public class TileEntityMGUSpawner extends BlockEntity implements MenuProvider, B
 	}
 
 	@Override
-	public void saveAdditional(CompoundTag nbt) {
-		super.saveAdditional(nbt);
-		nbt.put("inputSlots", inputSlots.serializeNBT());
-		nbt.put("fuelSlot", fuelSlot.serializeNBT());
+	public void saveAdditional(@Nonnull CompoundTag nbt, @Nonnull HolderLookup.Provider registries) {
+		super.saveAdditional(nbt, registries);
+		nbt.put("inputSlots", inputSlots.serializeNBT(registries));
+		nbt.put("fuelSlot", fuelSlot.serializeNBT(registries));
 		nbt.putBoolean("isOn", isOn);
 		nbt.putBoolean("showRenderBox", showRenderBox);
 		nbt.putInt("offsetX", offsetX);

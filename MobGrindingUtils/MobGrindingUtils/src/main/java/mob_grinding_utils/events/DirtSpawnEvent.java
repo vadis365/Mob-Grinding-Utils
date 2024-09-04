@@ -4,9 +4,11 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.level.LevelAccessor;
 import net.neoforged.bus.api.Event;
+import net.neoforged.bus.api.ICancellableEvent;
 import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.common.util.TriState;
 
-public class DirtSpawnEvent extends Event {
+public class DirtSpawnEvent extends Event implements ICancellableEvent {
     private final LevelAccessor world;
     private final double x;
     private final double y;
@@ -53,12 +55,12 @@ public class DirtSpawnEvent extends Event {
         return entityLiving;
     }
 
-    public static Result checkEvent(Mob entity, LevelAccessor level, double x, double y, double z, DirtType type) {
+    public static TriState checkEvent(Mob entity, LevelAccessor level, double x, double y, double z, DirtType type) {
         if (entity == null)
-            return Result.DEFAULT;
+            return TriState.DEFAULT;
         DirtSpawnEvent event = new DirtSpawnEvent(level, x, y, z, entity, type);
         NeoForge.EVENT_BUS.post(event);
 
-        return event.getResult();
+        return event.isCanceled()? TriState.FALSE : TriState.DEFAULT;
     }
 }

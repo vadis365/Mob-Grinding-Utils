@@ -24,7 +24,7 @@ import javax.annotation.Nonnull;
 
 @JeiPlugin
 public class JEIPlugin implements IModPlugin {
-    public static final ResourceLocation ID = new ResourceLocation(Reference.MOD_ID, "jei_plugin");
+    public static final ResourceLocation ID = ResourceLocation.fromNamespaceAndPath(Reference.MOD_ID, "jei_plugin");
     public static final RecipeType<SolidifyRecipe> SOLIDIFY_TYPE = RecipeType.create(Reference.MOD_ID, "solidify", SolidifyRecipe.class);
 
     @Nonnull

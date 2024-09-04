@@ -8,6 +8,8 @@ import mob_grinding_utils.inventory.server.InventoryWrapperAH;
 import mob_grinding_utils.util.CapHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
 import net.minecraft.network.FriendlyByteBuf;
@@ -94,10 +96,10 @@ public class TileEntityAbsorptionHopper extends TileEntityInventoryHelper implem
 	public int offsetX, offsetY, offsetZ;
 
 	@Override
-	public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket packet) {
+	public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket packet, HolderLookup.Provider lookupProvider) {
 		EnumStatus[] old = new EnumStatus[] { status[0], status[1], status[2], status[3], status[4], status[5] };
-		super.onDataPacket(net, packet);
-		load(packet.getTag());
+		super.onDataPacket(net, packet, lookupProvider);
+		loadAdditional(packet.getTag(), lookupProvider);
 		for (Direction facing : Direction.values()) {
 			if (old[facing.ordinal()] != status[facing.ordinal()]) {
 				getLevel().setBlocksDirty(getBlockPos(), getLevel().getBlockState(getBlockPos()), getLevel().getBlockState(getBlockPos()));
@@ -109,20 +111,21 @@ public class TileEntityAbsorptionHopper extends TileEntityInventoryHelper implem
 	@Override
 	public ClientboundBlockEntityDataPacket getUpdatePacket() {
 		CompoundTag nbt = new CompoundTag();
-		saveAdditional(nbt);
+		saveAdditional(nbt, RegistryAccess.EMPTY); // TODO uhhhh
 		return ClientboundBlockEntityDataPacket.create(this);
 	}
 
+	@Nonnull
 	@Override
-	public CompoundTag getUpdateTag() {
+	public CompoundTag getUpdateTag(@Nonnull HolderLookup.Provider registries) {
 		CompoundTag nbt = new CompoundTag();
-		saveAdditional(nbt);
+		saveAdditional(nbt, registries);
 		return nbt;
 	}
 
 	@Override
-	public void load(CompoundTag tagCompound) {
-		super.load(tagCompound);
+	public void loadAdditional(CompoundTag tagCompound, HolderLookup.Provider registries) {
+		super.loadAdditional(tagCompound, registries);
 		status[0] = EnumStatus.values()[tagCompound.getByte("down")];
 		status[1] = EnumStatus.values()[tagCompound.getByte("up")];
 		status[2] = EnumStatus.values()[tagCompound.getByte("north")];
@@ -133,12 +136,12 @@ public class TileEntityAbsorptionHopper extends TileEntityInventoryHelper implem
 		offsetX = tagCompound.getInt("offsetX");
 		offsetY = tagCompound.getInt("offsetY");
 		offsetZ = tagCompound.getInt("offsetZ");
-		tank.readFromNBT(tagCompound);
+		tank.readFromNBT(registries, tagCompound);
 	}
 
 	@Override
-	public void saveAdditional (CompoundTag tagCompound) {
-		super.saveAdditional(tagCompound);
+	public void saveAdditional (CompoundTag tagCompound, HolderLookup.Provider registries) {
+		super.saveAdditional(tagCompound, registries);
 		tagCompound.putByte("down", (byte) status[0].ordinal());
 		tagCompound.putByte("up", (byte) status[1].ordinal());
 		tagCompound.putByte("north", (byte) status[2].ordinal());
@@ -149,7 +152,7 @@ public class TileEntityAbsorptionHopper extends TileEntityInventoryHelper implem
 		tagCompound.putInt("offsetX", offsetX);
 		tagCompound.putInt("offsetY", offsetY);
 		tagCompound.putInt("offsetZ", offsetZ);
-		tank.writeToNBT(tagCompound);
+		tank.writeToNBT(registries, tagCompound);
 	}
 
 	public EnumStatus getSideStatus(Direction side) {
@@ -260,8 +263,8 @@ public class TileEntityAbsorptionHopper extends TileEntityInventoryHelper implem
 							if (receptacle.getTankCapacity(x) > 0) {
 								FluidStack contents = receptacle.getFluidInTank(x);
 								if (!tile.tank.getFluid().isEmpty()) {
-									if (contents.isEmpty() || contents.getAmount() <= receptacle.getTankCapacity(x) - 100 && contents.containsFluid(new FluidStack(tile.tank.getFluid(), 1))) {
-										receptacle.fill(tile.tank.drain(new FluidStack(tile.tank.getFluid(), 100), IFluidHandler.FluidAction.EXECUTE), IFluidHandler.FluidAction.EXECUTE);
+									if (contents.isEmpty() || contents.getAmount() <= receptacle.getTankCapacity(x) - 100 && contents.is(tile.tank.getFluid().getFluid())) {
+										receptacle.fill(tile.tank.drain(new FluidStack(tile.tank.getFluid().getFluid(), 100), IFluidHandler.FluidAction.EXECUTE), IFluidHandler.FluidAction.EXECUTE);
 										tile.setChanged();
 									}
 								}
@@ -275,7 +278,7 @@ public class TileEntityAbsorptionHopper extends TileEntityInventoryHelper implem
 			if (level.getGameTime() % 3 == 0 && !level.hasNeighborSignal(worldPosition)) {
 				if (!tile.isInventoryFull(tile, null))
 					tile.captureDroppedItems();
-				if (tile.tank.getFluid().isEmpty() || tile.tank.getFluid().containsFluid(new FluidStack(ModBlocks.FLUID_XP.get(), 1)))
+				if (tile.tank.getFluid().isEmpty() || tile.tank.getFluid().is(ModBlocks.FLUID_XP.get()))
 					tile.captureDroppedXP();
 			}
 
@@ -457,7 +460,7 @@ public class TileEntityAbsorptionHopper extends TileEntityInventoryHelper implem
 	}
 
 	private static boolean canCombine(ItemStack stack1, ItemStack stack2) {
-		return stack1.getItem() != stack2.getItem() ? false : (stack1.getDamageValue() != stack2.getDamageValue() ? false : (stack1.getCount() > stack1.getMaxStackSize() ? false : ItemStack.isSameItemSameTags(stack1, stack2)));
+		return stack1.getItem() != stack2.getItem() ? false : (stack1.getDamageValue() != stack2.getDamageValue() ? false : (stack1.getCount() > stack1.getMaxStackSize() ? false : ItemStack.isSameItemSameComponents(stack1, stack2)));
 	}
 
 // FLUID & INVENTORY CAPABILITIES STUFF

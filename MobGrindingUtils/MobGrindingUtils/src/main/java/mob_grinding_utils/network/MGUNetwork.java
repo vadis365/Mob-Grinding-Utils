@@ -1,16 +1,14 @@
 package mob_grinding_utils.network;
 
 import mob_grinding_utils.Reference;
-import net.neoforged.neoforge.network.event.RegisterPayloadHandlerEvent;
-import net.neoforged.neoforge.network.registration.IPayloadRegistrar;
+import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 
 public class MGUNetwork {
-    public static void register(final RegisterPayloadHandlerEvent event) {
-        IPayloadRegistrar reg = event.registrar(Reference.MOD_ID);
-
-        reg.play(BEGuiClick.ID, BEGuiClick::new, handler -> handler.server(BEGuiClick::handle));
-        reg.play(ChickenSyncPacket.ID, ChickenSyncPacket::new, handler -> handler.client(ChickenSyncPacket::handle));
-        reg.play(TapParticlePacket.ID, TapParticlePacket::new, handler -> handler.client(TapParticlePacket::handle));
-        reg.play(FlagSyncPacket.ID, FlagSyncPacket::new, handler -> handler.client(FlagSyncPacket::handle));
+    public static void register(final RegisterPayloadHandlersEvent event) {
+        event.registrar(Reference.MOD_ID)
+        .playToServer(BEGuiClick.TYPE, BEGuiClick.CODEC, BEGuiClick::handle)
+        .playToClient(ChickenSyncPacket.TYPE, ChickenSyncPacket.STREAM_CODEC, ChickenSyncPacket::handle)
+        .playToClient(TapParticlePacket.ID, TapParticlePacket::new, TapParticlePacket::handle)
+        .playToClient(FlagSyncPacket.ID, FlagSyncPacket::new, FlagSyncPacket::handle);
     }
 }

@@ -1,15 +1,22 @@
 package mob_grinding_utils.network;
 
 import mob_grinding_utils.Reference;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
-import net.neoforged.neoforge.network.handling.PlayPayloadContext;
+import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 public record ChickenSyncPacket(int chickenID, CompoundTag nbt) implements CustomPacketPayload {
-	public static final ResourceLocation ID = new ResourceLocation(Reference.MOD_ID, "chicken_sync");
+	public static final Type<ChickenSyncPacket> TYPE = new Type<>(ResourceLocation.fromNamespaceAndPath(Reference.MOD_ID, "chicken_sync"));
+	public static final StreamCodec<FriendlyByteBuf, ChickenSyncPacket> STREAM_CODEC = CustomPacketPayload.codec(
+			ChickenSyncPacket::write,
+			ChickenSyncPacket::new
+	);
+
+
 	public ChickenSyncPacket(LivingEntity chicken, CompoundTag chickenNBT) {
 		this(chicken.getId(), chickenNBT);
 	}
@@ -18,21 +25,15 @@ public record ChickenSyncPacket(int chickenID, CompoundTag nbt) implements Custo
 		this(buf.readInt(), buf.readNbt());
 	}
 
-	public static void handle(ChickenSyncPacket message, final PlayPayloadContext ctx) {
-		ctx.workHandler().submitAsync(() -> {
+	public static void handle(ChickenSyncPacket message, final IPayloadContext ctx) {
+		ctx.enqueueWork(() -> {
 			MGUClientPackets.HandleChickenSync(message);
 		});
 	}
 
-	@Override
 	public void write(FriendlyByteBuf buf) {
 		buf.writeInt(chickenID);
 		buf.writeNbt(nbt);
-	}
-
-	@Override
-	public ResourceLocation id() {
-		return ID;
 	}
 
 	@Override
@@ -43,5 +44,10 @@ public record ChickenSyncPacket(int chickenID, CompoundTag nbt) implements Custo
 	@Override
 	public CompoundTag nbt() {
 		return nbt;
+	}
+
+	@Override
+	public Type<? extends CustomPacketPayload> type() {
+		return TYPE;
 	}
 }

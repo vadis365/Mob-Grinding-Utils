@@ -15,7 +15,9 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.SpawnEggItem;
 import net.minecraft.world.level.Level;
 import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.event.entity.EntityEvent;
 import net.neoforged.neoforge.event.entity.living.LivingEvent;
+import net.neoforged.neoforge.event.tick.EntityTickEvent;
 import net.neoforged.neoforge.network.PacketDistributor;
 
 import javax.annotation.Nonnull;
@@ -30,8 +32,8 @@ public class ChickenFuseEvent {
 	}
 
 	@SubscribeEvent
-	public void startChickenFuse(LivingEvent.LivingTickEvent event) { // TODO uh oh? is this right?!
-		LivingEntity entity = event.getEntity();
+	public void startChickenFuse(EntityTickEvent.Post event) { // TODO uh oh? is this right?!
+		Entity entity = event.getEntity();
 		if (entity instanceof Chicken) {
 			Level world = entity.getCommandSenderWorld();
 			if (!world.isClientSide) {

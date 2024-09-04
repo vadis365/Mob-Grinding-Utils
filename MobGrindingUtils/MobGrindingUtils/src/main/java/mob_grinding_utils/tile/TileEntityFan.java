@@ -9,6 +9,8 @@ import mob_grinding_utils.inventory.server.ContainerFan;
 import mob_grinding_utils.items.ItemFanUpgrade;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
 import net.minecraft.network.FriendlyByteBuf;
@@ -190,8 +192,8 @@ public class TileEntityFan extends TileEntityInventoryHelper implements MenuProv
 	}
 
 	@Override
-	public void saveAdditional(CompoundTag nbt) {
-		super.saveAdditional(nbt);
+	public void saveAdditional(CompoundTag nbt, HolderLookup.Provider registries) {
+		super.saveAdditional(nbt, registries);
 		nbt.putBoolean("showRenderBox", showRenderBox);
 		nbt.putFloat("xPos", xPos);
 		nbt.putFloat("yPos", yPos);
@@ -202,8 +204,8 @@ public class TileEntityFan extends TileEntityInventoryHelper implements MenuProv
 	}
 
 	@Override
-	public void load(CompoundTag nbt) {
-		super.load(nbt);
+	public void loadAdditional(CompoundTag nbt, HolderLookup.Provider registries) {
+		super.loadAdditional(nbt, registries);
 		showRenderBox = nbt.getBoolean("showRenderBox");
 		xPos = nbt.getFloat("xPos");
 		yPos = nbt.getFloat("yPos");
@@ -215,22 +217,22 @@ public class TileEntityFan extends TileEntityInventoryHelper implements MenuProv
 
 	@Nonnull
 	@Override
-	public CompoundTag getUpdateTag() {
+	public CompoundTag getUpdateTag(@Nonnull HolderLookup.Provider registries) {
 		CompoundTag nbt = new CompoundTag();
-		saveAdditional(nbt);
+		saveAdditional(nbt, registries);
 		return nbt;
 	}
 
 	@Override
 	public ClientboundBlockEntityDataPacket getUpdatePacket() {
 		CompoundTag nbt = new CompoundTag();
-		saveAdditional(nbt);
+		saveAdditional(nbt, RegistryAccess.EMPTY); //TODO uhhhhh
 		return ClientboundBlockEntityDataPacket.create(this);
 	}
 
 	@Override
-	public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket packet) {
-		load(packet.getTag());
+	public void onDataPacket(@Nonnull Connection net, ClientboundBlockEntityDataPacket packet, @Nonnull HolderLookup.Provider registries) {
+		loadAdditional(packet.getTag(), registries);
 		onContentsChanged();
 	}
 

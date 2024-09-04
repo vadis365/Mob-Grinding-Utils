@@ -3,7 +3,7 @@ plugins {
     id 'idea'
     id 'maven-publish'
     id 'eclipse'
-    id 'net.neoforged.gradle.userdev' version '7.0.96'
+    id 'net.neoforged.gradle.userdev' version '7.0.157'
     id "me.modmuss50.mod-publish-plugin" version "0.4.5"
 }
 
@@ -18,7 +18,7 @@ base {
     archivesName = "mob_grinding_utils"
 }
 
-java.toolchain.languageVersion = JavaLanguageVersion.of(17)
+java.toolchain.languageVersion = JavaLanguageVersion.of(21)
 sourceSets.main.resources { srcDir 'src/generated/resources' }
 minecraft.accessTransformers.file rootProject.file('src/main/resources/META-INF/accesstransformer.cfg')
 
@@ -50,9 +50,9 @@ runs {
 
 dependencies {
     implementation "net.neoforged:neoforge:${neo_version}"
-    compileOnly "mezz.jei:jei-${minecraft_version}-common-api:${jei_version}"//new
-    compileOnly "mezz.jei:jei-${minecraft_version}-neoforge-api:${jei_version}"
-    runtimeOnly "mezz.jei:jei-${minecraft_version}-neoforge:${jei_version}"
+    compileOnly "mezz.jei:jei-${jei_mc_version}-common-api:${jei_version}"//new
+    compileOnly "mezz.jei:jei-${jei_mc_version}-neoforge-api:${jei_version}"
+    runtimeOnly "mezz.jei:jei-${jei_mc_version}-neoforge:${jei_version}"
 
     //runtimeOnly "curse.maven:top-245211:5084077"
     //runtimeOnly fg.deobf("curse.maven:playermobs-430513:3153298") //Not ported yet

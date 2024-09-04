@@ -9,6 +9,8 @@ import mob_grinding_utils.items.ItemSawUpgrade;
 import mob_grinding_utils.util.FakePlayerHandler;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
 import net.minecraft.network.FriendlyByteBuf;
@@ -138,37 +140,37 @@ public class TileEntitySaw extends TileEntityInventoryHelper implements MenuProv
 	}
 
 	@Override
-	public void load(CompoundTag nbt) {
-		super.load(nbt);
+	public void loadAdditional(CompoundTag nbt, HolderLookup.Provider registries) {
+		super.loadAdditional(nbt, registries);
 		active = nbt.getBoolean("active");
 		placer = nbt.hasUUID("placer") ? nbt.getUUID("placer") : null;
 	}
 
 	@Override
-	public void saveAdditional(CompoundTag nbt) {
-		super.saveAdditional(nbt);
+	public void saveAdditional(CompoundTag nbt, HolderLookup.Provider registries) {
+		super.saveAdditional(nbt, registries);
 		nbt.putBoolean("active", active);
 		if (placer != null) nbt.putUUID("placer", placer);
 	}
 
 	@Override
-	public CompoundTag getUpdateTag() {
+	public CompoundTag getUpdateTag(HolderLookup.Provider registries) {
 		CompoundTag tag = new CompoundTag();
-		saveAdditional(tag);
+		saveAdditional(tag, registries);
 		return tag;
 	}
 
 	@Override
 	public ClientboundBlockEntityDataPacket getUpdatePacket() {
 		CompoundTag tag = new CompoundTag();
-		saveAdditional(tag);
+		saveAdditional(tag, RegistryAccess.EMPTY); //TODO uhhh
 		return ClientboundBlockEntityDataPacket.create(this);
 	}
 
 	@Override
-	public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket packet) {
-		super.onDataPacket(net, packet);
-		load(packet.getTag());
+	public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket packet, HolderLookup.Provider registries) {
+		super.onDataPacket(net, packet, registries);
+		loadAdditional(packet.getTag(), registries);
 		if(!level.isClientSide)
 			level.sendBlockUpdated(worldPosition, level.getBlockState(worldPosition), level.getBlockState(worldPosition), 3);
 	}

@@ -1,21 +1,20 @@
 package mob_grinding_utils.blocks;
 
-import java.util.function.Supplier;
-
 import mob_grinding_utils.MobGrindingUtils;
 import mob_grinding_utils.entity.EntityXPOrbFalling;
+import net.minecraft.core.BlockPos;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.LiquidBlock;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.material.FlowingFluid;
-import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.LiquidBlock;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.FlowingFluid;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 
 import javax.annotation.Nonnull;
+import java.util.function.Supplier;
 
 public class MGUFlowingFluidBlock extends LiquidBlock {
 	public MGUFlowingFluidBlock(FlowingFluid fluidIn, Properties builder) {
@@ -23,7 +22,7 @@ public class MGUFlowingFluidBlock extends LiquidBlock {
 	}
 
 	public MGUFlowingFluidBlock(Supplier<? extends FlowingFluid> supplier, Properties properties) {
-		super(supplier, properties);
+		super(supplier.get(), properties);
 	}
 
 	@Override
