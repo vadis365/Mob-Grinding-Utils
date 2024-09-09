@@ -10,6 +10,7 @@ import mob_grinding_utils.recipe.SolidifyRecipe;
 import mob_grinding_utils.util.CapHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
 import net.minecraft.network.FriendlyByteBuf;
@@ -331,32 +332,32 @@ public class TileEntityXPSolidifier extends BlockEntity implements MenuProvider,
 	}
 
 	private static boolean canCombine(ItemStack stack1, ItemStack stack2) {
-		return stack1.getItem() != stack2.getItem() ? false : (stack1.getDamageValue() != stack2.getDamageValue() ? false : (stack1.getCount() > stack1.getMaxStackSize() ? false : ItemStack.isSameItemSameTags(stack1, stack2)));
+		return stack1.getItem() != stack2.getItem() ? false : (stack1.getDamageValue() != stack2.getDamageValue() ? false : (stack1.getCount() > stack1.getMaxStackSize() ? false : ItemStack.isSameItemSameComponents(stack1, stack2)));
 	}
 
 	@Override
-	public void load(@Nonnull CompoundTag nbt) {
-		super.load(nbt);
-		tank.readFromNBT(nbt);
-		inputSlots.deserializeNBT(nbt.getCompound("inputSlots"));
-		outputSlot.deserializeNBT(nbt.getCompound("outputSlot"));
+	public void loadAdditional(@Nonnull CompoundTag nbt, @Nonnull HolderLookup.Provider registries) {
+		super.loadAdditional(nbt, registries);
+		tank.readFromNBT(registries, nbt);
+		inputSlots.deserializeNBT(registries, nbt.getCompound("inputSlots"));
+		outputSlot.deserializeNBT(registries, nbt.getCompound("outputSlot"));
 		outputDirection = OutputDirection.fromString(nbt.getString("outputDirection"));
 		isOn = nbt.getBoolean("isOn");
 		active = nbt.getBoolean("active");
 		moulding_progress = nbt.getInt("moulding_progress");
 		if (nbt.contains("currentRecipe")) {
-			ResourceLocation id = new ResourceLocation(nbt.getString("currentRecipe"));
+			ResourceLocation id = ResourceLocation.tryParse(nbt.getString("currentRecipe"));
 			MobGrindingUtils.SOLIDIFIER_RECIPES.stream().filter(recipe -> recipe.id().equals(id))
 				.findFirst().ifPresent(recipe -> this.currentRecipe = recipe);
 		}
 	}
 
 	@Override
-	public void saveAdditional(CompoundTag nbt) {
-		super.saveAdditional(nbt);
-		tank.writeToNBT(nbt);
-		nbt.put("inputSlots", inputSlots.serializeNBT());
-		nbt.put("outputSlot", outputSlot.serializeNBT());
+	public void saveAdditional(@Nonnull CompoundTag nbt, @Nonnull HolderLookup.Provider registries) {
+		super.saveAdditional(nbt, registries);
+		tank.writeToNBT(registries, nbt);
+		nbt.put("inputSlots", inputSlots.serializeNBT(registries));
+		nbt.put("outputSlot", outputSlot.serializeNBT(registries));
 		nbt.putString("outputDirection", outputDirection.getSerializedName());
 		nbt.putBoolean("isOn", isOn);
 		nbt.putBoolean("active", active);
@@ -367,23 +368,23 @@ public class TileEntityXPSolidifier extends BlockEntity implements MenuProvider,
 
 	@Nonnull
 	@Override
-	public CompoundTag getUpdateTag() {
+	public CompoundTag getUpdateTag(@Nonnull HolderLookup.Provider registries) {
 		CompoundTag nbt = new CompoundTag();
-		saveAdditional(nbt);
+		saveAdditional(nbt, registries);
 		return nbt;
 	}
 
 	@Override
 	public ClientboundBlockEntityDataPacket getUpdatePacket() {
 		CompoundTag nbt = new CompoundTag();
-		saveAdditional(nbt);
+		saveAdditional(nbt, level.registryAccess());
 		return ClientboundBlockEntityDataPacket.create(this);
 	}
 
 	@Override
-	public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket packet) {
-		super.onDataPacket(net, packet);
-		load(packet.getTag());
+	public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket packet, @Nonnull HolderLookup.Provider registries) {
+		super.onDataPacket(net, packet, registries);
+		loadAdditional(packet.getTag(), registries);
 		onContentsChanged();
 	}
 

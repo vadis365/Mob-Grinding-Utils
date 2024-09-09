@@ -27,7 +27,7 @@ public class MGUEntityTypeTags extends EntityTypeTagsProvider {
 
         getOrCreateRawBuilder(ModTags.Entities.NO_DREADFUL_SPAWN);
         getOrCreateRawBuilder(ModTags.Entities.NO_DELIGHTFUL_SPAWN);
-        tag(ModTags.Entities.NO_DIRT_SPAWN).addOptional(new ResourceLocation("alexsmobs", "farseer"));
-        tag(ModTags.Entities.NO_DIRT_SPAWN).addOptional(new ResourceLocation("alexsmobs", "centipede_head"));
+        tag(ModTags.Entities.NO_DIRT_SPAWN).addOptional(ResourceLocation.fromNamespaceAndPath("alexsmobs", "farseer"));
+        tag(ModTags.Entities.NO_DIRT_SPAWN).addOptional(ResourceLocation.fromNamespaceAndPath("alexsmobs", "centipede_head"));
     }
 }

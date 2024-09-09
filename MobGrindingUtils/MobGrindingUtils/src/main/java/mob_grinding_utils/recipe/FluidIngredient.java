@@ -3,31 +3,27 @@ package mob_grinding_utils.recipe;
 import com.mojang.datafixers.util.Either;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import it.unimi.dsi.fastutil.ints.IntArrayList;
-import it.unimi.dsi.fastutil.ints.IntComparators;
 import it.unimi.dsi.fastutil.ints.IntList;
 import mob_grinding_utils.MobGrindingUtils;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.TagKey;
-import net.minecraft.util.ExtraCodecs;
-import net.minecraft.world.entity.player.StackedContents;
 import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.material.Fluid;
 import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.common.crafting.ICustomIngredient;
+import net.neoforged.neoforge.common.crafting.IngredientType;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.FluidUtil;
 import net.neoforged.neoforge.fluids.capability.IFluidHandlerItem;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
 import java.util.stream.Stream;
 
-public class FluidIngredient extends Ingredient {
+public class FluidIngredient implements ICustomIngredient {
     public static final Codec<FluidIngredient> CODEC = RecordCodecBuilder.create(instance -> instance
             .group(FluidValue.CODEC.fieldOf("value")
                             .forGetter($ -> $.value),
@@ -36,7 +32,7 @@ public class FluidIngredient extends Ingredient {
             .apply(instance, FluidIngredient::new));
     private final Boolean advanced;
     private final List<Fluid> matchingFluids = new ArrayList<>();
-    private ItemStack[] bucketCache = null;
+    private Stream<ItemStack> bucketCache = null;
     private IntList matchingStacksPacked;
     public final FluidValue value;
 
@@ -52,8 +48,6 @@ public class FluidIngredient extends Ingredient {
 
 
     public FluidIngredient(TagKey<Fluid> tagIn, int amount, boolean advancedIn) {
-        super(Stream.of(), MobGrindingUtils.FLUID_INGREDIENT);
-
         advanced = advancedIn;
         value = new FluidTagValue(tagIn, amount);
     }
@@ -61,8 +55,6 @@ public class FluidIngredient extends Ingredient {
         this(tagIn, 1000, false);
     }
     public FluidIngredient(Fluid fluidIn, int amount, boolean advancedIn) {
-        super(Stream.of(), MobGrindingUtils.FLUID_INGREDIENT);
-
         value = new SpecificFluidValue(new FluidStack(fluidIn, amount));
         advanced = advancedIn;
         matchingFluids.add(fluidIn);
@@ -72,46 +64,22 @@ public class FluidIngredient extends Ingredient {
     }
 
     public FluidIngredient(FluidValue value, boolean advancedIn) {
-        super(Stream.of(), MobGrindingUtils.FLUID_INGREDIENT);
         this.value = value;
         advanced = advancedIn;
     }
 
     @Override
-    public boolean isEmpty() {
+    public boolean isSimple() {
         return false;
     }
 
-    @Nonnull
     @Override
-    public IntList getStackingIds() {
-        if (this.matchingStacksPacked == null) {
-            this.matchingStacksPacked = new IntArrayList(this.getItems().length);
-            for(ItemStack itemstack : this.bucketCache) {
-                this.matchingStacksPacked.add(StackedContents.getStackingIndex(itemstack));
-            }
-            this.matchingStacksPacked.sort(IntComparators.NATURAL_COMPARATOR);
-        }
-        return this.matchingStacksPacked;
-    }
-
-    @Nonnull
-    @Override
-    public ItemStack[] getItems() {
-        if (bucketCache == null) {
-            List<ItemStack> tmp = new ArrayList<>();
-            getMatchingFluids().forEach((fluid -> {
-                ItemStack newBucket = FluidUtil.getFilledBucket(new FluidStack(fluid, 1000));
-                if (!newBucket.isEmpty())
-                    tmp.add(newBucket);
-            }));
-            bucketCache = tmp.toArray(tmp.toArray(new ItemStack[0]));
-        }
-        return bucketCache;
+    public IngredientType<?> getType() {
+        return MobGrindingUtils.FLUID_INGREDIENT.get();
     }
 
     public interface FluidValue {
-        Codec<FluidValue> CODEC = ExtraCodecs.xor(SpecificFluidValue.CODEC, FluidTagValue.CODEC)
+        Codec<FluidValue> CODEC = Codec.xor(SpecificFluidValue.CODEC, FluidTagValue.CODEC)
                 .xmap($ -> $.map(value1 -> value1, value2 -> value2), fluidValue -> {
                     if (fluidValue instanceof FluidTagValue fluidTagValue) {
                         return Either.right(fluidTagValue);
@@ -184,5 +152,19 @@ public class FluidIngredient extends Ingredient {
         }
 
         return false;
+    }
+
+    @Override
+    public Stream<ItemStack> getItems() {
+            if (bucketCache == null) {
+                List<ItemStack> tmp = new ArrayList<>();
+                getMatchingFluids().forEach((fluid -> {
+                    ItemStack newBucket = FluidUtil.getFilledBucket(new FluidStack(fluid, 1000));
+                    if (!newBucket.isEmpty())
+                        tmp.add(newBucket);
+                }));
+                bucketCache = tmp.stream();
+            }
+            return bucketCache;
     }
 }

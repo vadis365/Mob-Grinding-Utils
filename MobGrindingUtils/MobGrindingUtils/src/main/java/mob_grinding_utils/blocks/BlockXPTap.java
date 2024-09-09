@@ -85,7 +85,7 @@ public class BlockXPTap extends DirectionalBlock implements EntityBlock {
 	
 	@Nonnull
 	@Override
-	public InteractionResult use(@Nonnull BlockState state, Level world, @Nonnull BlockPos pos, @Nonnull Player player, @Nonnull InteractionHand hand, @Nonnull BlockHitResult hit) {
+	public InteractionResult useWithoutItem(@Nonnull BlockState state, Level world, @Nonnull BlockPos pos, @Nonnull Player player, @Nonnull InteractionHand hand, @Nonnull BlockHitResult hit) {
 		if (!world.isClientSide) {
 			boolean swap = state.getValue(POWERED);
 			world.setBlock(pos, state.setValue(POWERED, !swap), 3);

@@ -36,9 +36,9 @@ public class ModelAHConnect extends Model {
 	}
 
 	@Override
-	public void renderToBuffer(PoseStack matrixStackIn, VertexConsumer bufferIn, int packedLightIn, int packedOverlayIn, float red, float green, float blue, float alpha) {
+	public void renderToBuffer(PoseStack matrixStackIn, VertexConsumer bufferIn, int packedLightIn, int packedOverlayIn, int color) {
 		ImmutableList.of(plate, pipe).forEach((modelRenderer) -> {
-			modelRenderer.render(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn, red, green, blue, alpha);
+			modelRenderer.render(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn, color);
 		});
 	}
 }

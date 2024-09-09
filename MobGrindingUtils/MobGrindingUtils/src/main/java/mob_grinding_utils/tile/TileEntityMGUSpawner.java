@@ -287,24 +287,25 @@ public class TileEntityMGUSpawner extends BlockEntity implements MenuProvider, B
 		nbt.putInt("spawning_progress", spawning_progress);
 	}
 
+	@Nonnull
 	@Override
-	public CompoundTag getUpdateTag() {
+	public CompoundTag getUpdateTag(@Nonnull HolderLookup.Provider registries) {
 		CompoundTag nbt = new CompoundTag();
-		saveAdditional(nbt);
+		saveAdditional(nbt, registries);
 		return nbt;
 	}
 
 	@Override
 	public ClientboundBlockEntityDataPacket getUpdatePacket() {
 		CompoundTag nbt = new CompoundTag();
-		saveAdditional(nbt);
+		saveAdditional(nbt, level.registryAccess());
 		return ClientboundBlockEntityDataPacket.create(this);
 	}
 
 	@Override
-	public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket packet) {
-		super.onDataPacket(net, packet);
-		load(packet.getTag());
+	public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket packet, @Nonnull HolderLookup.Provider registries) {
+		super.onDataPacket(net, packet, registries);
+		loadAdditional(packet.getTag(), registries);
 	}
 
 	public void updateBlock() {

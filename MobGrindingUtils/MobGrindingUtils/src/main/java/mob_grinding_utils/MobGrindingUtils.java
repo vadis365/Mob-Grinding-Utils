@@ -2,6 +2,7 @@ package mob_grinding_utils;
 
 import mob_grinding_utils.blocks.BlockSpikes;
 import mob_grinding_utils.client.ModelLayers;
+import mob_grinding_utils.components.MGUComponents;
 import mob_grinding_utils.config.ServerConfig;
 import mob_grinding_utils.datagen.Generator;
 import mob_grinding_utils.events.*;
@@ -112,6 +113,7 @@ public class MobGrindingUtils {
 		RECIPE_TYPES.register(modBus);
 		TABS.register(modBus);
 		INGREDIENTS.register(modBus);
+		MGUComponents.init(modBus);
 		ModSounds.init(modBus);
 
 		if (FMLEnvironment.dist.isClient()) {

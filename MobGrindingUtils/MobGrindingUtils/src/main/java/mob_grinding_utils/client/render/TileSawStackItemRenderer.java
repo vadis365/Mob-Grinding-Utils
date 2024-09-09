@@ -24,8 +24,8 @@ import javax.annotation.Nonnull;
 @OnlyIn(Dist.CLIENT)
 public class TileSawStackItemRenderer extends BlockEntityWithoutLevelRenderer {
 
-	private static final ResourceLocation BASE_TEXTURE = new ResourceLocation("mob_grinding_utils:textures/tiles/saw_base.png");
-	private static final ResourceLocation BLADE_TEXTURE = new ResourceLocation("mob_grinding_utils:textures/tiles/saw_blade.png");
+	private static final ResourceLocation BASE_TEXTURE = ResourceLocation.tryParse("mob_grinding_utils:textures/tiles/saw_base.png");
+	private static final ResourceLocation BLADE_TEXTURE = ResourceLocation.tryParse("mob_grinding_utils:textures/tiles/saw_blade.png");
 	private final ModelSawBase saw_base;
 	private final ModelSawBlade saw_blade;
 

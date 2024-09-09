@@ -26,7 +26,7 @@ import net.neoforged.neoforge.fluids.FluidStack;
 @OnlyIn(Dist.CLIENT)
 public class TileXPSolidifierStackItemRenderer extends BlockEntityWithoutLevelRenderer {
 
-	private static final ResourceLocation TEXTURE = new ResourceLocation("mob_grinding_utils:textures/tiles/xp_solidifier_no_push.png");
+	private static final ResourceLocation TEXTURE = ResourceLocation.tryParse("mob_grinding_utils:textures/tiles/xp_solidifier_no_push.png");
 	private final ModelXPSolidifier xp_solidifier_model;
 	private FluidStack fluidStack;
 

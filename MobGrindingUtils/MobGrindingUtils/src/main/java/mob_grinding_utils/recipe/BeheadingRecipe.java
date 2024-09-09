@@ -1,14 +1,14 @@
 package mob_grinding_utils.recipe;
 
 import com.google.gson.JsonParseException;
-import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import mob_grinding_utils.MobGrindingUtils;
-import net.minecraft.core.RegistryAccess;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.Container;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
@@ -19,7 +19,7 @@ import net.minecraft.world.level.Level;
 import javax.annotation.Nonnull;
 import java.util.Optional;
 
-public class BeheadingRecipe implements Recipe<Container>{
+public class BeheadingRecipe implements Recipe<EmptyInput>{
     public static final String NAME = "beheading";
     private final EntityType<?> entityType;
     private final ItemStack result;
@@ -30,7 +30,7 @@ public class BeheadingRecipe implements Recipe<Container>{
     }
 
     @Override
-    public boolean matches(@Nonnull Container container, @Nonnull Level level) {
+    public boolean matches(@Nonnull EmptyInput container, @Nonnull Level level) {
         return false;
     }
 
@@ -40,7 +40,7 @@ public class BeheadingRecipe implements Recipe<Container>{
 
     @Nonnull
     @Override
-    public ItemStack assemble(@Nonnull Container container, RegistryAccess pointless) {
+    public ItemStack assemble(EmptyInput input, HolderLookup.Provider registries) {
         return ItemStack.EMPTY;
     }
 
@@ -51,7 +51,7 @@ public class BeheadingRecipe implements Recipe<Container>{
 
     @Nonnull
     @Override
-    public ItemStack getResultItem(RegistryAccess pointless) {
+    public ItemStack getResultItem(HolderLookup.Provider registries) {
         return result.copy();
     }
 
@@ -69,34 +69,41 @@ public class BeheadingRecipe implements Recipe<Container>{
 
 
     public static class Serializer implements RecipeSerializer<BeheadingRecipe> {
-        public static final Codec<BeheadingRecipe> CODEC = RecordCodecBuilder.create((p_300958_) -> p_300958_
+        public static final MapCodec<BeheadingRecipe> CODEC = RecordCodecBuilder.mapCodec((p_300958_) -> p_300958_
                 .group(BuiltInRegistries.ENTITY_TYPE.byNameCodec().fieldOf("entity")
                                 .forGetter((p_300960_) -> p_300960_.entityType),
                         ItemStack.CODEC.fieldOf("result")
                                 .forGetter((p_300962_) -> p_300962_.result))
                 .apply(p_300958_, BeheadingRecipe::new));
 
+        public static final StreamCodec<RegistryFriendlyByteBuf, BeheadingRecipe> STREAM_CODEC = StreamCodec.of(
+                BeheadingRecipe.Serializer::toNetwork,
+                BeheadingRecipe.Serializer::fromNetwork);
+
         @Nonnull
-        @Override
-        public BeheadingRecipe fromNetwork(FriendlyByteBuf buf) {
-            ResourceLocation entityRes = new ResourceLocation(buf.readUtf());
+        public static BeheadingRecipe fromNetwork(RegistryFriendlyByteBuf buf) {
+            ResourceLocation entityRes = ResourceLocation.parse(buf.readUtf());
             Optional<EntityType<?>> type = BuiltInRegistries.ENTITY_TYPE.getOptional(entityRes);
             if (type.isEmpty())
                 throw new JsonParseException("unknown entity type");
-            ItemStack result = buf.readItem();
+            ItemStack result = ItemStack.STREAM_CODEC.decode(buf);
 
             return new BeheadingRecipe(type.get(), result);
         }
 
         @Override
-        public Codec<BeheadingRecipe> codec() {
+        public MapCodec<BeheadingRecipe> codec() {
             return CODEC;
         }
 
         @Override
-        public void toNetwork(FriendlyByteBuf buf, BeheadingRecipe recipe) {
+        public StreamCodec<RegistryFriendlyByteBuf, BeheadingRecipe> streamCodec() {
+            return STREAM_CODEC;
+        }
+
+        public static void toNetwork(RegistryFriendlyByteBuf buf, BeheadingRecipe recipe) {
             buf.writeUtf(BuiltInRegistries.ENTITY_TYPE.getKey(recipe.entityType).toString());
-            buf.writeItem(recipe.result);
+            ItemStack.STREAM_CODEC.encode(buf, recipe.result);
         }
     }
 }

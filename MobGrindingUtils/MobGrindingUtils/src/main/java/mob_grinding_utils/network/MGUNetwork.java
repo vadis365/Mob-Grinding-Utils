@@ -8,7 +8,7 @@ public class MGUNetwork {
         event.registrar(Reference.MOD_ID)
         .playToServer(BEGuiClick.TYPE, BEGuiClick.CODEC, BEGuiClick::handle)
         .playToClient(ChickenSyncPacket.TYPE, ChickenSyncPacket.STREAM_CODEC, ChickenSyncPacket::handle)
-        .playToClient(TapParticlePacket.ID, TapParticlePacket::new, TapParticlePacket::handle)
-        .playToClient(FlagSyncPacket.ID, FlagSyncPacket::new, FlagSyncPacket::handle);
+        .playToClient(TapParticlePacket.TYPE, TapParticlePacket.STREAM_CODEC, TapParticlePacket::handle)
+        .playToClient(FlagSyncPacket.TYPE, FlagSyncPacket.STREAM_CODEC, FlagSyncPacket::handle);
     }
 }

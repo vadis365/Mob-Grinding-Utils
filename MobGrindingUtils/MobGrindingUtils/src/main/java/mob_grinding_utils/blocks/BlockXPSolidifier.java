@@ -79,7 +79,7 @@ public class BlockXPSolidifier extends BaseEntityBlock {
 			TileEntityXPSolidifier tile = (TileEntityXPSolidifier) world.getBlockEntity(pos);
 			if (tile != null) {
 				CompoundTag nbt = new CompoundTag();
-				tile.saveAdditional(nbt);
+				tile.saveAdditional(nbt, world.registryAccess());
 				ItemStack stack = new ItemStack(Item.byBlock(this), 1);
 				if (tile.tank.getFluidAmount() > 0)
 					stack.setTag(nbt);

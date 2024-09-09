@@ -8,6 +8,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.DamageTypeTags;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.concurrent.CompletableFuture;
 
@@ -17,7 +18,7 @@ public class MGUDamageTags extends DamageTypeTagsProvider {
     }
 
     @Override
-    protected void addTags(HolderLookup.Provider useless) {
-        tag(DamageTypeTags.BYPASSES_ARMOR).addOptional(new ResourceLocation(Reference.MOD_ID, "spikes"));
+    protected void addTags(@Nonnull HolderLookup.Provider useless) {
+        tag(DamageTypeTags.BYPASSES_ARMOR).addOptional(ResourceLocation.fromNamespaceAndPath(Reference.MOD_ID, "spikes"));
     }
 }

@@ -9,6 +9,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -65,7 +66,7 @@ public class BlockTank extends BaseEntityBlock {
 			BlockEntity tileentity = world.getBlockEntity(pos);
 			if (tileentity instanceof TileEntityTank) {
 				CompoundTag nbt = new CompoundTag();
-				((TileEntityTank) tileentity).saveAdditional(nbt);
+				((TileEntityTank) tileentity).saveAdditional(nbt, world.registryAccess());
 				ItemStack stack = new ItemStack(Item.byBlock(this), 1);
 				if (((TileEntityTank) tileentity).tank.getFluidAmount() > 0)
 					stack.setTag(nbt);
@@ -92,7 +93,7 @@ public class BlockTank extends BaseEntityBlock {
 
 	@Nonnull
 	@Override
-	public InteractionResult use(@Nonnull BlockState state, Level world, @Nonnull BlockPos pos, @Nonnull Player player, @Nonnull InteractionHand hand, @Nonnull BlockHitResult hit) {
+	public ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
 		if (world.isClientSide)
 			return InteractionResult.SUCCESS;
 		BlockEntity tileentity = world.getBlockEntity(pos);

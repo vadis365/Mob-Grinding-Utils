@@ -30,9 +30,9 @@ import javax.annotation.Nonnull;
 @OnlyIn(Dist.CLIENT)
 public class TileTankStackItemRenderer extends BlockEntityWithoutLevelRenderer {
 
-	private static final ResourceLocation TANK_TEXTURE = new ResourceLocation("mob_grinding_utils:textures/tiles/tank.png");
-	private static final ResourceLocation TANK_SINK_TEXTURE = new ResourceLocation("mob_grinding_utils:textures/tiles/tank_sink.png");
-	private static final ResourceLocation TANK_JUMBO_TEXTURE = new ResourceLocation("mob_grinding_utils:textures/tiles/tank_jumbo.png");
+	private static final ResourceLocation TANK_TEXTURE = ResourceLocation.tryParse("mob_grinding_utils:textures/tiles/tank.png");
+	private static final ResourceLocation TANK_SINK_TEXTURE = ResourceLocation.tryParse("mob_grinding_utils:textures/tiles/tank_sink.png");
+	private static final ResourceLocation TANK_JUMBO_TEXTURE = ResourceLocation.tryParse("mob_grinding_utils:textures/tiles/tank_jumbo.png");
 	private final ModelTankBlock tank_model;
 	private FluidStack fluidStack;
 

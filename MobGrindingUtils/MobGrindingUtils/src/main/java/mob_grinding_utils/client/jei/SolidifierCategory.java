@@ -22,12 +22,12 @@ import javax.annotation.Nonnull;
 import java.util.List;
 
 public class SolidifierCategory implements IRecipeCategory<SolidifyRecipe> {
-    public static final ResourceLocation ID = new ResourceLocation(Reference.MOD_ID, "solidifier_jei");
+    public static final ResourceLocation ID = ResourceLocation.fromNamespaceAndPath(Reference.MOD_ID, "solidifier_jei");
 
     private final IDrawableStatic background;
 
     public SolidifierCategory(IGuiHelper guiHelper) {
-        background = guiHelper.drawableBuilder(new ResourceLocation(Reference.MOD_ID, "textures/gui/solidifier_jei.png"), 0, 0, 91, 26).setTextureSize(91, 26).build();
+        background = guiHelper.drawableBuilder(ResourceLocation.fromNamespaceAndPath(Reference.MOD_ID, "textures/gui/solidifier_jei.png"), 0, 0, 91, 26).setTextureSize(91, 26).build();
     }
 
     @Nonnull

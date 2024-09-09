@@ -31,8 +31,8 @@ import net.neoforged.neoforge.fluids.FluidStack;
 
 @OnlyIn(Dist.CLIENT)
 public class TileEntityXPSolidifierRenderer implements BlockEntityRenderer<TileEntityXPSolidifier> {
-	private static final ResourceLocation TEXTURE = new ResourceLocation("mob_grinding_utils:textures/tiles/xp_solidifier.png");
-	private static final ResourceLocation TEXTURE_NO_PUSH = new ResourceLocation("mob_grinding_utils:textures/tiles/xp_solidifier_no_push.png");
+	private static final ResourceLocation TEXTURE = ResourceLocation.tryParse("mob_grinding_utils:textures/tiles/xp_solidifier.png");
+	private static final ResourceLocation TEXTURE_NO_PUSH = ResourceLocation.tryParse("mob_grinding_utils:textures/tiles/xp_solidifier_no_push.png");
 	private final ModelXPSolidifier xp_solidifier_model;
 
 	public TileEntityXPSolidifierRenderer(Context context) {
@@ -78,7 +78,7 @@ public class TileEntityXPSolidifierRenderer implements BlockEntityRenderer<TileE
 
 		RenderSystem.enableBlend();
 		RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
-		xp_solidifier_model.renderExport(matrixStack, bufferIn.getBuffer(RenderType.entitySmoothCutout(tile.outputDirection == OutputDirection.NONE ? TEXTURE_NO_PUSH : TEXTURE)), combinedLight, OverlayTexture.NO_OVERLAY, 1F, 1F, 1F, 1.0F);
+		xp_solidifier_model.renderExport(matrixStack, bufferIn.getBuffer(RenderType.entitySmoothCutout(tile.outputDirection == OutputDirection.NONE ? TEXTURE_NO_PUSH : TEXTURE)), combinedLight, OverlayTexture.NO_OVERLAY, 0xFFFFFFFF);
 		RenderSystem.disableBlend();
 	    RenderSystem.defaultBlendFunc();
 		matrixStack.popPose();
@@ -116,7 +116,7 @@ public class TileEntityXPSolidifierRenderer implements BlockEntityRenderer<TileE
 		if(ticks > 80F || ticks <= 0)
 			matrixStack.translate(0D, 0D, 0D);
 		RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
-		xp_solidifier_model.renderRack(matrixStack, bufferIn.getBuffer(RenderType.entitySmoothCutout(TEXTURE)), combinedLight, OverlayTexture.NO_OVERLAY, 1F, 1F, 1F, 1.0F);
+		xp_solidifier_model.renderRack(matrixStack, bufferIn.getBuffer(RenderType.entitySmoothCutout(TEXTURE)), combinedLight, OverlayTexture.NO_OVERLAY, 0xFFFFFFFF);
 		
 		matrixStack.pushPose();
 		matrixStack.translate(0D, 0.60625D, -0.22D);
@@ -135,7 +135,7 @@ public class TileEntityXPSolidifierRenderer implements BlockEntityRenderer<TileE
 	    
 		RenderSystem.enableBlend();
 		RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
-		xp_solidifier_model.renderToBuffer(matrixStack, bufferIn.getBuffer(RenderType.entitySmoothCutout(TEXTURE)), combinedLight, OverlayTexture.NO_OVERLAY, 1F, 1F, 1F, 1.0F);
+		xp_solidifier_model.renderToBuffer(matrixStack, bufferIn.getBuffer(RenderType.entitySmoothCutout(TEXTURE)), combinedLight, OverlayTexture.NO_OVERLAY, 0xFFFFFFFF);
 		
 		matrixStack.pushPose();
 		matrixStack.translate(0D, 0.79375D, -0.22D);
@@ -160,7 +160,7 @@ public class TileEntityXPSolidifierRenderer implements BlockEntityRenderer<TileE
 		float fluidLevel = tile.tank.getFluidAmount();
 		if (fluidLevel < 1)
 			return;
-		FluidStack fluidStack = new FluidStack(tile.tank.getFluid(), 100);
+		FluidStack fluidStack = new FluidStack(tile.tank.getFluid().getFluidHolder(), 100);
 		float height = (0.46875F / tile.tank.getCapacity()) * tile.tank.getFluidAmount();
 
 		var fluidExtensions = IClientFluidTypeExtensions.of(fluidStack.getFluid());

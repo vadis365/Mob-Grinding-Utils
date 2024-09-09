@@ -16,6 +16,8 @@ import net.minecraft.client.renderer.RenderType;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 
+import javax.annotation.Nonnull;
+
 @OnlyIn(Dist.CLIENT)
 public class ModelSawBlade extends Model {
     public ModelPart main;
@@ -141,12 +143,12 @@ public class ModelSawBlade extends Model {
 	}
 
 	
-	public void renderToBuffer(PoseStack matrixStackIn, VertexConsumer bufferIn, int packedLightIn, int packedOverlayIn, float red, float green, float blue, float alpha) {
+	public void renderToBuffer(@Nonnull PoseStack matrixStackIn, @Nonnull VertexConsumer bufferIn, int packedLightIn, int packedOverlayIn, int color) {
 		ImmutableList.of(main, back, front, left, right, tooth1Main, tooth2Main, tooth3Main, tooth4Main, tooth5Main,
 				tooth6Main, tooth7Main, tooth8Main, tooth9Main, tooth10Main, tooth11Main, tooth12Main, tooth13Main,
 				tooth14Main, tooth15Main, tooth16Main, tooth1End, tooth2End, tooth3End, tooth4End, tooth5End, tooth6End,
 				tooth7End, tooth8End, tooth9End, tooth10End, tooth11End, tooth12End, tooth13End, tooth14End, tooth15End,
-				tooth16End).forEach((p_228279_8_) -> { p_228279_8_.render(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn, red, green, blue, alpha);
+				tooth16End).forEach((p_228279_8_) -> { p_228279_8_.render(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn, color);
 				});
 	}
 
@@ -155,5 +157,4 @@ public class ModelSawBlade extends Model {
 		model.yRot = y;
 		model.zRot = z;
 	}
-
 }

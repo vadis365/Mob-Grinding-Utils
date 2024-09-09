@@ -37,7 +37,7 @@ public class BlockWitherMuffler extends Block {
 
 	@Nonnull
 	@Override
-	public InteractionResult use(BlockState state, Level world, @Nonnull BlockPos pos, @Nonnull Player player, @Nonnull InteractionHand hand, @Nonnull BlockHitResult hit) {
+	public InteractionResult useWithoutItem(BlockState state, Level world, @Nonnull BlockPos pos, @Nonnull Player player, @Nonnull InteractionHand hand, @Nonnull BlockHitResult hit) {
 		boolean swap = !state.getValue(MODE);
 		if (!world.isClientSide)
 			world.setBlock(pos, state.setValue(MODE, swap), 3);

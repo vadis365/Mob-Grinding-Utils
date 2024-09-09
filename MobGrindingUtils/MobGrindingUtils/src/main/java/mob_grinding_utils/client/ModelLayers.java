@@ -19,11 +19,11 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 
 public class ModelLayers {
-    public static final ModelLayerLocation SAW_BASE = new ModelLayerLocation(new ResourceLocation(Reference.MOD_ID, "saw_base"), "saw_base");
-    public static final ModelLayerLocation SAW_BLADE = new ModelLayerLocation(new ResourceLocation(Reference.MOD_ID, "saw_blade"), "saw_blade");
-    public static final ModelLayerLocation ABSORPTION_HOPPER = new ModelLayerLocation(new ResourceLocation(Reference.MOD_ID, "absorption_hopper"), "absorption_hopper");
-    public static final ModelLayerLocation TANK = new ModelLayerLocation(new ResourceLocation(Reference.MOD_ID, "tank"), "tank");
-    public static final ModelLayerLocation XPSOLIDIFIER = new ModelLayerLocation(new ResourceLocation(Reference.MOD_ID, "xp_solidifier"), "xp_solidifier");
+    public static final ModelLayerLocation SAW_BASE = new ModelLayerLocation(ResourceLocation.fromNamespaceAndPath(Reference.MOD_ID, "saw_base"), "saw_base");
+    public static final ModelLayerLocation SAW_BLADE = new ModelLayerLocation(ResourceLocation.fromNamespaceAndPath(Reference.MOD_ID, "saw_blade"), "saw_blade");
+    public static final ModelLayerLocation ABSORPTION_HOPPER = new ModelLayerLocation(ResourceLocation.fromNamespaceAndPath(Reference.MOD_ID, "absorption_hopper"), "absorption_hopper");
+    public static final ModelLayerLocation TANK = new ModelLayerLocation(ResourceLocation.fromNamespaceAndPath(Reference.MOD_ID, "tank"), "tank");
+    public static final ModelLayerLocation XPSOLIDIFIER = new ModelLayerLocation(ResourceLocation.fromNamespaceAndPath(Reference.MOD_ID, "xp_solidifier"), "xp_solidifier");
 
     public static void init(IEventBus bus) {
         bus.addListener(ModelLayers::registerEntityRenderers);
