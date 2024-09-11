@@ -9,6 +9,7 @@ import mob_grinding_utils.client.ModelLayers;
 import mob_grinding_utils.models.ModelSawBase;
 import mob_grinding_utils.models.ModelSawBlade;
 import mob_grinding_utils.tile.TileEntitySaw;
+import mob_grinding_utils.util.RL;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
@@ -25,8 +26,8 @@ import javax.annotation.Nonnull;
 @OnlyIn(Dist.CLIENT)
 public class TileEntitySawRenderer implements BlockEntityRenderer<TileEntitySaw> {
 
-	private static final ResourceLocation BASE_TEXTURE = new ResourceLocation("mob_grinding_utils:textures/tiles/saw_base.png");
-	private static final ResourceLocation BLADE_TEXTURE = new ResourceLocation("mob_grinding_utils:textures/tiles/saw_blade.png");
+	private static final ResourceLocation BASE_TEXTURE = RL.mgu("textures/tiles/saw_base.png");
+	private static final ResourceLocation BLADE_TEXTURE = RL.mgu("textures/tiles/saw_blade.png");
 	private final ModelSawBase saw_base;
 	private final ModelSawBlade saw_blade;
 

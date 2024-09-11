@@ -42,7 +42,7 @@ public class Recipes extends RecipeProvider {
             .define('O', Tags.Items.OBSIDIANS)
             .define('H', Items.HOPPER)
             .unlockedBy("", noneItem)
-            .save(consumer, RL.rl( "recipe_absorbtion_hopper"));
+            .save(consumer, RL.mgu( "recipe_absorbtion_hopper"));
 
         // Absorption Hopper Upgrade
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.ABSORPTION_UPGRADE.get())
@@ -54,7 +54,7 @@ public class Recipes extends RecipeProvider {
             .define('R', Tags.Items.DUSTS_REDSTONE)
             .define('H', Items.HOPPER)
             .unlockedBy("", noneItem)
-            .save(consumer, RL.rl( "recipe_absorbtion_upgrade"));
+            .save(consumer, RL.mgu( "recipe_absorbtion_upgrade"));
 
         // Spikes
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModBlocks.SPIKES.getItem())
@@ -63,7 +63,7 @@ public class Recipes extends RecipeProvider {
             .define('S', Items.IRON_SWORD)
             .define('I', Tags.Items.STORAGE_BLOCKS_IRON)
             .unlockedBy("", noneItem)
-            .save(consumer, RL.rl( "recipe_spikes"));
+            .save(consumer, RL.mgu( "recipe_spikes"));
 
         // Tank
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModBlocks.TANK.getItem())
@@ -73,11 +73,11 @@ public class Recipes extends RecipeProvider {
             .define('I', Tags.Items.INGOTS_IRON)
             .define('G', Tags.Items.GLASS_BLOCKS)
             .unlockedBy("", noneItem)
-            .save(consumer, RL.rl( "recipe_tank"));
+            .save(consumer, RL.mgu( "recipe_tank"));
 
         ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ModBlocks.TANK.getItem()).requires(ModBlocks.TANK.getItem(),1)
             .unlockedBy("", noneItem)
-            .save(consumer, RL.rl( "recipe_tank_reset"));
+            .save(consumer, RL.mgu( "recipe_tank_reset"));
 
         // Tank Sink
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModBlocks.TANK_SINK.getItem())
@@ -89,11 +89,11 @@ public class Recipes extends RecipeProvider {
             .define('H', Items.HOPPER)
             .define('T', ModBlocks.TANK.getItem())
             .unlockedBy("", noneItem)
-            .save(consumer, RL.rl( "recipe_tank_sink"));
+            .save(consumer, RL.mgu( "recipe_tank_sink"));
 
         ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ModBlocks.TANK_SINK.getItem()).requires(ModBlocks.TANK_SINK.getItem(),1)
             .unlockedBy("", noneItem)
-            .save(consumer, RL.rl( "recipe_tank_sink_reset"));
+            .save(consumer, RL.mgu( "recipe_tank_sink_reset"));
 
         // XP TAP
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModBlocks.XP_TAP.getItem())
@@ -103,7 +103,7 @@ public class Recipes extends RecipeProvider {
             .define('O', Tags.Items.OBSIDIANS)
             .define('I', Tags.Items.INGOTS_IRON)
             .unlockedBy("", noneItem)
-            .save(consumer, RL.rl( "recipe_xp_tap"));
+            .save(consumer, RL.mgu( "recipe_xp_tap"));
 
         // Fan
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModBlocks.FAN.getItem())
@@ -114,7 +114,7 @@ public class Recipes extends RecipeProvider {
             .define('I', Tags.Items.INGOTS_IRON)
             .define('R', Tags.Items.STORAGE_BLOCKS_REDSTONE)
             .unlockedBy("", noneItem)
-            .save(consumer, RL.rl( "recipe_fan"));
+            .save(consumer, RL.mgu( "recipe_fan"));
 
         // Fan Upgrades
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.FAN_UPGRADE_WIDTH.get())
@@ -124,7 +124,7 @@ public class Recipes extends RecipeProvider {
             .define('I', Tags.Items.INGOTS_IRON)
             .define('F', Tags.Items.FEATHERS)
             .unlockedBy("", noneItem)
-            .save(consumer, RL.rl( "recipe_fan_upgrade_width"));
+            .save(consumer, RL.mgu( "recipe_fan_upgrade_width"));
 
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.FAN_UPGRADE_HEIGHT.get())
             .pattern("IFI")
@@ -133,7 +133,7 @@ public class Recipes extends RecipeProvider {
             .define('I', Tags.Items.INGOTS_IRON)
             .define('F', Tags.Items.FEATHERS)
             .unlockedBy("", noneItem)
-            .save(consumer, RL.rl( "recipe_fan_upgrade_height"));
+            .save(consumer, RL.mgu( "recipe_fan_upgrade_height"));
 
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.FAN_UPGRADE_SPEED.get())
             .pattern("FIF")
@@ -143,7 +143,7 @@ public class Recipes extends RecipeProvider {
             .define('F', Tags.Items.FEATHERS)
             .define('R', Tags.Items.DUSTS_REDSTONE)
             .unlockedBy("", noneItem)
-            .save(consumer, RL.rl( "recipe_fan_upgrade_speed"));
+            .save(consumer, RL.mgu( "recipe_fan_upgrade_speed"));
 
         // Mob Swab
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.MOB_SWAB.get())
@@ -153,7 +153,7 @@ public class Recipes extends RecipeProvider {
             .define('W', ItemTags.WOOL)
             .define('S', Tags.Items.RODS_WOODEN)
             .unlockedBy("", noneItem)
-            .save(consumer, RL.rl( "recipe_mob_swab"));
+            .save(consumer, RL.mgu( "recipe_mob_swab"));
 
         // Wither Muffler
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModBlocks.WITHER_MUFFLER.getItem())
@@ -163,7 +163,7 @@ public class Recipes extends RecipeProvider {
             .define('W', ItemTags.WOOL)
             .define('S', Items.WITHER_SKELETON_SKULL)
             .unlockedBy("", noneItem)
-            .save(consumer, RL.rl( "recipe_wither_muffler"));
+            .save(consumer, RL.mgu( "recipe_wither_muffler"));
 
         // Dragon Muffler
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModBlocks.DRAGON_MUFFLER.getItem())
@@ -173,7 +173,7 @@ public class Recipes extends RecipeProvider {
             .define('W', ItemTags.WOOL)
             .define('E', Items.DRAGON_EGG)
             .unlockedBy("", noneItem)
-            .save(consumer, RL.rl( "recipe_dragon_muffler"));
+            .save(consumer, RL.mgu( "recipe_dragon_muffler"));
 
         // Mob Masher
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModBlocks.SAW.getItem())
@@ -186,7 +186,7 @@ public class Recipes extends RecipeProvider {
             .define('R', Tags.Items.STORAGE_BLOCKS_REDSTONE)
             .define('I', Tags.Items.STORAGE_BLOCKS_IRON)
             .unlockedBy("", noneItem)
-            .save(consumer, RL.rl( "recipe_saw"));
+            .save(consumer, RL.mgu( "recipe_saw"));
 
         // Mob Masher Upgrades
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.SAW_UPGRADE_SHARPNESS.get())
@@ -197,7 +197,7 @@ public class Recipes extends RecipeProvider {
             .define('S', Items.IRON_SWORD)
             .define('R', Tags.Items.DUSTS_REDSTONE)
             .unlockedBy("", noneItem)
-            .save(consumer, RL.rl( "recipe_saw_upgrade_sharpness"));
+            .save(consumer, RL.mgu( "recipe_saw_upgrade_sharpness"));
 
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.SAW_UPGRADE_LOOTING.get())
             .pattern("GLG")
@@ -207,7 +207,7 @@ public class Recipes extends RecipeProvider {
             .define('L', Tags.Items.DYES_BLUE)
             .define('R', Tags.Items.DUSTS_REDSTONE)
             .unlockedBy("", noneItem)
-            .save(consumer, RL.rl( "recipe_saw_upgrade_looting"));
+            .save(consumer, RL.mgu( "recipe_saw_upgrade_looting"));
 
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.SAW_UPGRADE_FIRE.get())
             .pattern("GFG")
@@ -217,7 +217,7 @@ public class Recipes extends RecipeProvider {
             .define('F', Items.FLINT_AND_STEEL)
             .define('R', Tags.Items.DUSTS_REDSTONE)
             .unlockedBy("", noneItem)
-            .save(consumer, RL.rl( "recipe_saw_upgrade_fire"));
+            .save(consumer, RL.mgu( "recipe_saw_upgrade_fire"));
 
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.SAW_UPGRADE_SMITE.get())
             .pattern("GFG")
@@ -227,7 +227,7 @@ public class Recipes extends RecipeProvider {
             .define('F', Items.ROTTEN_FLESH)
             .define('R', Tags.Items.DUSTS_REDSTONE)
             .unlockedBy("", noneItem)
-            .save(consumer, RL.rl( "recipe_saw_upgrade_smite"));
+            .save(consumer, RL.mgu( "recipe_saw_upgrade_smite"));
 
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.SAW_UPGRADE_ARTHROPOD.get())
             .pattern("GSG")
@@ -237,7 +237,7 @@ public class Recipes extends RecipeProvider {
             .define('S', Items.SPIDER_EYE)
             .define('R', Tags.Items.DUSTS_REDSTONE)
             .unlockedBy("", noneItem)
-            .save(consumer, RL.rl( "recipe_saw_upgrade_arthropod"));
+            .save(consumer, RL.mgu( "recipe_saw_upgrade_arthropod"));
 
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.SAW_UPGRADE_BEHEADING.get())
             .pattern("GHG")
@@ -248,7 +248,7 @@ public class Recipes extends RecipeProvider {
             .define('I', Items.IRON_HELMET)
             .define('R', Tags.Items.DUSTS_REDSTONE)
             .unlockedBy("", noneItem)
-            .save(consumer, RL.rl( "recipe_saw_upgrade_beheading"));
+            .save(consumer, RL.mgu( "recipe_saw_upgrade_beheading"));
 
         // Entity Conveyor
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModBlocks.ENTITY_CONVEYOR.getItem(),6)
@@ -259,7 +259,7 @@ public class Recipes extends RecipeProvider {
             .define('S', Tags.Items.SLIMEBALLS)
             .define('R', Tags.Items.DUSTS_REDSTONE)
             .unlockedBy("", noneItem)
-            .save(consumer, RL.rl( "recipe_entity_conveyor"));
+            .save(consumer, RL.mgu( "recipe_entity_conveyor"));
 
         // Ender Inhibitor
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModBlocks.ENDER_INHIBITOR_ON.getItem())
@@ -271,7 +271,7 @@ public class Recipes extends RecipeProvider {
             .define('R', Tags.Items.DUSTS_REDSTONE)
             .define('G', Tags.Items.DUSTS_GLOWSTONE)
             .unlockedBy("", noneItem)
-            .save(consumer, RL.rl( "recipe_ender_inhibitor"));
+            .save(consumer, RL.mgu( "recipe_ender_inhibitor"));
 
         //Jumbo Tank
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModBlocks.JUMBO_TANK.getItem())
@@ -281,11 +281,11 @@ public class Recipes extends RecipeProvider {
             .define('I', Tags.Items.INGOTS_IRON)
             .define('T', ModBlocks.TANK.getItem())
             .unlockedBy("", noneItem)
-            .save(consumer, RL.rl( "recipe_jumbotank"));
+            .save(consumer, RL.mgu( "recipe_jumbotank"));
 
         ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ModBlocks.JUMBO_TANK.getItem()).requires(ModBlocks.JUMBO_TANK.getItem(),1)
             .unlockedBy("", noneItem)
-            .save(consumer, RL.rl( "recipe_jumbo_tank_reset"));
+            .save(consumer, RL.mgu( "recipe_jumbo_tank_reset"));
 
         //Tinted Glass
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModBlocks.TINTED_GLASS.getItem(), 4)
@@ -295,7 +295,7 @@ public class Recipes extends RecipeProvider {
             .define('C', ItemTags.COALS)
             .define('G', Tags.Items.GLASS_BLOCKS)
             .unlockedBy("", noneItem)
-            .save(consumer, RL.rl( "recipe_tintedglass"));
+            .save(consumer, RL.mgu( "recipe_tintedglass"));
 
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.GM_CHICKEN_FEED_CURSED.get())
             .pattern("BEB")
@@ -308,7 +308,7 @@ public class Recipes extends RecipeProvider {
             .define('X', Tags.Items.BONES)
             .define('G', Tags.Items.GUNPOWDERS)
             .unlockedBy("", noneItem)
-            .save(consumer, RL.rl( "recipe_cursed_feed"));
+            .save(consumer, RL.mgu( "recipe_cursed_feed"));
 
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModBlocks.XPSOLIDIFIER.getItem())
             .pattern(" P ")
@@ -319,11 +319,11 @@ public class Recipes extends RecipeProvider {
             .define('H', Items.HOPPER)
             .define('T', ModBlocks.TANK.getItem())
             .unlockedBy("", noneItem)
-            .save(consumer, RL.rl( "recipe_solidifier"));
+            .save(consumer, RL.mgu( "recipe_solidifier"));
 
         ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ModBlocks.XPSOLIDIFIER.getItem()).requires(ModBlocks.XPSOLIDIFIER.getItem(),1)
             .unlockedBy("", noneItem)
-            .save(consumer, RL.rl( "recipe_solidifier_reset"));
+            .save(consumer, RL.mgu( "recipe_solidifier_reset"));
 
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModBlocks.ENTITY_SPAWNER.getItem())
             .pattern("EEE")
@@ -335,7 +335,7 @@ public class Recipes extends RecipeProvider {
             .define('X', ModBlocks.SOLID_XP_BLOCK.getItem())
             .define('E', Items.ENDER_EYE)
             .unlockedBy("", noneItem)
-            .save(consumer, RL.rl( "recipe_entity_spawner"));
+            .save(consumer, RL.mgu( "recipe_entity_spawner"));
 
         //Blank Mould
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.SOLID_XP_MOULD_BLANK.get())
@@ -345,30 +345,30 @@ public class Recipes extends RecipeProvider {
             .define('X', Tags.Items.NUGGETS_GOLD)
             .define('B', new FluidIngredient(ModTags.Fluids.EXPERIENCE).toVanilla())
             .unlockedBy("", noneItem)
-            .save(consumer, RL.rl( "recipe_mould_blank"));
+            .save(consumer, RL.mgu( "recipe_mould_blank"));
 
         //Mould upgrade chain, starting with blank
         ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ModItems.SOLID_XP_MOULD_BABY.get())
             .requires(ModItems.SOLID_XP_MOULD_BLANK.get())
             .unlockedBy("", noneItem)
-            .save(consumer, RL.rl( "recipe_mould_baby_upgrade"));
+            .save(consumer, RL.mgu( "recipe_mould_baby_upgrade"));
 
         //Last one in the chain should reset to blank
         ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ModItems.SOLID_XP_MOULD_BLANK.get())
             .requires(ModItems.SOLID_XP_MOULD_BABY.get())
             .unlockedBy("", noneItem)
-            .save(consumer, RL.rl( "recipe_mould_reset"));
+            .save(consumer, RL.mgu( "recipe_mould_reset"));
 
         //Solid XP Block
         ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ModBlocks.SOLID_XP_BLOCK.getItem())
             .requires(ModItems.SOLID_XP_BABY.get(), 9)
             .unlockedBy("", noneItem)
-            .save(consumer, RL.rl( "recipe_xp_block"));
+            .save(consumer, RL.mgu( "recipe_xp_block"));
         //Uncraft
         ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ModItems.SOLID_XP_BABY.get(), 9)
             .requires(ModBlocks.SOLID_XP_BLOCK.getItem())
             .unlockedBy("", noneItem)
-            .save(consumer, RL.rl( "recipe_xp_block_uncraft"));
+            .save(consumer, RL.mgu( "recipe_xp_block_uncraft"));
 
         //Solidifier upgrade
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.XP_SOLIDIFIER_UPGRADE.get())
@@ -380,7 +380,7 @@ public class Recipes extends RecipeProvider {
             .define('B', Items.BLAZE_POWDER)
             .define('X', new FluidIngredient(ModTags.Fluids.EXPERIENCE).toVanilla())
             .unlockedBy("", noneItem)
-            .save(consumer, RL.rl( "recipe_xpsolidifier_upgrade"));
+            .save(consumer, RL.mgu( "recipe_xpsolidifier_upgrade"));
 
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.NUTRITIOUS_CHICKEN_FEED.get())
             .pattern("BCB")
@@ -393,7 +393,7 @@ public class Recipes extends RecipeProvider {
             .define('X', Items.BEETROOT)
             .define('W', Items.WHEAT)
             .unlockedBy("", noneItem)
-            .save(consumer, RL.rl( "recipe_nutritious_feed"));
+            .save(consumer, RL.mgu( "recipe_nutritious_feed"));
 
         //Spawner width upgrade
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.SPAWNER_UPGRADE_WIDTH.get())
@@ -404,7 +404,7 @@ public class Recipes extends RecipeProvider {
             .define('B', Items.BLAZE_POWDER)
             .define('X', new FluidIngredient(ModTags.Fluids.EXPERIENCE).toVanilla())
             .unlockedBy("", noneItem)
-            .save(consumer, RL.rl( "recipe_spawner_upgrade_width"));
+            .save(consumer, RL.mgu( "recipe_spawner_upgrade_width"));
 
         //Spawner height upgrade
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.SPAWNER_UPGRADE_HEIGHT.get())
@@ -415,18 +415,18 @@ public class Recipes extends RecipeProvider {
             .define('B', Items.BLAZE_POWDER)
             .define('X', new FluidIngredient(ModTags.Fluids.EXPERIENCE).toVanilla())
             .unlockedBy("", noneItem)
-            .save(consumer, RL.rl( "recipe_spawner_upgrade_height"));
+            .save(consumer, RL.mgu( "recipe_spawner_upgrade_height"));
 
         ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ModItems.GM_CHICKEN_FEED.get())
             .requires(Tags.Items.SEEDS)
             .requires(ModItems.MOB_SWAB_USED.get())
             .requires(new FluidIngredient(ModTags.Fluids.EXPERIENCE).toVanilla())
             .unlockedBy("", noneItem)
-            .save(new RecipeInjector<ShapelessRecipe>(consumer, ChickenFeedRecipe::new), RL.rl( "gm_chicken_feed"));
+            .save(new RecipeInjector<ShapelessRecipe>(consumer, ChickenFeedRecipe::new), RL.mgu( "gm_chicken_feed"));
 
 
         //Solidifier recipes
-        consumer.accept(RL.rl( "solidify/jelly_baby"), new SolidifyRecipe(Ingredient.of(ModItems.SOLID_XP_MOULD_BABY.get()), new ItemStack(ModItems.SOLID_XP_BABY.get()), 1000), null);
+        consumer.accept(RL.mgu( "solidify/jelly_baby"), new SolidifyRecipe(Ingredient.of(ModItems.SOLID_XP_MOULD_BABY.get()), new ItemStack(ModItems.SOLID_XP_BABY.get()), 1000), null);
 
         generateBeheading(consumer);
     }
@@ -465,6 +465,6 @@ public class Recipes extends RecipeProvider {
                 new ModLoadedCondition(modid));
     }*/
     private void Head(RecipeOutput consumer, String name, EntityType<?> type, Item item) {
-        consumer.accept(RL.rl( "beheading/" + name), HeadRecipe(type, item), null);
+        consumer.accept(RL.mgu( "beheading/" + name), HeadRecipe(type, item), null);
     }
 }

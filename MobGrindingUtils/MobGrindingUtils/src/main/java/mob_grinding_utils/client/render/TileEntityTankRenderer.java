@@ -7,6 +7,7 @@ import mob_grinding_utils.models.ModelTankBlock;
 import mob_grinding_utils.tile.TileEntityJumboTank;
 import mob_grinding_utils.tile.TileEntitySinkTank;
 import mob_grinding_utils.tile.TileEntityTank;
+import mob_grinding_utils.util.RL;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -26,9 +27,9 @@ import javax.annotation.Nonnull;
 
 @OnlyIn(Dist.CLIENT)
 public class TileEntityTankRenderer implements BlockEntityRenderer<TileEntityTank> {
-	private static final ResourceLocation TANK_TEXTURE = new ResourceLocation("mob_grinding_utils:textures/tiles/tank.png");
-	private static final ResourceLocation TANK_SINK_TEXTURE = new ResourceLocation("mob_grinding_utils:textures/tiles/tank_sink.png");
-	private static final ResourceLocation TANK_JUMBO_TEXTURE = new ResourceLocation("mob_grinding_utils:textures/tiles/tank_jumbo.png");
+	private static final ResourceLocation TANK_TEXTURE = RL.mgu("textures/tiles/tank.png");
+	private static final ResourceLocation TANK_SINK_TEXTURE = RL.mgu("textures/tiles/tank_sink.png");
+	private static final ResourceLocation TANK_JUMBO_TEXTURE = RL.mgu("textures/tiles/tank_jumbo.png");
 	private final ModelTankBlock tank_model;
 	
 	public TileEntityTankRenderer(Context context) {
@@ -48,7 +49,7 @@ public class TileEntityTankRenderer implements BlockEntityRenderer<TileEntityTan
 		float fluidLevel = tile.tank.getFluidAmount();
 		if (fluidLevel < 1)
 			return;
-		FluidStack fluidStack = new FluidStack(tile.tank.getFluid(), 100);
+		FluidStack fluidStack = new FluidStack(tile.tank.getFluid().getFluidHolder(), 100);
 		float height = (0.96875F / tile.tank.getCapacity()) * tile.tank.getFluidAmount();
 
 		var fluidExtensions = IClientFluidTypeExtensions.of(fluidStack.getFluid());
@@ -124,7 +125,7 @@ public class TileEntityTankRenderer implements BlockEntityRenderer<TileEntityTan
 	}
 
 	private void addVertexWithUV(VertexConsumer buffer, PoseStack matrixStack, float x, float y, float z, float u, float v, float red, float green, float blue, float alpha, int combinedLight) {
-		buffer.vertex(matrixStack.last().pose(), x / 2f, y, z / 2f).color(red, green, blue, alpha).uv(u, v).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(combinedLight, 240).normal(1, 0, 0).endVertex();
+		buffer.addVertex(matrixStack.last().pose(), x / 2f, y, z / 2f).setColor(red, green, blue, alpha).setUv(u, v).setOverlay(OverlayTexture.NO_OVERLAY).setUv2(combinedLight, 240).setNormal(1, 0, 0);
 	}
 
 }

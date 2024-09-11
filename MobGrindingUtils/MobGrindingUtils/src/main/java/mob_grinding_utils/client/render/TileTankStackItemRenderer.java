@@ -7,6 +7,7 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import mob_grinding_utils.ModBlocks;
 import mob_grinding_utils.client.ModelLayers;
 import mob_grinding_utils.models.ModelTankBlock;
+import mob_grinding_utils.util.RL;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.geom.EntityModelSet;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
@@ -30,9 +31,9 @@ import javax.annotation.Nonnull;
 @OnlyIn(Dist.CLIENT)
 public class TileTankStackItemRenderer extends BlockEntityWithoutLevelRenderer {
 
-	private static final ResourceLocation TANK_TEXTURE = ResourceLocation.tryParse("mob_grinding_utils:textures/tiles/tank.png");
-	private static final ResourceLocation TANK_SINK_TEXTURE = ResourceLocation.tryParse("mob_grinding_utils:textures/tiles/tank_sink.png");
-	private static final ResourceLocation TANK_JUMBO_TEXTURE = ResourceLocation.tryParse("mob_grinding_utils:textures/tiles/tank_jumbo.png");
+	private static final ResourceLocation TANK_TEXTURE = RL.mgu("textures/tiles/tank.png");
+	private static final ResourceLocation TANK_SINK_TEXTURE = RL.mgu("textures/tiles/tank_sink.png");
+	private static final ResourceLocation TANK_JUMBO_TEXTURE = RL.mgu("textures/tiles/tank_jumbo.png");
 	private final ModelTankBlock tank_model;
 	private FluidStack fluidStack;
 
@@ -140,6 +141,6 @@ public class TileTankStackItemRenderer extends BlockEntityWithoutLevelRenderer {
 	}
 
 	private void addVertexWithUV(VertexConsumer buffer, PoseStack matrixStack, float x, float y, float z, float u, float v, float red, float green, float blue, float alpha, int combinedLight) {
-		buffer.vertex(matrixStack.last().pose(), x / 2f, y, z / 2f).color(red, green, blue, alpha).uv(u, v).uv2(combinedLight, 240).normal(1, 0, 0).endVertex();
+		buffer.addVertex(matrixStack.last().pose(), x / 2f, y, z / 2f).setColor(red, green, blue, alpha).setUv(u, v).setUv2(combinedLight, 240).setNormal(1, 0, 0);
 	}
 }

@@ -7,7 +7,7 @@ public class Generator {
     public static void gatherData(GatherDataEvent event) {
         DataGenerator gen = event.getGenerator();
 
-        gen.addProvider(true, new Recipes(gen));
+        gen.addProvider(true, new Recipes(gen, event.getLookupProvider()));
 
         MGUBlockTags blockTags = new MGUBlockTags(gen, event.getLookupProvider(), event.getExistingFileHelper());
         gen.addProvider(true, blockTags);

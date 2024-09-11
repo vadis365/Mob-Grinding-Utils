@@ -7,6 +7,7 @@ import mob_grinding_utils.client.ModelLayers;
 import mob_grinding_utils.models.ModelAHConnect;
 import mob_grinding_utils.tile.TileEntityAbsorptionHopper;
 import mob_grinding_utils.tile.TileEntityAbsorptionHopper.EnumStatus;
+import mob_grinding_utils.util.RL;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -24,8 +25,8 @@ import javax.annotation.Nonnull;
 
 @OnlyIn(Dist.CLIENT)
 public class TileEntityAbsorptionRenderer implements BlockEntityRenderer<TileEntityAbsorptionHopper> {
-	private static final ResourceLocation ITEM_TEXTURE = ResourceLocation.tryParse("mob_grinding_utils:textures/tiles/absorption_hopper_connects_items.png");
-	private static final ResourceLocation FLUID_TEXTURE = ResourceLocation.tryParse("mob_grinding_utils:textures/tiles/absorption_hopper_connects_fluids.png");
+	private static final ResourceLocation ITEM_TEXTURE = RL.mgu("textures/tiles/absorption_hopper_connects_items.png");
+	private static final ResourceLocation FLUID_TEXTURE = RL.mgu("textures/tiles/absorption_hopper_connects_fluids.png");
 	private final ModelAHConnect connectionModel;
 
 	public TileEntityAbsorptionRenderer(Context context) {

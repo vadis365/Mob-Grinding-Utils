@@ -3,10 +3,10 @@ package mob_grinding_utils.datagen;
 import mob_grinding_utils.ModBlocks;
 import mob_grinding_utils.ModTags;
 import mob_grinding_utils.Reference;
+import mob_grinding_utils.util.RL;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.tags.FluidTagsProvider;
-import net.minecraft.resources.ResourceLocation;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 
 import javax.annotation.Nonnull;
@@ -22,7 +22,7 @@ public class MGUFluidTags extends FluidTagsProvider {
         tag(ModTags.Fluids.EXPERIENCE).add(ModBlocks.FLUID_XP.get());
         tag(ModTags.Fluids.XPJUICE).add(ModBlocks.FLUID_XP.get());
 
-        tag(ModTags.Fluids.EXPERIENCE).addOptional(new ResourceLocation("pneumaticcraft","memory_essence"));
-        tag(ModTags.Fluids.EXPERIENCE).addOptional(new ResourceLocation("cofh_core","experience"));
+        tag(ModTags.Fluids.EXPERIENCE).addOptional(RL.rl("pneumaticcraft", "memory_essence"));
+        tag(ModTags.Fluids.EXPERIENCE).addOptional(RL.rl("cofh_core","experience"));
     }
 }

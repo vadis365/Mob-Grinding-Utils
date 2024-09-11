@@ -11,6 +11,7 @@ import mob_grinding_utils.client.ModelLayers;
 import mob_grinding_utils.models.ModelXPSolidifier;
 import mob_grinding_utils.tile.TileEntityXPSolidifier;
 import mob_grinding_utils.tile.TileEntityXPSolidifier.OutputDirection;
+import mob_grinding_utils.util.RL;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -31,8 +32,8 @@ import net.neoforged.neoforge.fluids.FluidStack;
 
 @OnlyIn(Dist.CLIENT)
 public class TileEntityXPSolidifierRenderer implements BlockEntityRenderer<TileEntityXPSolidifier> {
-	private static final ResourceLocation TEXTURE = ResourceLocation.tryParse("mob_grinding_utils:textures/tiles/xp_solidifier.png");
-	private static final ResourceLocation TEXTURE_NO_PUSH = ResourceLocation.tryParse("mob_grinding_utils:textures/tiles/xp_solidifier_no_push.png");
+	private static final ResourceLocation TEXTURE = RL.mgu("textures/tiles/xp_solidifier.png");
+	private static final ResourceLocation TEXTURE_NO_PUSH = RL.mgu("textures/tiles/xp_solidifier_no_push.png");
 	private final ModelXPSolidifier xp_solidifier_model;
 
 	public TileEntityXPSolidifierRenderer(Context context) {
@@ -259,7 +260,7 @@ public class TileEntityXPSolidifierRenderer implements BlockEntityRenderer<TileE
 	}
 
 	private void addVertexWithUV(VertexConsumer buffer, PoseStack matrixStack, float x, float y, float z, float u, float v, float red, float green, float blue, float alpha, int combinedLight) {
-		buffer.vertex(matrixStack.last().pose(), x / 2f, y, z / 2f).color(red, green, blue, alpha).uv(u, v).uv2(combinedLight, 240).normal(1, 0, 0).endVertex();
+		buffer.addVertex(matrixStack.last().pose(), x / 2f, y, z / 2f).setColor(red, green, blue, alpha).setUv(u, v).setUv2(combinedLight, 240).setNormal(1, 0, 0);
 	}
 
 }

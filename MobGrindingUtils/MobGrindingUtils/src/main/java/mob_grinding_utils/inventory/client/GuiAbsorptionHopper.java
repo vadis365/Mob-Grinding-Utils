@@ -4,11 +4,11 @@ import mob_grinding_utils.inventory.server.ContainerAbsorptionHopper;
 import mob_grinding_utils.network.BEGuiClick;
 import mob_grinding_utils.tile.TileEntityAbsorptionHopper;
 import mob_grinding_utils.tile.TileEntityAbsorptionHopper.EnumStatus;
+import mob_grinding_utils.util.RL;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.neoforged.neoforge.network.PacketDistributor;
 
@@ -18,7 +18,7 @@ public class GuiAbsorptionHopper extends MGUScreen<ContainerAbsorptionHopper> {
 	private final TileEntityAbsorptionHopper tile;
 	private TankGauge tankGauge;
 	public GuiAbsorptionHopper(ContainerAbsorptionHopper container, Inventory playerInventory, Component title) {
-		super(container, playerInventory, title, new ResourceLocation("mob_grinding_utils:textures/gui/absorption_hopper_gui.png"));
+		super(container, playerInventory, title, RL.mgu("textures/gui/absorption_hopper_gui.png"));
 		this.container = container;
 		this.tile = this.container.hopper;
 		imageHeight = 226;
@@ -35,7 +35,7 @@ public class GuiAbsorptionHopper extends MGUScreen<ContainerAbsorptionHopper> {
 
 		Button.OnPress message = button -> {
 			if (button instanceof GuiMGUButton)
-				PacketDistributor.SERVER.noArg().send(new BEGuiClick(tile.getBlockPos(), ((GuiMGUButton)button).id));
+				PacketDistributor.sendToServer(new BEGuiClick(tile.getBlockPos(), ((GuiMGUButton)button).id));
 		};
 
 		addRenderableWidget(new GuiMGUButton(leftPos + 7, topPos + 17, GuiMGUButton.Size.MEDIUM, 0, Component.literal("Down"), message));
@@ -46,7 +46,7 @@ public class GuiAbsorptionHopper extends MGUScreen<ContainerAbsorptionHopper> {
 		addRenderableWidget(new GuiMGUButton(leftPos + 82, topPos + 51, GuiMGUButton.Size.MEDIUM, 5, Component.literal("East"), message));
 
 		addRenderableWidget(new GuiMGUButton(leftPos + 173, topPos + 113, GuiMGUButton.Size.LARGE, 6, Component.empty(), (button) -> {
-			PacketDistributor.SERVER.noArg().send(new BEGuiClick(tile.getBlockPos(), 6));
+			PacketDistributor.sendToServer(new BEGuiClick(tile.getBlockPos(), 6));
 			tile.showRenderBox = !tile.showRenderBox;
 		}));
 

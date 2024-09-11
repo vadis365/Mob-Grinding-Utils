@@ -25,9 +25,9 @@ public class FillXPBottleEvent {
 					if (event.getLevel().getBlockState(event.getPos()).getBlock() instanceof BlockTank) {
 						TileEntityTank tileentity = (TileEntityTank) event.getLevel().getBlockEntity(event.getPos());
 						if (tileentity != null) {
-							if (tileentity.tank.getFluid() != null && tileentity.tank.getFluid().containsFluid(new FluidStack(ModBlocks.FLUID_XP.get(), 220))) {
+							if (tileentity.tank.getFluid() != null && tileentity.tank.getFluid().is(ModBlocks.FLUID_XP.get())) {
 								if (tileentity.tank.getFluidAmount() >= 200) {
-									tileentity.tank.drain(new FluidStack(tileentity.tank.getFluid(), 200), IFluidHandler.FluidAction.EXECUTE);
+									tileentity.tank.drain(new FluidStack(tileentity.tank.getFluid().getFluidHolder(), 200), IFluidHandler.FluidAction.EXECUTE);
 									event.getLevel().playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.BOTTLE_FILL, SoundSource.NEUTRAL, 1.0F, 1.0F);
 									turnBottleIntoItem(handItem, player, new ItemStack(Items.EXPERIENCE_BOTTLE));
 									handItem.shrink(1);

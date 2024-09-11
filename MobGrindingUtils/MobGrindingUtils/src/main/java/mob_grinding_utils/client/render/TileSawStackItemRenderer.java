@@ -6,6 +6,7 @@ import com.mojang.math.Axis;
 import mob_grinding_utils.client.ModelLayers;
 import mob_grinding_utils.models.ModelSawBase;
 import mob_grinding_utils.models.ModelSawBlade;
+import mob_grinding_utils.util.RL;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.geom.EntityModelSet;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
@@ -24,8 +25,8 @@ import javax.annotation.Nonnull;
 @OnlyIn(Dist.CLIENT)
 public class TileSawStackItemRenderer extends BlockEntityWithoutLevelRenderer {
 
-	private static final ResourceLocation BASE_TEXTURE = ResourceLocation.tryParse("mob_grinding_utils:textures/tiles/saw_base.png");
-	private static final ResourceLocation BLADE_TEXTURE = ResourceLocation.tryParse("mob_grinding_utils:textures/tiles/saw_blade.png");
+	private static final ResourceLocation BASE_TEXTURE = RL.mgu("textures/tiles/saw_base.png");
+	private static final ResourceLocation BLADE_TEXTURE = RL.mgu("textures/tiles/saw_blade.png");
 	private final ModelSawBase saw_base;
 	private final ModelSawBlade saw_blade;
 

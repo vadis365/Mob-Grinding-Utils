@@ -15,8 +15,6 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.SpawnEggItem;
 import net.minecraft.world.level.Level;
 import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.neoforge.event.entity.EntityEvent;
-import net.neoforged.neoforge.event.entity.living.LivingEvent;
 import net.neoforged.neoforge.event.tick.EntityTickEvent;
 import net.neoforged.neoforge.network.PacketDistributor;
 
@@ -43,7 +41,7 @@ public class ChickenFuseEvent {
 
 					if (startTime <= 19) {
 						nbt.putInt("countDown", nbt.getInt("countDown") + 1);
-						PacketDistributor.ALL.noArg().send(new ChickenSyncPacket(entity, nbt));
+						PacketDistributor.sendToAllPlayers(new ChickenSyncPacket((LivingEntity) entity, nbt));
 					}
 
 					if (startTime >= 20) {
