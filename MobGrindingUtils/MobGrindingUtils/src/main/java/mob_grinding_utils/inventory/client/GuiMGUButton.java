@@ -1,5 +1,6 @@
 package mob_grinding_utils.inventory.client;
 
+import mob_grinding_utils.util.RL;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
@@ -10,8 +11,8 @@ import net.minecraft.resources.ResourceLocation;
 import javax.annotation.Nonnull;
 
 public class GuiMGUButton extends Button {
-    private static final ResourceLocation TEXTURES = new ResourceLocation("mob_grinding_utils:textures/gui/absorption_hopper_gui.png");
-    private static final ResourceLocation SOLIDIFIER_TEXTURES = new ResourceLocation("mob_grinding_utils:textures/gui/solidifier_gui.png");
+    private static final ResourceLocation TEXTURES = RL.mgu("textures/gui/absorption_hopper_gui.png");
+    private static final ResourceLocation SOLIDIFIER_TEXTURES = RL.mgu("textures/gui/solidifier_gui.png");
     public Size size;
     public int id;
 

@@ -7,15 +7,18 @@ import mob_grinding_utils.entity.EntityXPOrbFalling;
 import mob_grinding_utils.network.TapParticlePacket;
 import mob_grinding_utils.util.CapHelper;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.neoforged.neoforge.network.PacketDistributor;
 
+import javax.annotation.Nonnull;
 import java.util.Optional;
 
 public class TileEntityXPTap extends BlockEntity {
@@ -37,8 +40,7 @@ public class TileEntityXPTap extends BlockEntity {
 						int xpAmount = EntityXPOrbFalling.getExperienceValue(Math.min(20, handler.getFluidInTank(0).getAmount() / 20));
 						if (!handler.drain(xpAmount * 20, IFluidHandler.FluidAction.EXECUTE).isEmpty()) {
 							tileEntityXPTap.spawnXP(world, worldPosition, xpAmount, tileentity);
-							var particleTarget = new PacketDistributor.TargetPoint(t.getBlockPos().getX(), t.getBlockPos().getY(), t.getBlockPos().getZ(), 30, t.getLevel().dimension());
-							PacketDistributor.NEAR.with(particleTarget).send(new TapParticlePacket(worldPosition));
+							PacketDistributor.sendToPlayersNear((ServerLevel) world, null, t.getBlockPos().getX(), t.getBlockPos().getY(), t.getBlockPos().getZ(), 30,new TapParticlePacket(worldPosition));
 						}
 					}
 				});
@@ -58,34 +60,34 @@ public class TileEntityXPTap extends BlockEntity {
 	}
 
 	@Override
-	public void saveAdditional(CompoundTag nbt) {
-		super.saveAdditional(nbt);
+	public void saveAdditional(@Nonnull CompoundTag nbt, @Nonnull HolderLookup.Provider registries) {
+		super.saveAdditional(nbt, registries);
 		nbt.putBoolean("active", active);
 	}
 
 	@Override
-	public void load(CompoundTag nbt) {
-		super.load(nbt);
+	public void loadAdditional(@Nonnull CompoundTag nbt, @Nonnull HolderLookup.Provider registries) {
+		super.loadAdditional(nbt, registries);
 		active = nbt.getBoolean("active");
 	}
 
 	@Override
-	public CompoundTag getUpdateTag() {
+	public CompoundTag getUpdateTag(@Nonnull HolderLookup.Provider registries) {
 		CompoundTag nbt = new CompoundTag();
-		saveAdditional(nbt);
+		saveAdditional(nbt, registries);
 		return nbt;
 	}
 
 	@Override
 	public ClientboundBlockEntityDataPacket getUpdatePacket() {
 		CompoundTag nbt = new CompoundTag();
-		saveAdditional(nbt);
+		saveAdditional(nbt, level.registryAccess());
 		return ClientboundBlockEntityDataPacket.create(this);
 	}
 
 	@Override
-	public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket packet) {
+	public void onDataPacket(@Nonnull Connection net, ClientboundBlockEntityDataPacket packet, @Nonnull HolderLookup.Provider registries) {
 		if (packet.getTag() != null)
-			load(packet.getTag());
+			loadAdditional(packet.getTag(), registries);
 	}
 }

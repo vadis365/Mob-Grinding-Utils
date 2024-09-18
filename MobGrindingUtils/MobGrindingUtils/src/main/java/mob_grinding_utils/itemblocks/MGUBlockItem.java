@@ -6,13 +6,11 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.List;
 
 public class MGUBlockItem extends BlockItem {
@@ -24,8 +22,8 @@ public class MGUBlockItem extends BlockItem {
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    public void appendHoverText(@Nonnull ItemStack stack, @Nullable Level worldIn, @Nonnull List<Component> tooltip, @Nonnull TooltipFlag flagIn) {
-        super.appendHoverText(stack, worldIn, tooltip, flagIn);
+    public void appendHoverText(@Nonnull ItemStack stack, @Nonnull TooltipContext context, @Nonnull List<Component> tooltip, @Nonnull TooltipFlag flagIn) {
+        super.appendHoverText(stack, context, tooltip, flagIn);
         if (I18n.exists(block.getDescriptionId() + ".tooltip_1")) {
             tooltip.add(Component.translatable(block.getDescriptionId() + ".tooltip_1").withStyle(ChatFormatting.YELLOW));
             if (I18n.exists(block.getDescriptionId() + ".tooltip_2")) {

@@ -3,9 +3,9 @@ package mob_grinding_utils.inventory.client;
 import mob_grinding_utils.inventory.server.ContainerXPSolidifier;
 import mob_grinding_utils.network.BEGuiClick;
 import mob_grinding_utils.tile.TileEntityXPSolidifier;
+import mob_grinding_utils.util.RL;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.neoforged.neoforge.network.PacketDistributor;
 
@@ -20,7 +20,7 @@ public class GuiXPSolidifier extends MGUScreen<ContainerXPSolidifier> {
     private TankGauge tankGauge;
 
     public GuiXPSolidifier(ContainerXPSolidifier screenContainer, Inventory inv, Component titleIn) {
-        super(screenContainer, inv, titleIn, new ResourceLocation("mob_grinding_utils:textures/gui/solidifier_gui.png"));
+        super(screenContainer, inv, titleIn, RL.mgu("textures/gui/solidifier_gui.png"));
         container = screenContainer;
         tile = container.tile;
 
@@ -36,10 +36,10 @@ public class GuiXPSolidifier extends MGUScreen<ContainerXPSolidifier> {
         addRenderableWidget(tankGauge);
 
         addRenderableWidget(new GuiMGUButton(leftPos + 62, topPos + 72, GuiMGUButton.Size.SOLIDIFIER, 0, Component.literal("Push") ,
-            (button) -> PacketDistributor.SERVER.noArg().send(new BEGuiClick(tile.getBlockPos(), 0))));
+            (button) -> PacketDistributor.sendToServer(new BEGuiClick(tile.getBlockPos(), 0))));
 
         addRenderableWidget(new GuiMGUButton(leftPos + 148, topPos + 8, GuiMGUButton.Size.SOLIDIFIER_ON, 0, Component.literal("") ,
-            (button) -> PacketDistributor.SERVER.noArg().send(new BEGuiClick(tile.getBlockPos(), 1))));
+            (button) -> PacketDistributor.sendToServer(new BEGuiClick(tile.getBlockPos(), 1))));
     }
 
     @Override
@@ -66,7 +66,7 @@ public class GuiXPSolidifier extends MGUScreen<ContainerXPSolidifier> {
         super.renderTooltip(gg, x, y);
         if (tankGauge.isHovered()) {
             List<Component> tooltip = new ArrayList<>();
-            tooltip.add(tile.tank.getFluid().getDisplayName());
+            tooltip.add(tile.tank.getFluid().getHoverName());
             tooltip.add(Component.literal(tile.tank.getFluidAmount() + "/" + tile.tank.getCapacity()));
             gg.renderComponentTooltip(font, tooltip, x, y);
         }

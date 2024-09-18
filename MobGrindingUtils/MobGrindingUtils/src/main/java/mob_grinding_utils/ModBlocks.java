@@ -3,32 +3,23 @@ package mob_grinding_utils;
 
 import com.google.common.collect.ImmutableSet;
 import mob_grinding_utils.blocks.*;
-import mob_grinding_utils.client.render.TileSawStackItemRenderer;
-import mob_grinding_utils.client.render.TileTankStackItemRenderer;
-import mob_grinding_utils.client.render.TileXPSolidifierStackItemRenderer;
 import mob_grinding_utils.itemblocks.BlockItemTank;
 import mob_grinding_utils.itemblocks.BlockItemTankJumbo;
 import mob_grinding_utils.itemblocks.BlockItemTankSink;
 import mob_grinding_utils.itemblocks.MGUBlockItem;
 import mob_grinding_utils.tile.*;
-import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.LiquidBlock;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.world.level.block.state.BlockBehaviour;
-import net.minecraft.world.level.material.FlowingFluid;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.material.PushReaction;
 import net.neoforged.bus.api.IEventBus;
-import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
-import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
 import net.neoforged.neoforge.common.SoundActions;
 import net.neoforged.neoforge.fluids.BaseFlowingFluid;
 import net.neoforged.neoforge.fluids.FluidStack;
@@ -38,9 +29,7 @@ import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.NeoForgeRegistries;
 
-import javax.annotation.Nonnull;
 import java.util.Set;
-import java.util.function.Consumer;
 
 public class ModBlocks {
 	public static DeferredRegister.Blocks BLOCKS = DeferredRegister.createBlocks(Reference.MOD_ID);
@@ -54,17 +43,7 @@ public class ModBlocks {
 
 	public static MGUBlockReg<BlockSaw, MGUBlockItem, TileEntitySaw> SAW = new MGUBlockReg<>("saw",
 		() -> new BlockSaw(Block.Properties.of().mapColor(MapColor.COLOR_GRAY).strength(10.0F, 2000.0F).sound(SoundType.METAL).noOcclusion()),
-		(b) -> new MGUBlockItem(b, new Item.Properties()) {
-			@Override
-			public void initializeClient(Consumer<IClientItemExtensions> consumer) {
-				consumer.accept(new IClientItemExtensions() {
-					@Override
-					public BlockEntityWithoutLevelRenderer getCustomRenderer() {
-						return new TileSawStackItemRenderer(null, null);
-					}
-				});
-			}
-		}, TileEntitySaw::new);
+		(b) -> new MGUBlockItem(b, new Item.Properties()), TileEntitySaw::new);
 
 	public static MGUBlockReg<BlockAbsorptionHopper, MGUBlockItem, TileEntityAbsorptionHopper> ABSORPTION_HOPPER = new MGUBlockReg<>("absorption_hopper",
 		() -> new BlockAbsorptionHopper(Block.Properties.of().mapColor(MapColor.COLOR_BLACK).forceSolidOn().strength(10.0F, 2000.0F).sound(SoundType.METAL).noOcclusion()),
@@ -76,31 +55,11 @@ public class ModBlocks {
 
 	public static MGUBlockReg<BlockTank, BlockItemTank, TileEntityTank> TANK = new MGUBlockReg<>("tank",
 		() -> new BlockTank(Block.Properties.of().mapColor(MapColor.COLOR_GRAY).strength(1.0F, 2000.0F).sound(SoundType.GLASS).noOcclusion()),
-		(b) -> new BlockItemTank(b, new Item.Properties()) {
-			@Override
-			public void initializeClient(Consumer<IClientItemExtensions> consumer) {
-				consumer.accept(new IClientItemExtensions() {
-					@Override
-					public BlockEntityWithoutLevelRenderer getCustomRenderer() {
-						return new TileTankStackItemRenderer(null, null);
-					}
-				});
-			}
-		}, TileEntityTank::new);
+		(b) -> new BlockItemTank(b, new Item.Properties()), TileEntityTank::new);
 
 	public static MGUBlockReg<BlockTankSink, BlockItemTankSink, TileEntitySinkTank> TANK_SINK = new MGUBlockReg<>("tank_sink",
 		() -> new BlockTankSink(Block.Properties.of().mapColor(MapColor.COLOR_GRAY).strength(1.0F, 2000.0F).sound(SoundType.GLASS).noOcclusion()),
-		(b) -> new BlockItemTankSink(b, new Item.Properties()){
-			@Override
-			public void initializeClient(Consumer<IClientItemExtensions> consumer) {
-				consumer.accept(new IClientItemExtensions() {
-					@Override
-					public BlockEntityWithoutLevelRenderer getCustomRenderer() {
-						return new TileTankStackItemRenderer(null, null);
-					}
-				});
-			}
-		}, TileEntitySinkTank::new);
+		(b) -> new BlockItemTankSink(b, new Item.Properties()), TileEntitySinkTank::new);
 
 	public static MGUBlockReg<BlockXPTap, MGUBlockItem, TileEntityXPTap> XP_TAP = new MGUBlockReg<>("xp_tap",
 		() -> new BlockXPTap(Block.Properties.of().mapColor(MapColor.NONE).strength(1.0F, 2000.0F).forceSolidOn().sound(SoundType.METAL).noOcclusion()),
@@ -136,35 +95,17 @@ public class ModBlocks {
 
 	public static MGUBlockReg<BlockTankJumbo, BlockItemTankJumbo, TileEntityJumboTank> JUMBO_TANK = new MGUBlockReg<>("jumbo_tank",
 		() -> new BlockTankJumbo(Block.Properties.of().mapColor(MapColor.COLOR_GRAY).strength(1.0F, 2000.0F).sound(SoundType.METAL).noOcclusion()),
-		(b) -> new BlockItemTankJumbo(b, new Item.Properties()){
-			@Override
-			public void initializeClient(Consumer<IClientItemExtensions> consumer) {
-				consumer.accept(new IClientItemExtensions() {
-					@Override
-					public BlockEntityWithoutLevelRenderer getCustomRenderer() {
-						return new TileTankStackItemRenderer(null, null);
-					}
-				});
-			}
-		}, TileEntityJumboTank::new);
+		(b) -> new BlockItemTankJumbo(b, new Item.Properties()), TileEntityJumboTank::new);
 
 	public static MGUBlockReg<BlockXPSolidifier, MGUBlockItem, TileEntityXPSolidifier> XPSOLIDIFIER = new MGUBlockReg<>("xpsolidifier",
 		() -> new BlockXPSolidifier(Block.Properties.of().mapColor(MapColor.COLOR_GRAY).strength(1.0F, 2000.0F).sound(SoundType.METAL).noOcclusion()),
-		(b) -> new MGUBlockItem(b, new Item.Properties()){
-			@Override
-			public void initializeClient(@Nonnull Consumer<IClientItemExtensions> consumer) {
-				consumer.accept(new IClientItemExtensions() {
-					@Override
-					public BlockEntityWithoutLevelRenderer getCustomRenderer() {
-						return new TileXPSolidifierStackItemRenderer(null, null);
-					}
-				});
-			}
-		}, TileEntityXPSolidifier::new);
+		(b) -> new MGUBlockItem(b, new Item.Properties()), TileEntityXPSolidifier::new);
 
 	//public static Material MATERIAL_DREADFUL_DIRT = new Material(MaterialColor.DIRT, false, true, false, true, true, false, PushReaction.NORMAL); //TODO
 	public static MGUBlockReg<BlockDreadfulDirt, MGUBlockItem, ?> DREADFUL_DIRT = new MGUBlockReg<>("dreadful_dirt",
-		() -> new BlockDreadfulDirt(Block.Properties.of().mapColor(MapColor.COLOR_PURPLE).strength(1.0F, 2000.0F).sound(SoundType.GRAVEL).randomTicks()),
+		() -> new BlockDreadfulDirt(Block.Properties.of().mapColor(MapColor.COLOR_PURPLE).strength(1.0F, 2000.0F).sound(SoundType.GRAVEL).randomTicks()
+				.isValidSpawn((state, level, pos, entitytype) -> entitytype.getCategory() == MobCategory.CREATURE)
+		),
 		(b) -> new MGUBlockItem(b, new Item.Properties()));
 
 	public static MGUBlockReg<BlockSolidXP, MGUBlockItem, ?> SOLID_XP_BLOCK = new MGUBlockReg<>("solid_xp_block",
@@ -172,7 +113,9 @@ public class ModBlocks {
 		(b) -> new MGUBlockItem(b, new Item.Properties()));
 
 	public static MGUBlockReg<BlockDelightfulDirt, MGUBlockItem, ?> DELIGHTFUL_DIRT = new MGUBlockReg<>("delightful_dirt",
-		() -> new BlockDelightfulDirt(Block.Properties.of().mapColor(MapColor.COLOR_LIGHT_GREEN).strength(1.0F, 2000.0F).sound(SoundType.GRAVEL).randomTicks()),
+		() -> new BlockDelightfulDirt(Block.Properties.of().mapColor(MapColor.COLOR_LIGHT_GREEN).strength(1.0F, 2000.0F).sound(SoundType.GRAVEL).randomTicks()
+				.isValidSpawn((state, level, pos, entitytype) -> entitytype.getCategory() == MobCategory.MONSTER)
+		),
 		(b) -> new MGUBlockItem(b, new Item.Properties()));
 
 	public static MGUBlockReg<BlockEntitySpawner, MGUBlockItem, TileEntityMGUSpawner> ENTITY_SPAWNER = new MGUBlockReg<>("entity_spawner",
@@ -191,29 +134,6 @@ public class ModBlocks {
 			.sound(SoundActions.BUCKET_EMPTY, SoundEvents.EXPERIENCE_ORB_PICKUP)
 			.sound(SoundActions.BUCKET_FILL, SoundEvents.PLAYER_LEVELUP))
 			{
-				ResourceLocation texture = new ResourceLocation(Reference.MOD_ID, "block/fluid_xp");
-				@Override
-				public void initializeClient(Consumer<IClientFluidTypeExtensions> consumer) {
-					consumer.accept(new IClientFluidTypeExtensions() {
-						@Override
-						public ResourceLocation getStillTexture() {
-							return texture;
-						}
-
-						@Override
-						public ResourceLocation getFlowingTexture() {
-							return texture;
-						}
-
-						@Override
-						public int getTintColor(FluidStack stack) {
-							return IClientFluidTypeExtensions.super.getTintColor(stack);
-						}
-
-
-					});
-				}
-
 				@Override
 				public ItemStack getBucket(FluidStack stack) {
 					return new ItemStack(ModItems.FLUID_XP_BUCKET.get());

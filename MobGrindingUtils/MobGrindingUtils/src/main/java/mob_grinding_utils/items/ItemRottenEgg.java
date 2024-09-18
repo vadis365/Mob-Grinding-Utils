@@ -19,7 +19,6 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.List;
 
 public class ItemRottenEgg extends Item {
@@ -30,7 +29,7 @@ public class ItemRottenEgg extends Item {
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void appendHoverText(@Nonnull ItemStack stack, @Nullable Level world, List<Component> list, @Nonnull TooltipFlag flag) {
+	public void appendHoverText(@Nonnull ItemStack stack, @Nonnull TooltipContext context, List<Component> list, @Nonnull TooltipFlag flag) {
 		list.add(Component.translatable("tooltip.rotten_egg_1").withStyle(ChatFormatting.YELLOW));
 		list.add(Component.translatable("tooltip.rotten_egg_2").withStyle(ChatFormatting.YELLOW));
 	}

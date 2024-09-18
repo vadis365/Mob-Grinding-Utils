@@ -2,6 +2,9 @@ package mob_grinding_utils;
 
 import mob_grinding_utils.blocks.BlockSpikes;
 import mob_grinding_utils.client.ModelLayers;
+import mob_grinding_utils.client.render.TileSawStackItemRenderer;
+import mob_grinding_utils.client.render.TileTankStackItemRenderer;
+import mob_grinding_utils.client.render.TileXPSolidifierStackItemRenderer;
 import mob_grinding_utils.components.MGUComponents;
 import mob_grinding_utils.config.ServerConfig;
 import mob_grinding_utils.datagen.Generator;
@@ -18,6 +21,8 @@ import mob_grinding_utils.tile.TileEntityMGUSpawner;
 import mob_grinding_utils.tile.TileEntityTank;
 import mob_grinding_utils.tile.TileEntityXPSolidifier;
 import mob_grinding_utils.util.FakePlayerHandler;
+import mob_grinding_utils.util.RL;
+import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.particles.ParticleType;
@@ -38,18 +43,20 @@ import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
-import net.neoforged.bus.api.Event;
+import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
-import net.neoforged.fml.ModLoadingContext;
+import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import net.neoforged.neoforge.client.event.RecipesUpdatedEvent;
 import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
+import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
+import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
+import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.common.crafting.IngredientType;
 import net.neoforged.neoforge.common.util.FakePlayer;
@@ -57,6 +64,7 @@ import net.neoforged.neoforge.event.AddReloadListenerEvent;
 import net.neoforged.neoforge.event.entity.living.MobEffectEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.level.LevelEvent;
+import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.network.PacketDistributor;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
@@ -64,6 +72,7 @@ import net.neoforged.neoforge.registries.NeoForgeRegistries;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
@@ -74,7 +83,7 @@ public class MobGrindingUtils {
 	public static final Logger LOGGER = LoggerFactory.getLogger(Reference.MOD_ID);
 
 	private static DamageSource SPIKE_DAMAGE;
-	public static final ResourceKey<DamageType> SPIKE_TYPE = ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation(Reference.MOD_ID, "spikes"));
+	public static final ResourceKey<DamageType> SPIKE_TYPE = ResourceKey.create(Registries.DAMAGE_TYPE, RL.mgu("spikes"));
 
 	public static final DeferredRegister<ParticleType<?>> PARTICLES = DeferredRegister.create(BuiltInRegistries.PARTICLE_TYPE, Reference.MOD_ID);
 	public static final DeferredRegister<RecipeSerializer<?>> RECIPES = DeferredRegister.create(BuiltInRegistries.RECIPE_SERIALIZER, Reference.MOD_ID);
@@ -103,7 +112,7 @@ public class MobGrindingUtils {
 	public static final DeferredHolder<RecipeType<?>, RecipeType<SolidifyRecipe>> SOLIDIFIER_TYPE = RECIPE_TYPES.register("solidify", RecipeType::simple);
 	public static final DeferredHolder<RecipeType<?>, RecipeType<BeheadingRecipe>> BEHEADING_TYPE = RECIPE_TYPES.register("beheading", RecipeType::simple);
 
-	public MobGrindingUtils(IEventBus modBus) {
+	public MobGrindingUtils(IEventBus modBus, ModContainer container, Dist dist) {
 		IEventBus neoBus = NeoForge.EVENT_BUS;
 		ModBlocks.init(modBus);
 		ModItems.init(modBus);
@@ -116,16 +125,18 @@ public class MobGrindingUtils {
 		MGUComponents.init(modBus);
 		ModSounds.init(modBus);
 
-		if (FMLEnvironment.dist.isClient()) {
+		if (dist.isClient()) {
 			ModelLayers.init(modBus);
 			modBus.addListener(this::doClientStuff);
 			modBus.addListener(this::menuScreenEvent);
+
+			modBus.addListener(this::onClientExtensions);
 		}
 
 		modBus.addListener(this::setup);
 
 
-		ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, ServerConfig.SERVER_CONFIG);
+		container.registerConfig(ModConfig.Type.SERVER, ServerConfig.SERVER_CONFIG);
 
 		neoBus.addListener(BlockSpikes::dropXP);
 		neoBus.register(new EntityInteractionEvent());
@@ -179,6 +190,68 @@ public class MobGrindingUtils {
 		event.register(ModContainers.ENTITY_SPAWNER.get(), GuiMGUSpawner::new);
 	}
 
+	public void onClientExtensions(RegisterClientExtensionsEvent event) {
+		event.registerItem(new IClientItemExtensions() {
+			@Nonnull
+			@Override
+			public BlockEntityWithoutLevelRenderer getCustomRenderer() {
+				return new TileTankStackItemRenderer(null, null);
+			}
+		}, ModBlocks.JUMBO_TANK.getItem());
+
+		event.registerItem(new IClientItemExtensions() {
+			@Nonnull
+			@Override
+			public BlockEntityWithoutLevelRenderer getCustomRenderer() {
+				return new TileXPSolidifierStackItemRenderer(null, null);
+			}
+		}, ModBlocks.XPSOLIDIFIER.getItem());
+
+		event.registerItem(new IClientItemExtensions() {
+			@Nonnull
+			@Override
+			public BlockEntityWithoutLevelRenderer getCustomRenderer() {
+				return new TileTankStackItemRenderer(null, null);
+			}
+		}, ModBlocks.TANK.getItem());
+
+		event.registerItem(new IClientItemExtensions() {
+			@Nonnull
+			@Override
+			public BlockEntityWithoutLevelRenderer getCustomRenderer() {
+				return new TileTankStackItemRenderer(null, null);
+			}
+		}, ModBlocks.TANK_SINK.getItem());
+
+		event.registerItem(new IClientItemExtensions() {
+			@Nonnull
+			@Override
+			public BlockEntityWithoutLevelRenderer getCustomRenderer() {
+				return new TileSawStackItemRenderer(null, null);
+			}
+		}, ModBlocks.SAW.getItem());
+
+		event.registerFluidType(new IClientFluidTypeExtensions() {
+			ResourceLocation texture = RL.mgu("block/fluid_xp");
+			@Override
+			public ResourceLocation getStillTexture() {
+				return texture;
+			}
+
+			@Override
+			public ResourceLocation getFlowingTexture() {
+				return texture;
+			}
+
+			@Override
+			public int getTintColor(FluidStack stack) {
+				return IClientFluidTypeExtensions.super.getTintColor(stack);
+			}
+
+
+		});
+	}
+
 	private void serverReloadListener(final AddReloadListenerEvent event) {
 		event.addListener(new ServerResourceReloader(event.getServerResources()));
 	}
@@ -207,7 +280,7 @@ public class MobGrindingUtils {
 	private void sendPersistentData(ServerPlayer playerEntity) {
 		CompoundTag nbt = playerEntity.getPersistentData();
 		if (nbt.contains("MGU_WitherMuffle") || nbt.contains("MGU_DragonMuffle")) {
-			PacketDistributor.PLAYER.with(playerEntity).send(new FlagSyncPacket(nbt.getBoolean("MGU_WitherMuffle"), nbt.getBoolean("MGU_DragonMuffle")));
+			PacketDistributor.sendToPlayer(playerEntity, new FlagSyncPacket(nbt.getBoolean("MGU_WitherMuffle"), nbt.getBoolean("MGU_DragonMuffle")));
 		}
 	}
 
@@ -247,7 +320,7 @@ public class MobGrindingUtils {
 	public void effectApplicable(MobEffectEvent.Applicable event) {
 		//Makes it so that the mob masher cant have effects applied to it
 		if (event.getEntity() instanceof FakePlayer fakePlayer && FakePlayerHandler.isMGUFakePlayer(fakePlayer)) {
-			event.setResult(Event.Result.DENY);
+			event.setResult(MobEffectEvent.Applicable.Result.DO_NOT_APPLY);
 		}
 	}
 }

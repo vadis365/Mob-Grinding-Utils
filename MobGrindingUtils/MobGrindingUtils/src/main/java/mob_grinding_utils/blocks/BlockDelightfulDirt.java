@@ -113,33 +113,26 @@ public class BlockDelightfulDirt extends BlockDirtSpawner {
 			EntityType<?> type = spawns.get(level.random.nextInt(indexSize)).type;
 			if (type.is(ModTags.Entities.NO_DIRT_SPAWN) || type.is(ModTags.Entities.NO_DELIGHTFUL_SPAWN))
 				return;
-			if (type == null || !NaturalSpawner.isSpawnPositionOk(SpawnPlacements.getPlacementType(type), level, pos.above(), type))
-				return;
 			Mob entity = (Mob) type.create(level);
-			if (entity != null) {
-				entity.setPos(pos.getX() + 0.5D, pos.getY() + 1D, pos.getZ() + 0.5D);
-				if (level.getEntities(entity.getType(), entity.getBoundingBox(), EntitySelector.ENTITY_STILL_ALIVE).isEmpty() && level.noCollision(entity)) {
-					TriState result = DirtSpawnEvent.checkEvent(entity, level, pos.getX() + 0.5D, pos.getY() + 1D, pos.getZ() + 0.5D, DirtSpawnEvent.DirtType.DELIGHTFUL);
-					if (result == TriState.FALSE) {
-						return;
-					}
-					EventHooks.finalizeMobSpawn(entity, level, level.getCurrentDifficultyAt(pos), MobSpawnType.NATURAL, null);
-					level.addFreshEntity(entity);
-				 }
-			}
+			if (entity == null)
+				return;
+			entity.setPos(pos.getX() + 0.5D, pos.getY() + 1D, pos.getZ() + 0.5D);
+			if (!EventHooks.checkSpawnPosition(entity, level, MobSpawnType.NATURAL)) //TODO maybe
+				return;
+			if (level.getEntities(entity.getType(), entity.getBoundingBox(), EntitySelector.ENTITY_STILL_ALIVE).isEmpty() && level.noCollision(entity)) {
+				TriState result = DirtSpawnEvent.checkEvent(entity, level, pos.getX() + 0.5D, pos.getY() + 1D, pos.getZ() + 0.5D, DirtSpawnEvent.DirtType.DELIGHTFUL);
+				if (result == TriState.FALSE)
+					return;
+				EventHooks.finalizeMobSpawn(entity, level, level.getCurrentDifficultyAt(pos), MobSpawnType.NATURAL, null);
+				level.addFreshEntity(entity);
+			 }
 		}
 	}
 
-	public boolean isValidSpawn(BlockState state, BlockGetter level, BlockPos pos, SpawnPlacements.Type type, EntityType<?> entityType) {
-		if (entityType == null)
-			return super.isValidSpawn(state, level, pos, type, entityType);
-		else
-			return entityType.getCategory() == MobCategory.CREATURE;
-	}
-
+	@Nonnull
 	@Override
-	public boolean canSustainPlant(BlockState state, BlockGetter level, BlockPos pos, Direction facing, IPlantable plantable) {
-		return true;
+	public TriState canSustainPlant(BlockState state, BlockGetter level, BlockPos pos, Direction facing, BlockState plant) {
+		return TriState.TRUE;
 	}
 
 	@Override

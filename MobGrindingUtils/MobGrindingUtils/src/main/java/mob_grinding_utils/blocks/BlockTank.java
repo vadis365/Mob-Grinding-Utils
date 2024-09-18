@@ -26,6 +26,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.FluidUtil;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.fluids.crafting.DataComponentFluidIngredient;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

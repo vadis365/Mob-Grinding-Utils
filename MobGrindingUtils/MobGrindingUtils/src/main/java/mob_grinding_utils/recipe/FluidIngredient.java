@@ -2,6 +2,7 @@ package mob_grinding_utils.recipe;
 
 import com.mojang.datafixers.util.Either;
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import it.unimi.dsi.fastutil.ints.IntList;
 import mob_grinding_utils.MobGrindingUtils;
@@ -24,7 +25,7 @@ import java.util.*;
 import java.util.stream.Stream;
 
 public class FluidIngredient implements ICustomIngredient {
-    public static final Codec<FluidIngredient> CODEC = RecordCodecBuilder.create(instance -> instance
+    public static final MapCodec<FluidIngredient> CODEC = RecordCodecBuilder.mapCodec(instance -> instance
             .group(FluidValue.CODEC.fieldOf("value")
                             .forGetter($ -> $.value),
                     Codec.BOOL.fieldOf("advanced")

@@ -3,9 +3,9 @@ package mob_grinding_utils.inventory.client;
 import mob_grinding_utils.inventory.server.ContainerFan;
 import mob_grinding_utils.network.BEGuiClick;
 import mob_grinding_utils.tile.TileEntityFan;
+import mob_grinding_utils.util.RL;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
@@ -19,7 +19,7 @@ public class GuiFan extends MGUScreen<ContainerFan> {
 	private final TileEntityFan tile;
 
 	public GuiFan(ContainerFan container, Inventory inventory, Component title) {
-		super(container, inventory, title, new ResourceLocation("mob_grinding_utils:textures/gui/fan_gui.png"));
+		super(container, inventory, title, RL.mgu("textures/gui/fan_gui.png"));
 		this.container = container;
 		this.tile = this.container.fan;
 		imageHeight = 150;
@@ -30,7 +30,7 @@ public class GuiFan extends MGUScreen<ContainerFan> {
 		super.init();
 
 		addRenderableWidget(new GuiMGUButton(leftPos + 54, topPos + 42, GuiMGUButton.Size.LARGE, 0, Component.empty(), (button) -> {
-			PacketDistributor.SERVER.noArg().send(new BEGuiClick(tile.getBlockPos(), 0));
+			PacketDistributor.sendToServer(new BEGuiClick(tile.getBlockPos(), 0));
 			tile.showRenderBox = !tile.showRenderBox;
 		}));
 	}

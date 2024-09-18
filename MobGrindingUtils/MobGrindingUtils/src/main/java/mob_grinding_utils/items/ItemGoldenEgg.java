@@ -18,7 +18,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 
-import javax.annotation.Nullable;
+import javax.annotation.Nonnull;
 import java.util.List;
 
 public class ItemGoldenEgg extends Item {
@@ -29,7 +29,7 @@ public class ItemGoldenEgg extends Item {
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void appendHoverText(ItemStack stack, @Nullable Level world, List<Component> list, TooltipFlag flag) {
+	public void appendHoverText(ItemStack stack, @Nonnull TooltipContext context, List<Component> list, TooltipFlag flag) {
 		list.add(Component.translatable("tooltip.golden_egg_1").withStyle(ChatFormatting.YELLOW));
 		list.add(Component.translatable("tooltip.golden_egg_2").withStyle(ChatFormatting.YELLOW));
 	}

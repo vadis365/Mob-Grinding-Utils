@@ -3,7 +3,6 @@ package mob_grinding_utils.inventory.server;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.items.IItemHandlerModifiable;
-import net.neoforged.neoforge.items.ItemHandlerHelper;
 
 import javax.annotation.Nonnull;
 
@@ -53,7 +52,7 @@ public class InventoryWrapperAH implements IItemHandlerModifiable {
 
 		int m;
 		if (!stackInSlot.isEmpty()) {
-			if (!ItemHandlerHelper.canItemStacksStack(stack, stackInSlot))
+			if (!ItemStack.isSameItemSameComponents(stack, stackInSlot)) //TODO maybe? was ItemHandlerHelper.canItemStacksStack
 				return stack;
 
 			if (!getInv().canPlaceItem(slot, stack))

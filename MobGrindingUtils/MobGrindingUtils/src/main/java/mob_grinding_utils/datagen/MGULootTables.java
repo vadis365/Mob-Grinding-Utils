@@ -2,6 +2,7 @@ package mob_grinding_utils.datagen;
 
 import com.google.common.collect.ImmutableSet;
 import mob_grinding_utils.ModBlocks;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.loot.BlockLootSubProvider;
 import net.minecraft.data.loot.LootTableProvider;
@@ -14,15 +15,16 @@ import net.neoforged.neoforge.registries.DeferredHolder;
 import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 public class MGULootTables extends BlockLootSubProvider {
-    protected MGULootTables() {
-        super(Set.of(), FeatureFlags.REGISTRY.allFlags());
+    protected MGULootTables(HolderLookup.Provider registries) {
+        super(Set.of(), FeatureFlags.REGISTRY.allFlags(), registries);
     }
 
-    public static LootTableProvider getProvider(PackOutput output) {
-        return new LootTableProvider(output, Set.of(), List.of(new LootTableProvider.SubProviderEntry(MGULootTables::new, LootContextParamSets.BLOCK)));
+    public static LootTableProvider getProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> future) {
+        return new LootTableProvider(output, Set.of(), List.of(new LootTableProvider.SubProviderEntry(MGULootTables::new, LootContextParamSets.BLOCK)), future);
     }
 
     @Override

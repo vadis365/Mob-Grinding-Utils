@@ -10,7 +10,6 @@ import mob_grinding_utils.items.ItemFanUpgrade;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.core.RegistryAccess;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
 import net.minecraft.network.FriendlyByteBuf;
@@ -226,7 +225,7 @@ public class TileEntityFan extends TileEntityInventoryHelper implements MenuProv
 	@Override
 	public ClientboundBlockEntityDataPacket getUpdatePacket() {
 		CompoundTag nbt = new CompoundTag();
-		saveAdditional(nbt, RegistryAccess.EMPTY); //TODO uhhhhh
+		saveAdditional(nbt, level.registryAccess());
 		return ClientboundBlockEntityDataPacket.create(this);
 	}
 
@@ -256,29 +255,24 @@ public class TileEntityFan extends TileEntityInventoryHelper implements MenuProv
 		return ContainerHelper.takeItem(getItems(), index);
 	}
 
+    @Nonnull
 	@Override
-	public int getMaxStackSize() {
-		return 64;
-	}
-
-	@Nonnull
-	@Override
-	public int[] getSlotsForFace(Direction side) {
+	public int[] getSlotsForFace(@Nonnull Direction side) {
 		return SLOTS;
 	}
 
 	@Override
-	public boolean canPlaceItemThroughFace(int index, ItemStack itemStackIn, Direction direction) {
+	public boolean canPlaceItemThroughFace(int index, @Nonnull ItemStack itemStackIn, Direction direction) {
 		return false;
 	}
 
 	@Override
-	public boolean canTakeItemThroughFace(int index, ItemStack stack, Direction direction) {
+	public boolean canTakeItemThroughFace(int index, @Nonnull ItemStack stack, @Nonnull Direction direction) {
 		return false;
 	}
 	
 	@Override
-	public AbstractContainerMenu createMenu(int windowID, Inventory playerInventory, Player player) {
+	public AbstractContainerMenu createMenu(int windowID, @Nonnull Inventory playerInventory, @Nonnull Player player) {
 		return new ContainerFan(windowID, playerInventory, new FriendlyByteBuf(Unpooled.buffer()).writeBlockPos(worldPosition));
 	}
 
