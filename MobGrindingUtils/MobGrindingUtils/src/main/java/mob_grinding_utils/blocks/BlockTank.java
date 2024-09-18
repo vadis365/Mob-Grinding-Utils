@@ -1,14 +1,13 @@
 package mob_grinding_utils.blocks;
 
 import com.mojang.serialization.MapCodec;
+import mob_grinding_utils.components.MGUComponents;
 import mob_grinding_utils.tile.TileEntityTank;
 import mob_grinding_utils.util.CapHelper;
 import net.minecraft.core.BlockPos;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -26,7 +25,6 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.FluidUtil;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
-import net.neoforged.neoforge.fluids.crafting.DataComponentFluidIngredient;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -61,16 +59,15 @@ public class BlockTank extends BaseEntityBlock {
 		return RenderShape.MODEL;
 	}
 
+	@Nonnull
 	@Override
-	public BlockState playerWillDestroy(Level world, BlockPos pos, BlockState state, Player player) {
+	public BlockState playerWillDestroy(Level world, @Nonnull BlockPos pos, @Nonnull BlockState state, @Nonnull Player player) {
 		if (!world.isClientSide && !player.getAbilities().instabuild) {
-			BlockEntity tileentity = world.getBlockEntity(pos);
-			if (tileentity instanceof TileEntityTank) {
-				CompoundTag nbt = new CompoundTag();
-				((TileEntityTank) tileentity).saveAdditional(nbt, world.registryAccess());
+			BlockEntity blockEntity = world.getBlockEntity(pos);
+			if (blockEntity instanceof TileEntityTank entityTank) {
 				ItemStack stack = new ItemStack(Item.byBlock(this), 1);
-				if (((TileEntityTank) tileentity).tank.getFluidAmount() > 0)
-					stack.setTag(nbt);
+				if (entityTank.tank.getFluidAmount() > 0)
+					stack.set(MGUComponents.FLUID, entityTank.tank.getFluid());
 				Containers.dropItemStack(world, pos.getX(), pos.getY(), pos.getZ(), stack);
 				world.removeBlockEntity(pos);
 			}
@@ -81,33 +78,31 @@ public class BlockTank extends BaseEntityBlock {
 	@Override
 	public void setPlacedBy(@Nonnull Level world, @Nonnull BlockPos pos, @Nonnull BlockState state, LivingEntity placer, @Nonnull ItemStack stack) {
 		super.setPlacedBy(world, pos, state, placer, stack);
-		if (!world.isClientSide && stack.hasTag()) {
+		if (!world.isClientSide && stack.has(MGUComponents.FLUID)) {
 			BlockEntity blockEntity = world.getBlockEntity(pos);
 			if (blockEntity instanceof TileEntityTank) {
-				if (!stack.getTag().contains("Empty")) {
-					FluidStack fluid = FluidStack.loadFluidStackFromNBT(stack.getTag());
+					FluidStack fluid = stack.getOrDefault(MGUComponents.FLUID, FluidStack.EMPTY);
 					((TileEntityTank) blockEntity).tank.fill(fluid, IFluidHandler.FluidAction.EXECUTE);
 				}
 			}
-		}
 	}
 
 	@Nonnull
 	@Override
 	public ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
 		if (world.isClientSide)
-			return InteractionResult.SUCCESS;
+			return ItemInteractionResult.SUCCESS;
 		BlockEntity tileentity = world.getBlockEntity(pos);
 		if (tileentity instanceof TileEntityTank) {
 			Optional<IFluidHandler> fluidHandler = CapHelper.getFluidHandler(world, pos, hit.getDirection());
 			fluidHandler.ifPresent((handler) -> {
 				if (player.getItemInHand(hand).isEmpty() && !handler.getFluidInTank(0).isEmpty())
-					player.displayClientMessage(Component.translatable(handler.getFluidInTank(0).getDisplayName().getString() + ": " + handler.getFluidInTank(0).getAmount() + "/" + handler.getTankCapacity(0)), true);
+					player.displayClientMessage(Component.translatable(handler.getFluidInTank(0).getHoverName().getString() + ": " + handler.getFluidInTank(0).getAmount() + "/" + handler.getTankCapacity(0)), true);
 				else
 					FluidUtil.interactWithFluidHandler(player, hand, world, pos, hit.getDirection());
 			});
-			return InteractionResult.SUCCESS;
+			return ItemInteractionResult.SUCCESS;
 		}
-		return InteractionResult.PASS;
+		return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
 	}
 }

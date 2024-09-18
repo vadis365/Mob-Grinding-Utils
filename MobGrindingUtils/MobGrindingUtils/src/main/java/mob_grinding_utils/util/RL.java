@@ -25,4 +25,8 @@ public class RL {
     public static ResourceLocation mgu(String path) {
         return ResourceLocation.fromNamespaceAndPath(Reference.MOD_ID, path);
     }
+
+    public static ResourceLocation mc(String path) {
+        return ResourceLocation.fromNamespaceAndPath("minecraft", path);
+    }
 }

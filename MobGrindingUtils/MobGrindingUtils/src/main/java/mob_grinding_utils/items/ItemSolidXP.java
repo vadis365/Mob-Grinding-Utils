@@ -15,7 +15,6 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.List;
 
 public class ItemSolidXP extends Item {
@@ -28,7 +27,7 @@ public class ItemSolidXP extends Item {
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void appendHoverText(ItemStack stack, @Nullable Level world, List<Component> list, @Nonnull TooltipFlag flag) {
+	public void appendHoverText(ItemStack stack, @Nonnull TooltipContext context, List<Component> list, @Nonnull TooltipFlag flag) {
 		list.add(Component.translatable("tooltip.solid_xp").append(Integer.toString(xpValue)).withStyle(ChatFormatting.YELLOW));
 		if (stack.getCount() > 1)
 			list.add(Component.translatable("tooltip.solid_xp2").append(Integer.toString(xpValue * stack.getCount())).withStyle(ChatFormatting.YELLOW));

@@ -49,13 +49,13 @@ public class TileEntityAbsorptionRenderer implements BlockEntityRenderer<TileEnt
 			if (tile.status[facing.ordinal()] == EnumStatus.STATUS_OUTPUT_ITEM) {
 				matrixStack.pushPose();
 				getRotTranslation(matrixStack, facing);
-				connectionModel.renderToBuffer(matrixStack, buffer.getBuffer(RenderType.entitySolid(ITEM_TEXTURE)), combinedLight, OverlayTexture.NO_OVERLAY, 0.5F, 0.5F, 0.5F, 1.0F);
+				connectionModel.renderToBuffer(matrixStack, buffer.getBuffer(RenderType.entitySolid(ITEM_TEXTURE)), combinedLight, OverlayTexture.NO_OVERLAY, 0x7F7F7FFF);
 				matrixStack.popPose();
 			}
 			if (tile.status[facing.ordinal()] == EnumStatus.STATUS_OUTPUT_FLUID) {
 				matrixStack.pushPose();
 				getRotTranslation(matrixStack, facing);
-				connectionModel.renderToBuffer(matrixStack, buffer.getBuffer(RenderType.entitySolid(FLUID_TEXTURE)), combinedLight, OverlayTexture.NO_OVERLAY, 0.5F, 0.5F, 0.5F, 1.0F);
+				connectionModel.renderToBuffer(matrixStack, buffer.getBuffer(RenderType.entitySolid(FLUID_TEXTURE)), combinedLight, OverlayTexture.NO_OVERLAY, 0x7F7F7FFF);
 				matrixStack.popPose();
 			}
 		}

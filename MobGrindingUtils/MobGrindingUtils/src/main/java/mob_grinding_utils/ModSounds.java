@@ -1,8 +1,8 @@
 package mob_grinding_utils;
 
 
+import mob_grinding_utils.util.RL;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.level.block.SoundType;
@@ -23,7 +23,7 @@ public class ModSounds {
 	public static final SoundType SOLID_XP_BLOCK = new SoundType(1.0F, 1.0F, SoundEvents.PLAYER_LEVELUP, SoundEvents.EXPERIENCE_ORB_PICKUP, SoundEvents.EXPERIENCE_ORB_PICKUP, SoundEvents.EXPERIENCE_ORB_PICKUP, SoundEvents.EXPERIENCE_ORB_PICKUP);
 
 	private static DeferredHolder<SoundEvent, SoundEvent> registerSound(String name) {
-		return SOUNDS.register(name, () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(Reference.MOD_ID, name)));
+		return SOUNDS.register(name, () -> SoundEvent.createVariableRangeEvent(RL.mgu(name)));
 	}
 
 	public static void init(IEventBus bus) {

@@ -63,45 +63,45 @@ public class TileEntitySawRenderer implements BlockEntityRenderer<TileEntitySaw>
 			case EAST -> matrixStack.mulPose(Axis.ZP.rotationDegrees(-90F));
 		}
 		matrixStack.translate(0F, -1F, 0F);
-		saw_base.renderToBuffer(matrixStack, ivertexbuilder, combinedLight, OverlayTexture.NO_OVERLAY, 1F, 1F, 1F, 1.0F);
+		saw_base.renderToBuffer(matrixStack, ivertexbuilder, combinedLight, OverlayTexture.NO_OVERLAY, 0xFFFFFFFF);
 
 		matrixStack.pushPose();
 
 		float ticks = tile.animationTicks + (tile.animationTicks - tile.prevAnimationTicks)  * partialTicks;
 		matrixStack.mulPose(Axis.YP.rotationDegrees(ticks));
-		saw_base.renderAxle(matrixStack, ivertexbuilder, combinedLight, OverlayTexture.NO_OVERLAY, 1F, 1F, 1F, 1.0F);
+		saw_base.renderAxle(matrixStack, ivertexbuilder, combinedLight, OverlayTexture.NO_OVERLAY, 0xFFFFFFFF);
 		
 		matrixStack.pushPose();
 		matrixStack.mulPose(Axis.YP.rotationDegrees(45F));
-		saw_base.renderMace(matrixStack, ivertexbuilder, combinedLight, OverlayTexture.NO_OVERLAY, 1F, 1F, 1F, 1.0F);
+		saw_base.renderMace(matrixStack, ivertexbuilder, combinedLight, OverlayTexture.NO_OVERLAY, 0xFFFFFFFF);
 		matrixStack.popPose();
 		
 		matrixStack.pushPose();
 		matrixStack.mulPose(Axis.YP.rotationDegrees(165F));
-		saw_base.renderMace(matrixStack, ivertexbuilder, combinedLight, OverlayTexture.NO_OVERLAY, 1F, 1F, 1F, 1.0F);
+		saw_base.renderMace(matrixStack, ivertexbuilder, combinedLight, OverlayTexture.NO_OVERLAY, 0xFFFFFFFF);
 		matrixStack.popPose();
 		
 		matrixStack.pushPose();
 		matrixStack.mulPose(Axis.YP.rotationDegrees(285F));
-		saw_base.renderMace(matrixStack, ivertexbuilder, combinedLight, OverlayTexture.NO_OVERLAY, 1F, 1F, 1F, 1.0F);
+		saw_base.renderMace(matrixStack, ivertexbuilder, combinedLight, OverlayTexture.NO_OVERLAY, 0xFFFFFFFF);
 		matrixStack.popPose();
 		
 		matrixStack.pushPose();
 		matrixStack.translate(0F, 0.2F, -0.16F);
 		matrixStack.mulPose(Axis.XP.rotationDegrees(8F));
-		saw_blade.renderToBuffer(matrixStack, buffer.getBuffer(RenderType.entitySolid(BLADE_TEXTURE)), combinedLight, OverlayTexture.NO_OVERLAY, 1F, 1F, 1F, 1.0F);
+		saw_blade.renderToBuffer(matrixStack, buffer.getBuffer(RenderType.entitySolid(BLADE_TEXTURE)), combinedLight, OverlayTexture.NO_OVERLAY, 0xFFFFFFFF);
 		matrixStack.popPose();
 
 		matrixStack.pushPose();
 		matrixStack.translate(0F, 0.00F, 0.16F);
 		matrixStack.mulPose(Axis.XP.rotationDegrees(-8F));
-		saw_blade.renderToBuffer(matrixStack, buffer.getBuffer(RenderType.entitySolid(BLADE_TEXTURE)), combinedLight, OverlayTexture.NO_OVERLAY, 1F, 1F, 1F, 1.0F);
+		saw_blade.renderToBuffer(matrixStack, buffer.getBuffer(RenderType.entitySolid(BLADE_TEXTURE)), combinedLight, OverlayTexture.NO_OVERLAY, 0xFFFFFFFF);
 		matrixStack.popPose();
 
 		matrixStack.pushPose();
 		matrixStack.translate(0F, -0.2F, -0.16F);
 		matrixStack.mulPose(Axis.XP.rotationDegrees(8F));
-		saw_blade.renderToBuffer(matrixStack, buffer.getBuffer(RenderType.entitySolid(BLADE_TEXTURE)), combinedLight, OverlayTexture.NO_OVERLAY, 1F, 1F, 1F, 1.0F);
+		saw_blade.renderToBuffer(matrixStack, buffer.getBuffer(RenderType.entitySolid(BLADE_TEXTURE)), combinedLight, OverlayTexture.NO_OVERLAY, 0xFFFFFFFF);
 		matrixStack.popPose();
 
 		matrixStack.popPose();

@@ -6,6 +6,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import mob_grinding_utils.ModBlocks;
 import mob_grinding_utils.client.ModelLayers;
+import mob_grinding_utils.components.MGUComponents;
 import mob_grinding_utils.models.ModelTankBlock;
 import mob_grinding_utils.util.RL;
 import net.minecraft.client.Minecraft;
@@ -50,13 +51,13 @@ public class TileTankStackItemRenderer extends BlockEntityWithoutLevelRenderer {
 		matrixStack.scale(-0.9999F, -0.9999F, 0.9999F);
 		RenderSystem.enableBlend();
 		RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
-		tank_model.renderToBuffer(matrixStack, bufferIn.getBuffer(RenderType.entitySmoothCutout(getTexture(stack.getItem()))), combinedLight, OverlayTexture.NO_OVERLAY, 1F, 1F, 1F, 1.0F);
+		tank_model.renderToBuffer(matrixStack, bufferIn.getBuffer(RenderType.entitySmoothCutout(getTexture(stack.getItem()))), combinedLight, OverlayTexture.NO_OVERLAY, 0xFFFFFFFF);
 		RenderSystem.disableBlend();
 	    RenderSystem.defaultBlendFunc();
 		matrixStack.popPose();
 
-		if (stack.hasTag() && !stack.getTag().contains("Empty")) {
-			fluidStack = FluidStack.loadFluidStackFromNBT(stack.getTag());
+		if (stack.has(MGUComponents.FLUID) && !stack.getOrDefault(MGUComponents.FLUID, FluidStack.EMPTY).isEmpty()) {
+			fluidStack = stack.get(MGUComponents.FLUID);
 
 		} else
 			return;

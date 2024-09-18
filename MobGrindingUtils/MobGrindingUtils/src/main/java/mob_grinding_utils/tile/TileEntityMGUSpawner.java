@@ -22,7 +22,6 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.SpawnEggItem;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.NaturalSpawner;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -130,7 +129,7 @@ public class TileEntityMGUSpawner extends BlockEntity implements MenuProvider, B
 						for (int z = minZ; z < maxZ; z++) {
 							mutablePos.set(x, y, z);
 							entity.setPos(mutablePos.getX() + 0.5D, mutablePos.getY(), mutablePos.getZ() + 0.5D);
-							if (isValidSpawnLocation(getLevel(), type, entity, mutablePos)) {
+							if (isValidSpawnLocation(getLevel(), entity)) {
 								posArrayList.add(new BlockPos(mutablePos));
 							}
 						}
@@ -148,8 +147,8 @@ public class TileEntityMGUSpawner extends BlockEntity implements MenuProvider, B
 		return false;
 	}
 
-	public boolean isValidSpawnLocation(Level world, EntityType<?> type, Entity entity, BlockPos pos) {
-		return NaturalSpawner.isSpawnPositionOk(SpawnPlacements.getPlacementType(type), world, pos, type) && world.getEntities(entity.getType(), entity.getBoundingBox(), EntitySelector.ENTITY_STILL_ALIVE).isEmpty() && getLevel().noCollision(entity);
+	public boolean isValidSpawnLocation(Level world, Mob entity) {
+		return EventHooks.checkSpawnPosition(entity, (ServerLevelAccessor) world, MobSpawnType.SPAWNER) && world.getEntities(entity.getType(), entity.getBoundingBox(), EntitySelector.ENTITY_STILL_ALIVE).isEmpty() && getLevel().noCollision(entity);
 	}
 
 	public void toggleRenderBox() {

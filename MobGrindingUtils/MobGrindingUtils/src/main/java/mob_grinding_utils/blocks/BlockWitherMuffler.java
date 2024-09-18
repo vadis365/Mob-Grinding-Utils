@@ -3,7 +3,6 @@ package mob_grinding_utils.blocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -37,7 +36,7 @@ public class BlockWitherMuffler extends Block {
 
 	@Nonnull
 	@Override
-	public InteractionResult useWithoutItem(BlockState state, Level world, @Nonnull BlockPos pos, @Nonnull Player player, @Nonnull InteractionHand hand, @Nonnull BlockHitResult hit) {
+	public InteractionResult useWithoutItem(BlockState state, Level world, @Nonnull BlockPos pos, @Nonnull Player player, @Nonnull BlockHitResult hit) {
 		boolean swap = !state.getValue(MODE);
 		if (!world.isClientSide)
 			world.setBlock(pos, state.setValue(MODE, swap), 3);

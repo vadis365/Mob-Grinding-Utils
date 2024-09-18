@@ -2,18 +2,18 @@ package mob_grinding_utils.entity;
 
 import mob_grinding_utils.tile.TileEntitySinkTank;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ExperienceOrb;
 import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.enchantment.EnchantedItemInUse;
+import net.minecraft.world.item.enchantment.EnchantmentEffectComponents;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
-import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.entity.player.PlayerXpEvent;
 
-import java.util.Map.Entry;
+import java.util.Optional;
 
 public class EntityXPOrbFalling extends ExperienceOrb {
 	private int age;
@@ -62,10 +62,10 @@ public class EntityXPOrbFalling extends ExperienceOrb {
 					return;
 				player.takeXpDelay = 2;
 				player.take(this, 1);
-				 Entry<EquipmentSlot, ItemStack> entry = EnchantmentHelper.getRandomItemWith(Enchantments.MENDING, player, ItemStack::isDamaged);
+				 Optional<EnchantedItemInUse> entry = EnchantmentHelper.getRandomItemWith(EnchantmentEffectComponents.REPAIR_WITH_XP, player, ItemStack::isDamaged);
 
-		            if (entry != null) {
-		                ItemStack itemstack = entry.getValue();
+		            if (entry.isPresent()) {
+		                ItemStack itemstack = entry.get().itemStack();
 		                if (!itemstack.isEmpty() && itemstack.isDamaged()) {
 		                   int i = Math.min((int)(this.value * itemstack.getXpRepairRatio()), itemstack.getDamageValue());
 		                   this.value -= durabilityToXp(i);

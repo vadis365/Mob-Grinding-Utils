@@ -11,7 +11,7 @@ public class Generator {
 
         MGUBlockTags blockTags = new MGUBlockTags(gen, event.getLookupProvider(), event.getExistingFileHelper());
         gen.addProvider(true, blockTags);
-        gen.addProvider(true, MGULootTables.getProvider(gen.getPackOutput()));
+        gen.addProvider(true, MGULootTables.getProvider(gen.getPackOutput(), event.getLookupProvider()));
         gen.addProvider(true, new MGUFluidTags(gen, event.getLookupProvider(), event.getExistingFileHelper()));
         gen.addProvider(true, new MGUEntityTypeTags(gen, event.getLookupProvider(), event.getExistingFileHelper()));
         gen.addProvider(true, new MGUBlockStates(gen, event.getExistingFileHelper()));

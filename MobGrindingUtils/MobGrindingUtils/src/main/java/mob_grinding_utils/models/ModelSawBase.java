@@ -64,24 +64,24 @@ public class ModelSawBase extends Model {
 		return LayerDefinition.create(meshdefinition, 64, 32);
 	}
 
-	public void renderToBuffer(PoseStack matrixStackIn, VertexConsumer bufferIn, int packedLightIn, int packedOverlayIn, float red, float green, float blue, float alpha) {
+	public void renderToBuffer(PoseStack matrixStackIn, VertexConsumer bufferIn, int packedLightIn, int packedOverlayIn, int color) {
 		ImmutableList.of(base, plinth)
 		.forEach((p_228279_8_) -> {
-			p_228279_8_.render(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn, red, green, blue, alpha);
+			p_228279_8_.render(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn, color);
 		});
 	}
 
-	public void renderAxle(PoseStack matrixStackIn, VertexConsumer bufferIn, int packedLightIn, int packedOverlayIn, float red, float green, float blue, float alpha) {
+	public void renderAxle(PoseStack matrixStackIn, VertexConsumer bufferIn, int packedLightIn, int packedOverlayIn, int color) {
 		ImmutableList.of(axle, axle2, axleTop)
 		.forEach((p_228279_8_) -> {
-			p_228279_8_.render(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn, red, green, blue, alpha);
+			p_228279_8_.render(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn, color);
 		});
 	}
 	
-	public void renderMace(PoseStack matrixStackIn, VertexConsumer bufferIn, int packedLightIn, int packedOverlayIn, float red, float green, float blue, float alpha) {
+	public void renderMace(PoseStack matrixStackIn, VertexConsumer bufferIn, int packedLightIn, int packedOverlayIn, int color) {
 		ImmutableList.of(maceBase, maceArm, mace1, mace2, mace3, mace4)
 		.forEach((p_228279_8_) -> {
-			p_228279_8_.render(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn, red, green, blue, alpha);
+			p_228279_8_.render(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn, color);
 		});
 	}
 }

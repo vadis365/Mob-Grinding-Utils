@@ -2,6 +2,7 @@ package mob_grinding_utils.items;
 
 import mob_grinding_utils.ModItems;
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -16,13 +17,13 @@ import java.util.List;
 
 public class ItemMonocle extends ArmorItem {
 
-	public ItemMonocle(ArmorMaterials material, ArmorItem.Type slot, Properties properties) {
+	public ItemMonocle(Holder<ArmorMaterial> material, ArmorItem.Type slot, Properties properties) {
 		super(material, slot, properties);
 	}
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void appendHoverText(@Nonnull ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, @Nonnull TooltipFlag flagIn) {
+	public void appendHoverText(@Nonnull ItemStack stack, @Nonnull TooltipContext context, List<Component> tooltip, @Nonnull TooltipFlag flagIn) {
 		tooltip.add(Component.translatable("tooltip.monocle").withStyle(ChatFormatting.YELLOW));//applyTextStyle
 	}
 

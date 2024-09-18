@@ -1,15 +1,15 @@
 package mob_grinding_utils.blocks;
 
 import com.mojang.serialization.MapCodec;
+import mob_grinding_utils.components.MGUComponents;
 import mob_grinding_utils.tile.TileEntityXPSolidifier;
 import mob_grinding_utils.util.CapHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BucketItem;
@@ -78,11 +78,9 @@ public class BlockXPSolidifier extends BaseEntityBlock {
 		if (!world.isClientSide && !player.getAbilities().instabuild) {
 			TileEntityXPSolidifier tile = (TileEntityXPSolidifier) world.getBlockEntity(pos);
 			if (tile != null) {
-				CompoundTag nbt = new CompoundTag();
-				tile.saveAdditional(nbt, world.registryAccess());
 				ItemStack stack = new ItemStack(Item.byBlock(this), 1);
 				if (tile.tank.getFluidAmount() > 0)
-					stack.setTag(nbt);
+					stack.set(MGUComponents.FLUID, tile.tank.getFluid());
 				Containers.dropItemStack(world, pos.getX(), pos.getY(), pos.getZ(), stack);
 				if(!tile.inputSlots.getStackInSlot(0).isEmpty())
 					Containers.dropItemStack(world, pos.getX(), pos.getY(), pos.getZ(), tile.inputSlots.getStackInSlot(0));
@@ -99,13 +97,11 @@ public class BlockXPSolidifier extends BaseEntityBlock {
 	@Override
 	public void setPlacedBy(@Nonnull Level world, @Nonnull BlockPos pos, @Nonnull BlockState state, LivingEntity placer, @Nonnull ItemStack stack) {
 		super.setPlacedBy(world, pos, state, placer, stack);
-		if (!world.isClientSide && stack.hasTag()) {
+		if (!world.isClientSide && stack.has(MGUComponents.FLUID)) {
 			BlockEntity tileentity = world.getBlockEntity(pos);
-			if (tileentity instanceof TileEntityXPSolidifier) {
-				if (!stack.getTag().contains("Empty")) {
-					FluidStack fluid = FluidStack.loadFluidStackFromNBT(stack.getTag());
-					((TileEntityXPSolidifier) tileentity).tank.fill(fluid, IFluidHandler.FluidAction.EXECUTE);
-				}
+			if (tileentity instanceof TileEntityXPSolidifier tile) {
+					FluidStack fluid = stack.getOrDefault(MGUComponents.FLUID, FluidStack.EMPTY);
+					tile.tank.fill(fluid, IFluidHandler.FluidAction.EXECUTE);
 			}
 		}
 	}
@@ -117,28 +113,28 @@ public class BlockXPSolidifier extends BaseEntityBlock {
 
     @Nonnull
 	@Override
-    public InteractionResult use(@Nonnull BlockState state, Level world, @Nonnull BlockPos pos, @Nonnull Player player, @Nonnull InteractionHand hand, @Nonnull BlockHitResult hit) {
-		if (world.isClientSide) {
-			return InteractionResult.SUCCESS;
-		} else {
-			BlockEntity tileentity = world.getBlockEntity(pos);
+    public ItemInteractionResult useItemOn(@Nonnull ItemStack stack, @Nonnull BlockState state, Level level, @Nonnull BlockPos pos, @Nonnull Player player, @Nonnull InteractionHand hand, @Nonnull BlockHitResult hit) {
+		if (level.isClientSide) {
+			return ItemInteractionResult.SUCCESS;
+		} else { //TODO OH BOY this needs split up
+			BlockEntity tileentity = level.getBlockEntity(pos);
 			if (tileentity instanceof TileEntityXPSolidifier) {
 				if (!player.getItemInHand(hand).isEmpty() && player.getItemInHand(hand).getItem() instanceof BucketItem) { // fixy later, Flanks: ?!?
-					Optional<IFluidHandler> fluidHandler = CapHelper.getFluidHandler(world, pos, hit.getDirection());
+					Optional<IFluidHandler> fluidHandler = CapHelper.getFluidHandler(level, pos, hit.getDirection());
 					fluidHandler.ifPresent((handler) -> {
 						if (player.getItemInHand(hand).isEmpty() && !handler.getFluidInTank(0).isEmpty())
-							player.displayClientMessage(Component.translatable(handler.getFluidInTank(0).getDisplayName().getString() + ": "+ handler.getFluidInTank(0).getAmount()+"/"+handler.getTankCapacity(0)), true);
+							player.displayClientMessage(Component.translatable(handler.getFluidInTank(0).getHoverName().getString() + ": "+ handler.getFluidInTank(0).getAmount()+"/"+handler.getTankCapacity(0)), true);
 						else
-							FluidUtil.interactWithFluidHandler(player, hand, world, pos, hit.getDirection());
+							FluidUtil.interactWithFluidHandler(player, hand, level, pos, hit.getDirection());
 					});
-					return InteractionResult.SUCCESS;
+					return ItemInteractionResult.SUCCESS;
 				}
 				else {
 					player.openMenu((TileEntityXPSolidifier) tileentity, pos);
-					return InteractionResult.SUCCESS;
+					return ItemInteractionResult.SUCCESS;
 				}
 			}
 		}
-		return InteractionResult.PASS;
+		return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
     }
 }

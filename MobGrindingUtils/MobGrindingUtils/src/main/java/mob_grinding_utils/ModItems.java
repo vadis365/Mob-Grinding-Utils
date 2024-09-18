@@ -2,11 +2,9 @@ package mob_grinding_utils;
 
 import com.google.common.collect.ImmutableSet;
 import mob_grinding_utils.items.*;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.*;
 import net.neoforged.bus.api.IEventBus;
-import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
@@ -34,17 +32,17 @@ public class ModItems {
 	public static DeferredItem<Item> GM_CHICKEN_FEED = ITEMS.register("gm_chicken_feed", () -> new ItemGMChickenFeed(new Item.Properties().stacksTo(1), ItemGMChickenFeed.FeedType.MOB));
 	public static DeferredItem<Item> GM_CHICKEN_FEED_CURSED = ITEMS.register("gm_chicken_feed_cursed", () -> new ItemGMChickenFeed(new Item.Properties().stacksTo(1), ItemGMChickenFeed.FeedType.CURSED));
 	public static DeferredItem<Item> NUTRITIOUS_CHICKEN_FEED = ITEMS.register("nutritious_chicken_feed", () -> new ItemGMChickenFeed(new Item.Properties().stacksTo(1), ItemGMChickenFeed.FeedType.NUTRITIOUS));
-	public static DeferredItem<Item> FLUID_XP_BUCKET = ITEMS.register("fluid_xp_bucket", () -> new BucketItem(() -> ModBlocks.FLUID_XP.get(), new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)));
+	public static DeferredItem<Item> FLUID_XP_BUCKET = ITEMS.register("fluid_xp_bucket", () -> new BucketItem(ModBlocks.FLUID_XP.get(), new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)));
 	public static DeferredItem<Item> NULL_SWORD = ITEMS.register("null_sword", () -> new ItemImaginaryInvisibleNotReallyThereSword(new Item.Properties()));
 	public static DeferredItem<Item> ROTTEN_EGG = ITEMS.register("rotten_egg", () -> new ItemRottenEgg(new Item.Properties().stacksTo(1)));
 	public static DeferredItem<Item> GOLDEN_EGG = ITEMS.register("golden_egg", () -> new ItemGoldenEgg(new Item.Properties().stacksTo(1)));
 	public static DeferredItem<Item> SOLID_XP_MOULD_BLANK = ITEMS.register("solid_xp_mould_blank", () -> new ItemSolidXPMould(new Item.Properties().stacksTo(64), ItemSolidXPMould.Mould.BLANK));
 	public static DeferredItem<Item> SOLID_XP_MOULD_BABY = ITEMS.register("solid_xp_mould_baby", () -> new ItemSolidXPMould(new Item.Properties().stacksTo(64), ItemSolidXPMould.Mould.BABY));
-	public static DeferredItem<Item> SOLID_XP_BABY = ITEMS.register("solid_xp_baby", () -> new ItemSolidXP(new Item.Properties().stacksTo(64).food((new FoodProperties.Builder()).nutrition(0).saturationMod(0F).alwaysEat().build()), 50));
+	public static DeferredItem<Item> SOLID_XP_BABY = ITEMS.register("solid_xp_baby", () -> new ItemSolidXP(new Item.Properties().stacksTo(64).food((new FoodProperties.Builder()).nutrition(0).saturationModifier(0F).alwaysEdible().build()), 50));
 	public static DeferredItem<Item> XP_SOLIDIFIER_UPGRADE = ITEMS.register("xp_solidifier_upgrade", () -> new ItemSolidifierUpgrade(new Item.Properties().stacksTo(64)));
 	public static DeferredItem<Item> SPAWNER_UPGRADE_WIDTH = ITEMS.register("spawner_upgrade_width", () -> new ItemSpawnerUpgrade(new Item.Properties().stacksTo(64), ItemSpawnerUpgrade.SpawnerUpgrade.WIDTH));
 	public static DeferredItem<Item> SPAWNER_UPGRADE_HEIGHT = ITEMS.register("spawner_upgrade_height", () -> new ItemSpawnerUpgrade(new Item.Properties().stacksTo(64), ItemSpawnerUpgrade.SpawnerUpgrade.HEIGHT));
-	public static DeferredItem<Item> MONOCLE = ITEMS.register("monocle", () -> new ItemMonocle(ArmorMaterials.CHAIN, ArmorItem.Type.HELMET, new Item.Properties().stacksTo(1).durability(256).defaultDurability(ArmorMaterials.CHAIN.getDurabilityForType(ArmorItem.Type.HELMET)))); // pointless shit
+	public static DeferredItem<Item> MONOCLE = ITEMS.register("monocle", () -> new ItemMonocle(ArmorMaterials.CHAIN, ArmorItem.Type.HELMET, new Item.Properties().stacksTo(1).durability(256)));
 	//public static RegistryObject<Item> SPAWNEGG = ITEMS.register("witheregg", () -> new SpawnEggItem(EntityType.WITHER, 0x0, 0xffffff, new Item.Properties().group(MobGrindingUtils.TAB)));
 
 	public static final Set<DeferredItem<Item>> TAB_ORDER = ImmutableSet.of(
