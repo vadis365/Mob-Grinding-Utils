@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "mob_grinding_utils:solid_xp_block"
+    }
+  ],
+  "result": {
+    "count": 9,
+    "id": "mob_grinding_utils:solid_xp_baby"
+  }
+}

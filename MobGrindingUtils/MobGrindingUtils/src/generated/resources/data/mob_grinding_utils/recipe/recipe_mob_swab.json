@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "S": {
+      "tag": "c:rods/wooden"
+    },
+    "W": {
+      "tag": "minecraft:wool"
+    }
+  },
+  "pattern": [
+    "  W",
+    " S ",
+    "W  "
+  ],
+  "result": {
+    "count": 1,
+    "id": "mob_grinding_utils:mob_swab"
+  }
+}

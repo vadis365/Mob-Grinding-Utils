@@ -1,0 +1,8 @@
+{
+  "type": "mob_grinding_utils:beheading",
+  "entity": "minecraft:creeper",
+  "result": {
+    "count": 1,
+    "id": "minecraft:creeper_head"
+  }
+}

@@ -9,7 +9,6 @@ import mob_grinding_utils.util.CapHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.core.RegistryAccess;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
 import net.minecraft.network.FriendlyByteBuf;
@@ -111,7 +110,7 @@ public class TileEntityAbsorptionHopper extends TileEntityInventoryHelper implem
 	@Override
 	public ClientboundBlockEntityDataPacket getUpdatePacket() {
 		CompoundTag nbt = new CompoundTag();
-		saveAdditional(nbt, RegistryAccess.EMPTY); // TODO uhhhh
+		saveAdditional(nbt, level.registryAccess()); // TODO uhhhh
 		return ClientboundBlockEntityDataPacket.create(this);
 	}
 

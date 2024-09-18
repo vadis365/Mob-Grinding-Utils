@@ -67,7 +67,7 @@ public class ChickenFeedRecipe extends ShapelessRecipe {
 
         @Override
         public StreamCodec<RegistryFriendlyByteBuf, ChickenFeedRecipe> streamCodec() {
-            return null;
+            return STREAM_CODEC;
         }
 
         public static ChickenFeedRecipe fromNetwork(@Nonnull RegistryFriendlyByteBuf buffer) {

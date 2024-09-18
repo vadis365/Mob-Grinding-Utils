@@ -4,13 +4,13 @@ import io.netty.buffer.Unpooled;
 import mob_grinding_utils.ModBlocks;
 import mob_grinding_utils.ModItems;
 import mob_grinding_utils.blocks.BlockSaw;
+import mob_grinding_utils.components.MGUComponents;
 import mob_grinding_utils.inventory.server.ContainerSaw;
 import mob_grinding_utils.items.ItemSawUpgrade;
 import mob_grinding_utils.util.FakePlayerHandler;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.core.RegistryAccess;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
 import net.minecraft.network.FriendlyByteBuf;
@@ -78,41 +78,41 @@ public class TileEntitySaw extends TileEntityInventoryHelper implements MenuProv
 		getLevel().sendBlockUpdated(worldPosition, getLevel().getBlockState(worldPosition), getLevel().getBlockState(worldPosition), 3);
 	}
 
-	protected Entity activateBlock() {
+	protected void activateBlock() {
 		List<LivingEntity> list = getLevel().getEntitiesOfClass(LivingEntity.class, new AABB(worldPosition.getX(), worldPosition.getY(), worldPosition.getZ(), worldPosition.getX() + 1D, worldPosition.getY() + 1D, worldPosition.getZ() + 1D).inflate(0.0625D, 0.0625D, 0.0625D));
-		for (int i = 0; i < list.size(); i++) {
-			Entity entity = list.get(i);
-			if (entity != null) {
-				if (entity instanceof LivingEntity) {
-					fakePlayer = FakePlayerHandler.get(fakePlayer, (ServerLevel) getLevel(), placer, this.worldPosition.atY(-100));
-					FakePlayer fakePlayer = this.fakePlayer.get();
-					if (fakePlayer == null) return null;
-					ItemStack tempSword = new ItemStack(ModItems.NULL_SWORD.get(), 1);
+		if (list.isEmpty() || level == null)
+			return;
 
-					if(!tempSword.hasTag())
-						tempSword.setTag(new CompoundTag());
+		fakePlayer = FakePlayerHandler.get(fakePlayer, (ServerLevel) getLevel(), placer, this.worldPosition.atY(-100));
+		FakePlayer fakePlayer = this.fakePlayer.get();
+		if (fakePlayer == null) return;
+		ItemStack tempSword = new ItemStack(ModItems.NULL_SWORD.get(), 1);
 
-					if(hasSharpnessUpgrade())
-						tempSword.enchant(Enchantments.SHARPNESS, getItems().get(0).getCount() * 10);
-					if(hasLootingUpgrade())
-						tempSword.enchant(Enchantments.MOB_LOOTING, getItems().get(1).getCount());
-					if(hasFlameUpgrade())
-						tempSword.enchant(Enchantments.FIRE_ASPECT, getItems().get(2).getCount());
-					if(hasSmiteUpgrade())
-						tempSword.enchant(Enchantments.SMITE, getItems().get(3).getCount() * 10);
-					if(hasArthropodUpgrade())
-						tempSword.enchant(Enchantments.BANE_OF_ARTHROPODS, getItems().get(4).getCount() * 10);
-					if(hasBeheadingUpgrade())
-						tempSword.getTag().putInt("beheadingValue", getItems().get(5).getCount());
+		if(hasSharpnessUpgrade())
+			tempSword.enchant(level.holderOrThrow(Enchantments.SHARPNESS), getItems().get(0).getCount() * 10);
+		if(hasLootingUpgrade())
+			tempSword.enchant(level.holderOrThrow(Enchantments.LOOTING), getItems().get(1).getCount());
+		if(hasFlameUpgrade())
+			tempSword.enchant(level.holderOrThrow(Enchantments.FIRE_ASPECT), getItems().get(2).getCount());
+		if(hasSmiteUpgrade())
+			tempSword.enchant(level.holderOrThrow(Enchantments.SMITE), getItems().get(3).getCount() * 10);
+		if(hasArthropodUpgrade())
+			tempSword.enchant(level.holderOrThrow(Enchantments.BANE_OF_ARTHROPODS), getItems().get(4).getCount() * 10);
+		if(hasBeheadingUpgrade())
+			tempSword.set(MGUComponents.BEHEADING, getItems().get(5).getCount());
 
-					fakePlayer.setItemInHand(InteractionHand.MAIN_HAND, tempSword);
-					fakePlayer.attack(entity);
-					fakePlayer.resetAttackStrengthTicker();
-					fakePlayer.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
-				}
-			}
-		}
-		return null;
+		fakePlayer.setItemInHand(InteractionHand.MAIN_HAND, tempSword);
+
+        for (Entity entity : list) {
+            if (entity != null) {
+                if (entity instanceof LivingEntity) {
+                    fakePlayer.attack(entity);
+                    fakePlayer.resetAttackStrengthTicker();
+                }
+            }
+        }
+
+		fakePlayer.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
 	}
 
 	private boolean hasSharpnessUpgrade() {
@@ -163,7 +163,7 @@ public class TileEntitySaw extends TileEntityInventoryHelper implements MenuProv
 	@Override
 	public ClientboundBlockEntityDataPacket getUpdatePacket() {
 		CompoundTag tag = new CompoundTag();
-		saveAdditional(tag, RegistryAccess.EMPTY); //TODO uhhh
+		saveAdditional(tag, level.registryAccess()); //TODO uhhh
 		return ClientboundBlockEntityDataPacket.create(this);
 	}
 

@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "I": {
+      "tag": "c:ingots/iron"
+    },
+    "R": {
+      "tag": "c:dusts/redstone"
+    },
+    "S": {
+      "tag": "c:slimeballs"
+    }
+  },
+  "pattern": [
+    " S ",
+    "IRI",
+    "ISI"
+  ],
+  "result": {
+    "count": 6,
+    "id": "mob_grinding_utils:entity_conveyor"
+  }
+}

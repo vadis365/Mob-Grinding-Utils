@@ -13,6 +13,7 @@ import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.entity.player.PlayerXpEvent;
 
+import javax.annotation.Nonnull;
 import java.util.Optional;
 
 public class EntityXPOrbFalling extends ExperienceOrb {
@@ -55,7 +56,7 @@ public class EntityXPOrbFalling extends ExperienceOrb {
 	}
 
 	@Override
-	public void playerTouch(Player player) {
+	public void playerTouch(@Nonnull Player player) {
 		if (!level().isClientSide) {
 			if (delayBeforeCanPickup == 0 && player.takeXpDelay == 0) {
 				if (NeoForge.EVENT_BUS.post(new PlayerXpEvent.PickupXp(player, this)).isCanceled()) //TODO maybe?

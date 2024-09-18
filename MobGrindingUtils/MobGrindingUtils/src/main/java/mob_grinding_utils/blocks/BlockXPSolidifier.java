@@ -116,7 +116,7 @@ public class BlockXPSolidifier extends BaseEntityBlock {
     public ItemInteractionResult useItemOn(@Nonnull ItemStack stack, @Nonnull BlockState state, Level level, @Nonnull BlockPos pos, @Nonnull Player player, @Nonnull InteractionHand hand, @Nonnull BlockHitResult hit) {
 		if (level.isClientSide) {
 			return ItemInteractionResult.SUCCESS;
-		} else { //TODO OH BOY this needs split up
+		} else {
 			BlockEntity tileentity = level.getBlockEntity(pos);
 			if (tileentity instanceof TileEntityXPSolidifier) {
 				if (!player.getItemInHand(hand).isEmpty() && player.getItemInHand(hand).getItem() instanceof BucketItem) { // fixy later, Flanks: ?!?

@@ -1,6 +1,6 @@
 {
   "values": [
-    "#forge:is_cave",
+    "#c:is_cave",
     "#minecraft:is_river"
   ]
 }

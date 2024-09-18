@@ -1,8 +1,10 @@
 package mob_grinding_utils.components;
 
+import com.mojang.serialization.Codec;
 import mob_grinding_utils.Reference;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.fluids.FluidStack;
@@ -23,6 +25,12 @@ public class MGUComponents {
             DataComponentType.<FluidStack>builder()
                     .persistent(FluidStack.CODEC)
                     .networkSynchronized(FluidStack.STREAM_CODEC)
+                    .build());
+
+    public static final Supplier<DataComponentType<Integer>> BEHEADING = DATA_COMPONENT_TYPES.register("beheading", () ->
+            DataComponentType.<Integer>builder()
+                    .persistent(Codec.INT)
+                    .networkSynchronized(ByteBufCodecs.INT)
                     .build());
 
     public static void init(IEventBus bus) {

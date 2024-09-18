@@ -1,4 +1,4 @@
-// 1.20.4	2024-02-29T15:32:23.3563384	Tags for minecraft:block mod id mob_grinding_utils
-7541ff93e09d08b2aa0710b3fea8edde6b296d43 data/minecraft/tags/blocks/dragon_immune.json
-7541ff93e09d08b2aa0710b3fea8edde6b296d43 data/minecraft/tags/blocks/mineable/pickaxe.json
-7541ff93e09d08b2aa0710b3fea8edde6b296d43 data/minecraft/tags/blocks/wither_immune.json
+// 1.21.1	2024-09-18T18:06:28.1791134	Tags for minecraft:block mod id mob_grinding_utils
+7541ff93e09d08b2aa0710b3fea8edde6b296d43 data/minecraft/tags/block/dragon_immune.json
+7541ff93e09d08b2aa0710b3fea8edde6b296d43 data/minecraft/tags/block/mineable/pickaxe.json
+7541ff93e09d08b2aa0710b3fea8edde6b296d43 data/minecraft/tags/block/wither_immune.json

@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "G": {
+      "tag": "c:glass_blocks"
+    },
+    "I": {
+      "tag": "c:ingots/iron"
+    }
+  },
+  "pattern": [
+    "IGI",
+    "GGG",
+    "IGI"
+  ],
+  "result": {
+    "count": 1,
+    "id": "mob_grinding_utils:tank"
+  }
+}

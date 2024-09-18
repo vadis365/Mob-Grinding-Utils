@@ -35,7 +35,7 @@ public class RenderChickenSwell {
 					event.getPoseStack().translate(0D, - 0.5D - scale, 0D);
 					event.getPoseStack().mulPose(Axis.YN.rotationDegrees(event.getEntity().yBodyRot));
 					event.getPoseStack().scale(1F + scale, 1F + scale, 1F + scale * 0.75F);
-					model.renderToBuffer(event.getPoseStack(), event.getMultiBufferSource().getBuffer(RenderType.entitySolid(RL.mc("textures/entity/chicken.png"))), event.getPackedLight(), OverlayTexture.NO_OVERLAY, 1F, 1F, 1F, 1F);
+					model.renderToBuffer(event.getPoseStack(), event.getMultiBufferSource().getBuffer(RenderType.entitySolid(RL.mc("textures/entity/chicken.png"))), event.getPackedLight(), OverlayTexture.NO_OVERLAY, 0xFFFFFFFF);
 					event.getPoseStack().popPose();
 				}
 			}

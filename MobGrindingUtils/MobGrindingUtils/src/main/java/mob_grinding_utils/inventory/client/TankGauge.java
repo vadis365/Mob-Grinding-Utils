@@ -76,9 +76,9 @@ public class TankGauge extends AbstractWidget {
                 RenderSystem.enableBlend();
                 int count = 1 + ((int) Math.ceil(tankLevel)) / 16;
                 for (int i = 0; i < count; i++) {
-                    double subHeight = Math.min(16.0, tankLevel - (16.0 * i));
+                    float subHeight = (float) Math.min(16.0f, tankLevel - (16.0f * i));
                     double offsetY = height - 16.0 * i - subHeight;
-                    drawQuad(getX(), getY() + offsetY, width, subHeight, minU, (float) (maxV - deltaV * (subHeight / 16.0)), maxU, maxV);
+                    drawQuad(getX(), (float)(getY() + offsetY), width, subHeight, minU, (float) (maxV - deltaV * (subHeight / 16.0)), maxU, maxV);
                 }
                 RenderSystem.disableBlend();
                 RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
@@ -86,15 +86,15 @@ public class TankGauge extends AbstractWidget {
         }
     }
 
-    private void drawQuad(double x, double y, double width, double height, float minU, float minV, float maxU, float maxV) {
+    private void drawQuad(float x, float y, float width, float height, float minU, float minV, float maxU, float maxV) {
         Tesselator tesselator = Tesselator.getInstance();
-        BufferBuilder buffer = tesselator.getBuilder();
-        buffer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
-        buffer.vertex(x, y + height, 0).uv(minU, maxV).endVertex();
-        buffer.vertex(x + width, y + height, 0).uv(maxU, maxV).endVertex();
-        buffer.vertex(x + width, y, 0).uv(maxU, minV).endVertex();
-        buffer.vertex(x, y, 0).uv(minU, minV).endVertex();
-        tesselator.end();
+        BufferBuilder buffer = tesselator.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
+        buffer.addVertex(x, y + height, 0).setUv(minU, maxV);
+        buffer.addVertex(x + width, y + height, 0).setUv(maxU, maxV);
+        buffer.addVertex(x + width, y, 0).setUv(maxU, minV);
+        buffer.addVertex(x, y, 0).setUv(minU, minV);
+
+        buffer.build();
     }
 
     public float getFluidLevel() {

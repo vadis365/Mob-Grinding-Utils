@@ -1,0 +1,26 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "B": {
+      "type": "mob_grinding_utils:fluid",
+      "advanced": false,
+      "value": {
+        "Amount": 1000,
+        "Tag": "c:experience"
+      }
+    },
+    "X": {
+      "tag": "c:nuggets/gold"
+    }
+  },
+  "pattern": [
+    "XXX",
+    "XBX",
+    "XXX"
+  ],
+  "result": {
+    "count": 1,
+    "id": "mob_grinding_utils:solid_xp_mould_blank"
+  }
+}

@@ -41,7 +41,7 @@ public class TileEntityTankRenderer implements BlockEntityRenderer<TileEntityTan
 		matrixStack.pushPose();
 		matrixStack.translate(0.5D, 1.5D, 0.5D);
 		matrixStack.scale(-0.9999F, -0.9999F, 0.9999F); //don't want to cull, but also don't want z-fighty nonsense
-		tank_model.renderToBuffer(matrixStack, bufferIn.getBuffer(RenderType.entitySmoothCutout(getTexture(tile))), combinedLight, OverlayTexture.NO_OVERLAY, 1F, 1F, 1F, 1.0F);
+		tank_model.renderToBuffer(matrixStack, bufferIn.getBuffer(RenderType.entitySmoothCutout(getTexture(tile))), combinedLight, OverlayTexture.NO_OVERLAY, 0xFFFFFFFF);
 		matrixStack.popPose();
 
 		if (tile.tank.getFluid().isEmpty())

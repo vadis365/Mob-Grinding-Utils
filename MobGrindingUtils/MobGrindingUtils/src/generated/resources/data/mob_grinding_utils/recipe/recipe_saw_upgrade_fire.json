@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "F": {
+      "item": "minecraft:flint_and_steel"
+    },
+    "G": {
+      "tag": "c:nuggets/gold"
+    },
+    "R": {
+      "tag": "c:dusts/redstone"
+    }
+  },
+  "pattern": [
+    "GFG",
+    "FRF",
+    "GFG"
+  ],
+  "result": {
+    "count": 1,
+    "id": "mob_grinding_utils:saw_upgrade_fire"
+  }
+}

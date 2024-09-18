@@ -1,10 +1,13 @@
 package mob_grinding_utils.events;
 
 import mob_grinding_utils.ModItems;
+import mob_grinding_utils.components.MGUComponents;
 import mob_grinding_utils.items.ItemGMChickenFeed;
 import mob_grinding_utils.items.ItemMobSwab;
 import mob_grinding_utils.network.ChickenSyncPacket;
+import mob_grinding_utils.util.RL;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.animal.Chicken;
@@ -20,10 +23,8 @@ public class EntityInteractionEvent {
 
 	@SubscribeEvent
 	public void clickOnEntity(PlayerInteractEvent.EntityInteract event) {
-		if (event.getTarget() instanceof LivingEntity) {
-			LivingEntity entity = (LivingEntity) event.getTarget();
-
-			if (entity instanceof WanderingTrader && !event.getItemStack().isEmpty() && event.getItemStack().getItem() instanceof ItemMobSwab) {
+		if (event.getTarget() instanceof LivingEntity entity) {
+            if (entity instanceof WanderingTrader && !event.getItemStack().isEmpty() && event.getItemStack().getItem() instanceof ItemMobSwab) {
 				event.getItemStack().interactLivingEntity(event.getEntity(), entity, event.getHand());
 				return;
 			}
@@ -38,15 +39,14 @@ public class EntityInteractionEvent {
 							entity.setInvulnerable(true);
 							nbt.putBoolean("shouldExplode", true);
 							nbt.putInt("countDown", 0);
-							if (eventItem.hasTag() && eventItem.getTag().contains("mguMobName"))
-								nbt.putString("mguMobName", eventItem.getTag().getString("mguMobName"));
+							if (eventItem.has(MGUComponents.MOB_DNA))
+								nbt.putString("mguMobName", eventItem.getOrDefault(MGUComponents.MOB_DNA, RL.mc("chicken")).toString());
 							if (eventItem.getItem() == ModItems.GM_CHICKEN_FEED_CURSED.get())
 								nbt.putBoolean("cursed", true);
 							if (eventItem.getItem() == ModItems.NUTRITIOUS_CHICKEN_FEED.get())
 								nbt.putBoolean("nutritious", true);
 							if (event.getEntity() instanceof ServerPlayer) {
-								PacketDistributor.TargetPoint target = new PacketDistributor.TargetPoint(entity.getX(), entity.getY(), entity.getZ(), 32, entity.getCommandSenderWorld().dimension());
-								PacketDistributor.NEAR.with(target).send(new ChickenSyncPacket(entity, nbt));
+								PacketDistributor.sendToPlayersNear((ServerLevel) world, null, entity.getX(), entity.getY(), entity.getZ(), 32, new ChickenSyncPacket(entity, nbt));
 							}
 						}
 						Vec3 vec3d = entity.getDeltaMovement();

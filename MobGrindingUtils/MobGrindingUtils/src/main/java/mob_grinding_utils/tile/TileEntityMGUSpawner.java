@@ -328,7 +328,7 @@ public class TileEntityMGUSpawner extends BlockEntity implements MenuProvider, B
 		if (hasSpawnEggItem()) {
 			ItemStack eggStack = inputSlots.getStackInSlot(0);
 			SpawnEggItem eggItem = (SpawnEggItem) eggStack.getItem();
-			entity = eggItem.getType(null).create(getLevel());
+			entity = eggItem.getType(eggStack).create(getLevel());
 		}
 		return entity;
 	}

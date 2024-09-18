@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "G": {
+      "tag": "c:nuggets/gold"
+    },
+    "L": {
+      "tag": "c:dyes/blue"
+    },
+    "R": {
+      "tag": "c:dusts/redstone"
+    }
+  },
+  "pattern": [
+    "GLG",
+    "LRL",
+    "GLG"
+  ],
+  "result": {
+    "count": 1,
+    "id": "mob_grinding_utils:saw_upgrade_looting"
+  }
+}

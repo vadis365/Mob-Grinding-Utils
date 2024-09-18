@@ -2,11 +2,11 @@ package mob_grinding_utils.events;
 
 import com.mojang.authlib.GameProfile;
 import mob_grinding_utils.MobGrindingUtils;
+import mob_grinding_utils.components.MGUComponents;
 import mob_grinding_utils.items.ItemImaginaryInvisibleNotReallyThereSword;
 import mob_grinding_utils.util.FakePlayerHandler;
 import net.minecraft.core.RegistryAccess;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.NbtUtils;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -15,6 +15,7 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.component.ResolvableProfile;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModList;
@@ -36,8 +37,8 @@ public class EntityHeadDropEvent {
 		if (event.getSource().getEntity() instanceof FakePlayer fakePlayer && FakePlayerHandler.isMGUFakePlayer(fakePlayer)) {
 			if (fakePlayer.getMainHandItem().getItem() instanceof ItemImaginaryInvisibleNotReallyThereSword) {
 				ItemStack tempSword = fakePlayer.getMainHandItem();
-				if (tempSword.hasTag() && tempSword.getTag().contains("beheadingValue"))
-					beheadingLevel = tempSword.getTag().getInt("beheadingValue");
+				if (tempSword.has(MGUComponents.BEHEADING))
+					beheadingLevel = tempSword.getOrDefault(MGUComponents.BEHEADING, 0);
 				int dropChance = event.getEntity().getCommandSenderWorld().random.nextInt(10);
 				if (dropChance < beheadingLevel) {
 					ItemStack stack = getHeadFromEntity(event.getEntity());
@@ -84,10 +85,7 @@ public class EntityHeadDropEvent {
 
 	public static ItemStack createHeadFor(GameProfile profile) {
 		ItemStack stack = new ItemStack(Items.PLAYER_HEAD, 1);
-		stack.setTag(new CompoundTag());
-		CompoundTag profileData = new CompoundTag();
-		NbtUtils.writeGameProfile(profileData, profile);
-		stack.getTag().put("SkullOwner", profileData);
+		stack.set(DataComponents.PROFILE, new ResolvableProfile(profile));
 		return stack;
 	}
 

@@ -42,7 +42,7 @@ public class ItemMobSwab extends Item {
 			list.add(Component.translatable("tooltip.mobswab_1").withStyle(ChatFormatting.YELLOW));
 		else if (stack.has(MGUComponents.MOB_DNA)) {
 			list.add(Component.translatable("tooltip.mobswab_2").withStyle(ChatFormatting.YELLOW));
-			list.add(Component.translatable("tooltip.mobswab_3").withStyle(ChatFormatting.GREEN).append( " " + stack.getOrDefault(MGUComponents.MOB_DNA, RL.rl("minecraft", "nobody")).toString() + " 'DNA'."));
+			list.add(Component.translatable("tooltip.mobswab_3").withStyle(ChatFormatting.GREEN).append(stack.getOrDefault(MGUComponents.MOB_DNA, RL.mc("nobody")).toString() + " 'DNA'."));
 		}
 	}
 

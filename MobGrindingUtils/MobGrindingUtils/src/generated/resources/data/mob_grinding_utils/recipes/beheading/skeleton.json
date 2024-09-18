@@ -1,8 +1,0 @@
-{
-  "type": "mob_grinding_utils:beheading",
-  "entity": "minecraft:skeleton",
-  "result": {
-    "Count": 1,
-    "id": "minecraft:skeleton_skull"
-  }
-}

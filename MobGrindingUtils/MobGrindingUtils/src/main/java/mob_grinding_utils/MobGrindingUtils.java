@@ -249,7 +249,7 @@ public class MobGrindingUtils {
 			}
 
 
-		});
+		}, ModBlocks.XPTYPE.get());
 	}
 
 	private void serverReloadListener(final AddReloadListenerEvent event) {

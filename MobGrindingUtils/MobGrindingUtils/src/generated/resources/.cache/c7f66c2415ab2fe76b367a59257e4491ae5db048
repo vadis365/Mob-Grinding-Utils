@@ -1,3 +1,3 @@
-// 1.20.4	2024-02-29T15:32:23.379348	Tags for minecraft:worldgen/biome mod id mob_grinding_utils
+// 1.21.1	2024-09-18T18:06:28.1822203	Tags for minecraft:worldgen/biome mod id mob_grinding_utils
 35133e95f1c8fdd7a1c21afcc231fc0bffefb9a8 data/mob_grinding_utils/tags/worldgen/biome/hostile_override.json
-d972f308a214eea8aeb5246cea1bd5840ce8e9f3 data/mob_grinding_utils/tags/worldgen/biome/passive_override.json
+a7fdf38fd192fae4aeaee173a21da9676f2949d6 data/mob_grinding_utils/tags/worldgen/biome/passive_override.json

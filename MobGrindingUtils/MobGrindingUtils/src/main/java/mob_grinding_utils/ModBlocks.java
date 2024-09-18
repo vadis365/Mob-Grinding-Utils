@@ -4,8 +4,6 @@ package mob_grinding_utils;
 import com.google.common.collect.ImmutableSet;
 import mob_grinding_utils.blocks.*;
 import mob_grinding_utils.itemblocks.BlockItemTank;
-import mob_grinding_utils.itemblocks.BlockItemTankJumbo;
-import mob_grinding_utils.itemblocks.BlockItemTankSink;
 import mob_grinding_utils.itemblocks.MGUBlockItem;
 import mob_grinding_utils.tile.*;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -55,11 +53,11 @@ public class ModBlocks {
 
 	public static MGUBlockReg<BlockTank, BlockItemTank, TileEntityTank> TANK = new MGUBlockReg<>("tank",
 		() -> new BlockTank(Block.Properties.of().mapColor(MapColor.COLOR_GRAY).strength(1.0F, 2000.0F).sound(SoundType.GLASS).noOcclusion()),
-		(b) -> new BlockItemTank(b, new Item.Properties()), TileEntityTank::new);
+		(b) -> new BlockItemTank(b, 32000,new Item.Properties()), TileEntityTank::new);
 
-	public static MGUBlockReg<BlockTankSink, BlockItemTankSink, TileEntitySinkTank> TANK_SINK = new MGUBlockReg<>("tank_sink",
+	public static MGUBlockReg<BlockTankSink, BlockItemTank, TileEntitySinkTank> TANK_SINK = new MGUBlockReg<>("tank_sink",
 		() -> new BlockTankSink(Block.Properties.of().mapColor(MapColor.COLOR_GRAY).strength(1.0F, 2000.0F).sound(SoundType.GLASS).noOcclusion()),
-		(b) -> new BlockItemTankSink(b, new Item.Properties()), TileEntitySinkTank::new);
+		(b) -> new BlockItemTank(b, 32000, new Item.Properties()), TileEntitySinkTank::new);
 
 	public static MGUBlockReg<BlockXPTap, MGUBlockItem, TileEntityXPTap> XP_TAP = new MGUBlockReg<>("xp_tap",
 		() -> new BlockXPTap(Block.Properties.of().mapColor(MapColor.NONE).strength(1.0F, 2000.0F).forceSolidOn().sound(SoundType.METAL).noOcclusion()),
@@ -93,9 +91,9 @@ public class ModBlocks {
 		() -> new BlockTintedGlass(Block.Properties.of().mapColor(MapColor.COLOR_BLACK).strength(1.0F, 2000.0F).sound(SoundType.GLASS).noOcclusion()),
 		(b) -> new MGUBlockItem(b, new Item.Properties()));
 
-	public static MGUBlockReg<BlockTankJumbo, BlockItemTankJumbo, TileEntityJumboTank> JUMBO_TANK = new MGUBlockReg<>("jumbo_tank",
+	public static MGUBlockReg<BlockTankJumbo, BlockItemTank, TileEntityJumboTank> JUMBO_TANK = new MGUBlockReg<>("jumbo_tank",
 		() -> new BlockTankJumbo(Block.Properties.of().mapColor(MapColor.COLOR_GRAY).strength(1.0F, 2000.0F).sound(SoundType.METAL).noOcclusion()),
-		(b) -> new BlockItemTankJumbo(b, new Item.Properties()), TileEntityJumboTank::new);
+		(b) -> new BlockItemTank(b, 1024000, new Item.Properties()), TileEntityJumboTank::new);
 
 	public static MGUBlockReg<BlockXPSolidifier, MGUBlockItem, TileEntityXPSolidifier> XPSOLIDIFIER = new MGUBlockReg<>("xpsolidifier",
 		() -> new BlockXPSolidifier(Block.Properties.of().mapColor(MapColor.COLOR_GRAY).strength(1.0F, 2000.0F).sound(SoundType.METAL).noOcclusion()),
