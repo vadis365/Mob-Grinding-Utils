@@ -102,12 +102,13 @@ public class TileEntitySaw extends TileEntityInventoryHelper implements MenuProv
 			tempSword.set(MGUComponents.BEHEADING, getItems().get(5).getCount());
 
 		fakePlayer.setItemInHand(InteractionHand.MAIN_HAND, tempSword);
+		fakePlayer.detectEquipmentUpdates();
 
         for (Entity entity : list) {
             if (entity != null) {
                 if (entity instanceof LivingEntity) {
                     fakePlayer.attack(entity);
-                    fakePlayer.resetAttackStrengthTicker();
+					fakePlayer.attackStrengthTicker = 100;
                 }
             }
         }

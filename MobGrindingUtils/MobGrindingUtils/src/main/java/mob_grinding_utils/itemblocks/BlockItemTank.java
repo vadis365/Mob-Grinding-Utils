@@ -1,12 +1,12 @@
 package mob_grinding_utils.itemblocks;
 
+import mob_grinding_utils.blocks.BlockTank;
 import mob_grinding_utils.components.MGUComponents;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.level.block.Block;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.fluids.FluidStack;
@@ -16,7 +16,7 @@ import java.util.List;
 
 public class BlockItemTank extends BlockItem {
 
-	public BlockItemTank(Block blockIn, int capacity, Properties builder) {
+	public BlockItemTank(BlockTank blockIn, int capacity, Properties builder) {
 		super(blockIn, builder);
 		this.capacity = capacity;
 	}

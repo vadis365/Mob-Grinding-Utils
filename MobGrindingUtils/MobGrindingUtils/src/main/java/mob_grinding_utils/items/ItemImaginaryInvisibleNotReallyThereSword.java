@@ -28,12 +28,6 @@ public class ItemImaginaryInvisibleNotReallyThereSword extends SwordItem {
 		return builder.build();
 	}
 
-/*	@Override
-	public boolean hurtEnemy(@Nonnull ItemStack stack, LivingEntity target, @Nonnull LivingEntity attacker) {
-		target.hurt(target.level().damageSources().playerAttack((Player) attacker), getDamage(stack) + EnchantmentHelper.getDamageBonus(stack, target.getMobType()));
-		return true;
-	}*/ //TODO is this needed anymore?
-
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void appendHoverText(ItemStack stack, @Nonnull TooltipContext context, List<Component> list, TooltipFlag flag) {
