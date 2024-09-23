@@ -13,13 +13,17 @@ public class MGUZombieReinforcementEvent {
 
 	@SubscribeEvent(priority = EventPriority.LOWEST)
 	public void zombieEvent(FinalizeSpawnEvent event) {
-		if (event.getLevel().isClientSide())
-			return;
-		if (event.getSpawnType() == MobSpawnType.REINFORCEMENT && event.getSpawner().right().isPresent()) {
-			Entity entity = event.getSpawner().right().get();
-			if (entity instanceof Zombie zombie && zombie.getLastAttacker() instanceof FakePlayer && FakePlayerHandler.isMGUFakePlayer((FakePlayer) zombie.getLastAttacker()))
-				event.setSpawnCancelled(true);
-		}
+		if (event.getLevel().isClientSide()) {
+            return;
+        }
+        if (event.getSpawnType() == MobSpawnType.REINFORCEMENT && event.getSpawner() != null && event.getSpawner().right().isPresent()) {
+            Entity spawnerEntity = event.getSpawner().right().get();
+            if (spawnerEntity instanceof Zombie zombie) {
+                Entity lastAttacker = zombie.getLastAttacker();
+                if (lastAttacker instanceof FakePlayer fakePlayer && FakePlayerHandler.isMGUFakePlayer(fakePlayer)) {
+                    event.setSpawnCancelled(true);
+                }
+            }
+        }
 	} // TODO clean this up!
-
 }
