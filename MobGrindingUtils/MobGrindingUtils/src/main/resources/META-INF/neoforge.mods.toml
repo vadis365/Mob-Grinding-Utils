@@ -10,6 +10,8 @@ credits=""
 authors="vadis365, flanks255"
 description='''
 A mod that adds a fun ways to farm mobs'''
+[[mixins]]
+config = "mob_grinding_utils.mixins.json"
 [[dependencies.mob_grinding_utils]]
 modId="neoforge"
 required=true

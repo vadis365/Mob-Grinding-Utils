@@ -32,8 +32,7 @@ public class TileEntityFanRenderer implements BlockEntityRenderer<TileEntityFan>
 		matrixStack.pushPose();
 		matrixStack.translate(-0.0005D, -0.0005D, -0.0005D);
 		matrixStack.scale(0.999F, 0.999F, 0.999F);
-		// TODO could be this now?
-		//DebugRenderer.renderBox(tile.getAABBForRender(), 0F, 0F, 1F, 0.75F);	
+
 		LevelRenderer.renderLineBox(matrixStack, ivertexbuilder, tile.getAABBForRender(), 0F, 0F, 1F, 1F);
 		matrixStack.popPose();
 		

@@ -164,7 +164,7 @@ public class TileEntitySaw extends TileEntityInventoryHelper implements MenuProv
 	@Override
 	public ClientboundBlockEntityDataPacket getUpdatePacket() {
 		CompoundTag tag = new CompoundTag();
-		saveAdditional(tag, level.registryAccess()); //TODO uhhh
+		saveAdditional(tag, level.registryAccess());
 		return ClientboundBlockEntityDataPacket.create(this);
 	}
 

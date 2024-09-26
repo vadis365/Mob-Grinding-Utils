@@ -59,7 +59,7 @@ public class EntityXPOrbFalling extends ExperienceOrb {
 	public void playerTouch(@Nonnull Player player) {
 		if (!level().isClientSide) {
 			if (delayBeforeCanPickup == 0 && player.takeXpDelay == 0) {
-				if (NeoForge.EVENT_BUS.post(new PlayerXpEvent.PickupXp(player, this)).isCanceled()) //TODO maybe?
+				if (NeoForge.EVENT_BUS.post(new PlayerXpEvent.PickupXp(player, this)).isCanceled())
 					return;
 				player.takeXpDelay = 2;
 				player.take(this, 1);

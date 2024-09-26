@@ -110,7 +110,7 @@ public class TileEntityAbsorptionHopper extends TileEntityInventoryHelper implem
 	@Override
 	public ClientboundBlockEntityDataPacket getUpdatePacket() {
 		CompoundTag nbt = new CompoundTag();
-		saveAdditional(nbt, level.registryAccess()); // TODO uhhhh
+		saveAdditional(nbt, level.registryAccess());
 		return ClientboundBlockEntityDataPacket.create(this);
 	}
 

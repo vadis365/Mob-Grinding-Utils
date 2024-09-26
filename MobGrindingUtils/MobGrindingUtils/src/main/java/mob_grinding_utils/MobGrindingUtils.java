@@ -144,7 +144,6 @@ public class MobGrindingUtils {
 		neoBus.register(new LocalWitherSoundEvent());
 		neoBus.register(new LocalDragonSoundEvent());
 		neoBus.register(new EntityHeadDropEvent());
-		neoBus.register(new MGUZombieReinforcementEvent());
 		neoBus.register(new FillXPBottleEvent());
 		neoBus.register(new MGUEndermanInhibitEvent());
 		neoBus.addListener(this::playerConnected);

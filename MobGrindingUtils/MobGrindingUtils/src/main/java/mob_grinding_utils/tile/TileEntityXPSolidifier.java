@@ -223,7 +223,7 @@ public class TileEntityXPSolidifier extends BlockEntity implements MenuProvider,
 	}
 
 	@OnlyIn(Dist.CLIENT)
-	public ItemStack getCachedOutPutRenderStack() { // TODO this needs to be cached to NBT probably
+	public ItemStack getCachedOutPutRenderStack() {
 		if(hasMould()) {
 			if(inputSlots.getStackInSlot(0).getItem() == ModItems.SOLID_XP_MOULD_BABY.get())
 				return new ItemStack(ModItems.SOLID_XP_BABY.get(), 1);

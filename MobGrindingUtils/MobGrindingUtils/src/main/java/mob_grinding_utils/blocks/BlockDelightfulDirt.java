@@ -117,7 +117,7 @@ public class BlockDelightfulDirt extends BlockDirtSpawner {
 			if (entity == null)
 				return;
 			entity.setPos(pos.getX() + 0.5D, pos.getY() + 1D, pos.getZ() + 0.5D);
-			if (!EventHooks.checkSpawnPosition(entity, level, MobSpawnType.NATURAL)) //TODO maybe
+			if (!EventHooks.checkSpawnPosition(entity, level, MobSpawnType.NATURAL))
 				return;
 			if (level.getEntities(entity.getType(), entity.getBoundingBox(), EntitySelector.ENTITY_STILL_ALIVE).isEmpty() && level.noCollision(entity)) {
 				TriState result = DirtSpawnEvent.checkEvent(entity, level, pos.getX() + 0.5D, pos.getY() + 1D, pos.getZ() + 0.5D, DirtSpawnEvent.DirtType.DELIGHTFUL);

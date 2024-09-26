@@ -220,7 +220,7 @@ public class TileEntityMGUSpawner extends BlockEntity implements MenuProvider, B
 	}
 
 	private boolean hasSpeedUpgrade() {
-		return !inputSlots.getStackInSlot(3).isEmpty() && inputSlots.getStackInSlot(3).getItem() == ModItems.XP_SOLIDIFIER_UPGRADE.get(); //TODO temp items here
+		return !inputSlots.getStackInSlot(3).isEmpty() && inputSlots.getStackInSlot(3).getItem() == ModItems.XP_SOLIDIFIER_UPGRADE.get();
 	}
 
 	public int getSpeedModifierAmount() {

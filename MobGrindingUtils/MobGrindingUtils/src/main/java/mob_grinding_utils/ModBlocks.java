@@ -99,7 +99,7 @@ public class ModBlocks {
 		() -> new BlockXPSolidifier(Block.Properties.of().mapColor(MapColor.COLOR_GRAY).strength(1.0F, 2000.0F).sound(SoundType.METAL).noOcclusion()),
 		(b) -> new MGUBlockItem(b, new Item.Properties()), TileEntityXPSolidifier::new);
 
-	//public static Material MATERIAL_DREADFUL_DIRT = new Material(MaterialColor.DIRT, false, true, false, true, true, false, PushReaction.NORMAL); //TODO
+	//public static Material MATERIAL_DREADFUL_DIRT = new Material(MaterialColor.DIRT, false, true, false, true, true, false, PushReaction.NORMAL);
 	public static MGUBlockReg<BlockDreadfulDirt, MGUBlockItem, ?> DREADFUL_DIRT = new MGUBlockReg<>("dreadful_dirt",
 		() -> new BlockDreadfulDirt(Block.Properties.of().mapColor(MapColor.COLOR_PURPLE).strength(1.0F, 2000.0F).sound(SoundType.GRAVEL).randomTicks()
 				.isValidSpawn((state, level, pos, entitytype) -> entitytype.getCategory() == MobCategory.CREATURE)
@@ -142,7 +142,7 @@ public class ModBlocks {
 	public static DeferredHolder<Fluid, BaseFlowingFluid> FLUID_XP_FLOWING = FLUIDS.register("fluid_xp_flowing",
 		() -> new BaseFlowingFluid.Flowing(ModBlocks.xp_properties) );
 	public static DeferredBlock<MGUFlowingFluidBlock> FLUID_XP_BLOCK = BLOCKS.register("fluid_xp",
-		() -> new MGUFlowingFluidBlock(FLUID_XP,Block.Properties.of().liquid().noCollission().replaceable().strength(100.0F).pushReaction(PushReaction.DESTROY).noLootTable())); //TODO hopefully
+		() -> new MGUFlowingFluidBlock(FLUID_XP,Block.Properties.of().liquid().noCollission().replaceable().strength(100.0F).pushReaction(PushReaction.DESTROY).noLootTable()));
 
 	private static final BaseFlowingFluid.Properties xp_properties = new BaseFlowingFluid.Properties(() -> XPTYPE.get(), () -> FLUID_XP.get(), () -> FLUID_XP_FLOWING.get())
 			.block(() -> FLUID_XP_BLOCK.get())

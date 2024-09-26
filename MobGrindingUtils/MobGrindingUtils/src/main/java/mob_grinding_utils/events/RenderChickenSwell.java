@@ -26,7 +26,7 @@ public class RenderChickenSwell {
 				
 				if (event.getRenderer().getModel() instanceof ChickenModel) {
 					ModelPart tempPart = ChickenBodyModel.createBodyLayer().bakeRoot();
-					ChickenBodyModel model = new ChickenBodyModel(tempPart); /// TODO errrrrr
+					ChickenBodyModel model = new ChickenBodyModel(tempPart);
 					int count = event.getEntity().getPersistentData().getInt("countDown");
 					float scale = count * 0.04F;
 					if (scale >= 0.75F)
