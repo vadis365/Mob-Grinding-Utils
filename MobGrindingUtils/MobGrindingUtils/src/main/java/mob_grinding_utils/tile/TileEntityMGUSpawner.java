@@ -110,7 +110,7 @@ public class TileEntityMGUSpawner extends BlockEntity implements MenuProvider, B
 		EntityType<?> type = null;
 		ItemStack eggStack = inputSlots.getStackInSlot(0);
 		SpawnEggItem eggItem = (SpawnEggItem) eggStack.getItem();
-		type = eggItem.getType(null);
+		type = eggItem.getType(eggStack);
 
 		if (type != null && !type.is(ModTags.Entities.NO_SPAWN)) {
 			AABB axisalignedbb = getAABBWithModifiers();

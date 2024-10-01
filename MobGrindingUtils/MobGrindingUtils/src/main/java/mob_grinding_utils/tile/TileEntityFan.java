@@ -80,8 +80,8 @@ public class TileEntityFan extends TileEntityInventoryHelper implements MenuProv
 
 		int distance;
 		for (distance = 1; distance < 5 + getSpeedModifier(); distance++) {
-			BlockState state2 = getLevel().getBlockState(getBlockPos().relative(facing, distance));
-			if (!(state2.getBlock() instanceof AirBlock) && (strongBlades ? state2.canOcclude() : !state2.is(BlockTags.REPLACEABLE_BY_TREES)))
+			BlockState targetState = getLevel().getBlockState(getBlockPos().relative(facing, distance));
+			if (!(targetState.getBlock() instanceof AirBlock) && (strongBlades ? targetState.canOcclude() : !(targetState.is(BlockTags.REPLACEABLE_BY_TREES) || targetState.is(BlockTags.SMALL_FLOWERS))))
 				break;
 		}
 

@@ -81,7 +81,7 @@ public class BlockDelightfulDirt extends BlockDirtSpawner {
 			if (entityCount < 8)
 				spawnMob(level, pos);
 
-			if (level.getGameTime() % 20 == 0) {
+			if (rand.nextInt(20) == 0) {
 				BlockPos posUp = pos.above();
 				if (level.getBlockState(posUp).isAir()) {
 					PlacedFeature placedfeature;
@@ -131,28 +131,28 @@ public class BlockDelightfulDirt extends BlockDirtSpawner {
 
 	@Nonnull
 	@Override
-	public TriState canSustainPlant(BlockState state, BlockGetter level, BlockPos pos, Direction facing, BlockState plant) {
+	public TriState canSustainPlant(@Nonnull BlockState state, @Nonnull BlockGetter level, @Nonnull BlockPos pos, @Nonnull Direction facing, @Nonnull BlockState plant) {
 		return TriState.TRUE;
 	}
 
 	@Override
-    public  boolean isFlammable(BlockState state, BlockGetter level, BlockPos pos, Direction face) {
+    public  boolean isFlammable(@Nonnull BlockState state, @Nonnull BlockGetter level, @Nonnull BlockPos pos, @Nonnull Direction face) {
         return true;
     }
 
 	@Override
-	public int getFlammability(BlockState state, BlockGetter level, BlockPos pos, Direction face) {
+	public int getFlammability(@Nonnull BlockState state, @Nonnull BlockGetter level, @Nonnull BlockPos pos, @Nonnull Direction face) {
         return 200;
     }
 
 	@Override
-    public boolean isFireSource(BlockState state, LevelReader level, BlockPos pos, Direction side) {
+    public boolean isFireSource(@Nonnull BlockState state, @Nonnull LevelReader level, @Nonnull BlockPos pos, @Nonnull Direction side) {
 		return side == Direction.UP;
 	}
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void animateTick(BlockState stateIn, Level level, BlockPos pos, RandomSource rand) {
+	public void animateTick(@Nonnull BlockState stateIn, Level level, @Nonnull BlockPos pos, @Nonnull RandomSource rand) {
 		if(level.getGameTime()%3 == 0 && level.getBlockState(pos.above()).isAir()) {
 			for (int i = 0; i < 4; ++i) {
 				double d0 = (double) ((float) pos.getX( ));
