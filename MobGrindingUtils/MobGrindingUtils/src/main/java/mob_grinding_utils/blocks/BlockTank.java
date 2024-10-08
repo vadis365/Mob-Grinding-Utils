@@ -96,10 +96,12 @@ public class BlockTank extends BaseEntityBlock {
 		if (tileentity instanceof TileEntityTank) {
 			Optional<IFluidHandler> fluidHandler = CapHelper.getFluidHandler(world, pos, hit.getDirection());
 			fluidHandler.ifPresent((handler) -> {
-				if (player.getItemInHand(hand).isEmpty() && !handler.getFluidInTank(0).isEmpty())
-					player.displayClientMessage(Component.translatable(handler.getFluidInTank(0).getHoverName().getString() + ": " + handler.getFluidInTank(0).getAmount() + "/" + handler.getTankCapacity(0)), true);
-				else
-					FluidUtil.interactWithFluidHandler(player, hand, world, pos, hit.getDirection());
+				if (player.getItemInHand(hand).isEmpty() || !FluidUtil.interactWithFluidHandler(player, hand, world, pos, hit.getDirection())) {
+					if (!handler.getFluidInTank(0).isEmpty())
+						player.displayClientMessage(Component.literal(handler.getFluidInTank(0).getHoverName().getString() + ": " + handler.getFluidInTank(0).getAmount() + "/" + handler.getTankCapacity(0)), true);
+					else
+						player.displayClientMessage(Component.literal("Empty: 0/" + handler.getTankCapacity(0)), true);
+				}
 			});
 			return ItemInteractionResult.SUCCESS;
 		}
