@@ -42,7 +42,7 @@ public class Recipes extends RecipeProvider {
             .define('O', Tags.Items.OBSIDIANS)
             .define('H', Items.HOPPER)
             .unlockedBy("", noneItem)
-            .save(consumer, RL.mgu( "recipe_absorbtion_hopper"));
+            .save(consumer, RL.mgu( "recipe_absorption_hopper"));
 
         // Absorption Hopper Upgrade
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.ABSORPTION_UPGRADE.get())
