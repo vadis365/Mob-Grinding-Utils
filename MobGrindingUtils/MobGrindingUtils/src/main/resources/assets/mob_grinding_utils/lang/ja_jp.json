@@ -10,7 +10,7 @@
   "block.mob_grinding_utils.tank": "シンギュラリティタンク",
   "block.mob_grinding_utils.tank_sink": "経験値吸収シンギュラリティタンク",
   "block.mob_grinding_utils.xp_tap": "経験値蛇口",
-  "block.mob_grinding_utils.wither_muffler": "ウィザーボス死亡音マフラー",
+  "block.mob_grinding_utils.wither_muffler": "ウィザー死亡音マフラー",
   "block.mob_grinding_utils.dragon_muffler": "エンダードラゴン死亡音マフラー",
   "block.mob_grinding_utils.dark_oak_stone": "ダークオークストーン",
   "block.mob_grinding_utils.ender_inhibitor_on": "エンダー阻害装置 アクティブ",
@@ -26,7 +26,7 @@
 
   "_comment": "Fluids",
   "mob_grinding_utils.fluid_xp": "液体経験値",
-  "mob_grinding_utils.jei.any_experience": "受け入れ: forge:experience",
+  "mob_grinding_utils.jei.any_experience": "以下のすべてで: forge:experience",
 
   "_comment": "JEI Titles",
   "mob_grinding_utiles.jei.solidifier" : "固体化レシピ",
@@ -44,9 +44,9 @@
   "_comment": "Items",
   "item.mob_grinding_utils.mob_swab": "モブ用綿棒",
   "item.mob_grinding_utils.mob_swab_used": "使用済みのモブ用綿棒",
-  "item.mob_grinding_utils.gm_chicken_feed": "GM チキンフィード",
-  "item.mob_grinding_utils.gm_chicken_feed_cursed": "GM 呪われたチキンフィード",
-  "item.mob_grinding_utils.nutritious_chicken_feed": "栄養価の高いチキンフィード",
+  "item.mob_grinding_utils.gm_chicken_feed": "遺伝子組み換えのニワトリのエサ",
+  "item.mob_grinding_utils.gm_chicken_feed_cursed": "遺伝子組み換えの呪われたニワトリのエサ",
+  "item.mob_grinding_utils.nutritious_chicken_feed": "栄養価の高いニワトリのエサ",
   "item.mob_grinding_utils.fan_upgrade_width": "モブ用ファン幅アップグレード",
   "item.mob_grinding_utils.fan_upgrade_height": "モブ用ファン高さアップグレード",
   "item.mob_grinding_utils.fan_upgrade_speed": "モブ用ファン奥行きアップグレード",
@@ -77,14 +77,14 @@
 
   "_comment": "Spike Damage",
   "death.attack.spikes": "%1$sはスパイクに突き刺さった。",
-  "death.attack.spikes.player": "%1$sはスパイク%2$sに突き刺さった。",
+  "death.attack.spikes.player": "%1$sは%2$sによってスパイクに突き落とされた。",
 
   "_comment": "Block Tool tips",
   "block.mob_grinding_utils.fan.tooltip_1": "Mobを向いている方向に押します。",
   "block.mob_grinding_utils.fan.tooltip_2": "モブ用ファンアップグレードで変更できます。",
   "block.mob_grinding_utils.fan.tooltip_3": "効果範囲はGUIで切り替えることができます。",
 
-  "block.mob_grinding_utils.saw.tooltip_1": "発展的なモジュール式モブグラインダー。",
+  "block.mob_grinding_utils.saw.tooltip_1": "発展的なモジュール式モブグラインダーです。",
   "block.mob_grinding_utils.saw.tooltip_2": "モブ用マッシャーアップグレードで強化できます。",
   "block.mob_grinding_utils.saw.tooltip_3": "マッシャーのキルはプレイヤーのキルとしてカウントされます。",
 
@@ -96,12 +96,12 @@
   "block.mob_grinding_utils.absorption_hopper.tooltip_6": "位置はGUIでオフセットを設定できます。",
 
   "block.mob_grinding_utils.spikes.tooltip_1": "基本的なスパイク - Mobの経験値はドロップします。",
-  "block.mob_grinding_utils.spikes.tooltip_2": "スパイクで殺されたMobはプレイヤーキルとしてカウントされません。",
+  "block.mob_grinding_utils.spikes.tooltip_2": "スパイクで殺されたMobはプレイヤーのキルとしてカウントされません。",
 
-  "block.mob_grinding_utils.xp_tap.tooltip_1": "タンクの側面に取り付けます。",
+  "block.mob_grinding_utils.xp_tap.tooltip_1": "タンクの側面に取りつけることができます。",
   "block.mob_grinding_utils.xp_tap.tooltip_2": "液体経験値を経験値オーブに戻します。",
 
-  "block.mob_grinding_utils.wither_muffler.tooltip_1": "ウィザーボスの死の音声を止めます。",
+  "block.mob_grinding_utils.wither_muffler.tooltip_1": "ウィザーの死の音声を止めます。",
   "block.mob_grinding_utils.wither_muffler.tooltip_2": "効果範囲は8ブロックです。",
   "block.mob_grinding_utils.wither_muffler.tooltip_3": "右クリックしてボスバーを非表示にします。",
 
@@ -143,7 +143,7 @@
   "block.mob_grinding_utils.entity_spawner.tooltip_1": "3x3x1のエリアにMobをスポーンできます。",
   "block.mob_grinding_utils.entity_spawner.tooltip_2": "上部のスロットにMobのスポーンエッグを使用します。",
   "block.mob_grinding_utils.entity_spawner.tooltip_3": "経験値ゼリーベビーを燃料として使用します。",
-  "block.mob_grinding_utils.entity_spawner.tooltip_4": "経験値速度アップグレードとスポナーの高さ/幅アップグレードで強化。",
+  "block.mob_grinding_utils.entity_spawner.tooltip_4": "経験値速度アップグレードとスポナーの高さ/幅アップグレードで強化できます。",
   "block.mob_grinding_utils.entity_spawner.tooltip_5": "効果範囲はGUIで切り替えることができます。",
   "block.mob_grinding_utils.entity_spawner.tooltip_6": "位置はGUIでオフセットを設定できます。",
 
@@ -155,7 +155,7 @@
   "tooltip.fanupgrade_distance": "奥行き: +1. 最大 10.",
 
   "tooltip.chickenfeed_1": "ニワトリのエサです。",
-  "tooltip.chickenfeed_2": "ニワトリを使い捨て...",
+  "tooltip.chickenfeed_2": "ニワトリを犠牲に...",
   "tooltip.chickenfeed_3": "含有:",
   "tooltip.chickenfeed_4": "腐った卵を生み出します。",
   "tooltip.chickenfeed_5": "金の卵を生み出します。",
