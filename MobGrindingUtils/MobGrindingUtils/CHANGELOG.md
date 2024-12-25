@@ -3,6 +3,7 @@
 - Lots of internal De-Janking.
 - Fixed Fluids not properly rendering in UI.
 - Added tooltip to AbsorptionHopper fluid tank.
+- Added Japanese translation(ja_jp.json) Thanks twister716/Anpan715
 
 ### [ 1.1.6+1.21.1 ]
 - Hopefully stopping Megatorches from blocking dirt spawns.
