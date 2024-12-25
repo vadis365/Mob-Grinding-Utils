@@ -1,9 +1,12 @@
 package mob_grinding_utils.tile;
 
 import mob_grinding_utils.ModBlocks;
+import mob_grinding_utils.components.FluidContents;
+import mob_grinding_utils.components.MGUComponents;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
@@ -89,5 +92,19 @@ public class TileEntityTank extends BlockEntity {
 
 	public int getScaledFluid(int scale) {
 		return tank.getFluid() != null ? (int) ((float) tank.getFluidAmount() / (float) tank.getCapacity() * scale) : 0;
+	}
+
+	@Override
+	protected void applyImplicitComponents(@Nonnull DataComponentInput componentInput) {
+		super.applyImplicitComponents(componentInput);
+
+		tank.setFluid(componentInput.getOrDefault(MGUComponents.FLUID, FluidContents.EMPTY).get());
+	}
+
+	@Override
+	protected void collectImplicitComponents(@Nonnull DataComponentMap.Builder builder) {
+		super.collectImplicitComponents(builder);
+
+		builder.set(MGUComponents.FLUID, FluidContents.of(tank.getFluid()));
 	}
 }

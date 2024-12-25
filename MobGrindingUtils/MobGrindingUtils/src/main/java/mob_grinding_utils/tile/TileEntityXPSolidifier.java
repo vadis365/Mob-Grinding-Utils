@@ -5,12 +5,15 @@ import mob_grinding_utils.MobGrindingUtils;
 import mob_grinding_utils.ModBlocks;
 import mob_grinding_utils.ModItems;
 import mob_grinding_utils.ModTags;
+import mob_grinding_utils.components.FluidContents;
+import mob_grinding_utils.components.MGUComponents;
 import mob_grinding_utils.inventory.server.ContainerXPSolidifier;
 import mob_grinding_utils.recipe.SolidifyRecipe;
 import mob_grinding_utils.util.CapHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
 import net.minecraft.network.FriendlyByteBuf;
@@ -414,5 +417,19 @@ public class TileEntityXPSolidifier extends BlockEntity implements MenuProvider,
 	@Override
 	public AbstractContainerMenu createMenu(int windowID, Inventory playerInventory, Player player) {
 		return new ContainerXPSolidifier(windowID, playerInventory, new FriendlyByteBuf(Unpooled.buffer()).writeBlockPos(worldPosition));
+	}
+
+	@Override
+	protected void applyImplicitComponents(@Nonnull DataComponentInput componentInput) {
+		super.applyImplicitComponents(componentInput);
+
+		tank.setFluid(componentInput.getOrDefault(MGUComponents.FLUID, FluidContents.EMPTY).get());
+	}
+
+	@Override
+	protected void collectImplicitComponents(@Nonnull DataComponentMap.Builder builder) {
+		super.collectImplicitComponents(builder);
+
+		builder.set(MGUComponents.FLUID, FluidContents.of(tank.getFluid()));
 	}
 }

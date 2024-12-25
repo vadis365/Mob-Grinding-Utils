@@ -1,3 +1,7 @@
+### [ 1.1.7+1.21.1 ]
+- Fixed Tanks not properly dropping.
+- Lots of internal De-Janking.
+
 ### [ 1.1.6+1.21.1 ]
 - Hopefully stopping Megatorches from blocking dirt spawns.
 

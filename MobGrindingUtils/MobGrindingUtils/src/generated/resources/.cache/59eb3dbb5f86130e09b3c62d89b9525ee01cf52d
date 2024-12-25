@@ -1,4 +1,4 @@
-// 1.21.1	2024-09-18T18:06:28.1802136	Loot Tables
+// 1.21.1	2024-12-25T12:03:58.9295086	Loot Tables
 0a31eba8641afae5fe06749e23202a803277cbc2 data/mob_grinding_utils/loot_table/blocks/absorption_hopper.json
 b85d7fc9c1a067f4b1ee95edfe9862e19c8c8a03 data/mob_grinding_utils/loot_table/blocks/dark_oak_stone.json
 8a1e4a1e509069220b18ca5b20ebc09bb4722c5d data/mob_grinding_utils/loot_table/blocks/delightful_dirt.json
@@ -9,9 +9,13 @@ fd6652e826cac5303463168c1378ae73afd62171 data/mob_grinding_utils/loot_table/bloc
 405a26028d1c43c8d57c9ccfcb49c3e681f405a0 data/mob_grinding_utils/loot_table/blocks/entity_conveyor.json
 5e5e88241bddf6630a54aee72547d97da6e999c9 data/mob_grinding_utils/loot_table/blocks/entity_spawner.json
 d2050ba3146a67096d5b73579c26ea1ad480eca1 data/mob_grinding_utils/loot_table/blocks/fan.json
+893e1c0715c12503a88664399e2fba28305a2777 data/mob_grinding_utils/loot_table/blocks/jumbo_tank.json
 6ad1e2fd1ffe8b869e78eb3179df300455e90979 data/mob_grinding_utils/loot_table/blocks/saw.json
 27ae3e18d1b564bafac07d68acaa435d4970a323 data/mob_grinding_utils/loot_table/blocks/solid_xp_block.json
 1b796e39ed5ec01f70f4b7b30697be11eec15497 data/mob_grinding_utils/loot_table/blocks/spikes.json
+30e78e1f572f0e85ed713785f480ef4332db66fa data/mob_grinding_utils/loot_table/blocks/tank.json
+1f552d4c038c1c5501cbbba9bb4f34a26c4be427 data/mob_grinding_utils/loot_table/blocks/tank_sink.json
 4bc908f0327417b003be9779604661d8f739b0a3 data/mob_grinding_utils/loot_table/blocks/tinted_glass.json
 646ff6eedce861b462f15974c91f89ba04f5ae8e data/mob_grinding_utils/loot_table/blocks/wither_muffler.json
+98b13ad06c3b5de499ed7cd915a0a78ac958b9b0 data/mob_grinding_utils/loot_table/blocks/xpsolidifier.json
 89b445b2f3359a6ac18023e8155fc8b07d7442fb data/mob_grinding_utils/loot_table/blocks/xp_tap.json
