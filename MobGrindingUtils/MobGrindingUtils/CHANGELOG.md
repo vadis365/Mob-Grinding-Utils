@@ -1,6 +1,8 @@
 ### [ 1.1.7+1.21.1 ]
 - Fixed Tanks not properly dropping.
 - Lots of internal De-Janking.
+- Fixed Fluids not properly rendering in UI.
+- Added tooltip to AbsorptionHopper fluid tank.
 
 ### [ 1.1.6+1.21.1 ]
 - Hopefully stopping Megatorches from blocking dirt spawns.

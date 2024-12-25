@@ -12,6 +12,10 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import net.neoforged.neoforge.network.PacketDistributor;
 
+import javax.annotation.Nonnull;
+import java.util.ArrayList;
+import java.util.List;
+
 public class GuiAbsorptionHopper extends MGUScreen<ContainerAbsorptionHopper> {
 
 	protected final ContainerAbsorptionHopper container;
@@ -56,6 +60,17 @@ public class GuiAbsorptionHopper extends MGUScreen<ContainerAbsorptionHopper> {
 		addRenderableWidget(new GuiMGUButton(leftPos + 225, topPos + 59, GuiMGUButton.Size.SMALL, 10, Component.literal("+"), message));
 		addRenderableWidget(new GuiMGUButton(leftPos + 173, topPos + 93, GuiMGUButton.Size.SMALL, 11, Component.literal("-"), message));
 		addRenderableWidget(new GuiMGUButton(leftPos + 225, topPos + 93, GuiMGUButton.Size.SMALL, 12, Component.literal("+"), message));
+	}
+
+	@Override
+	protected void renderTooltip(@Nonnull GuiGraphics gg, int x, int y) {
+		super.renderTooltip(gg, x, y);
+		if (tankGauge.isHovered()) {
+			List<Component> tooltip = new ArrayList<>();
+			tooltip.add(tile.tank.getFluid().getHoverName());
+			tooltip.add(Component.literal(tile.tank.getFluidAmount() + "/" + tile.tank.getCapacity()));
+			gg.renderComponentTooltip(font, tooltip, x, y);
+		}
 	}
 
 	@Override
