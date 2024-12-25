@@ -1,6 +1,7 @@
 package mob_grinding_utils.blocks;
 
 import com.mojang.serialization.MapCodec;
+import mob_grinding_utils.components.FluidContents;
 import mob_grinding_utils.components.MGUComponents;
 import mob_grinding_utils.tile.TileEntityXPSolidifier;
 import mob_grinding_utils.util.CapHelper;
@@ -80,7 +81,7 @@ public class BlockXPSolidifier extends BaseEntityBlock {
 			if (tile != null) {
 				ItemStack stack = new ItemStack(Item.byBlock(this), 1);
 				if (tile.tank.getFluidAmount() > 0)
-					stack.set(MGUComponents.FLUID, tile.tank.getFluid());
+					stack.set(MGUComponents.FLUID, FluidContents.of(tile.tank.getFluid()));
 				Containers.dropItemStack(world, pos.getX(), pos.getY(), pos.getZ(), stack);
 				if(!tile.inputSlots.getStackInSlot(0).isEmpty())
 					Containers.dropItemStack(world, pos.getX(), pos.getY(), pos.getZ(), tile.inputSlots.getStackInSlot(0));
@@ -100,7 +101,7 @@ public class BlockXPSolidifier extends BaseEntityBlock {
 		if (!world.isClientSide && stack.has(MGUComponents.FLUID)) {
 			BlockEntity tileentity = world.getBlockEntity(pos);
 			if (tileentity instanceof TileEntityXPSolidifier tile) {
-					FluidStack fluid = stack.getOrDefault(MGUComponents.FLUID, FluidStack.EMPTY);
+					FluidStack fluid = stack.getOrDefault(MGUComponents.FLUID, FluidContents.EMPTY).get();
 					tile.tank.fill(fluid, IFluidHandler.FluidAction.EXECUTE);
 			}
 		}

@@ -1,6 +1,7 @@
 package mob_grinding_utils.blocks;
 
 import com.mojang.serialization.MapCodec;
+import mob_grinding_utils.components.FluidContents;
 import mob_grinding_utils.components.MGUComponents;
 import mob_grinding_utils.tile.TileEntityTank;
 import mob_grinding_utils.util.CapHelper;
@@ -67,7 +68,7 @@ public class BlockTank extends BaseEntityBlock {
 			if (blockEntity instanceof TileEntityTank entityTank) {
 				ItemStack stack = new ItemStack(Item.byBlock(this), 1);
 				if (entityTank.tank.getFluidAmount() > 0)
-					stack.set(MGUComponents.FLUID, entityTank.tank.getFluid());
+					stack.set(MGUComponents.FLUID, FluidContents.of(entityTank.tank.getFluid()));
 				Containers.dropItemStack(world, pos.getX(), pos.getY(), pos.getZ(), stack);
 				world.removeBlockEntity(pos);
 			}
@@ -81,7 +82,7 @@ public class BlockTank extends BaseEntityBlock {
 		if (!world.isClientSide && stack.has(MGUComponents.FLUID)) {
 			BlockEntity blockEntity = world.getBlockEntity(pos);
 			if (blockEntity instanceof TileEntityTank) {
-					FluidStack fluid = stack.getOrDefault(MGUComponents.FLUID, FluidStack.EMPTY);
+					FluidStack fluid = stack.getOrDefault(MGUComponents.FLUID, FluidContents.EMPTY).get();
 					((TileEntityTank) blockEntity).tank.fill(fluid, IFluidHandler.FluidAction.EXECUTE);
 				}
 			}

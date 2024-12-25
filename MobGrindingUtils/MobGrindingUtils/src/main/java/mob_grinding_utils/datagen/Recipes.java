@@ -256,7 +256,7 @@ public class Recipes extends RecipeProvider {
             .pattern("IRI")
             .pattern("ISI")
             .define('I', Tags.Items.INGOTS_IRON)
-            .define('S', Tags.Items.SLIMEBALLS)
+            .define('S', Tags.Items.SLIME_BALLS)
             .define('R', Tags.Items.DUSTS_REDSTONE)
             .unlockedBy("", noneItem)
             .save(consumer, RL.mgu( "recipe_entity_conveyor"));

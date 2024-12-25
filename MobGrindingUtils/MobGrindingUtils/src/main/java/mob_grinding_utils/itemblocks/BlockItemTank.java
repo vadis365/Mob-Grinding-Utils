@@ -1,6 +1,7 @@
 package mob_grinding_utils.itemblocks;
 
 import mob_grinding_utils.blocks.BlockTank;
+import mob_grinding_utils.components.FluidContents;
 import mob_grinding_utils.components.MGUComponents;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
@@ -26,8 +27,8 @@ public class BlockItemTank extends BlockItem {
 	@OnlyIn(Dist.CLIENT)
 	public void appendHoverText(ItemStack stack, @Nonnull TooltipContext context, @Nonnull List<Component> list, @Nonnull TooltipFlag flag) {
 		if (stack.has(MGUComponents.FLUID)) {
-			FluidStack fluid = stack.getOrDefault(MGUComponents.FLUID, FluidStack.EMPTY);
-			if (fluid != null) {
+			FluidStack fluid = stack.getOrDefault(MGUComponents.FLUID, FluidContents.EMPTY).get();
+			if (!fluid.isEmpty()) {
 				list.add(Component.literal("Contains: " + fluid.getHoverName().getString()).withStyle(ChatFormatting.GREEN));
 				list.add(Component.literal(String.format("%dMb/%dMb", fluid.getAmount(),capacity)).withStyle(ChatFormatting.BLUE));
 			}

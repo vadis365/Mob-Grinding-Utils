@@ -5,6 +5,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import mob_grinding_utils.client.ModelLayers;
+import mob_grinding_utils.components.FluidContents;
 import mob_grinding_utils.components.MGUComponents;
 import mob_grinding_utils.models.ModelXPSolidifier;
 import mob_grinding_utils.util.RL;
@@ -56,10 +57,7 @@ public class TileXPSolidifierStackItemRenderer extends BlockEntityWithoutLevelRe
 	    RenderSystem.defaultBlendFunc();
 		matrixStack.popPose();
 
-		if (stack.has(MGUComponents.FLUID) && !stack.getOrDefault(MGUComponents.FLUID, FluidStack.EMPTY).isEmpty()) {
-			fluidStack = stack.get(MGUComponents.FLUID);
-		} else
-			return;
+		fluidStack = stack.getOrDefault(MGUComponents.FLUID, FluidContents.EMPTY).get();
 
 		float fluidLevel = fluidStack.getAmount();
 		if (fluidLevel < 1)
