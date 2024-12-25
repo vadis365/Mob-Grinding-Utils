@@ -1,10 +1,7 @@
 package mob_grinding_utils.inventory.client;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.BufferBuilder;
-import com.mojang.blaze3d.vertex.DefaultVertexFormat;
-import com.mojang.blaze3d.vertex.Tesselator;
-import com.mojang.blaze3d.vertex.VertexFormat;
+import com.mojang.blaze3d.vertex.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
@@ -21,6 +18,8 @@ import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtension
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
 
+import javax.annotation.Nonnull;
+
 public class TankGauge extends AbstractWidget {
     private final FluidTank tank;
     private Fluid oldFluid;
@@ -31,7 +30,7 @@ public class TankGauge extends AbstractWidget {
     }
 
     @Override
-    protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
+    protected void renderWidget(@Nonnull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
         // Byscos fix from AA
 
         float fluidLevel = getFluidLevel();
@@ -94,7 +93,8 @@ public class TankGauge extends AbstractWidget {
         buffer.addVertex(x + width, y, 0).setUv(maxU, minV);
         buffer.addVertex(x, y, 0).setUv(minU, minV);
 
-        buffer.build();
+        //buffer.build();
+        BufferUploader.drawWithShader(buffer.buildOrThrow());
     }
 
     public float getFluidLevel() {
@@ -102,7 +102,7 @@ public class TankGauge extends AbstractWidget {
     }
 
     @Override
-    protected void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {
+    protected void updateWidgetNarration(@Nonnull NarrationElementOutput narrationElementOutput) {
 
     }
 }
