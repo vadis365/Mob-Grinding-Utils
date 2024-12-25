@@ -1,8 +1,11 @@
 package mob_grinding_utils.blocks;
 
 import com.mojang.serialization.MapCodec;
+import mob_grinding_utils.components.FluidContents;
+import mob_grinding_utils.components.MGUComponents;
 import mob_grinding_utils.tile.TileEntityXPSolidifier;
 import mob_grinding_utils.util.CapHelper;
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
@@ -11,7 +14,9 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BucketItem;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BaseEntityBlock;
@@ -25,11 +30,13 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.phys.BlockHitResult;
+import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.FluidUtil;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.List;
 import java.util.Optional;
 
 @SuppressWarnings("deprecation")
@@ -118,4 +125,15 @@ public class BlockXPSolidifier extends BaseEntityBlock {
 		}
 		return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
     }
+
+	@Override
+	public void appendHoverText(ItemStack stack, @Nonnull Item.TooltipContext context, @Nonnull List<Component> tooltipComponents, @Nonnull TooltipFlag tooltipFlag) {
+		if (stack.has(MGUComponents.FLUID)) {
+			FluidStack fluid = stack.getOrDefault(MGUComponents.FLUID, FluidContents.EMPTY).get();
+			if (!fluid.isEmpty()) {
+				tooltipComponents.add(Component.literal("Contains: " + fluid.getHoverName().getString()).withStyle(ChatFormatting.GREEN));
+				tooltipComponents.add(Component.literal(String.format("%dMb/%dMb", fluid.getAmount(), 16000)).withStyle(ChatFormatting.BLUE));
+			}
+		}
+	}
 }

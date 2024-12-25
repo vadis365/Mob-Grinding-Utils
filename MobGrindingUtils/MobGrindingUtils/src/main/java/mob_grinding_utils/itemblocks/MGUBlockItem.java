@@ -20,26 +20,21 @@ public class MGUBlockItem extends BlockItem {
     }
     private final Block block;
 
+    private boolean addTooltipLine(int line, List<Component> tooltip) {
+        if (I18n.exists(block.getDescriptionId() + ".tooltip_" + line)) {
+            tooltip.add(Component.translatable(block.getDescriptionId() + ".tooltip_" + line).withStyle(ChatFormatting.YELLOW));
+            return true;
+        }
+        return false;
+    }
+
     @OnlyIn(Dist.CLIENT)
     @Override
     public void appendHoverText(@Nonnull ItemStack stack, @Nonnull TooltipContext context, @Nonnull List<Component> tooltip, @Nonnull TooltipFlag flagIn) {
         super.appendHoverText(stack, context, tooltip, flagIn);
-        if (I18n.exists(block.getDescriptionId() + ".tooltip_1")) {
-            tooltip.add(Component.translatable(block.getDescriptionId() + ".tooltip_1").withStyle(ChatFormatting.YELLOW));
-            if (I18n.exists(block.getDescriptionId() + ".tooltip_2")) {
-                tooltip.add(Component.translatable(block.getDescriptionId() + ".tooltip_2").withStyle(ChatFormatting.YELLOW));
-                if (I18n.exists(block.getDescriptionId() + ".tooltip_3")) {
-                    tooltip.add(Component.translatable(block.getDescriptionId() + ".tooltip_3").withStyle(ChatFormatting.YELLOW));
-                    if (I18n.exists(block.getDescriptionId() + ".tooltip_4")) {
-                        tooltip.add(Component.translatable(block.getDescriptionId() + ".tooltip_4").withStyle(ChatFormatting.YELLOW));
-                        if (I18n.exists(block.getDescriptionId() + ".tooltip_5")) {
-                            tooltip.add(Component.translatable(block.getDescriptionId() + ".tooltip_5").withStyle(ChatFormatting.YELLOW));
-                            if (I18n.exists(block.getDescriptionId() + ".tooltip_6")) {
-                                tooltip.add(Component.translatable(block.getDescriptionId() + ".tooltip_6").withStyle(ChatFormatting.YELLOW));
-                            }
-                        }
-                    }
-                }
+        for (int i = 1; i <= 6; i++) {
+            if (!addTooltipLine(i, tooltip)) {
+                break;
             }
         }
     }
