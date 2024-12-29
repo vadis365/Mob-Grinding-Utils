@@ -1,6 +1,7 @@
 package mob_grinding_utils.events;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.language.I18n;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.api.distmarker.Dist;
@@ -17,12 +18,14 @@ public class BossBarHidingEvent {
 		if (player != null) {
 			CompoundTag nbt = player.getPersistentData();
 			if (nbt.getBoolean("MGU_WitherMuffle")) {
-				if (event.getBossEvent().getName().getString().contains("Wither"))
+				String witherName = I18n.get("entity.minecraft.wither");
+				if (event.getBossEvent().getName().getString().contains(witherName))
 					event.setCanceled(true);
 			}
 
 			if (nbt.getBoolean("MGU_DragonMuffle")) {
-				if (event.getBossEvent().getName().getString().contains("Dragon"))
+				String dragonName = I18n.get("entity.minecraft.ender_dragon");
+				if (event.getBossEvent().getName().getString().contains(dragonName))
 					event.setCanceled(true);
 			}
 		}
