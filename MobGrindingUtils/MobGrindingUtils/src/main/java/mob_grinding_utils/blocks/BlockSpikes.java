@@ -8,7 +8,6 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.ExperienceOrb;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -24,7 +23,6 @@ import net.neoforged.neoforge.common.util.FakePlayerFactory;
 import net.neoforged.neoforge.event.entity.living.LivingDropsEvent;
 
 import javax.annotation.Nonnull;
-import java.lang.reflect.Method;
 
 public class BlockSpikes extends DirectionalBlock {
 	public static final MapCodec<BlockSpikes> CODEC = simpleCodec(BlockSpikes::new);
@@ -78,9 +76,9 @@ public class BlockSpikes extends DirectionalBlock {
 	public static void dropXP(LivingDropsEvent event) {
 		LivingEntity entity = event.getEntity();
 		Level level = entity.getCommandSenderWorld();
-		if (entity != null) {
+		if (entity != null && level instanceof ServerLevel serverLevel) {
 			if (!level.isClientSide && !event.isRecentlyHit() && event.getSource().is(MobGrindingUtils.SPIKE_TYPE)) {
-				int xp = entity.getExperiencePoints();
+				int xp = entity.getExperienceReward(serverLevel, FakePlayerFactory.getMinecraft(serverLevel));
 				while (xp > 0) {
 					int cap = ExperienceOrb.getExperienceValue(xp);
 					xp -= cap;
