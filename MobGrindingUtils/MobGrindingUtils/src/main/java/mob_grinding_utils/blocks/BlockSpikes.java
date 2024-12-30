@@ -75,18 +75,12 @@ public class BlockSpikes extends DirectionalBlock {
 			entity.hurt(MobGrindingUtils.getSpikeDamage(world), 5);
 	}
 
-	public static final Method xpPoints = getExperiencePoints();
-
 	public static void dropXP(LivingDropsEvent event) {
 		LivingEntity entity = event.getEntity();
 		Level level = entity.getCommandSenderWorld();
 		if (entity != null) {
 			if (!level.isClientSide && !event.isRecentlyHit() && event.getSource().is(MobGrindingUtils.SPIKE_TYPE)) {
-				int xp = 0;
-				try {
-					xp = (Integer) xpPoints.invoke(entity, FakePlayerFactory.getMinecraft((ServerLevel) level));
-				} catch (Exception e) {
-				}
+				int xp = entity.getExperiencePoints();
 				while (xp > 0) {
 					int cap = ExperienceOrb.getExperienceValue(xp);
 					xp -= cap;
@@ -94,20 +88,5 @@ public class BlockSpikes extends DirectionalBlock {
 				}
 			}
 		}
-	}
-
-	public static Method getExperiencePoints() {
-		Method method = null;
-		try {
-			method = LivingEntity.class.getDeclaredMethod("getExperienceReward", Player.class);
-			method.setAccessible(true);
-		} catch (Exception e) {
-		}
-		try {
-			method = LivingEntity.class.getDeclaredMethod("m_6552_", Player.class);
-			method.setAccessible(true);
-		} catch (Exception e) {
-		}
-		return method;
 	}
 }
