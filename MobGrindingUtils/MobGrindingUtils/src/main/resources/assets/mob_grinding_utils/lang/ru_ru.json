@@ -1,0 +1,191 @@
+{
+  "_comment": "Блоки",
+  "block.mob_grinding_utils.fan": "Вентилятор для мобов",
+  "block.mob_grinding_utils.saw": "Измельчитель мобов",
+  "block.mob_grinding_utils.absorption_hopper": "Поглощающая воронка",
+  "block.mob_grinding_utils.absorption_hopper_d_u": "Смещение Вверх/Вниз",
+  "block.mob_grinding_utils.absorption_hopper_n_s": "Смещение Север/Юг",
+  "block.mob_grinding_utils.absorption_hopper_w_e": "Смещение Запад/Восток",
+  "block.mob_grinding_utils.spikes": "Железные шипы",
+  "block.mob_grinding_utils.tank": "Резервуар сингулярности",
+  "block.mob_grinding_utils.tank_sink": "Резервуар сингулярности со сливом опыта",
+  "block.mob_grinding_utils.xp_tap": "Кран опыта",
+  "block.mob_grinding_utils.wither_muffler": "Глушитель смерти Иссушителя",
+  "block.mob_grinding_utils.dragon_muffler": "Глушитель смерти Дракона Края",
+  "block.mob_grinding_utils.dark_oak_stone": "Камень из темного дуба",
+  "block.mob_grinding_utils.ender_inhibitor_on": "Ингибитор Эндера активен",
+  "block.mob_grinding_utils.ender_inhibitor_off": "Ингибитор Эндера неактивен",
+  "block.mob_grinding_utils.entity_conveyor": "Конвейер сущностей",
+  "block.mob_grinding_utils.tinted_glass": "Тонированное стекло",
+  "block.mob_grinding_utils.jumbo_tank": "Огромный резервуар",
+  "block.mob_grinding_utils.xpsolidifier": "Затвердитель опыта",
+  "block.mob_grinding_utils.dreadful_dirt": "Ужасающая земля",
+  "block.mob_grinding_utils.solid_xp_block": "Твердый опыт",
+  "block.mob_grinding_utils.delightful_dirt": "Восхитительная земля",
+  "block.mob_grinding_utils.entity_spawner": "Спавнер сущностей",
+
+  "_comment": "Жидкости",
+  "mob_grinding_utils.fluid_xp": "Жидкий опыт",
+  "mob_grinding_utils.jei.any_experience": "принимает любой: forge:experience",
+
+  "_comment": "Заголовки JEI",
+  "mob_grinding_utiles.jei.solidifier": "Рецепт затвердителя",
+
+  "_comment": "Информационные вкладки JEI",
+  "block.mob_grinding_utils.jumbo_tank.jei.info": "Увеличенная версия резервуара сингулярности, вмещает 1024 ведра любой жидкости.",
+  "block.mob_grinding_utils.xpsolidifier.jei.info": "Затвердевает жидкий опыт с помощью форм, создавая съедобное желе опыта.",
+  "block.mob_grinding_utils.tinted_glass.jei.info": "Позволяет видеть внутреннюю часть фермы мобов, не пропуская свет внутрь.",
+  "block.mob_grinding_utils.dreadful_dirt.jei.info": "Быстро спавнит монстров в темноте, горит, если подвергается воздействию неба днем.",
+  "block.mob_grinding_utils.solid_xp_block.jei.info": "Блок затвердевшего опыта, очень прыгучий, очень веселый.",
+  "block.mob_grinding_utils.delightfull_dirt.jei.info": "Быстро спавнит существ на свету, покрывается снегом ночью, если подвергается воздействию неба.",
+  "block.mob_grinding_utils.entity_spawner.jei.info": "Спавнит мобов в области 3x3x1.\nПотребляет желе опыта.\nМожет быть улучшен.",
+  "block.mob_grinding_utils.delightful_dirt.jei.info": "Не будет функционировать в океанических биомах и других биомах без спавна пассивных мобов.",
+
+  "_comment": "Предметы",
+  "item.mob_grinding_utils.mob_swab": "Ватная палочка для мобов",
+  "item.mob_grinding_utils.mob_swab_used": "Использованная ватная палочка для мобов",
+  "item.mob_grinding_utils.gm_chicken_feed": "Корм для куриц GM",
+  "item.mob_grinding_utils.gm_chicken_feed_cursed": "Проклятый корм для куриц GM",
+  "item.mob_grinding_utils.nutritious_chicken_feed": "Питательный корм для куриц",
+  "item.mob_grinding_utils.fan_upgrade_width": "Улучшение ширины вентилятора для мобов",
+  "item.mob_grinding_utils.fan_upgrade_height": "Улучшение высоты вентилятора для мобов",
+  "item.mob_grinding_utils.fan_upgrade_speed": "Улучшение дальности вентилятора для мобов",
+  "item.mob_grinding_utils.absorption_upgrade": "Улучшение радиуса поглощения",
+  "item.mob_grinding_utils.saw_upgrade_sharpness": "Улучшение остроты измельчителя мобов",
+  "item.mob_grinding_utils.saw_upgrade_looting": "Улучшение добычи измельчителя мобов",
+  "item.mob_grinding_utils.saw_upgrade_fire": "Улучшение заговора огня измельчителя мобов",
+  "item.mob_grinding_utils.saw_upgrade_smite": "Улучшение небесной кары измельчителя мобов",
+  "item.mob_grinding_utils.saw_upgrade_arthropod": "Улучшение бича членистоногих измельчителя мобов",
+  "item.mob_grinding_utils.saw_upgrade_beheading": "Улучшение обезглавливания измельчителя мобов",
+  "item.mob_grinding_utils.null_sword": "Воображаемый несуществующий меч",
+  "item.mob_grinding_utils.fluid_xp_bucket": "Ведро с жидким опытом",
+  "item.mob_grinding_utils.rotten_egg": "Тухлое яйцо",
+  "item.mob_grinding_utils.golden_egg": "Золотое яйцо",
+  "item.mob_grinding_utils.solid_xp_mould_blank": "Заготовка формы для опыта",
+  "item.mob_grinding_utils.solid_xp_mould_baby": "Форма для желе опыта \"Малыш\"",
+  "item.mob_grinding_utils.solid_xp_baby": "Желе опыта \"Малыш\"",
+  "item.mob_grinding_utils.xp_solidifier_upgrade": "Улучшение скорости получения опыта",
+  "item.mob_grinding_utils.spawner_upgrade_width": "Улучшение ширины спавнера сущностей",
+  "item.mob_grinding_utils.spawner_upgrade_height": "Улучшение высоты спавнера сущностей",
+  "item.mob_grinding_utils.monocle": "Монокль",
+
+  "_comment": "Вкладка в творческом режиме",
+  "itemGroup.mob_grinding_utils": "Mob Grinding Utils",
+
+  "_comment": "Фальшивый игрок Mob Masher (отображается в сообщении о смерти)",
+  "fakeplayer.mob_masher": "Измельчитель мобов",
+
+  "_comment": "Урон от шипов",
+  "death.attack.spikes": "%1$s был пронзен шипами.",
+  "death.attack.spikes.player": "%1$s был пронзен шипами %2$s.",
+
+  "_comment": "Всплывающие подсказки блоков",
+  "block.mob_grinding_utils.fan.tooltip_1": "Толкает мобов в направлении, куда смотрит блок.",
+  "block.mob_grinding_utils.fan.tooltip_2": "Может быть модифицирован с помощью улучшений вентилятора для мобов.",
+  "block.mob_grinding_utils.fan.tooltip_3": "Область действия можно переключать в его графическом интерфейсе.",
+
+  "block.mob_grinding_utils.saw.tooltip_1": "Усовершенствованный модульный измельчитель мобов.",
+  "block.mob_grinding_utils.saw.tooltip_2": "Может быть улучшен с помощью улучшений измельчителя мобов.",
+  "block.mob_grinding_utils.saw.tooltip_3": "Мобы, измельченные с помощью этого блока, считаются убитыми игроком.",
+
+  "block.mob_grinding_utils.absorption_hopper.tooltip_1": "Всасывает предметы и сферы опыта в области 7x7x7.",
+  "block.mob_grinding_utils.absorption_hopper.tooltip_2": "Может быть настроен на выталкивание с любой стороны.",
+  "block.mob_grinding_utils.absorption_hopper.tooltip_3": "Жидкости будут поступать в резервуары, а предметы - в инвентари.",
+  "block.mob_grinding_utils.absorption_hopper.tooltip_4": "Радиус действия увеличивается с помощью улучшений радиуса поглощения.",
+  "block.mob_grinding_utils.absorption_hopper.tooltip_5": "Область действия можно переключать в его графическом интерфейсе.",
+  "block.mob_grinding_utils.absorption_hopper.tooltip_6": "Положение можно смещать в его графическом интерфейсе.",
+
+  "block.mob_grinding_utils.spikes.tooltip_1": "Простые шипы - также будут выпадать сферы опыта мобов.",
+  "block.mob_grinding_utils.spikes.tooltip_2": "Мобы, убитые шипами, НЕ считаются убитыми игроком.",
+
+  "block.mob_grinding_utils.xp_tap.tooltip_1": "Крепится к боковой стороне резервуара.",
+  "block.mob_grinding_utils.xp_tap.tooltip_2": "Превращает жидкий опыт обратно в сферы.",
+
+  "block.mob_grinding_utils.wither_muffler.tooltip_1": "Останавливает звуки смерти Иссушителя",
+  "block.mob_grinding_utils.wither_muffler.tooltip_2": "в радиусе 8 блоков.",
+  "block.mob_grinding_utils.wither_muffler.tooltip_3": "Нажмите правую кнопку мыши, чтобы скрыть полоску ХП босса.",
+
+  "block.mob_grinding_utils.dragon_muffler.tooltip_1": "Останавливает звуки смерти Дракона Края",
+  "block.mob_grinding_utils.dragon_muffler.tooltip_2": "в радиусе 32 блоков.",
+  "block.mob_grinding_utils.dragon_muffler.tooltip_3": "Нажмите правую кнопку мыши, чтобы скрыть полоску ХП босса.",
+
+  "block.mob_grinding_utils.dark_oak_stone.tooltip_1": "А они говорили, что это невозможно...",
+
+  "block.mob_grinding_utils.entity_conveyor.tooltip_1": "Конвейер для перемещения мобов и предметов по горизонтали.",
+  "block.mob_grinding_utils.entity_conveyor.tooltip_2": "Мобы могут появляться на этом блоке.",
+
+  "block.mob_grinding_utils.ender_inhibitor_on.tooltip_1": "Запрещает телепортацию для сущностей на расстоянии до 8 блоков.",
+  "block.mob_grinding_utils.ender_inhibitor_on.tooltip_2": "Может быть прикреплен к ЛЮБОЙ стороне твердых блоков.",
+  "block.mob_grinding_utils.ender_inhibitor_on.tooltip_3": "Нажмите правую кнопку мыши, чтобы деактивировать/активировать.",
+  "block.mob_grinding_utils.ender_inhibitor_off.tooltip_1": "Запрещает телепортацию для сущностей на расстоянии до 8 блоков.",
+  "block.mob_grinding_utils.ender_inhibitor_off.tooltip_2": "Может быть прикреплен к ЛЮБОЙ стороне твердых блоков.",
+  "block.mob_grinding_utils.ender_inhibitor_off.tooltip_3": "Нажмите правую кнопку мыши, чтобы деактивировать/активировать.",
+
+  "block.mob_grinding_utils.tinted_glass.tooltip_1": "Стеклянные блоки, предназначенные для предотвращения попадания света.",
+  "block.mob_grinding_utils.tinted_glass.tooltip_2": "Достаточно прочные, чтобы выдерживать Иссушителей.",
+
+  "block.mob_grinding_utils.dreadful_dirt.tooltip_1": "Спавнит больше враждебных мобов.",
+  "block.mob_grinding_utils.dreadful_dirt.tooltip_2": "Воспламеняется на дневном свету, если подвергается воздействию неба.",
+  "block.mob_grinding_utils.dreadful_dirt.tooltip_3": "Уровень освещенности 5 и выше останавливает спавн враждебных мобов.",
+
+  "block.mob_grinding_utils.delightful_dirt.tooltip_1": "Спавнит больше дружелюбных мобов.",
+  "block.mob_grinding_utils.delightful_dirt.tooltip_2": "Покрывается снегом ночью, если подвергается воздействию неба.",
+  "block.mob_grinding_utils.delightful_dirt.tooltip_3": "Уровень освещенности ниже 10 останавливает спавн дружелюбных мобов.",
+  "block.mob_grinding_utils.delightful_dirt.tooltip_4": "Не работает в океанических биомах.",
+
+  "block.mob_grinding_utils.xpsolidifier.tooltip_1": "Затвердевает жидкий опыт.",
+  "block.mob_grinding_utils.xpsolidifier.tooltip_2": "Требует форму для опыта и жидкий опыт в своем резервуаре.",
+  "block.mob_grinding_utils.xpsolidifier.tooltip_3": "Может быть настроен на горизонтальный экспорт.",
+  "block.mob_grinding_utils.xpsolidifier.tooltip_4": "Скорость увеличивается с помощью улучшений скорости получения опыта.",
+
+  "block.mob_grinding_utils.solid_xp_block.tooltip_1": "Прыгучий.",
+
+  "block.mob_grinding_utils.entity_spawner.tooltip_1": "Может спавнить мобов в области 3x3x1.",
+  "block.mob_grinding_utils.entity_spawner.tooltip_2": "Использует яйцо моба в верхнем слоте.",
+  "block.mob_grinding_utils.entity_spawner.tooltip_3": "Работает на твердом желе опыта \"Малыш\".",
+  "block.mob_grinding_utils.entity_spawner.tooltip_4": "Улучшается с помощью улучшений скорости получения опыта и улучшений высоты/ширины спавнера.",
+  "block.mob_grinding_utils.entity_spawner.tooltip_5": "Область действия можно переключать в его графическом интерфейсе.",
+"block.mob_grinding_utils.entity_spawner.tooltip_6": "Положение можно смещать в его графическом интерфейсе.",
+
+
+  "_comment": "Всплывающие подсказки предметов",
+  "tooltip.hopperupgrade": "Модификатор радиуса: +1. Максимум 6.",
+
+  "tooltip.fanupgrade_width": "Модификатор ширины: +1. Максимум 3.",
+  "tooltip.fanupgrade_height": "Модификатор высоты: +1. Максимум 3.",
+  "tooltip.fanupgrade_distance": "Модификатор расстояния: +1. Максимум 10.",
+
+  "tooltip.chickenfeed_1": "Кормит куриц.",
+  "tooltip.chickenfeed_2": "Одноразовое использование для курицы...",
+  "tooltip.chickenfeed_3": "Содержит:",
+  "tooltip.chickenfeed_4": "Создает тухлое яйцо.",
+  "tooltip.chickenfeed_5": "Создает золотое яйцо.",
+
+  "tooltip.mobswab_1": "Использовать на мобах для сбора \"ДНК\".",
+  "tooltip.mobswab_2": "Создается с ведром опыта и семенами.",
+  "tooltip.mobswab_3": "Содержит:",
+
+  "tooltip.sawupgrade_sharpness": "Острота: +1. Максимум %d.",
+  "tooltip.sawupgrade_looting": "Добыча: +1. Максимум %d.",
+  "tooltip.sawupgrade_fire": "Заговор огня: +1. Максимум %d.",
+  "tooltip.sawupgrade_smite": "Небесная кара: +1. Максимум %d.",
+  "tooltip.sawupgrade_arthropods": "Бич членистоногих: +1. Максимум %d.",
+  "tooltip.sawupgrade_beheading": "Обезглавливание: +1. Максимум %d.",
+
+  "tooltip.rotten_egg_1": "Создает область Ужасающей земли 5x5.",
+  "tooltip.rotten_egg_2": "Используется на траве, земле, мицелии или пашне.",
+
+  "tooltip.golden_egg_1": "Создает область Восхитительной земли 5x5.",
+  "tooltip.golden_egg_2": "Используется на траве, земле, мицелии или пашне.",
+
+  "tooltip.solid_xp": "Съедобно. Значение опыта: ",
+  "tooltip.solid_xp2": "Общее значение опыта в стаке: ",
+  "tooltip.solid_xp_mould": "Используется в затвердителе опыта",
+  "tooltip.solid_xp_mould_blank": "Создается в форме для опыта",
+
+  "tooltip.solidifier_upgrade": "Модификатор скорости: +1.",
+  "tooltip.spawner_upgrade_width": "Модификатор ширины: +1. Максимум 5.",
+  "tooltip.spawner_upgrade_height": "Модификатор высоты: +1. Максимум 5.",
+
+  "tooltip.monocle": "Что-ж? Шикарно, старина!"
+}
