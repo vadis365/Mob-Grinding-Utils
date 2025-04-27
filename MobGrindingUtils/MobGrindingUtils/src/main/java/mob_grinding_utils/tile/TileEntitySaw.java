@@ -5,6 +5,7 @@ import mob_grinding_utils.ModBlocks;
 import mob_grinding_utils.ModItems;
 import mob_grinding_utils.blocks.BlockSaw;
 import mob_grinding_utils.components.MGUComponents;
+import mob_grinding_utils.config.ServerConfig;
 import mob_grinding_utils.inventory.server.ContainerSaw;
 import mob_grinding_utils.items.ItemSawUpgrade;
 import mob_grinding_utils.util.FakePlayerHandler;
@@ -51,6 +52,8 @@ public class TileEntitySaw extends TileEntityInventoryHelper implements MenuProv
 		super(ModBlocks.SAW.getTileEntityType(), 6, pos, state);
 	}
 
+
+
 	public static <T extends BlockEntity> void clientTick(Level level, BlockPos blockPos, BlockState blockState, T t) {
 		if (t instanceof TileEntitySaw tile ) {
 			if (tile.active) {
@@ -88,18 +91,29 @@ public class TileEntitySaw extends TileEntityInventoryHelper implements MenuProv
 		if (fakePlayer == null) return;
 		ItemStack tempSword = new ItemStack(ModItems.NULL_SWORD.get(), 1);
 
-		if(hasSharpnessUpgrade())
-			tempSword.enchant(level.holderOrThrow(Enchantments.SHARPNESS), getItems().get(0).getCount() * 10);
-		if(hasLootingUpgrade())
-			tempSword.enchant(level.holderOrThrow(Enchantments.LOOTING), getItems().get(1).getCount());
-		if(hasFlameUpgrade())
-			tempSword.enchant(level.holderOrThrow(Enchantments.FIRE_ASPECT), getItems().get(2).getCount());
-		if(hasSmiteUpgrade())
-			tempSword.enchant(level.holderOrThrow(Enchantments.SMITE), getItems().get(3).getCount() * 10);
-		if(hasArthropodUpgrade())
-			tempSword.enchant(level.holderOrThrow(Enchantments.BANE_OF_ARTHROPODS), getItems().get(4).getCount() * 10);
-		if(hasBeheadingUpgrade())
-			tempSword.set(MGUComponents.BEHEADING, getItems().get(5).getCount());
+		int sharpness = getUpgradeCount(ItemSawUpgrade.SawUpgradeType.SHARPNESS);
+		if(sharpness > 0)
+			tempSword.enchant(level.holderOrThrow(Enchantments.SHARPNESS), sharpness * 10);
+
+		int looting = getUpgradeCount(ItemSawUpgrade.SawUpgradeType.LOOTING);
+		if(looting > 0)
+			tempSword.enchant(level.holderOrThrow(Enchantments.LOOTING), looting);
+
+		int flame = getUpgradeCount(ItemSawUpgrade.SawUpgradeType.FIRE);
+		if(flame > 0)
+			tempSword.enchant(level.holderOrThrow(Enchantments.FIRE_ASPECT), flame);
+
+		int smite = getUpgradeCount(ItemSawUpgrade.SawUpgradeType.SMITE);
+		if(smite > 0)
+			tempSword.enchant(level.holderOrThrow(Enchantments.SMITE), smite * 10);
+
+		int arthropod = getUpgradeCount(ItemSawUpgrade.SawUpgradeType.ARTHROPOD);
+		if(arthropod > 0)
+			tempSword.enchant(level.holderOrThrow(Enchantments.BANE_OF_ARTHROPODS), arthropod * 10);
+
+		int beheading = getUpgradeCount(ItemSawUpgrade.SawUpgradeType.BEHEADING);
+		if(beheading > 0)
+			tempSword.set(MGUComponents.BEHEADING, beheading);
 
 		fakePlayer.setItemInHand(InteractionHand.MAIN_HAND, tempSword);
 		fakePlayer.detectEquipmentUpdates();
@@ -116,30 +130,11 @@ public class TileEntitySaw extends TileEntityInventoryHelper implements MenuProv
 		fakePlayer.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
 	}
 
-	private boolean hasSharpnessUpgrade() {
-		return !getItems().get(0).isEmpty() && getItems().get(0).getItem() == ModItems.SAW_UPGRADE_SHARPNESS.get();
+	private int getUpgradeCount(ItemSawUpgrade.SawUpgradeType type) {
+		ItemStack stack = getItems().get(type.ordinal());
+		return !stack.isEmpty() && stack.getItem() instanceof ItemSawUpgrade upgrade && upgrade.upgradeType == type ? Math.min(stack.getCount(), ServerConfig.MASHER_MAX_UPGRADES.get()) : 0;
 	}
 	
-	private boolean hasLootingUpgrade() {
-		return !getItems().get(1).isEmpty() && getItems().get(1).getItem() == ModItems.SAW_UPGRADE_LOOTING.get();
-	}
-
-	private boolean hasFlameUpgrade() {
-		return !getItems().get(2).isEmpty() && getItems().get(2).getItem() == ModItems.SAW_UPGRADE_FIRE.get();
-	}
-	
-	private boolean hasSmiteUpgrade() {
-		return !getItems().get(3).isEmpty() && getItems().get(3).getItem() == ModItems.SAW_UPGRADE_SMITE.get();
-	}
-	
-	private boolean hasArthropodUpgrade() {
-		return !getItems().get(4).isEmpty() && getItems().get(4).getItem() == ModItems.SAW_UPGRADE_ARTHROPOD.get();
-	}
-
-	private boolean hasBeheadingUpgrade() {
-		return !getItems().get(5).isEmpty() && getItems().get(5).getItem() == ModItems.SAW_UPGRADE_BEHEADING.get();
-	}
-
 	@Override
 	public void loadAdditional(CompoundTag nbt, HolderLookup.Provider registries) {
 		super.loadAdditional(nbt, registries);
@@ -178,29 +173,7 @@ public class TileEntitySaw extends TileEntityInventoryHelper implements MenuProv
 
 	@Override
 	public boolean canPlaceItem(int slot, ItemStack stack) {
-		if (stack.getItem() instanceof ItemSawUpgrade) {
-			switch (slot) {
-				case 0:
-					if (stack.getItem() == ModItems.SAW_UPGRADE_SHARPNESS.get())
-						return true;
-				case 1:
-					if (stack.getItem() == ModItems.SAW_UPGRADE_LOOTING.get())
-						return true;
-				case 2:
-					if (stack.getItem() == ModItems.SAW_UPGRADE_FIRE.get())
-						return true;
-				case 3:
-					if (stack.getItem() == ModItems.SAW_UPGRADE_SMITE.get())
-						return true;
-				case 4:
-					if (stack.getItem() == ModItems.SAW_UPGRADE_ARTHROPOD.get())
-						return true;
-				case 5:
-					if (stack.getItem() == ModItems.SAW_UPGRADE_BEHEADING.get())
-						return true;
-			}
-		}
-		return false;
+		return stack.getItem() instanceof ItemSawUpgrade && slot == ((ItemSawUpgrade) stack.getItem()).upgradeType.ordinal() && getItems().get(slot).getCount() < ServerConfig.MASHER_MAX_UPGRADES.get();
 	}
 
 	@Override
@@ -210,7 +183,7 @@ public class TileEntitySaw extends TileEntityInventoryHelper implements MenuProv
 
 	@Override
 	public int getMaxStackSize() {
-		return 10;
+		return ServerConfig.MASHER_MAX_UPGRADES.get();
 	}
 
 	@Override
