@@ -1,3 +1,7 @@
+### [ 1.1.8+1.21.1 ]
+- Fixed Mob Masher not setting emulated uuid correctly.
+- Fixed masher not stopping hoppers from inserting too many upgrades.
+
 ### [ 1.1.7+1.21.1 ]
 - Fixed Tanks not properly dropping.
 - Lots of internal De-Janking.

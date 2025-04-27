@@ -45,6 +45,7 @@ public class BlockSaw extends DirectionalBlock implements EntityBlock {
 		registerDefaultState(this.stateDefinition.any().setValue(POWERED, false));
 	}
 
+	@Nonnull
 	@Override
 	protected MapCodec<? extends DirectionalBlock> codec() {
 		return CODEC;
@@ -86,13 +87,13 @@ public class BlockSaw extends DirectionalBlock implements EntityBlock {
 	}
 
 	@Override
-	  public void setPlacedBy(@Nonnull Level world, @Nonnull BlockPos pos, BlockState state, @Nullable LivingEntity placer, @Nonnull ItemStack stack) {
+	  public void setPlacedBy(@Nonnull Level world, @Nonnull BlockPos pos, @Nonnull BlockState state, @Nullable LivingEntity placer, @Nonnull ItemStack stack) {
 		BlockEntity be = world.getBlockEntity(pos);
-		if (state.getValue(POWERED) && be instanceof TileEntitySaw tile) {
-			tile.setActive(true);
-			if (placer instanceof Player player) {
+		if (be instanceof TileEntitySaw tile) {
+			if (state.getValue(POWERED))
+				tile.setActive(true);
+			if (placer instanceof Player player)
 				tile.setPlacer(player);
-			}
 		}
 	}
 
@@ -103,7 +104,7 @@ public class BlockSaw extends DirectionalBlock implements EntityBlock {
 
 	@Nonnull
 	@Override
-	public InteractionResult useWithoutItem(BlockState state, @Nonnull Level world, @Nonnull BlockPos pos, @Nonnull Player player, @Nonnull BlockHitResult hitResult) {
+	public InteractionResult useWithoutItem(@Nonnull BlockState state, @Nonnull Level world, @Nonnull BlockPos pos, @Nonnull Player player, @Nonnull BlockHitResult hitResult) {
 		if (!world.isClientSide) {
 			BlockEntity tileentity = world.getBlockEntity(pos);
 			if (tileentity instanceof TileEntitySaw)
@@ -155,7 +156,7 @@ public class BlockSaw extends DirectionalBlock implements EntityBlock {
 	}
 
 	@Override
-	public boolean getWeakChanges(BlockState state, LevelReader world, BlockPos pos) {
+	public boolean getWeakChanges(BlockState state, @Nonnull LevelReader world, @Nonnull BlockPos pos) {
 		return state.is(ModBlocks.SAW.getBlock());
 	}
 }
