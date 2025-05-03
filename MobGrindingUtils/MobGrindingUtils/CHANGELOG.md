@@ -1,6 +1,7 @@
 ### [ 1.1.8+1.21.1 ]
 - Fixed Mob Masher not setting emulated uuid correctly.
 - Fixed masher not stopping hoppers from inserting too many upgrades.
+- Fixed cursed earth not spawning mobs in JAVD/JAMD dimensions.
 
 ### [ 1.1.7+1.21.1 ]
 - Fixed Tanks not properly dropping.

@@ -2,6 +2,7 @@ package mob_grinding_utils.datagen;
 
 import mob_grinding_utils.ModTags;
 import mob_grinding_utils.Reference;
+import mob_grinding_utils.util.RL;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.tags.BiomeTagsProvider;
@@ -24,5 +25,8 @@ public class MGUBiomeTags extends BiomeTagsProvider {
         tag(ModTags.Biomes.PASSIVE_OVERRIDE).addTags(BiomeTags.IS_RIVER);
 
         getOrCreateRawBuilder(ModTags.Biomes.HOSTILE_OVERRIDE);
+
+        tag(ModTags.Biomes.HOSTILE_OVERRIDE).addOptional(RL.rl("javd", "void"));
+        tag(ModTags.Biomes.HOSTILE_OVERRIDE).addOptional(RL.rl("jamd", "mining"));
     }
 }
