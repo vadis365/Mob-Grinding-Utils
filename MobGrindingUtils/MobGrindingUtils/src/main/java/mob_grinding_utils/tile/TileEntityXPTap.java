@@ -71,6 +71,7 @@ public class TileEntityXPTap extends BlockEntity {
 		active = nbt.getBoolean("active");
 	}
 
+	@Nonnull
 	@Override
 	public CompoundTag getUpdateTag(@Nonnull HolderLookup.Provider registries) {
 		CompoundTag nbt = new CompoundTag();

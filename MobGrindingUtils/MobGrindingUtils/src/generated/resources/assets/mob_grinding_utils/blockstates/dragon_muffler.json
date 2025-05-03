@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "mode=false": {
+      "model": "mob_grinding_utils:block/dragon_muffler"
+    },
+    "mode=true": {
+      "model": "mob_grinding_utils:block/dragon_muffler_boss_bar"
+    }
+  }
+}

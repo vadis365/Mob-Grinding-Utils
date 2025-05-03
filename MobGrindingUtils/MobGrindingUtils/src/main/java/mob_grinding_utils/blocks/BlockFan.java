@@ -37,6 +37,7 @@ public class BlockFan extends DirectionalBlock implements EntityBlock {
 		registerDefaultState(this.stateDefinition.any().setValue(POWERED, false));
 	}
 
+	@Nonnull
 	@Override
 	protected MapCodec<? extends DirectionalBlock> codec() {
 		return CODEC;
@@ -72,7 +73,7 @@ public class BlockFan extends DirectionalBlock implements EntityBlock {
 
 	@Nonnull
 	@Override
-	public InteractionResult useWithoutItem(BlockState state, @Nonnull Level world, @Nonnull BlockPos pos, @Nonnull Player player, @Nonnull BlockHitResult hitResult) {
+	public InteractionResult useWithoutItem(@Nonnull BlockState state, @Nonnull Level world, @Nonnull BlockPos pos, @Nonnull Player player, @Nonnull BlockHitResult hitResult) {
 		if (!world.isClientSide) {
 			BlockEntity tileentity = world.getBlockEntity(pos);
 			if (tileentity  instanceof TileEntityFan)

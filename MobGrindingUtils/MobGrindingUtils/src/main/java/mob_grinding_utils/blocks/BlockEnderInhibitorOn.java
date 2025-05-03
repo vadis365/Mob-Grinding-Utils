@@ -156,7 +156,7 @@ public class BlockEnderInhibitorOn extends Block {
 
 	@Nonnull
 	@Override
-	public InteractionResult useWithoutItem(BlockState state, @Nonnull Level world, @Nonnull BlockPos pos, @Nonnull Player player, @Nonnull BlockHitResult hitResult) {
+	public InteractionResult useWithoutItem(@Nonnull BlockState state, @Nonnull Level world, @Nonnull BlockPos pos, @Nonnull Player player, @Nonnull BlockHitResult hitResult) {
 		if (!world.isClientSide) {
 			BlockState activeState = ModBlocks.ENDER_INHIBITOR_OFF.getBlock().defaultBlockState().setValue(BlockEnderInhibitorOff.TYPE, state.getValue(TYPE));
 			world.setBlock(pos, activeState, 3);
