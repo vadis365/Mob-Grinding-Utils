@@ -158,7 +158,7 @@ public class TileEntityXPSolidifier extends BlockEntity implements MenuProvider,
 					}
 				}
 
-				if (tile.outputDirection != OutputDirection.NONE && tile.getOutputFacing() != null) {
+				if (!level.isClientSide &&  tile.outputDirection != OutputDirection.NONE && tile.getOutputFacing() != null) {
 					BlockEntity otherTile = level.getBlockEntity(worldPosition.relative(tile.getOutputFacing()));
 					Optional<IItemHandler> handlerOptional = CapHelper.getItemHandler(level, worldPosition.relative(tile.getOutputFacing()), tile.getOutputFacing().getOpposite());
 					if (otherTile != null && handlerOptional.isPresent()) {
