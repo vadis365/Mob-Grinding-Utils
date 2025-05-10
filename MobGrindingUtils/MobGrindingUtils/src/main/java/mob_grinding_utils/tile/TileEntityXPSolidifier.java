@@ -81,6 +81,7 @@ public class TileEntityXPSolidifier extends BlockEntity implements MenuProvider,
 		final String name;
 		OutputDirection(String nameIn) { name = nameIn; }
 
+		@Nonnull
 		@Override
 		public String getSerializedName() { return name; }
 
@@ -101,7 +102,7 @@ public class TileEntityXPSolidifier extends BlockEntity implements MenuProvider,
 
 	public OutputDirection outputDirection = OutputDirection.NONE;
 
-	public OutputDirection toggleOutput() {
+	public void toggleOutput() {
 		switch (outputDirection) {
 			case WEST -> outputDirection = OutputDirection.NONE;
 			case SOUTH -> outputDirection = OutputDirection.WEST;
@@ -110,7 +111,6 @@ public class TileEntityXPSolidifier extends BlockEntity implements MenuProvider,
 			case NONE -> outputDirection = OutputDirection.NORTH;
 		}
 		setChanged();
-		return outputDirection;
 	}
 
 	public void toggleOnOff() {
@@ -142,7 +142,7 @@ public class TileEntityXPSolidifier extends BlockEntity implements MenuProvider,
 				}
 
 
-				if (tile.hasfluid() && tile.canOperate()) {
+				if (tile.hasFluid() && tile.canOperate()) {
 					tile.setActive(true);
 					tile.setProgress(tile.getProgress() + 1 + tile.getModifierAmount());
 					if (tile.getProgress() >= tile.MAX_MOULDING_TIME) {
@@ -209,21 +209,15 @@ public class TileEntityXPSolidifier extends BlockEntity implements MenuProvider,
 	}
 
 	private Direction getOutputFacing() {
-		switch (outputDirection) {
-			case WEST:
-				return Direction.WEST;
-			case SOUTH:
-				return Direction.SOUTH;
-			case EAST:
-				return Direction.EAST;
-			case NORTH:
-				return Direction.NORTH;
-			default:
-				break;
-		}
-		return null;
+        return switch (outputDirection) {
+            case WEST -> Direction.WEST;
+            case SOUTH -> Direction.SOUTH;
+            case EAST -> Direction.EAST;
+            case NORTH -> Direction.NORTH;
+            default -> null;
+        };
 
-	}
+    }
 
 	@OnlyIn(Dist.CLIENT)
 	public ItemStack getCachedOutPutRenderStack() {
@@ -239,7 +233,7 @@ public class TileEntityXPSolidifier extends BlockEntity implements MenuProvider,
 		return getProgress() * count / (MAX_MOULDING_TIME);
 	}
 
-	private boolean hasfluid() {
+	private boolean hasFluid() {
 		return currentRecipe != null && !tank.getFluid().isEmpty() && tank.getFluid().getAmount() >= currentRecipe.value().fluidAmount() && tank.getFluidInTank(0).getFluid().is(ModTags.Fluids.EXPERIENCE);
 	}
 
@@ -415,7 +409,7 @@ public class TileEntityXPSolidifier extends BlockEntity implements MenuProvider,
 
 	@Nullable
 	@Override
-	public AbstractContainerMenu createMenu(int windowID, Inventory playerInventory, Player player) {
+	public AbstractContainerMenu createMenu(int windowID, @Nonnull Inventory playerInventory, @Nonnull Player player) {
 		return new ContainerXPSolidifier(windowID, playerInventory, new FriendlyByteBuf(Unpooled.buffer()).writeBlockPos(worldPosition));
 	}
 
