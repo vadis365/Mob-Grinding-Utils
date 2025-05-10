@@ -33,6 +33,7 @@ public class BlockAbsorptionHopper extends BaseEntityBlock {
 		super(properties);
 	}
 
+	@Nonnull
 	@Override
 	protected MapCodec<? extends BaseEntityBlock> codec() {
 		return CODEC;
@@ -43,24 +44,27 @@ public class BlockAbsorptionHopper extends BaseEntityBlock {
 		return new TileEntityAbsorptionHopper(pos, state);
 	}
 
+	@Nonnull
 	@Override
-	public RenderShape getRenderShape(BlockState state) {
+	public RenderShape getRenderShape(@Nonnull BlockState state) {
 		return RenderShape.MODEL;
 	}
 
 	@Nullable
 	@Override
-	public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level pLevel, BlockState pState, BlockEntityType<T> pBlockEntityType) {
+	public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level pLevel, @Nonnull BlockState pState, @Nonnull BlockEntityType<T> pBlockEntityType) {
 		return pLevel.isClientSide ? null : TileEntityAbsorptionHopper::serverTick;
 	}
 
+	@Nonnull
 	@Override
-	public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
+	public VoxelShape getShape(@Nonnull BlockState state, @Nonnull BlockGetter worldIn, @Nonnull BlockPos pos, @Nonnull CollisionContext context) {
 		return HOPPER_AABB;
 	}
 
+	@Nonnull
 	@Override
-	public VoxelShape getInteractionShape(BlockState state, BlockGetter worldIn, BlockPos pos) {
+	public VoxelShape getInteractionShape(@Nonnull BlockState state, @Nonnull BlockGetter worldIn, @Nonnull BlockPos pos) {
 		return HOPPER_AABB;
 	}
 
@@ -85,8 +89,9 @@ public class BlockAbsorptionHopper extends BaseEntityBlock {
 		return InteractionResult.SUCCESS;
 	}
 
+	@Nonnull
 	@Override
-	public BlockState playerWillDestroy(Level world, BlockPos pos, BlockState state, Player player) {
+	public BlockState playerWillDestroy(Level world, @Nonnull BlockPos pos, @Nonnull BlockState state, @Nonnull Player player) {
 		if (!world.isClientSide) {
 			TileEntityAbsorptionHopper tile = (TileEntityAbsorptionHopper) world.getBlockEntity(pos);
 			if (tile != null) {
