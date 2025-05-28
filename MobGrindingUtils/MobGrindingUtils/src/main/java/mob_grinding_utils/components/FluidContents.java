@@ -30,14 +30,14 @@ public class FluidContents {
 
     @Override
     public boolean equals(Object obj) {
-        if (obj instanceof FluidStack other) {
-            return FluidStack.matches(inner, other);
+        if (obj instanceof FluidContents other) {
+            return FluidStack.matches(inner, other.inner);
         }
         return false;
     }
 
     @Override
     public int hashCode() {
-        return inner.hashCode();
+        return FluidStack.hashFluidAndComponents(inner);
     }
 }
