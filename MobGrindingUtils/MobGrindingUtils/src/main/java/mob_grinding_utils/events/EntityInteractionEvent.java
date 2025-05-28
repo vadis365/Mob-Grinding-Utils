@@ -11,6 +11,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.animal.Chicken;
+import net.minecraft.world.entity.animal.horse.AbstractHorse;
 import net.minecraft.world.entity.npc.WanderingTrader;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -24,7 +25,7 @@ public class EntityInteractionEvent {
 	@SubscribeEvent
 	public void clickOnEntity(PlayerInteractEvent.EntityInteract event) {
 		if (event.getTarget() instanceof LivingEntity entity) {
-            if (entity instanceof WanderingTrader && !event.getItemStack().isEmpty() && event.getItemStack().getItem() instanceof ItemMobSwab) {
+            if ((entity instanceof WanderingTrader || entity instanceof AbstractHorse) && !event.getItemStack().isEmpty() && event.getItemStack().getItem() instanceof ItemMobSwab) {
 				event.getItemStack().interactLivingEntity(event.getEntity(), entity, event.getHand());
 				return;
 			}
