@@ -61,6 +61,7 @@ dependencies {
     //runtimeOnly "curse.maven:top-245211:5084077"
     //runtimeOnly fg.deobf("curse.maven:playermobs-430513:3153298") //Not ported yet
     runtimeOnly "curse.maven:mek-268560:6327955"
+    runtimeOnly "curse.maven:RS-243076:6391989"
     //runtimeOnly fg.deobf("curse.maven:IF-266515:3261176")
     //runtimeOnly fg.deobf("curse.maven:TITANIUM-287342:3223141")
     //runtimeOnly fg.deobf("curse.maven:XNET-260912:3140153")

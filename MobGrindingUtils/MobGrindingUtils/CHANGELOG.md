@@ -1,3 +1,7 @@
+### [ 1.1.9+1.21.1 ]
+- Fixed mob swabs not usable on horses.
+- Fixed some items containing fluids not comparing properly.
+
 ### [ 1.1.8+1.21.1 ]
 - Fixed Mob Masher not setting emulated uuid correctly.
 - Fixed masher not stopping hoppers from inserting too many upgrades.
