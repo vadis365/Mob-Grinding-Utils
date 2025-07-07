@@ -36,12 +36,12 @@ public class BlockDreadfulDirt extends BlockDirtSpawner {
 		super(properties);
 	}
 
-	public boolean shouldCatchFire(Level level, BlockPos pos) {
+	public boolean shouldCatchFire(LevelAccessor level, BlockPos pos) {
 		// standard night to day ticks
-		return level.canSeeSkyFromBelowWater(pos) && (level.getDayTime() < 13000 || level.getDayTime() > 23000);
+		return level.canSeeSkyFromBelowWater(pos) && (level.dayTime() < 13000 || level.dayTime() > 23000);
 	}
 
-	public boolean shouldSpawnMob(Level level, BlockPos pos) {
+	public boolean shouldSpawnMob(LevelAccessor level, BlockPos pos) {
 		return level.getMaxLocalRawBrightness(pos.above()) < 5;
 	}
 
@@ -56,14 +56,14 @@ public class BlockDreadfulDirt extends BlockDirtSpawner {
 	@SuppressWarnings("deprecation")
 	@Override
 	public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, LevelAccessor level, BlockPos pos, BlockPos facingPos) {
-		if (shouldCatchFire((Level) level, pos) || shouldSpawnMob((Level) level, pos))
+		if (shouldCatchFire(level, pos) || shouldSpawnMob(level, pos))
 			level.scheduleTick(pos, this, Mth.nextInt(level.getRandom(), 20, 60));
 		return super.updateShape(stateIn, facing, facingState, level, pos, facingPos);
 	}
 
 	@Override
 	public void neighborChanged(BlockState state, Level level, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving) {
-		if (shouldCatchFire((Level) level, pos) || shouldSpawnMob((Level) level, pos))
+		if (shouldCatchFire(level, pos) || shouldSpawnMob(level, pos))
 			level.scheduleTick(pos, this, Mth.nextInt(level.getRandom(), 20, 60));
 	}
 
