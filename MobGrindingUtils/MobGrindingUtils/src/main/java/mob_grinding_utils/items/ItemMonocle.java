@@ -31,7 +31,7 @@ public class ItemMonocle extends ArmorItem {
 	@Override
 	public @Nullable ResourceLocation getArmorTexture(ItemStack stack, Entity entity, EquipmentSlot slot, ArmorMaterial.Layer layer, boolean innerModel) {
 		if (stack.getItem() == ModItems.MONOCLE.get())
-			return RL.mgu("textures/items/monocle_armour.png");
+			return RL.mgu("textures/item/monocle_armour.png");
 		else
 			return super.getArmorTexture(stack, entity, slot, layer, innerModel);
 	}

@@ -1,3 +1,8 @@
+### [ 1.1.10+1.21.1 ]
+- Fixed Ender Inhibitors crashing when placed by non-players.
+- Fixed Dreadful/Delightful dirt crashing in worldgen.
+- Fixed Monocle texture error.
+
 ### [ 1.1.9+1.21.1 ]
 - Fixed mob swabs not usable on horses.
 - Fixed some items containing fluids not comparing properly.
