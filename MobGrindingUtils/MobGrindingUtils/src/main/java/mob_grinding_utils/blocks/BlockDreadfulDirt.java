@@ -28,6 +28,7 @@ import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.common.util.TriState;
 import net.neoforged.neoforge.event.EventHooks;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 public class BlockDreadfulDirt extends BlockDirtSpawner {
@@ -46,29 +47,29 @@ public class BlockDreadfulDirt extends BlockDirtSpawner {
 	}
 
 	@Override
-	public void onPlace(BlockState state, Level level, BlockPos pos, BlockState oldState, boolean isMoving) {
+	public void onPlace(@Nonnull BlockState state, @Nonnull Level level, @Nonnull BlockPos pos, @Nonnull BlockState oldState, boolean isMoving) {
 		if (shouldCatchFire(level, pos) || shouldSpawnMob(level, pos))
 			level.scheduleTick(pos, this, Mth.nextInt(level.getRandom(), 20,60));
 		//List<SpawnerData> spawns = level.getBiome(pos).value().getMobSettings().getMobs(MobCategory.MONSTER).unwrap();
 		//spawns.forEach(spawn -> MobGrindingUtils.LOGGER.info(spawn.type.getRegistryName().toString()));
 	}
 
-	@SuppressWarnings("deprecation")
-	@Override
-	public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, LevelAccessor level, BlockPos pos, BlockPos facingPos) {
+	@Nonnull
+    @Override
+	public BlockState updateShape(@Nonnull BlockState stateIn, @Nonnull Direction facing, @Nonnull BlockState facingState, @Nonnull LevelAccessor level, @Nonnull BlockPos pos, @Nonnull BlockPos facingPos) {
 		if (shouldCatchFire(level, pos) || shouldSpawnMob(level, pos))
 			level.scheduleTick(pos, this, Mth.nextInt(level.getRandom(), 20, 60));
 		return super.updateShape(stateIn, facing, facingState, level, pos, facingPos);
 	}
 
 	@Override
-	public void neighborChanged(BlockState state, Level level, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving) {
+	public void neighborChanged(@Nonnull BlockState state, @Nonnull Level level, @Nonnull BlockPos pos, @Nonnull Block blockIn, @Nonnull BlockPos fromPos, boolean isMoving) {
 		if (shouldCatchFire(level, pos) || shouldSpawnMob(level, pos))
 			level.scheduleTick(pos, this, Mth.nextInt(level.getRandom(), 20, 60));
 	}
 
 	@Override
-	public void randomTick(BlockState state, ServerLevel level, BlockPos pos, RandomSource rand) {
+	public void randomTick(@Nonnull BlockState state, @Nonnull ServerLevel level, @Nonnull BlockPos pos, @Nonnull RandomSource rand) {
 		if (shouldCatchFire(level, pos)) {
 			BlockPos posUp = pos.above();
 			BlockState blockstate = BaseFireBlock.getState(level, posUp);
@@ -77,7 +78,7 @@ public class BlockDreadfulDirt extends BlockDirtSpawner {
 		}
 		if (!shouldCatchFire(level, pos) && shouldSpawnMob(level, pos)) {
 			AABB areaToCheck = new AABB(pos).inflate(5, 2, 5);
-			int entityCount = level.getEntitiesOfClass(Mob.class, areaToCheck, entity -> entity != null && entity instanceof Enemy).size();
+			int entityCount = level.getEntitiesOfClass(Mob.class, areaToCheck, entity -> entity instanceof Enemy).size();
 
 			if (entityCount < 8)
 				spawnMob(level, pos);
@@ -113,23 +114,23 @@ public class BlockDreadfulDirt extends BlockDirtSpawner {
 	}
 
 	@Override
-    public  boolean isFlammable(BlockState state, BlockGetter level, BlockPos pos, Direction face) {
+    public  boolean isFlammable(@Nonnull BlockState state, @Nonnull BlockGetter level, @Nonnull BlockPos pos, @Nonnull Direction face) {
         return true;
     }
 
 	@Override
-	public int getFlammability(BlockState state, BlockGetter level, BlockPos pos, Direction face) {
+	public int getFlammability(@Nonnull BlockState state, @Nonnull BlockGetter level, @Nonnull BlockPos pos, @Nonnull Direction face) {
         return 200;
     }
 
 	@Override
-    public boolean isFireSource(BlockState state, LevelReader level, BlockPos pos, Direction side) {
+    public boolean isFireSource(@Nonnull BlockState state, @Nonnull LevelReader level, @Nonnull BlockPos pos, @Nonnull Direction side) {
 		return side == Direction.UP;
 	}
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void animateTick(BlockState stateIn, Level level, BlockPos pos, RandomSource rand) {
+	public void animateTick(@Nonnull BlockState stateIn, @Nonnull Level level, @Nonnull BlockPos pos, @Nonnull RandomSource rand) {
 		for (int i = 0; i < 4; ++i) {
 			double d0 = (double) ((float) pos.getX() + rand.nextFloat());
 			double d1 = (double) ((float) pos.getY() + rand.nextFloat());

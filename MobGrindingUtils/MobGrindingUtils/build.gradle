@@ -31,7 +31,7 @@ runs {
 
     client {
         systemProperty 'neoforge.enabledGameTestNamespaces', "mob_grinding_utils"
-        programArguments.addAll('--width', '1280', '--height', '720')
+        arguments.addAll('--width', '1280', '--height', '720')
     }
 
     server {
@@ -44,7 +44,7 @@ runs {
     }
 
     data {
-        programArguments.addAll '--mod', "mob_grinding_utils", '--all', '--output', file('src/generated/resources/').getAbsolutePath(), '--existing', file('src/main/resources/').getAbsolutePath()
+        arguments.addAll '--mod', "mob_grinding_utils", '--all', '--output', file('src/generated/resources/').getAbsolutePath(), '--existing', file('src/main/resources/').getAbsolutePath()
     }
 }
 
