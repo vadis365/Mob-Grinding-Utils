@@ -177,8 +177,11 @@ public class BlockEnderInhibitorOn extends Block {
 	@Override
 	public BlockState getStateForPlacement(BlockPlaceContext context) {
 		Direction facing = context.getClickedFace();
-		Direction direction = context.getPlayer().getDirection();
-		EnumGemDirection newFacing = EnumGemDirection.DOWN_NORTH;
+        Direction direction = Direction.NORTH;
+        if (context.getPlayer() != null)
+            direction = context.getPlayer().getDirection();
+
+        EnumGemDirection newFacing = EnumGemDirection.DOWN_NORTH;
 		if (facing == Direction.UP) {
 			newFacing = switch (direction) {
 				case SOUTH -> EnumGemDirection.DOWN_SOUTH;
