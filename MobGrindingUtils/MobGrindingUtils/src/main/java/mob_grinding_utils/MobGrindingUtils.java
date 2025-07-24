@@ -131,6 +131,8 @@ public class MobGrindingUtils {
 			modBus.addListener(this::menuScreenEvent);
 
 			modBus.addListener(this::onClientExtensions);
+			modBus.addListener(ModColourManager::registerBlockHandlers);
+			modBus.addListener(ModColourManager::registerItemHandlers);
 		}
 
 		modBus.addListener(this::setup);
@@ -178,7 +180,7 @@ public class MobGrindingUtils {
 		ItemBlockRenderTypes.setRenderLayer(ModBlocks.FLUID_XP_FLOWING.get(), RenderType.translucent());
 		ItemBlockRenderTypes.setRenderLayer(ModBlocks.FLUID_XP.get(), RenderType.translucent());
 
-		event.enqueueWork(ModColourManager::registerColourHandlers);
+		//event.enqueueWork(ModColourManager::registerColourHandlers);
 	}
 
 	private void menuScreenEvent(final RegisterMenuScreensEvent event) {

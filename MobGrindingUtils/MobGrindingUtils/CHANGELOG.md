@@ -1,3 +1,6 @@
+### [ 1.1.11+1.21.1 ]
+- Fixed Dreadful/Delightful dirt RenderType issues.
+
 ### [ 1.1.10+1.21.1 ]
 - Fixed Ender Inhibitors crashing when placed by non-players.
 - Fixed Dreadful/Delightful dirt crashing in worldgen.

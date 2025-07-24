@@ -1,5 +1,5 @@
 {   "parent": "block/block",
-    "render_type": "solid",
+    "render_type": "cutout",
     "textures": {
         "particle": "block/dirt",
         "bottom": "block/dirt",
