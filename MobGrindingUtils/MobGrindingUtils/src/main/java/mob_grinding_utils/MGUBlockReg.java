@@ -34,14 +34,14 @@ public class MGUBlockReg<B extends Block,I extends Item, T extends BlockEntity> 
     public MGUBlockReg(String name, Function<Block.Properties, B> blockFactory, BiFunction<B, Item.Properties, I> itemFactory, BlockEntityType.BlockEntitySupplier<T> tileSupplier) {
         this.name = name;
         block = ModBlocks.BLOCKS.registerBlock(name, blockFactory);
-        item = ModItems.ITEMS.registerItem(name, properties -> itemFactory.apply(block.get(), properties));
+        item = ModItems.ITEMS.registerItem(name, properties -> itemFactory.apply(block.get(), properties.useBlockDescriptionPrefix()));
         tile = ModBlocks.TILE_ENTITIES.register(name, () -> new BlockEntityType<>(tileSupplier, block.get()));
     }
 
     public MGUBlockReg(String name, Function<Block.Properties, B> blockFactory, BiFunction<B, Item.Properties, I> itemFactory) {
         this.name = name;
         block = ModBlocks.BLOCKS.registerBlock(name, blockFactory);
-        item = ModItems.ITEMS.registerItem(name, properties -> itemFactory.apply(block.get(), properties));
+        item = ModItems.ITEMS.registerItem(name, properties -> itemFactory.apply(block.get(), properties.useBlockDescriptionPrefix()));
     }
 
     @Nonnull
