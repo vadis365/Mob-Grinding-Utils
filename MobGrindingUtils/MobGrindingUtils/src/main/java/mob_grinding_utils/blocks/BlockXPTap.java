@@ -77,8 +77,11 @@ public class BlockXPTap extends DirectionalBlock implements EntityBlock {
 	}
 
 	@Override
+	@Nullable
 	public BlockState getStateForPlacement(BlockPlaceContext context) {
 		Direction direction = context.getClickedFace();
+		if (!direction.getAxis().isHorizontal())
+			return null;
 		return this.defaultBlockState().setValue(FACING, direction).setValue(POWERED, false);
 	}
 	
@@ -98,11 +101,8 @@ public class BlockXPTap extends DirectionalBlock implements EntityBlock {
 
 	@Override
 	public boolean canSurvive(@Nonnull BlockState state, @Nonnull LevelReader world, @Nonnull BlockPos pos) {
-		for (Direction enumfacing : Direction.values()) {
-			if (canPlaceAt(world, pos.relative(enumfacing.getOpposite()), enumfacing))
-				return true;
-		}
-		return false;
+		Direction facing = state.getValue(FACING);
+		return facing.getAxis().isHorizontal() && canPlaceAt(world, pos.relative(facing.getOpposite()), facing);
 	}
 
 	private boolean canPlaceAt(LevelReader world, BlockPos pos, Direction facing) {

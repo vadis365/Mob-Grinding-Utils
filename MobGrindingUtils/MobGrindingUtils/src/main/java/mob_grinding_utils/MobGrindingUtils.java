@@ -26,6 +26,8 @@ import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.client.renderer.block.FluidModel;
+import net.minecraft.client.resources.model.sprite.Material;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
@@ -50,6 +52,7 @@ import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import net.neoforged.neoforge.client.event.RecipesReceivedEvent;
+import net.neoforged.neoforge.client.event.RegisterFluidModelsEvent;
 import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
 import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent;
@@ -128,6 +131,7 @@ public class MobGrindingUtils {
 			modBus.addListener(this::menuScreenEvent);
 
 			modBus.addListener(this::onClientExtensions);
+			modBus.addListener(this::registerFluidModels);
 			modBus.addListener(this::registerSpecialModelRenderers);
 			modBus.addListener(ModColourManager::registerBlockTintSources);
 		}
@@ -188,6 +192,11 @@ public class MobGrindingUtils {
 
 	public void onClientExtensions(RegisterClientExtensionsEvent event) {
 		// Fluid textures are supplied by the 26.1 fluid-state model system.
+	}
+
+	public void registerFluidModels(RegisterFluidModelsEvent event) {
+		Material texture = new Material(RL.mgu("block/fluid_xp"), true);
+		event.register(new FluidModel.Unbaked(texture, texture, texture, state -> 0xFFFFFFFF), ModBlocks.FLUID_XP, ModBlocks.FLUID_XP_FLOWING);
 	}
 
 	public void registerSpecialModelRenderers(RegisterSpecialModelRendererEvent event) {

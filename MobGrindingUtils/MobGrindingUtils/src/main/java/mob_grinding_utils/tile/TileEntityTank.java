@@ -79,7 +79,8 @@ public class TileEntityTank extends BlockEntity {
 	@Override
 	protected void saveAdditional(@Nonnull ValueOutput output) {
 		super.saveAdditional(output);
-		output.store("fluid", FluidStack.CODEC, tank.stack());
+		if (!tank.stack().isEmpty())
+			output.store("fluid", FluidStack.CODEC, tank.stack());
 	}
 
 	public FluidTankStorage getTank(){
