@@ -19,7 +19,7 @@ base {
 }
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(25)
-sourceSets.main.resources { srcDir 'src/generated/resources' }
+sourceSets.main.resources.setSrcDirs(['src/main/resources', 'src/generated/client', 'src/generated/server'])
 minecraft.accessTransformers.file rootProject.file('src/main/resources/META-INF/accesstransformer.cfg')
 
 runs {
@@ -44,7 +44,11 @@ runs {
     }
 
     clientData {
-        arguments.addAll '--mod', "mob_grinding_utils", '--all', '--output', file('src/generated/resources/').getAbsolutePath(), '--existing', file('src/main/resources/').getAbsolutePath()
+        arguments.addAll '--mod', "mob_grinding_utils", '--client', '--output', file('src/generated/client/').getAbsolutePath(), '--existing', file('src/main/resources/').getAbsolutePath()
+    }
+
+    serverData {
+        arguments.addAll '--mod', "mob_grinding_utils", '--server', '--output', file('src/generated/server/').getAbsolutePath(), '--existing', file('src/main/resources/').getAbsolutePath()
     }
 }
 
@@ -62,7 +66,7 @@ dependencies {
     //runtimeOnly fg.deobf("curse.maven:playermobs-430513:3153298") //Not ported yet
     //runtimeOnly "curse.maven:mek-268560:6327955"
     runtimeOnly "curse.maven:RS-243076:8211383"
-    //runtimeOnly fg.deobf("curse.maven:IF-266515:3261176")
+    //runtimeOnly "curse.maven:IF-266515:3261176"
     //runtimeOnly fg.deobf("curse.maven:TITANIUM-287342:3223141")
     //runtimeOnly fg.deobf("curse.maven:XNET-260912:3140153")
     //runtimeOnly fg.deobf("curse.maven:RFTBASE-326041:3206945")

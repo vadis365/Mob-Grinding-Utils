@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "B": {
+      "neoforge:ingredient_type": "mob_grinding_utils:fluid",
+      "advanced": false,
+      "value": {
+        "Amount": 1000,
+        "Tag": "c:experience"
+      }
+    },
+    "E": "minecraft:spider_eye",
+    "G": "#c:gunpowders",
+    "R": "minecraft:rotten_flesh",
+    "S": "#c:seeds",
+    "X": "#c:bones"
+  },
+  "pattern": [
+    "BEB",
+    "RSX",
+    "BGB"
+  ],
+  "result": {
+    "id": "mob_grinding_utils:gm_chicken_feed_cursed"
+  }
+}

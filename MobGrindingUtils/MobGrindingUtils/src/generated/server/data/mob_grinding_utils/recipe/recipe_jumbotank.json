@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "I": "#c:ingots/iron",
+    "T": "mob_grinding_utils:tank"
+  },
+  "pattern": [
+    "ITI",
+    "T T",
+    "ITI"
+  ],
+  "result": {
+    "id": "mob_grinding_utils:jumbo_tank"
+  }
+}

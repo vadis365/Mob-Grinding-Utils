@@ -19,6 +19,7 @@ import net.minecraft.tags.ItemTags;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.ShapelessRecipe;
@@ -444,7 +445,7 @@ public class Recipes extends RecipeProvider.Runner {
 
 
         //Solidifier recipes
-        consumer.accept(recipeId( "solidify/jelly_baby"), new SolidifyRecipe(Ingredient.of(ModItems.SOLID_XP_MOULD_BABY.get()), new ItemStack(ModItems.SOLID_XP_BABY.get()), 1000), null);
+        consumer.accept(recipeId( "solidify/jelly_baby"), new SolidifyRecipe(Ingredient.of(ModItems.SOLID_XP_MOULD_BABY.get()), new ItemStackTemplate(items.getOrThrow(ModItems.SOLID_XP_BABY.getKey())), 1000), null);
 
         generateBeheading(consumer);
     }
@@ -475,7 +476,7 @@ public class Recipes extends RecipeProvider.Runner {
     }
 
     private BeheadingRecipe HeadRecipe(EntityType<?> type, Item item) {
-        return new BeheadingRecipe(type, new ItemStack(item));
+        return new BeheadingRecipe(type, new ItemStackTemplate(item));
     }
 
 /*    private BeheadingRecipe HeadRecipe(EntityType<?> type, Identifier item) {

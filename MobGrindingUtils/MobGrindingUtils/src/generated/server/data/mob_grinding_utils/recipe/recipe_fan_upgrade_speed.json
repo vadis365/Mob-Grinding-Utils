@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "F": "#c:feathers",
+    "I": "#c:ingots/iron",
+    "R": "#c:dusts/redstone"
+  },
+  "pattern": [
+    "FIF",
+    "IRI",
+    "FIF"
+  ],
+  "result": {
+    "id": "mob_grinding_utils:fan_upgrade_speed"
+  }
+}

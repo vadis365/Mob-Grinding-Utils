@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "G": "#c:nuggets/gold",
+    "H": "minecraft:golden_helmet",
+    "I": "minecraft:iron_helmet",
+    "R": "#c:dusts/redstone"
+  },
+  "pattern": [
+    "GHG",
+    "IRI",
+    "GHG"
+  ],
+  "result": {
+    "id": "mob_grinding_utils:saw_upgrade_beheading"
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "type": "mob_grinding_utils:solidify",
+  "fluidAmount": 1000,
+  "ingredient": "mob_grinding_utils:solid_xp_mould_baby",
+  "result": {
+    "id": "mob_grinding_utils:solid_xp_baby"
+  }
+}

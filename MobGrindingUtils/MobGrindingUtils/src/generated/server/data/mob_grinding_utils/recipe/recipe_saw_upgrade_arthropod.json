@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "G": "#c:nuggets/gold",
+    "R": "#c:dusts/redstone",
+    "S": "minecraft:spider_eye"
+  },
+  "pattern": [
+    "GSG",
+    "SRS",
+    "GSG"
+  ],
+  "result": {
+    "id": "mob_grinding_utils:saw_upgrade_arthropod"
+  }
+}

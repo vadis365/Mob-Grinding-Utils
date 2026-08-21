@@ -1,0 +1,29 @@
+{
+  "variants": {
+    "facing=down": {
+      "model": "mob_grinding_utils:block/spikes",
+      "x": 180
+    },
+    "facing=east": {
+      "model": "mob_grinding_utils:block/spikes",
+      "x": 90,
+      "y": 90
+    },
+    "facing=north": {
+      "model": "mob_grinding_utils:block/spikes",
+      "x": 90
+    },
+    "facing=south": {
+      "model": "mob_grinding_utils:block/spikes",
+      "x": 270
+    },
+    "facing=up": {
+      "model": "mob_grinding_utils:block/spikes"
+    },
+    "facing=west": {
+      "model": "mob_grinding_utils:block/spikes",
+      "x": 270,
+      "y": 90
+    }
+  }
+}

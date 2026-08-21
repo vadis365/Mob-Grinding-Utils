@@ -7,12 +7,13 @@ import mob_grinding_utils.MobGrindingUtils;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
 
 import javax.annotation.Nonnull;
 
-public record SolidifyRecipe(Ingredient mould, ItemStack result, int fluidAmount) implements Recipe<RecipeInput> {
+public record SolidifyRecipe(Ingredient mould, ItemStackTemplate resultTemplate, int fluidAmount) implements Recipe<RecipeInput> {
     public static final String NAME = "solidify";
 
     @Override
@@ -27,7 +28,11 @@ public record SolidifyRecipe(Ingredient mould, ItemStack result, int fluidAmount
     @Nonnull
     @Override
     public ItemStack assemble(@Nonnull RecipeInput inv) {
-        return result.copy();
+        return resultTemplate.create();
+    }
+
+    public ItemStack result() {
+        return resultTemplate.create();
     }
 
     @Override
@@ -65,7 +70,7 @@ public record SolidifyRecipe(Ingredient mould, ItemStack result, int fluidAmount
     public static final class Serializer {
         public static final MapCodec<SolidifyRecipe> CODEC = RecordCodecBuilder.mapCodec(instance -> instance
                 .group(Ingredient.CODEC.fieldOf("ingredient").forGetter(recipe -> recipe.mould),
-                        ItemStack.CODEC.fieldOf("result").forGetter(recipe -> recipe.result),
+                        ItemStackTemplate.CODEC.fieldOf("result").forGetter(SolidifyRecipe::resultTemplate),
                         Codec.INT.fieldOf("fluidAmount").forGetter(recipe -> recipe.fluidAmount))
                 .apply(instance, SolidifyRecipe::new));
 
@@ -77,14 +82,14 @@ public record SolidifyRecipe(Ingredient mould, ItemStack result, int fluidAmount
         @Nonnull
         public static SolidifyRecipe fromNetwork(@Nonnull RegistryFriendlyByteBuf buffer) {
             Ingredient mould = Ingredient.CONTENTS_STREAM_CODEC.decode(buffer);
-            ItemStack result = ItemStack.STREAM_CODEC.decode(buffer);
+            ItemStackTemplate result = ItemStackTemplate.STREAM_CODEC.decode(buffer);
             int fluidAmount = buffer.readInt();
             return new SolidifyRecipe(mould, result, fluidAmount);
         }
 
         public static void toNetwork(@Nonnull RegistryFriendlyByteBuf buffer, SolidifyRecipe recipe) {
             Ingredient.CONTENTS_STREAM_CODEC.encode(buffer, recipe.mould);
-            ItemStack.STREAM_CODEC.encode(buffer, recipe.result);
+            ItemStackTemplate.STREAM_CODEC.encode(buffer, recipe.resultTemplate);
             buffer.writeInt(recipe.fluidAmount);
         }
     }

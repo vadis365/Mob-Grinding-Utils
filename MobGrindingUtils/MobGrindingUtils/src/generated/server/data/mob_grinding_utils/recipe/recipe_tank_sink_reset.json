@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "mob_grinding_utils:tank_sink"
+  ],
+  "result": {
+    "id": "mob_grinding_utils:tank_sink"
+  }
+}
