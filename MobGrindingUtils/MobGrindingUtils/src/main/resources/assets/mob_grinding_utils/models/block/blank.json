@@ -1,5 +1,5 @@
 {
-    "parent": "builtin/entity",
+    "parent": "minecraft:block/air",
         "textures": {
         "particle": "mob_grinding_utils:block/saw_break_particles"
     }

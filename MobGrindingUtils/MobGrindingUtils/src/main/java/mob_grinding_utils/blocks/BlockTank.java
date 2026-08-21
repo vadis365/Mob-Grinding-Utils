@@ -3,11 +3,13 @@ package mob_grinding_utils.blocks;
 import com.mojang.serialization.MapCodec;
 import mob_grinding_utils.tile.TileEntityTank;
 import mob_grinding_utils.util.CapHelper;
+import mob_grinding_utils.util.FluidTransfer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BaseEntityBlock;
@@ -18,8 +20,8 @@ import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
-import net.neoforged.neoforge.fluids.FluidUtil;
-import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.fluid.FluidResource;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -45,7 +47,7 @@ public class BlockTank extends BaseEntityBlock {
 	@Nullable
 	@Override
 	public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level pLevel, @Nonnull BlockState pState, @Nonnull BlockEntityType<T> pBlockEntityType) {
-		return pLevel.isClientSide ? null : TileEntityTank::serverTick;
+		return pLevel.isClientSide() ? null : TileEntityTank::serverTick;
 	}
 
 	@Nonnull
@@ -56,22 +58,21 @@ public class BlockTank extends BaseEntityBlock {
 
 	@Nonnull
 	@Override
-	public ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
-		if (world.isClientSide)
-			return ItemInteractionResult.SUCCESS;
+	public InteractionResult useItemOn(ItemStack stack, BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+		if (world.isClientSide())
+			return InteractionResult.SUCCESS;
 		BlockEntity tileentity = world.getBlockEntity(pos);
 		if (tileentity instanceof TileEntityTank) {
-			Optional<IFluidHandler> fluidHandler = CapHelper.getFluidHandler(world, pos, hit.getDirection());
+			Optional<ResourceHandler<FluidResource>> fluidHandler = CapHelper.getFluidHandler(world, pos, hit.getDirection());
 			fluidHandler.ifPresent((handler) -> {
-				if (player.getItemInHand(hand).isEmpty() || !FluidUtil.interactWithFluidHandler(player, hand, world, pos, hit.getDirection())) {
-					if (!handler.getFluidInTank(0).isEmpty())
-						player.displayClientMessage(Component.literal(handler.getFluidInTank(0).getHoverName().getString() + ": " + handler.getFluidInTank(0).getAmount() + "/" + handler.getTankCapacity(0)), true);
-					else
-						player.displayClientMessage(Component.literal("Empty: 0/" + handler.getTankCapacity(0)), true);
+				if (player.getItemInHand(hand).isEmpty() || !FluidTransfer.interact(player, hand, handler)) {
+					FluidResource fluid = handler.getResource(0);
+					if (player instanceof ServerPlayer serverPlayer)
+						serverPlayer.sendSystemMessage(Component.literal(!fluid.isEmpty() ? fluid.getHoverName().getString() + ": " + handler.getAmountAsInt(0) + "/" + handler.getCapacityAsInt(0, fluid) : "Empty: 0/" + handler.getCapacityAsInt(0, fluid)), true);
 				}
 			});
-			return ItemInteractionResult.SUCCESS;
+			return InteractionResult.SUCCESS;
 		}
-		return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+		return InteractionResult.PASS;
 	}
 }

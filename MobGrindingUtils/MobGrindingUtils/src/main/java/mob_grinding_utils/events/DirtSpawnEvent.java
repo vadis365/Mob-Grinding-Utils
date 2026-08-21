@@ -6,7 +6,7 @@ import net.minecraft.world.level.LevelAccessor;
 import net.neoforged.bus.api.Event;
 import net.neoforged.bus.api.ICancellableEvent;
 import net.neoforged.neoforge.common.NeoForge;
-import net.neoforged.neoforge.common.util.TriState;
+import net.minecraft.util.TriState;
 
 public class DirtSpawnEvent extends Event implements ICancellableEvent {
     private final LevelAccessor world;

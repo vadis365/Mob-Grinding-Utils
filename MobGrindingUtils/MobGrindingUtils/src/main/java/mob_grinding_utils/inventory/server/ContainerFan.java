@@ -22,7 +22,7 @@ public class ContainerFan extends AbstractContainerMenu {
 	public ContainerFan(final int windowId, final Inventory playerInventory, FriendlyByteBuf extra) {
 		super(ModContainers.FAN.get(), windowId);
 		BlockPos tilePos = extra.readBlockPos();
-		BlockEntity tile = playerInventory.player.getCommandSenderWorld().getBlockEntity(tilePos);
+		BlockEntity tile = playerInventory.player.level().getBlockEntity(tilePos);
 		if (!(tile instanceof TileEntityFan))
 			return;
 		fan = (TileEntityFan) tile;

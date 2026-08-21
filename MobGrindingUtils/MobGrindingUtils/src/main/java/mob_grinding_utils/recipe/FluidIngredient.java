@@ -11,14 +11,16 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.BucketItem;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.material.Fluid;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.common.crafting.ICustomIngredient;
 import net.neoforged.neoforge.common.crafting.IngredientType;
 import net.neoforged.neoforge.fluids.FluidStack;
-import net.neoforged.neoforge.fluids.FluidUtil;
-import net.neoforged.neoforge.fluids.capability.IFluidHandlerItem;
+import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.access.ItemAccess;
+import net.neoforged.neoforge.transfer.fluid.FluidResource;
 
 import javax.annotation.Nullable;
 import java.util.*;
@@ -33,7 +35,6 @@ public class FluidIngredient implements ICustomIngredient {
             .apply(instance, FluidIngredient::new));
     private final Boolean advanced;
     private final List<Fluid> matchingFluids = new ArrayList<>();
-    private Stream<ItemStack> bucketCache = null;
     private IntList matchingStacksPacked;
     public final FluidValue value;
 
@@ -142,30 +143,24 @@ public class FluidIngredient implements ICustomIngredient {
     public boolean test(@Nullable ItemStack stack) {
         if (stack == null)
             return false;
-        Optional<IFluidHandlerItem> cap = Optional.ofNullable(stack.getCapability(Capabilities.FluidHandler.ITEM));
+        ResourceHandler<FluidResource> cap = ItemAccess.forStack(stack).getCapability(Capabilities.Fluid.ITEM);
 
-        if (cap.isPresent()) {
+        if (cap != null) {
             if (!advanced && !(stack.getItem() instanceof BucketItem))
                 return false;
 
-            FluidStack fluid = cap.get().getFluidInTank(0);
-            return getMatchingFluids().contains(fluid.getFluid()) && fluid.getAmount() >= value.getAmount();
+            FluidResource fluid = cap.getResource(0);
+            return getMatchingFluids().contains(fluid.getFluid()) && cap.getAmountAsInt(0) >= value.getAmount();
         }
 
         return false;
     }
 
     @Override
-    public Stream<ItemStack> getItems() {
-            if (bucketCache == null) {
-                List<ItemStack> tmp = new ArrayList<>();
-                getMatchingFluids().forEach((fluid -> {
-                    ItemStack newBucket = FluidUtil.getFilledBucket(new FluidStack(fluid, 1000));
-                    if (!newBucket.isEmpty())
-                        tmp.add(newBucket);
-                }));
-                bucketCache = tmp.stream();
-            }
-            return bucketCache;
+    public Stream<Holder<Item>> items() {
+        return getMatchingFluids().stream()
+                .map(Fluid::getBucket)
+                .filter(item -> item != net.minecraft.world.item.Items.AIR)
+                .map(BuiltInRegistries.ITEM::wrapAsHolder);
     }
 }

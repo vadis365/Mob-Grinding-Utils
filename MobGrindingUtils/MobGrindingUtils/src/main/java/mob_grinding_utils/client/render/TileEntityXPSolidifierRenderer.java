@@ -1,9 +1,6 @@
 package mob_grinding_utils.client.render;
 
-import com.mojang.blaze3d.platform.GlStateManager;
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 import mob_grinding_utils.ModBlocks;
 import mob_grinding_utils.blocks.BlockXPSolidifier;
@@ -13,254 +10,69 @@ import mob_grinding_utils.tile.TileEntityXPSolidifier;
 import mob_grinding_utils.tile.TileEntityXPSolidifier.OutputDirection;
 import mob_grinding_utils.util.RL;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider.Context;
+import net.minecraft.client.renderer.feature.ModelFeatureRenderer;
+import net.minecraft.client.renderer.item.ItemModelResolver;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
+import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.inventory.InventoryMenu;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
-import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
-import net.neoforged.neoforge.fluids.FluidStack;
+import net.minecraft.world.phys.Vec3;
+import org.jspecify.annotations.Nullable;
 
-@OnlyIn(Dist.CLIENT)
-public class TileEntityXPSolidifierRenderer implements BlockEntityRenderer<TileEntityXPSolidifier> {
-	private static final ResourceLocation TEXTURE = RL.mgu("textures/tiles/xp_solidifier.png");
-	private static final ResourceLocation TEXTURE_NO_PUSH = RL.mgu("textures/tiles/xp_solidifier_no_push.png");
-	private final ModelXPSolidifier xp_solidifier_model;
-
-	public TileEntityXPSolidifierRenderer(Context context) {
-		xp_solidifier_model = new ModelXPSolidifier(context.bakeLayer(ModelLayers.XPSOLIDIFIER));
-	}
-
-	@Override
-	public void render(TileEntityXPSolidifier tile, float partialTicks, PoseStack matrixStack, MultiBufferSource bufferIn, int combinedLight, int combinedOverlay) {
-		if(tile == null || !tile.hasLevel())
-			return;
-
-		BlockState state = tile.getLevel().getBlockState(tile.getBlockPos());
-
-		if(state == null || state.getBlock() != ModBlocks.XPSOLIDIFIER.getBlock())
-			return;
-
-		Direction facing = state.getValue(BlockXPSolidifier.FACING);
-
-		float ticks = tile.prevAnimationTicks + (tile.animationTicks - tile.prevAnimationTicks)  * partialTicks;
-		
-		matrixStack.pushPose();
-		matrixStack.translate(0.5D, 1.5D, 0.5D);
-		matrixStack.scale(-0.9999F, -0.9999F, 0.9999F);
-
-		switch (tile.outputDirection) {
-		case NONE:
-		case NORTH:
-			matrixStack.mulPose(Axis.YP.rotationDegrees(90F));
-			break;
-		case SOUTH:
-			matrixStack.mulPose(Axis.YN.rotationDegrees(90F));
-			break;
-		case WEST:
-			matrixStack.mulPose(Axis.YP.rotationDegrees(0F));
-			break;
-		case EAST:
-			matrixStack.mulPose(Axis.YN.rotationDegrees(180F));
-			break;
-		default:
-			matrixStack.mulPose(Axis.YP.rotationDegrees(90F));
-			break;
-		}
-
-		RenderSystem.enableBlend();
-		RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
-		xp_solidifier_model.renderExport(matrixStack, bufferIn.getBuffer(RenderType.entitySmoothCutout(tile.outputDirection == OutputDirection.NONE ? TEXTURE_NO_PUSH : TEXTURE)), combinedLight, OverlayTexture.NO_OVERLAY, 0xFFFFFFFF);
-		RenderSystem.disableBlend();
-	    RenderSystem.defaultBlendFunc();
-		matrixStack.popPose();
-
-		matrixStack.pushPose();
-		matrixStack.translate(0.5D, 1.5D, 0.5D);
-		matrixStack.scale(-0.9999F, -0.9999F, 0.9999F); //don't want to cull, but also don't want z-fighty nonsense
-
-		switch (facing) {
-		case NORTH:
-			matrixStack.mulPose(Axis.YP.rotationDegrees(0F));
-			break;
-		case SOUTH:
-			matrixStack.mulPose(Axis.YP.rotationDegrees(180F));
-			break;
-		case WEST:
-			matrixStack.mulPose(Axis.YN.rotationDegrees(90F));
-			break;
-		case EAST:
-			matrixStack.mulPose(Axis.YP.rotationDegrees(90F));
-			break;
-		default:
-			break;
-		}
-		
-		matrixStack.pushPose();
-		RenderSystem.enableBlend();
-		
-		if(ticks > 0 && ticks <= 20F)
-			matrixStack.translate(0D, ticks * 0.009375F, 0D);
-		if(ticks > 20F && ticks <= 60)
-			matrixStack.translate(0D, 0.1875F, 0D);
-		if(ticks > 60F && ticks <= 80F)
-			matrixStack.translate(0D, (80F - ticks)  * 0.009375F, 0D);
-		if(ticks > 80F || ticks <= 0)
-			matrixStack.translate(0D, 0D, 0D);
-		RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
-		xp_solidifier_model.renderRack(matrixStack, bufferIn.getBuffer(RenderType.entitySmoothCutout(TEXTURE)), combinedLight, OverlayTexture.NO_OVERLAY, 0xFFFFFFFF);
-		
-		matrixStack.pushPose();
-		matrixStack.translate(0D, 0.60625D, -0.22D);
-		matrixStack.mulPose(Axis.XP.rotationDegrees(90.0F));
-		matrixStack.scale(1.25F, 1.25F, 1.25F);
-		ItemStack stackMould = tile.inputSlots.getStackInSlot(0);
-		if (!stackMould.isEmpty()) {
-			Minecraft.getInstance().getTextureManager().bindForSetup(InventoryMenu.BLOCK_ATLAS);
-			Minecraft.getInstance().getItemRenderer().render(stackMould, ItemDisplayContext.GROUND, false, matrixStack, bufferIn, combinedLight, combinedOverlay, Minecraft.getInstance().getItemRenderer().getModel(stackMould, null, null, 0));
-		}
-		matrixStack.popPose();
-		
-		RenderSystem.disableBlend();
-	    RenderSystem.defaultBlendFunc();
-	    matrixStack.popPose();
-	    
-		RenderSystem.enableBlend();
-		RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
-		xp_solidifier_model.renderToBuffer(matrixStack, bufferIn.getBuffer(RenderType.entitySmoothCutout(TEXTURE)), combinedLight, OverlayTexture.NO_OVERLAY, 0xFFFFFFFF);
-		
-		matrixStack.pushPose();
-		matrixStack.translate(0D, 0.79375D, -0.22D);
-		matrixStack.mulPose(Axis.XP.rotationDegrees(90.0F));
-		matrixStack.scale(1.25F, 1.25F, 1.25F);
-		ItemStack stackResult = tile.outputSlot.getStackInSlot(0);
-		if (stackResult.isEmpty() && !tile.getCachedOutPutRenderStack().isEmpty() && tile.getProgress() > 60) { //may want to add some earlier blending fade here
-			Minecraft.getInstance().getTextureManager().bindForSetup(InventoryMenu.BLOCK_ATLAS);
-			Minecraft.getInstance().getItemRenderer().render(tile.getCachedOutPutRenderStack(), ItemDisplayContext.GROUND, false, matrixStack, bufferIn, combinedLight, combinedOverlay, Minecraft.getInstance().getItemRenderer() .getModel(tile.getCachedOutPutRenderStack(), null, null, 0));
-		} else if (!stackResult.isEmpty()) {
-			Minecraft.getInstance().getTextureManager().bindForSetup(InventoryMenu.BLOCK_ATLAS);
-			Minecraft.getInstance().getItemRenderer().render(stackResult, ItemDisplayContext.GROUND, false, matrixStack, bufferIn, combinedLight, combinedOverlay, Minecraft.getInstance().getItemRenderer().getModel(stackResult, null, null, 0));
-		}
-		matrixStack.popPose();
-
-		RenderSystem.disableBlend();
-	    RenderSystem.defaultBlendFunc();
-		matrixStack.popPose();
-
-		if (tile.tank.getFluid().isEmpty())
-			return;
-		float fluidLevel = tile.tank.getFluidAmount();
-		if (fluidLevel < 1)
-			return;
-		FluidStack fluidStack = new FluidStack(tile.tank.getFluid().getFluidHolder(), 100);
-		float height = (0.46875F / tile.tank.getCapacity()) * tile.tank.getFluidAmount();
-
-		var fluidExtensions = IClientFluidTypeExtensions.of(fluidStack.getFluid());
-
-		TextureAtlasSprite fluidStillSprite = Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(fluidExtensions.getStillTexture());
-		VertexConsumer buffer = bufferIn.getBuffer(RenderType.translucent());
-		int fluidColor = fluidExtensions.getTintColor();
-		matrixStack.pushPose();
-		matrixStack.translate(0D, 0D, 0D);
-		float xMax, zMax, xMin, zMin, yMin = 0;
-		xMax = 1.984375F;
-		zMax = 1.984375F;
-		xMin = 0.015625F;
-		zMin = 0.015625F;
-		yMin = 0.015625F;
-		float alpha = 1F;
-		float red = (fluidColor >> 16 & 0xFF) / 255.0F;
-		float green = (fluidColor >> 8 & 0xFF) / 255.0F;
-		float blue = (fluidColor & 0xFF) / 255.0F;
-		renderCuboid(buffer, matrixStack, xMax, xMin, yMin, height, zMin, zMax, fluidStillSprite, red, green, blue, alpha, combinedLight);
-		matrixStack.popPose();
-
-		if(ticks > 20F && ticks < 60 && !stackMould.isEmpty()) {
-			matrixStack.pushPose();
-			switch (facing) {
-			case NORTH:
-				matrixStack.translate(0D, 0D, 0D);
-				break;
-			case SOUTH:
-				matrixStack.translate(0D, 0D, 0.125D);
-				break;
-			case WEST:
-				matrixStack.translate(-0.0625D, 0D, 0.0625D);
-				break;
-			case EAST:
-				matrixStack.translate(0.0625D, 0D, 0.0625D);
-				break;
-			default:
-				break;
-			}
-			xMax = 1.62F;
-			zMax = 1.5F;
-			xMin = 0.38F;
-			zMin = 0.25F;
-			yMin = 0.6875F;
-			renderCuboid(buffer, matrixStack, xMax, xMin, yMin, 0.6875F + ticks * 0.000625F, zMin, zMax, fluidStillSprite, red, green, blue, alpha, combinedLight);
-			matrixStack.popPose();
-		}
-
-	}
-
-	private void renderCuboid(VertexConsumer buffer, PoseStack matrixStack, float xMax, float xMin, float yMin, float height, float zMin, float zMax, TextureAtlasSprite textureAtlasSprite, float red, float green, float blue, float alpha, int combinedLight) {
-
-		float uMin = textureAtlasSprite.getU0();
-		float uMax = textureAtlasSprite.getU1();
-		float vMin = textureAtlasSprite.getV0();
-		float vMax = textureAtlasSprite.getV1();
-
-		float vHeight = vMax - vMin;
-
-		// top
-		addVertexWithUV(buffer, matrixStack, xMax, height, zMax, uMax, vMin, red, green, blue, alpha, combinedLight);
-		addVertexWithUV(buffer, matrixStack, xMax, height, zMin, uMin, vMin, red, green, blue, alpha, combinedLight);
-		addVertexWithUV(buffer, matrixStack, xMin, height, zMin, uMin, vMax, red, green, blue, alpha, combinedLight);
-		addVertexWithUV(buffer, matrixStack, xMin, height, zMax, uMax, vMax, red, green, blue, alpha, combinedLight);
-
-		// north
-		addVertexWithUV(buffer, matrixStack, xMax, yMin, zMin, uMax, vMin, red, green, blue, alpha, combinedLight);
-		addVertexWithUV(buffer, matrixStack, xMin, yMin, zMin, uMin, vMin, red, green, blue, alpha, combinedLight);
-		addVertexWithUV(buffer, matrixStack, xMin, height, zMin, uMin, vMin + (vHeight * height), red, green, blue, alpha, combinedLight);
-		addVertexWithUV(buffer, matrixStack, xMax, height, zMin, uMax, vMin + (vHeight * height), red, green, blue, alpha, combinedLight);
-
-		// south
-		addVertexWithUV(buffer, matrixStack, xMax, yMin, zMax, uMin, vMin, red, green, blue, alpha, combinedLight);
-		addVertexWithUV(buffer, matrixStack, xMax, height, zMax, uMin, vMin + (vHeight * height), red, green, blue, alpha, combinedLight);
-		addVertexWithUV(buffer, matrixStack, xMin, height, zMax, uMax, vMin + (vHeight * height), red, green, blue, alpha, combinedLight);
-		addVertexWithUV(buffer, matrixStack, xMin, yMin, zMax, uMax, vMin, red, green, blue, alpha, combinedLight);
-
-		// east
-		addVertexWithUV(buffer, matrixStack, xMax, yMin, zMin, uMin, vMin, red, green, blue, alpha, combinedLight);
-		addVertexWithUV(buffer, matrixStack, xMax, height, zMin, uMin, vMin + (vHeight * height), red, green, blue, alpha, combinedLight);
-		addVertexWithUV(buffer, matrixStack, xMax, height, zMax, uMax, vMin + (vHeight * height), red, green, blue, alpha, combinedLight);
-		addVertexWithUV(buffer, matrixStack, xMax, yMin, zMax, uMax, vMin, red, green, blue, alpha, combinedLight);
-
-		// west
-		addVertexWithUV(buffer, matrixStack, xMin, yMin, zMax, uMin, vMin, red, green, blue, alpha, combinedLight);
-		addVertexWithUV(buffer, matrixStack, xMin, height, zMax, uMin, vMin + (vHeight * height), red, green, blue, alpha, combinedLight);
-		addVertexWithUV(buffer, matrixStack, xMin, height, zMin, uMax, vMin + (vHeight * height), red, green, blue, alpha, combinedLight);
-		addVertexWithUV(buffer, matrixStack, xMin, yMin, zMin, uMax, vMin, red, green, blue, alpha, combinedLight);
-
-		// down
-		addVertexWithUV(buffer, matrixStack, xMax, yMin, zMin, uMax, vMin, red, green, blue, alpha, combinedLight);
-		addVertexWithUV(buffer, matrixStack, xMax, yMin, zMax, uMin, vMin, red, green, blue, alpha, combinedLight);
-		addVertexWithUV(buffer, matrixStack, xMin, yMin, zMax, uMin, vMax, red, green, blue, alpha, combinedLight);
-		addVertexWithUV(buffer, matrixStack, xMin, yMin, zMin, uMax, vMax, red, green, blue, alpha, combinedLight);
-	}
-
-	private void addVertexWithUV(VertexConsumer buffer, PoseStack matrixStack, float x, float y, float z, float u, float v, float red, float green, float blue, float alpha, int combinedLight) {
-		buffer.addVertex(matrixStack.last().pose(), x / 2f, y, z / 2f).setColor(red, green, blue, alpha).setUv(u, v).setUv2(combinedLight, 240).setNormal(1, 0, 0);
-	}
-
+public class TileEntityXPSolidifierRenderer implements BlockEntityRenderer<TileEntityXPSolidifier, MGUBlockEntityRenderState> {
+    private static final Identifier TEXTURE = RL.mgu("textures/tiles/xp_solidifier.png"), TEXTURE_NO_PUSH = RL.mgu("textures/tiles/xp_solidifier_no_push.png");
+    private final ModelXPSolidifier model;
+    private final ItemModelResolver itemModels;
+    public TileEntityXPSolidifierRenderer(Context context) { model = new ModelXPSolidifier(context.bakeLayer(ModelLayers.XPSOLIDIFIER)); itemModels = context.itemModelResolver(); }
+    @Override public MGUBlockEntityRenderState createRenderState() { return new MGUBlockEntityRenderState(); }
+    @Override public void extractRenderState(TileEntityXPSolidifier tile, MGUBlockEntityRenderState state, float partialTicks, Vec3 camera, ModelFeatureRenderer.@Nullable CrumblingOverlay breakProgress) {
+        BlockEntityRenderer.super.extractRenderState(tile, state, partialTicks, camera, breakProgress);
+        BlockState blockState = tile.getBlockState(); state.valid = blockState.getBlock() == ModBlocks.XPSOLIDIFIER.getBlock();
+        if (!state.valid) return;
+        state.facing = (Direction) blockState.getValue(BlockXPSolidifier.FACING); state.outputDirection = tile.outputDirection;
+        state.animation = tile.prevAnimationTicks + (tile.animationTicks - tile.prevAnimationTicks) * partialTicks;
+        state.fluid = tile.tank.stack().copy(); state.fluidCapacity = tile.tank.capacity();
+        state.input = tile.getInputStack(0).copy(); state.output = tile.getOutputStack().copy();
+        if (state.output.isEmpty() && !tile.getCachedOutPutRenderStack().isEmpty() && tile.getProgress() > 60) state.output = tile.getCachedOutPutRenderStack().copy();
+        int seed = (int)tile.getBlockPos().asLong();
+        itemModels.updateForTopItem(state.inputItemState, state.input, ItemDisplayContext.GROUND, tile.getLevel(), null, seed);
+        itemModels.updateForTopItem(state.outputItemState, state.output, ItemDisplayContext.GROUND, tile.getLevel(), null, seed + 1);
+    }
+    @Override public void submit(MGUBlockEntityRenderState state, PoseStack stack, SubmitNodeCollector nodes, CameraRenderState camera) {
+        if (!state.valid) return;
+        submitExport(state, stack, nodes); submitBodyAndRack(state, stack, nodes); submitFluid(state, stack, nodes);
+    }
+    private void submitExport(MGUBlockEntityRenderState s, PoseStack p, SubmitNodeCollector n) {
+        p.pushPose(); p.translate(0.5D, 1.5D, 0.5D); p.scale(-.9999F, -.9999F, .9999F);
+        switch (s.outputDirection) { case SOUTH -> p.mulPose(Axis.YN.rotationDegrees(90)); case WEST -> {} case EAST -> p.mulPose(Axis.YN.rotationDegrees(180)); default -> p.mulPose(Axis.YP.rotationDegrees(90)); }
+        n.submitModelPart(model.top, p, RenderTypes.entityCutout(s.outputDirection == OutputDirection.NONE ? TEXTURE_NO_PUSH : TEXTURE), s.lightCoords, OverlayTexture.NO_OVERLAY, null, -1, s.breakProgress); p.popPose();
+    }
+    private void submitBodyAndRack(MGUBlockEntityRenderState s, PoseStack p, SubmitNodeCollector n) {
+        p.pushPose(); p.translate(.5D, 1.5D, .5D); p.scale(-.9999F, -.9999F, .9999F);
+        switch (s.facing) { case SOUTH -> p.mulPose(Axis.YP.rotationDegrees(180)); case WEST -> p.mulPose(Axis.YN.rotationDegrees(90)); case EAST -> p.mulPose(Axis.YP.rotationDegrees(90)); default -> {} }
+        p.pushPose(); float t = s.animation;
+        if (t > 0 && t <= 20) p.translate(0, t * .009375F, 0); else if (t <= 60) p.translate(0, .1875F, 0); else if (t <= 80) p.translate(0, (80 - t) * .009375F, 0);
+        n.submitModelPart(model.rack, p, RenderTypes.entityCutout(TEXTURE), s.lightCoords, OverlayTexture.NO_OVERLAY, null, -1, s.breakProgress);
+        p.pushPose(); p.translate(0, .60625D, -.22D); p.mulPose(Axis.XP.rotationDegrees(90)); p.scale(1.25F, 1.25F, 1.25F); s.inputItemState.submit(p, n, s.lightCoords, OverlayTexture.NO_OVERLAY, 0); p.popPose(); p.popPose();
+        n.submitModelPart(model.tank, p, RenderTypes.entityCutout(TEXTURE), s.lightCoords, OverlayTexture.NO_OVERLAY, null, -1, s.breakProgress);
+        p.pushPose(); p.translate(0, .79375D, -.22D); p.mulPose(Axis.XP.rotationDegrees(90)); p.scale(1.25F, 1.25F, 1.25F); s.outputItemState.submit(p, n, s.lightCoords, OverlayTexture.NO_OVERLAY, 0); p.popPose(); p.popPose();
+    }
+    private static void submitFluid(MGUBlockEntityRenderState s, PoseStack p, SubmitNodeCollector n) {
+        if (s.fluid.isEmpty()) return;
+        float height = .46875F / s.fluidCapacity * s.fluid.getAmount(); if (height <= 0) return;
+		TextureAtlasSprite sprite = Minecraft.getInstance().getModelManager().getFluidStateModelSet().get(s.fluid.getFluid().defaultFluidState()).stillMaterial().sprite();
+		MGURenderUtil.submitFluidCuboid(p, n, sprite, -1, s.lightCoords, 1.984375F, .015625F, .015625F, height, .015625F, 1.984375F);
+        if (s.animation > 20 && s.animation < 60 && !s.input.isEmpty()) {
+            p.pushPose(); switch (s.facing) { case SOUTH -> p.translate(0, 0, .125D); case WEST -> p.translate(-.0625D, 0, .0625D); case EAST -> p.translate(.0625D, 0, .0625D); default -> {} }
+			MGURenderUtil.submitFluidCuboid(p, n, sprite, -1, s.lightCoords, 1.62F, .38F, .6875F, .6875F + s.animation * .000625F, .25F, 1.5F); p.popPose();
+        }
+    }
 }

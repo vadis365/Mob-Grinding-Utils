@@ -7,14 +7,14 @@ import net.neoforged.neoforge.common.util.Lazy;
 
 public class TagLookup<T> {
     private final TagKey<T> tagKey;
-    private final Lazy<HolderSet.Named<T>> lazy;
+    private final Lazy<Iterable<net.minecraft.core.Holder<T>>> lazy;
 
     public TagLookup(Registry<T> registry, TagKey<T> key) {
         this.tagKey = key;
-        this.lazy = Lazy.of(() -> registry.getOrCreateTag(key));
+		this.lazy = Lazy.of(() -> registry.getTagOrEmpty(key));
     }
 
-    public HolderSet.Named<T> get() {
+    public Iterable<net.minecraft.core.Holder<T>> get() {
         return this.lazy.get();
     }
 
@@ -23,10 +23,11 @@ public class TagLookup<T> {
     }
 
     public boolean contains(T entry) {
-        return this.get().stream().anyMatch($ -> $.value() == entry);
+        for (var holder : get()) if (holder.value() == entry) return true;
+        return false;
     }
 
     public boolean isEmpty() {
-        return this.get().stream().findAny().isPresent();
+        return !this.get().iterator().hasNext();
     }
 }

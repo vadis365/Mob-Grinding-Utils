@@ -25,7 +25,7 @@ public class EntityXPOrbFalling extends ExperienceOrb {
 		setPos(x, y, z);
 		setYRot((float) (Math.random() * 360.0D));
 		setDeltaMovement(0D ,0D ,0D);
-		value = expValue;
+		setValue(expValue);
 	}
 
 	@Override
@@ -57,7 +57,7 @@ public class EntityXPOrbFalling extends ExperienceOrb {
 
 	@Override
 	public void playerTouch(@Nonnull Player player) {
-		if (!level().isClientSide) {
+		if (!level().isClientSide()) {
 			if (delayBeforeCanPickup == 0 && player.takeXpDelay == 0) {
 				if (NeoForge.EVENT_BUS.post(new PlayerXpEvent.PickupXp(player, this)).isCanceled())
 					return;
@@ -68,14 +68,14 @@ public class EntityXPOrbFalling extends ExperienceOrb {
 		            if (entry.isPresent()) {
 		                ItemStack itemstack = entry.get().itemStack();
 		                if (!itemstack.isEmpty() && itemstack.isDamaged()) {
-		                   int i = Math.min((int)(this.value * itemstack.getXpRepairRatio()), itemstack.getDamageValue());
-		                   this.value -= durabilityToXp(i);
+			                   int i = Math.min((int)(this.getValue() * itemstack.getXpRepairRatio()), itemstack.getDamageValue());
+			                   this.setValue(this.getValue() - durabilityToXp(i));
 		                   itemstack.setDamageValue(itemstack.getDamageValue() - i);
 		                }
 		             }
 
-				if (value > 0)
-					TileEntitySinkTank.addPlayerXP(player, value);
+				if (getValue() > 0)
+					TileEntitySinkTank.addPlayerXP(player, getValue());
 
 				remove(RemovalReason.DISCARDED);
 			}

@@ -4,8 +4,8 @@ import io.netty.buffer.Unpooled;
 import mob_grinding_utils.ModBlocks;
 import mob_grinding_utils.ModItems;
 import mob_grinding_utils.inventory.server.ContainerAbsorptionHopper;
-import mob_grinding_utils.inventory.server.InventoryWrapperAH;
 import mob_grinding_utils.util.CapHelper;
+import mob_grinding_utils.util.FluidTankStorage;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
@@ -30,14 +30,17 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.AABB;
 import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.fluids.FluidStack;
-import net.neoforged.neoforge.fluids.capability.IFluidHandler;
-import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
-import net.neoforged.neoforge.items.IItemHandler;
-import net.neoforged.neoforge.items.ItemHandlerHelper;
+import net.neoforged.neoforge.transfer.RangedResourceHandler;
+import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.fluid.FluidResource;
+import net.neoforged.neoforge.transfer.item.ItemResource;
+import net.neoforged.neoforge.transfer.item.VanillaContainerWrapper;
+import net.neoforged.neoforge.transfer.transaction.Transaction;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -46,13 +49,13 @@ import java.util.Optional;
 
 
 public class TileEntityAbsorptionHopper extends TileEntityInventoryHelper implements MenuProvider, BEGuiClickable {
-	public FluidTank tank = new FluidTank(1000 *  16);
-	private final IItemHandler itemHandler;
+	public FluidTankStorage tank = new FluidTankStorage(1000 * 16, this::setChanged);
+	private final ResourceHandler<ItemResource> itemHandler;
 	private static final int[] SLOTS = new int[] {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16};
 	public int prevTankAmount;
 	public TileEntityAbsorptionHopper(BlockPos pos, BlockState state) {
 		super(ModBlocks.ABSORPTION_HOPPER.getTileEntityType(), 17, pos, state);
-		itemHandler = createUnSidedHandler();
+		itemHandler = RangedResourceHandler.of(VanillaContainerWrapper.of(this), 1, getContainerSize());
 	}
 
 	@Override
@@ -65,10 +68,10 @@ public class TileEntityAbsorptionHopper extends TileEntityInventoryHelper implem
 		updateBlock();
 	}
 
-	public IItemHandler getItemHandler(@Nullable Direction side) {
+	public ResourceHandler<ItemResource> getItemHandler(@Nullable Direction side) {
 		return itemHandler;
 	}
-	public FluidTank getTank(final Direction side) {
+	public FluidTankStorage getTank(final Direction side) {
 		return tank;
 	}
 
@@ -95,10 +98,9 @@ public class TileEntityAbsorptionHopper extends TileEntityInventoryHelper implem
 	public int offsetX, offsetY, offsetZ;
 
 	@Override
-	public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket packet, HolderLookup.Provider lookupProvider) {
+	public void onDataPacket(Connection net, ValueInput input) {
 		EnumStatus[] old = new EnumStatus[] { status[0], status[1], status[2], status[3], status[4], status[5] };
-		super.onDataPacket(net, packet, lookupProvider);
-		loadAdditional(packet.getTag(), lookupProvider);
+		loadAdditional(input);
 		for (Direction facing : Direction.values()) {
 			if (old[facing.ordinal()] != status[facing.ordinal()]) {
 				getLevel().setBlocksDirty(getBlockPos(), getLevel().getBlockState(getBlockPos()), getLevel().getBlockState(getBlockPos()));
@@ -109,49 +111,45 @@ public class TileEntityAbsorptionHopper extends TileEntityInventoryHelper implem
 
 	@Override
 	public ClientboundBlockEntityDataPacket getUpdatePacket() {
-		CompoundTag nbt = new CompoundTag();
-		saveAdditional(nbt, level.registryAccess());
 		return ClientboundBlockEntityDataPacket.create(this);
 	}
 
 	@Nonnull
 	@Override
 	public CompoundTag getUpdateTag(@Nonnull HolderLookup.Provider registries) {
-		CompoundTag nbt = new CompoundTag();
-		saveAdditional(nbt, registries);
-		return nbt;
+		return saveCustomOnly(registries);
 	}
 
 	@Override
-	public void loadAdditional(CompoundTag tagCompound, HolderLookup.Provider registries) {
-		super.loadAdditional(tagCompound, registries);
-		status[0] = EnumStatus.values()[tagCompound.getByte("down")];
-		status[1] = EnumStatus.values()[tagCompound.getByte("up")];
-		status[2] = EnumStatus.values()[tagCompound.getByte("north")];
-		status[3] = EnumStatus.values()[tagCompound.getByte("south")];
-		status[4] = EnumStatus.values()[tagCompound.getByte("west")];
-		status[5] = EnumStatus.values()[tagCompound.getByte("east")];
-		showRenderBox = tagCompound.getBoolean("showRenderBox");
-		offsetX = tagCompound.getInt("offsetX");
-		offsetY = tagCompound.getInt("offsetY");
-		offsetZ = tagCompound.getInt("offsetZ");
-		tank.readFromNBT(registries, tagCompound);
+	protected void loadAdditional(ValueInput input) {
+		super.loadAdditional(input);
+		status[0] = EnumStatus.values()[input.getByteOr("down", (byte) 0)];
+		status[1] = EnumStatus.values()[input.getByteOr("up", (byte) 0)];
+		status[2] = EnumStatus.values()[input.getByteOr("north", (byte) 0)];
+		status[3] = EnumStatus.values()[input.getByteOr("south", (byte) 0)];
+		status[4] = EnumStatus.values()[input.getByteOr("west", (byte) 0)];
+		status[5] = EnumStatus.values()[input.getByteOr("east", (byte) 0)];
+		showRenderBox = input.getBooleanOr("showRenderBox", false);
+		offsetX = input.getIntOr("offsetX", 0);
+		offsetY = input.getIntOr("offsetY", 0);
+		offsetZ = input.getIntOr("offsetZ", 0);
+		tank.replace(input.read("fluid", FluidStack.CODEC).orElse(FluidStack.EMPTY));
 	}
 
 	@Override
-	public void saveAdditional (CompoundTag tagCompound, HolderLookup.Provider registries) {
-		super.saveAdditional(tagCompound, registries);
-		tagCompound.putByte("down", (byte) status[0].ordinal());
-		tagCompound.putByte("up", (byte) status[1].ordinal());
-		tagCompound.putByte("north", (byte) status[2].ordinal());
-		tagCompound.putByte("south", (byte) status[3].ordinal());
-		tagCompound.putByte("west", (byte) status[4].ordinal());
-		tagCompound.putByte("east", (byte) status[5].ordinal());
-		tagCompound.putBoolean("showRenderBox", showRenderBox);
-		tagCompound.putInt("offsetX", offsetX);
-		tagCompound.putInt("offsetY", offsetY);
-		tagCompound.putInt("offsetZ", offsetZ);
-		tank.writeToNBT(registries, tagCompound);
+	protected void saveAdditional(ValueOutput output) {
+		super.saveAdditional(output);
+		output.putByte("down", (byte) status[0].ordinal());
+		output.putByte("up", (byte) status[1].ordinal());
+		output.putByte("north", (byte) status[2].ordinal());
+		output.putByte("south", (byte) status[3].ordinal());
+		output.putByte("west", (byte) status[4].ordinal());
+		output.putByte("east", (byte) status[5].ordinal());
+		output.putBoolean("showRenderBox", showRenderBox);
+		output.putInt("offsetX", offsetX);
+		output.putInt("offsetY", offsetY);
+		output.putInt("offsetZ", offsetZ);
+		output.store("fluid", FluidStack.CODEC, tank.stack());
 	}
 
 	public EnumStatus getSideStatus(Direction side) {
@@ -214,22 +212,20 @@ public class TileEntityAbsorptionHopper extends TileEntityInventoryHelper implem
 
 	public static <T extends BlockEntity> void serverTick(Level level, BlockPos worldPosition, BlockState blockState, T t) {
 		if (t instanceof TileEntityAbsorptionHopper tile) {
-			tile.prevTankAmount = tile.tank.getFluidAmount();
+			tile.prevTankAmount = tile.tank.amount();
 			for (Direction facing : Direction.values()) {
 				if (tile.status[facing.ordinal()] == EnumStatus.STATUS_OUTPUT_ITEM) {
 					BlockEntity otherTile = level.getBlockEntity(worldPosition.relative(facing));
-					Optional<IItemHandler> handlerOptional = CapHelper.getItemHandler(level, worldPosition.relative(facing), facing.getOpposite());
+					Optional<ResourceHandler<ItemResource>> handlerOptional = CapHelper.getItemHandler(level, worldPosition.relative(facing), facing.getOpposite());
 					if (otherTile != null && handlerOptional.isPresent()) {
 						handlerOptional.ifPresent((handler) -> {
 							if (level.getGameTime() % 8 == 0) {
 								for (int i = 0; i < tile.getContainerSize(); ++i) {
 									if (!tile.getItem(i).isEmpty() && i != 0) {
-										ItemStack stack = tile.getItem(i).copy();
-										stack.setCount(1);
-										ItemStack stack1 = ItemHandlerHelper.insertItem(handler, stack, true);
-										if (stack1.isEmpty()) {
-											ItemHandlerHelper.insertItem(handler, tile.removeItem(i, 1), false);
-											tile.setChanged();
+										ItemResource resource = ItemResource.of(tile.getItem(i));
+										try (Transaction transaction = Transaction.openRoot()) {
+											if (tile.itemHandler.extract(i - 1, resource, 1, transaction) == 1 && handler.insert(resource, 1, transaction) == 1)
+												transaction.commit();
 										}
 									}
 								}
@@ -255,18 +251,13 @@ public class TileEntityAbsorptionHopper extends TileEntityInventoryHelper implem
 				}
 
 				if (tile.status[facing.ordinal()] == EnumStatus.STATUS_OUTPUT_FLUID) {
-					Optional<IFluidHandler> handlerOptional = CapHelper.getFluidHandler(level, worldPosition.relative(facing), facing.getOpposite());
+					Optional<ResourceHandler<FluidResource>> handlerOptional = CapHelper.getFluidHandler(level, worldPosition.relative(facing), facing.getOpposite());
 					handlerOptional.ifPresent((receptacle) -> {
-						int tanks = receptacle.getTanks();
-						for (int x = 0; x < tanks; x++) {
-							if (receptacle.getTankCapacity(x) > 0) {
-								FluidStack contents = receptacle.getFluidInTank(x);
-								if (!tile.tank.getFluid().isEmpty()) {
-									if (contents.isEmpty() || contents.getAmount() <= receptacle.getTankCapacity(x) - 100 && contents.is(tile.tank.getFluid().getFluid())) {
-										receptacle.fill(tile.tank.drain(new FluidStack(tile.tank.getFluid().getFluid(), 100), IFluidHandler.FluidAction.EXECUTE), IFluidHandler.FluidAction.EXECUTE);
-										tile.setChanged();
-									}
-								}
+						if (!tile.tank.stack().isEmpty()) try (Transaction transaction = Transaction.openRoot()) {
+							FluidResource fluid = tile.tank.getResource(0);
+							if (tile.tank.extract(fluid, 100, transaction) == 100 && receptacle.insert(fluid, 100, transaction) == 100) {
+								transaction.commit();
+								tile.setChanged();
 							}
 						}
 					});
@@ -277,11 +268,11 @@ public class TileEntityAbsorptionHopper extends TileEntityInventoryHelper implem
 			if (level.getGameTime() % 3 == 0 && !level.hasNeighborSignal(worldPosition)) {
 				if (!tile.isInventoryFull(tile, null))
 					tile.captureDroppedItems();
-				if (tile.tank.getFluid().isEmpty() || tile.tank.getFluid().is(ModBlocks.FLUID_XP.get()))
+				if (tile.tank.stack().isEmpty() || tile.tank.stack().is(ModBlocks.FLUID_XP.get()))
 					tile.captureDroppedXP();
 			}
 
-			if (tile.prevTankAmount != tile.tank.getFluidAmount())
+			if (tile.prevTankAmount != tile.tank.amount())
 				tile.updateBlock();
 		}
 	}
@@ -306,9 +297,12 @@ public class TileEntityAbsorptionHopper extends TileEntityInventoryHelper implem
 	public boolean captureDroppedXP() {
 		for (ExperienceOrb entity : getCaptureXP()) {
 			int xpAmount = entity.getValue();
-			if (tank.getFluidAmount() < tank.getCapacity() - xpAmount * 20) {
-				tank.fill(new FluidStack(ModBlocks.FLUID_XP.get(), xpAmount * 20), IFluidHandler.FluidAction.EXECUTE);
-				entity.value = 0;
+			if (tank.amount() < tank.capacity() - xpAmount * 20) {
+				try (Transaction transaction = Transaction.openRoot()) {
+					if (tank.insert(FluidResource.of(new FluidStack(ModBlocks.FLUID_XP.get(), xpAmount * 20)), xpAmount * 20, transaction) == xpAmount * 20)
+						transaction.commit();
+				}
+				entity.setValue(0);
 				entity.remove(Entity.RemovalReason.DISCARDED);
 			}
 			return true;
@@ -327,7 +321,6 @@ public class TileEntityAbsorptionHopper extends TileEntityInventoryHelper implem
 		return new AABB(x - 3.5D - getModifierAmount(), y - 3.5D - getModifierAmount(), z - 3.5D - getModifierAmount(), x + 3.5D + getModifierAmount(), y + 3.5D + getModifierAmount(), z + 3.5D + getModifierAmount()).move(getoffsetX(), getoffsetY(), getoffsetZ());
 	}
 
-	@OnlyIn(Dist.CLIENT)
 	public AABB getAABBForRender() {
 		return new AABB(- 3D - getModifierAmount(), - 3D - getModifierAmount(), - 3D - getModifierAmount(), 4D + getModifierAmount(), 4D + getModifierAmount(), 4D + getModifierAmount()).move(getoffsetX(), getoffsetY(), getoffsetZ());
 	}
@@ -464,12 +457,8 @@ public class TileEntityAbsorptionHopper extends TileEntityInventoryHelper implem
 
 // FLUID & INVENTORY CAPABILITIES STUFF
 
-	protected IItemHandler createUnSidedHandler() {
-		return new InventoryWrapperAH(this);
-	}
-
 	public int getScaledFluid(int scale) {
-		return tank.getFluid() != null ? (int) ((float) tank.getFluid().getAmount() / (float) tank.getCapacity() * scale) : 0;
+		return !tank.stack().isEmpty() ? (int) ((float) tank.amount() / tank.capacity() * scale) : 0;
 	}
 
 	@Override

@@ -12,11 +12,9 @@ import net.minecraft.client.model.geom.builders.CubeListBuilder;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 
-@OnlyIn(Dist.CLIENT)
 public class ModelSawBase extends Model {
     public ModelPart axle;
     public ModelPart axle2;
@@ -31,7 +29,7 @@ public class ModelSawBase extends Model {
     public ModelPart mace4;
 
 	public ModelSawBase(ModelPart root) {
-		super(RenderType::entitySolid);
+		super(root, texture -> RenderTypes.entitySolid((net.minecraft.resources.Identifier) texture));
 		this.axle = root.getChild("axle");
 		this.axle2 = root.getChild("axle2");
 		this.axleTop = root.getChild("axleTop");
@@ -62,13 +60,6 @@ public class ModelSawBase extends Model {
 	  	partdefinition.addOrReplaceChild("mace3", CubeListBuilder.create().texOffs(0, 21).addBox(-6.5F, -9.5F, -0.5F, 3F, 3F, 3F, new CubeDeformation(0F)), PartPose.offsetAndRotation(0F, 16F, 0F, 0.7853982F, 0F, 0F)); 
 	  	partdefinition.addOrReplaceChild("mace4", CubeListBuilder.create().texOffs(0, 21).addBox(-6.5F, -8F, -6.5F, 3F, 3F, 3F, new CubeDeformation(0F)), PartPose.offsetAndRotation(0F, 16F, 0F, 0F, 0F, 0F)); 
 		return LayerDefinition.create(meshdefinition, 64, 32);
-	}
-
-	public void renderToBuffer(PoseStack matrixStackIn, VertexConsumer bufferIn, int packedLightIn, int packedOverlayIn, int color) {
-		ImmutableList.of(base, plinth)
-		.forEach((p_228279_8_) -> {
-			p_228279_8_.render(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn, color);
-		});
 	}
 
 	public void renderAxle(PoseStack matrixStackIn, VertexConsumer bufferIn, int packedLightIn, int packedOverlayIn, int color) {

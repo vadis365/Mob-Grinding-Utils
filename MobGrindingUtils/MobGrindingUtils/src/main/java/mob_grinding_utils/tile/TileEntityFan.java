@@ -29,10 +29,11 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.AirBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 
 import javax.annotation.Nonnull;
 import java.util.List;
@@ -54,7 +55,7 @@ public class TileEntityFan extends TileEntityInventoryHelper implements MenuProv
 				if (level.getBlockState(pos).getValue(BlockFan.POWERED)) {
 					fan.activateBlock();
 				}
-			if (!level.isClientSide)
+			if (!level.isClientSide())
 				fan.setAABBWithModifiers();
 		}
 	}
@@ -140,7 +141,6 @@ public class TileEntityFan extends TileEntityInventoryHelper implements MenuProv
 		return new AABB(getBlockPos().getX() - xNeg, getBlockPos().getY() - yNeg, getBlockPos().getZ() - zNeg, getBlockPos().getX() + 1D + xPos, getBlockPos().getY() + 1D + yPos, getBlockPos().getZ() + 1D + zPos);
 	}
 
-	@OnlyIn(Dist.CLIENT)
 	public AABB getAABBForRender() {
 		return new AABB(- xNeg, - yNeg, - zNeg, 1D + xPos, 1D + yPos, 1D + zPos);
 	}
@@ -191,52 +191,48 @@ public class TileEntityFan extends TileEntityInventoryHelper implements MenuProv
 	}
 
 	@Override
-	public void saveAdditional(CompoundTag nbt, HolderLookup.Provider registries) {
-		super.saveAdditional(nbt, registries);
-		nbt.putBoolean("showRenderBox", showRenderBox);
-		nbt.putFloat("xPos", xPos);
-		nbt.putFloat("yPos", yPos);
-		nbt.putFloat("zPos", zPos);
-		nbt.putFloat("xNeg", xNeg);
-		nbt.putFloat("yNeg", yNeg);
-		nbt.putFloat("zNeg", zNeg);
+	protected void saveAdditional(ValueOutput output) {
+		super.saveAdditional(output);
+		output.putBoolean("showRenderBox", showRenderBox);
+		output.putFloat("xPos", xPos);
+		output.putFloat("yPos", yPos);
+		output.putFloat("zPos", zPos);
+		output.putFloat("xNeg", xNeg);
+		output.putFloat("yNeg", yNeg);
+		output.putFloat("zNeg", zNeg);
 	}
 
 	@Override
-	public void loadAdditional(CompoundTag nbt, HolderLookup.Provider registries) {
-		super.loadAdditional(nbt, registries);
-		showRenderBox = nbt.getBoolean("showRenderBox");
-		xPos = nbt.getFloat("xPos");
-		yPos = nbt.getFloat("yPos");
-		zPos = nbt.getFloat("zPos");
-		xNeg = nbt.getFloat("xNeg");
-		yNeg = nbt.getFloat("yNeg");
-		zNeg = nbt.getFloat("zNeg");
+	protected void loadAdditional(ValueInput input) {
+		super.loadAdditional(input);
+		showRenderBox = input.getBooleanOr("showRenderBox", false);
+		xPos = input.getFloatOr("xPos", 0F);
+		yPos = input.getFloatOr("yPos", 0F);
+		zPos = input.getFloatOr("zPos", 0F);
+		xNeg = input.getFloatOr("xNeg", 0F);
+		yNeg = input.getFloatOr("yNeg", 0F);
+		zNeg = input.getFloatOr("zNeg", 0F);
 	}
 
 	@Nonnull
 	@Override
 	public CompoundTag getUpdateTag(@Nonnull HolderLookup.Provider registries) {
-		CompoundTag nbt = new CompoundTag();
-		saveAdditional(nbt, registries);
-		return nbt;
+		return saveCustomOnly(registries);
 	}
 
 	@Override
 	public ClientboundBlockEntityDataPacket getUpdatePacket() {
-		CompoundTag nbt = new CompoundTag();
-		saveAdditional(nbt, level.registryAccess());
 		return ClientboundBlockEntityDataPacket.create(this);
 	}
 
 	@Override
-	public void onDataPacket(@Nonnull Connection net, ClientboundBlockEntityDataPacket packet, @Nonnull HolderLookup.Provider registries) {
-		loadAdditional(packet.getTag(), registries);
+	public void onDataPacket(@Nonnull Connection net, ValueInput input) {
+		loadAdditional(input);
 		onContentsChanged();
 	}
 
 	public void onContentsChanged() {
-		if (!getLevel().isClientSide) {
+		if (!getLevel().isClientSide()) {
 			final BlockState state = getLevel().getBlockState(getBlockPos());
 			setAABBWithModifiers();
 			getLevel().sendBlockUpdated(getBlockPos(), state, state, 8);

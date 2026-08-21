@@ -7,7 +7,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.context.BlockPlaceContext;
-import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.core.Direction;
 import net.minecraft.core.BlockPos;
@@ -21,7 +21,7 @@ import net.minecraft.world.level.Level;
 import javax.annotation.Nonnull;
 
 public class BlockEntityConveyor extends Block {
-	public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
+	public static final EnumProperty<Direction> FACING = HorizontalDirectionalBlock.FACING;
 	public static final VoxelShape CONVEYOR_AABB = Block.box(0D, 0D, 0D, 16D, 14D, 16D);
 
 	public BlockEntityConveyor(Block.Properties properties) {
@@ -52,7 +52,7 @@ public class BlockEntityConveyor extends Block {
 	}
 
 	@Override
-	public void entityInside(@Nonnull BlockState state, @Nonnull Level world, @Nonnull BlockPos pos, Entity entity) {
+	protected void entityInside(@Nonnull BlockState state, @Nonnull Level world, @Nonnull BlockPos pos, Entity entity, net.minecraft.world.entity.InsideBlockEffectApplier effectApplier, boolean isPrecise) {
 		if (entity.isShiftKeyDown())
 			return;
 

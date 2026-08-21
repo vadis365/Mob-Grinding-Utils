@@ -10,16 +10,16 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 
 import javax.annotation.Nonnull;
-import java.util.List;
+import java.util.function.Consumer;
 
 public class ItemGoldenEgg extends Item {
 
@@ -28,10 +28,9 @@ public class ItemGoldenEgg extends Item {
 	}
 
 	@Override
-	@OnlyIn(Dist.CLIENT)
-	public void appendHoverText(ItemStack stack, @Nonnull TooltipContext context, List<Component> list, TooltipFlag flag) {
-		list.add(Component.translatable("tooltip.golden_egg_1").withStyle(ChatFormatting.YELLOW));
-		list.add(Component.translatable("tooltip.golden_egg_2").withStyle(ChatFormatting.YELLOW));
+	public void appendHoverText(ItemStack stack, @Nonnull TooltipContext context, TooltipDisplay display, Consumer<Component> tooltip, TooltipFlag flag) {
+		tooltip.accept(Component.translatable("tooltip.golden_egg_1").withStyle(ChatFormatting.YELLOW));
+		tooltip.accept(Component.translatable("tooltip.golden_egg_2").withStyle(ChatFormatting.YELLOW));
 	}
 
 	@Override
@@ -41,7 +40,7 @@ public class ItemGoldenEgg extends Item {
 		InteractionHand hand = context.getHand();
 		BlockPos pos = context.getClickedPos();
 		ItemStack stackHeld = player.getItemInHand(hand);
-		if (!world.isClientSide) {
+		if (!world.isClientSide()) {
 			for (int x = -2; x <= 2; x++)
 				for (int z = -2; z <= 2; z++) {
 					BlockState state = world.getBlockState(pos.offset(x, 0, z));

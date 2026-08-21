@@ -3,7 +3,7 @@ plugins {
     id 'idea'
     id 'maven-publish'
     id 'eclipse'
-    id 'net.neoforged.gradle.userdev' version '7.0.173'
+    id 'net.neoforged.gradle.userdev' version '7.1.38'
     id "me.modmuss50.mod-publish-plugin" version "0.4.5"
 }
 
@@ -18,8 +18,8 @@ base {
     archivesName = "mob_grinding_utils"
 }
 
-java.toolchain.languageVersion = JavaLanguageVersion.of(21)
-sourceSets.main.resources { srcDir 'src/generated/resources' }
+java.toolchain.languageVersion = JavaLanguageVersion.of(25)
+sourceSets.main.resources.setSrcDirs(['src/main/resources', 'src/generated/client', 'src/generated/server'])
 minecraft.accessTransformers.file rootProject.file('src/main/resources/META-INF/accesstransformer.cfg')
 
 runs {
@@ -36,15 +36,19 @@ runs {
 
     server {
         systemProperty 'neoforge.enabledGameTestNamespaces', "mob_grinding_utils"
-        programArgument '--nogui'
+        arguments.add '--nogui'
     }
 
     gameTestServer {
-        systemProperty 'forge.enabledGameTestNamespaces', "mob_grinding_utils"
+        systemProperty 'neoforge.enabledGameTestNamespaces', "mob_grinding_utils"
     }
 
-    data {
-        arguments.addAll '--mod', "mob_grinding_utils", '--all', '--output', file('src/generated/resources/').getAbsolutePath(), '--existing', file('src/main/resources/').getAbsolutePath()
+    clientData {
+        arguments.addAll '--mod', "mob_grinding_utils", '--client', '--output', file('src/generated/client/').getAbsolutePath(), '--existing', file('src/main/resources/').getAbsolutePath()
+    }
+
+    serverData {
+        arguments.addAll '--mod', "mob_grinding_utils", '--server', '--output', file('src/generated/server/').getAbsolutePath(), '--existing', file('src/main/resources/').getAbsolutePath()
     }
 }
 
@@ -54,15 +58,15 @@ dependencies {
     compileOnly "mezz.jei:jei-${jei_mc_version}-neoforge-api:${jei_version}"
     runtimeOnly "mezz.jei:jei-${jei_mc_version}-neoforge:${jei_version}"
 
-    runtimeOnly "curse.maven:JADE-324717:5493270"
-    runtimeOnly "curse.maven:ATLAS-633577:5490697"
+    runtimeOnly "curse.maven:JADE-324717:8651070"
+    runtimeOnly "curse.maven:ATLAS-633577:7842742"
 
     //runtimeOnly "curse.maven:PP-657831:6304429"
     //runtimeOnly "curse.maven:top-245211:5084077"
     //runtimeOnly fg.deobf("curse.maven:playermobs-430513:3153298") //Not ported yet
-    runtimeOnly "curse.maven:mek-268560:6327955"
-    runtimeOnly "curse.maven:RS-243076:6391989"
-    //runtimeOnly fg.deobf("curse.maven:IF-266515:3261176")
+    //runtimeOnly "curse.maven:mek-268560:6327955"
+    runtimeOnly "curse.maven:RS-243076:8211383"
+    //runtimeOnly "curse.maven:IF-266515:3261176"
     //runtimeOnly fg.deobf("curse.maven:TITANIUM-287342:3223141")
     //runtimeOnly fg.deobf("curse.maven:XNET-260912:3140153")
     //runtimeOnly fg.deobf("curse.maven:RFTBASE-326041:3206945")
@@ -70,7 +74,7 @@ dependencies {
     //runtimeOnly fg.deobf("curse.maven:COFHCORE-69162:3249453")
     //runtimeOnly fg.deobf("curse.maven:TE-69163:3247000")
     //runtimeOnly fg.deobf("curse.maven:TF-222880:3248150")
-    //runtimeOnly fg.deobf("curse.maven:CLUMPS-256717:3481298")
+    runtimeOnly "curse.maven:clumps-256717:7911758"
     //runtimeOnly fg.deobf("curse.maven:CYCLIC-239286:3708026")
 }
 
@@ -90,6 +94,7 @@ jar {
 
 tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8' // Use the UTF-8 charset for Java compilation
+    options.compilerArgs.addAll(['-Xmaxerrs', '1000', '-Xmaxwarns', '1000'])
 }
 
 idea {

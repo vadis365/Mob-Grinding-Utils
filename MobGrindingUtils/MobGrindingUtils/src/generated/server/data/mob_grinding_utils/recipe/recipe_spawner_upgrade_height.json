@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "B": "minecraft:blaze_powder",
+    "E": "minecraft:egg",
+    "X": {
+      "neoforge:ingredient_type": "mob_grinding_utils:fluid",
+      "advanced": false,
+      "value": {
+        "Amount": 1000,
+        "Tag": "c:experience"
+      }
+    }
+  },
+  "pattern": [
+    "EBE",
+    "EXE",
+    "EBE"
+  ],
+  "result": {
+    "id": "mob_grinding_utils:spawner_upgrade_height"
+  }
+}

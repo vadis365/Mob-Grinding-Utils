@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "B": {
+      "neoforge:ingredient_type": "mob_grinding_utils:fluid",
+      "advanced": false,
+      "value": {
+        "Amount": 1000,
+        "Tag": "c:experience"
+      }
+    },
+    "X": "#c:nuggets/gold"
+  },
+  "pattern": [
+    "XXX",
+    "XBX",
+    "XXX"
+  ],
+  "result": {
+    "id": "mob_grinding_utils:solid_xp_mould_blank"
+  }
+}

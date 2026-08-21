@@ -20,12 +20,12 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
-import net.minecraft.world.level.levelgen.feature.configurations.RandomPatchConfiguration;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
+import net.minecraft.world.level.redstone.Orientation;
+import net.minecraft.world.level.ScheduledTickAccess;
 import net.minecraft.world.phys.AABB;
 import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
-import net.neoforged.neoforge.common.util.TriState;
+import net.minecraft.util.TriState;
 import net.neoforged.neoforge.event.EventHooks;
 
 import javax.annotation.Nonnull;
@@ -36,34 +36,35 @@ public class BlockDelightfulDirt extends BlockDirtSpawner {
 		super(properties);
 	}
 
-	public boolean shouldSnowCap(LevelAccessor level, BlockPos pos) {
+	public boolean shouldSnowCap(LevelReader level, BlockPos pos) {
 		// standard night ticks
-		return level.canSeeSkyFromBelowWater(pos) && (level.dayTime() >= 13000 && level.dayTime() <= 23000);
+		long time = level instanceof LevelAccessor accessor ? accessor.getLevelData().getGameTime() % 24000 : 0;
+		return level.canSeeSkyFromBelowWater(pos) && time >= 13000 && time <= 23000;
 	}
 
-	public boolean shouldSpawnMob(LevelAccessor level, BlockPos pos) {
+	public boolean shouldSpawnMob(LevelReader level, BlockPos pos) {
 		return level.getMaxLocalRawBrightness(pos.above()) >= 10 && level.getBlockState(pos.above()).isAir();
 	}
 
 	@Override
 	public void onPlace(@Nonnull BlockState state, @Nonnull Level level, @Nonnull BlockPos pos, @Nonnull BlockState oldState, boolean isMoving) {
 		if (shouldSnowCap(level, pos) || shouldSpawnMob(level, pos))
-			level.scheduleTick(pos, this, Mth.nextInt(level.random, 20,60));
+			level.scheduleTick(pos, this, Mth.nextInt(level.getRandom(), 20,60));
 	}
 
 	@Nonnull
 	@SuppressWarnings("deprecation")
 	@Override
-	public BlockState updateShape(@Nonnull BlockState stateIn, @Nonnull Direction facing, @Nonnull BlockState facingState, @Nonnull LevelAccessor level, @Nonnull BlockPos pos, @Nonnull BlockPos facingPos) {
+	protected BlockState updateShape(@Nonnull BlockState stateIn, @Nonnull LevelReader level, @Nonnull ScheduledTickAccess ticks, @Nonnull BlockPos pos, @Nonnull Direction facing, @Nonnull BlockPos facingPos, @Nonnull BlockState facingState, @Nonnull RandomSource random) {
 		if (shouldSnowCap(level, pos) || shouldSpawnMob(level, pos))
-			level.scheduleTick(pos, this, Mth.nextInt(level.getRandom(), 20, 60));
-		return super.updateShape(stateIn, facing, facingState, level, pos, facingPos);
+			ticks.scheduleTick(pos, this, Mth.nextInt(random, 20, 60));
+		return super.updateShape(stateIn, level, ticks, pos, facing, facingPos, facingState, random);
 	}
 
 	@Override
-	public void neighborChanged(@Nonnull BlockState state, @Nonnull Level level, @Nonnull BlockPos pos, @Nonnull Block blockIn, @Nonnull BlockPos fromPos, boolean isMoving) {
+	protected void neighborChanged(@Nonnull BlockState state, @Nonnull Level level, @Nonnull BlockPos pos, @Nonnull Block blockIn, Orientation orientation, boolean isMoving) {
 		if (shouldSnowCap(level, pos) || shouldSpawnMob(level, pos))
-			level.scheduleTick(pos, this, Mth.nextInt(level.random, 20, 60));
+			level.scheduleTick(pos, this, Mth.nextInt(level.getRandom(), 20, 60));
 	}
 
 	@SuppressWarnings("unchecked")
@@ -87,12 +88,13 @@ public class BlockDelightfulDirt extends BlockDirtSpawner {
 				if (level.getBlockState(posUp).isAir()) {
 					PlacedFeature placedfeature;
 					if (rand.nextInt(8) == 0) {
-						List<ConfiguredFeature<?, ?>> list = level.getBiome(posUp).value().getGenerationSettings().getFlowerFeatures();
+						List<ConfiguredFeature<?, ?>> list = level.getBiome(posUp).value().getGenerationSettings().getBoneMealFeatures();
 						if (list.isEmpty())
 							return;
-						placedfeature = ((RandomPatchConfiguration)list.get(0).config()).feature().value();
+						list.get(rand.nextInt(list.size())).place(level, level.getChunkSource().getGenerator(), rand, posUp);
+						return;
 					 } else {
-							placedfeature = level.registryAccess().registryOrThrow(Registries.PLACED_FEATURE).get(VegetationPlacements.GRASS_BONEMEAL);
+							placedfeature = level.registryAccess().lookupOrThrow(Registries.PLACED_FEATURE).get(VegetationPlacements.GRASS_BONEMEAL).orElseThrow().value();
 			            }
 					 placedfeature.place(level, level.getChunkSource().getGenerator(), rand, posUp);	
 				}
@@ -102,29 +104,28 @@ public class BlockDelightfulDirt extends BlockDirtSpawner {
 
 	public void spawnMob(ServerLevel level, BlockPos pos) {
 		Holder<Biome> biomeHolder = level.getBiome(pos);
-		Biome biome = !biomeHolder.is(ModTags.Biomes.PASSIVE_OVERRIDE) ? biomeHolder.value() : level.registryAccess().registry(Registries.BIOME)
-				.flatMap(reg -> reg.getOptional(Biomes.PLAINS))
-				.orElseGet(biomeHolder::value);
+		Biome biome = !biomeHolder.is(ModTags.Biomes.PASSIVE_OVERRIDE) ? biomeHolder.value() : level.registryAccess().lookupOrThrow(Registries.BIOME)
+				.getOptional(Biomes.PLAINS).orElseGet(biomeHolder::value);
 
-		List<SpawnerData> spawns = biome.getMobSettings().getMobs(MobCategory.CREATURE).unwrap();
+		var spawns = biome.getMobSettings().getMobs(MobCategory.CREATURE).unwrap();
 //		MobGrindingUtils.LOGGER.info("Spawns: " + spawns.size());
 //		spawns.forEach(s -> MobGrindingUtils.LOGGER.info(s.toString()));
 		if (!spawns.isEmpty()) {
 			int indexSize = spawns.size();
-			EntityType<?> type = spawns.get(level.random.nextInt(indexSize)).type;
-			if (type.is(ModTags.Entities.NO_DIRT_SPAWN) || type.is(ModTags.Entities.NO_DELIGHTFUL_SPAWN))
+			EntityType<?> type = spawns.get(level.getRandom().nextInt(indexSize)).value().type();
+			if (type.builtInRegistryHolder().is(ModTags.Entities.NO_DIRT_SPAWN) || type.builtInRegistryHolder().is(ModTags.Entities.NO_DELIGHTFUL_SPAWN))
 				return;
-			Mob entity = (Mob) type.create(level);
+			Mob entity = (Mob) type.create(level, EntitySpawnReason.NATURAL);
 			if (entity == null)
 				return;
 			entity.setPos(pos.getX() + 0.5D, pos.getY() + 1D, pos.getZ() + 0.5D);
-			if (!checkSpawnPosition(entity, level, MobSpawnType.NATURAL))
+			if (!checkSpawnPosition(entity, level, EntitySpawnReason.NATURAL))
 				return;
 			if (level.getEntities(entity.getType(), entity.getBoundingBox(), EntitySelector.ENTITY_STILL_ALIVE).isEmpty() && level.noCollision(entity)) {
 				TriState result = DirtSpawnEvent.checkEvent(entity, level, pos.getX() + 0.5D, pos.getY() + 1D, pos.getZ() + 0.5D, DirtSpawnEvent.DirtType.DELIGHTFUL);
 				if (result == TriState.FALSE)
 					return;
-				EventHooks.finalizeMobSpawn(entity, level, level.getCurrentDifficultyAt(pos), MobSpawnType.NATURAL, null);
+				EventHooks.finalizeMobSpawn(entity, level, level.getCurrentDifficultyAt(pos), EntitySpawnReason.NATURAL, null);
 				level.addFreshEntity(entity);
 			 }
 		}
@@ -152,7 +153,6 @@ public class BlockDelightfulDirt extends BlockDirtSpawner {
 	}
 
 	@Override
-	@OnlyIn(Dist.CLIENT)
 	public void animateTick(@Nonnull BlockState stateIn, Level level, @Nonnull BlockPos pos, @Nonnull RandomSource rand) {
 		if(level.getGameTime()%3 == 0 && level.getBlockState(pos.above()).isAir()) {
 			for (int i = 0; i < 4; ++i) {

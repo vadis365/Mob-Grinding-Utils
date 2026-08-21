@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "E": "minecraft:dragon_egg",
+    "W": "#minecraft:wool"
+  },
+  "pattern": [
+    "WWW",
+    "WEW",
+    "WWW"
+  ],
+  "result": {
+    "id": "mob_grinding_utils:dragon_muffler"
+  }
+}

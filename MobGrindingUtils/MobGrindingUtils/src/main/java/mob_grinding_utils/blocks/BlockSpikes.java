@@ -68,21 +68,21 @@ public class BlockSpikes extends DirectionalBlock {
 	}
 
 	@Override
-	public void entityInside(@Nonnull BlockState state, Level world, @Nonnull BlockPos pos, @Nonnull Entity entity) {
-		if (!world.isClientSide && entity instanceof LivingEntity)
+	protected void entityInside(@Nonnull BlockState state, Level world, @Nonnull BlockPos pos, @Nonnull Entity entity, net.minecraft.world.entity.InsideBlockEffectApplier effectApplier, boolean isPrecise) {
+		if (!world.isClientSide() && entity instanceof LivingEntity)
 			entity.hurt(MobGrindingUtils.getSpikeDamage(world), 5);
 	}
 
 	public static void dropXP(LivingDropsEvent event) {
 		LivingEntity entity = event.getEntity();
-		Level level = entity.getCommandSenderWorld();
+		Level level = entity.level();
 		if (entity != null && level instanceof ServerLevel serverLevel) {
-			if (!level.isClientSide && !event.isRecentlyHit() && event.getSource().is(MobGrindingUtils.SPIKE_TYPE)) {
+			if (!level.isClientSide() && !event.isRecentlyHit() && event.getSource().is(MobGrindingUtils.SPIKE_TYPE)) {
 				int xp = entity.getExperienceReward(serverLevel, FakePlayerFactory.getMinecraft(serverLevel));
 				while (xp > 0) {
 					int cap = ExperienceOrb.getExperienceValue(xp);
 					xp -= cap;
-					entity.getCommandSenderWorld().addFreshEntity(new ExperienceOrb(entity.getCommandSenderWorld(), entity.getX(), entity.getY(), entity.getZ(), cap));
+					level.addFreshEntity(new ExperienceOrb(level, entity.getX(), entity.getY(), entity.getZ(), cap));
 				}
 			}
 		}

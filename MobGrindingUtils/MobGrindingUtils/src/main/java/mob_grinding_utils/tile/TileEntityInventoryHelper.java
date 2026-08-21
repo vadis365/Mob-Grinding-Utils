@@ -1,9 +1,7 @@
 package mob_grinding_utils.tile;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.WorldlyContainer;
 import net.minecraft.world.entity.player.Player;
@@ -11,6 +9,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 
 import javax.annotation.Nullable;
 
@@ -75,24 +75,21 @@ public abstract class TileEntityInventoryHelper extends BlockEntity implements W
 	}
 
 	@Override
-	public void saveAdditional(CompoundTag compound, HolderLookup.Provider registries) {
-		super.saveAdditional(compound, registries);
-		ContainerHelper.saveAllItems(compound, inventory, false, registries);
+	protected void saveAdditional(ValueOutput output) {
+		super.saveAdditional(output);
+		ContainerHelper.saveAllItems(output, inventory, false);
 	}
 
 	@Override
-	public void loadAdditional(CompoundTag compound, HolderLookup.Provider registries) {
-		super.loadAdditional(compound, registries);
+	protected void loadAdditional(ValueInput input) {
+		super.loadAdditional(input);
 		inventory = NonNullList.<ItemStack>withSize(this.getContainerSize(), ItemStack.EMPTY);
-		if (compound.contains("Items", 9))
-			ContainerHelper.loadAllItems(compound, inventory, registries);
+		ContainerHelper.loadAllItems(input, inventory);
 	}
 
-	@Override
 	public void startOpen(Player playerIn) {
 	}
 
-	@Override
 	public void stopOpen(Player playerIn) {
 	}
 

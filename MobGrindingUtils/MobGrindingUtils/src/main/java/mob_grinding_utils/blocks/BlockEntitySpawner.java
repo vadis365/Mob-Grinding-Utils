@@ -23,7 +23,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
-import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.phys.BlockHitResult;
 
 import javax.annotation.Nonnull;
@@ -31,7 +31,7 @@ import javax.annotation.Nullable;
 
 @SuppressWarnings("deprecation")
 public class BlockEntitySpawner extends Block implements EntityBlock {
-	public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
+	public static final EnumProperty FACING = HorizontalDirectionalBlock.FACING;
 	public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
 
 	public BlockEntitySpawner(Block.Properties properties) {
@@ -53,7 +53,7 @@ public class BlockEntitySpawner extends Block implements EntityBlock {
 	@Nullable
 	@Override
 	public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level pLevel, @Nonnull BlockState pState, @Nonnull BlockEntityType<T> pBlockEntityType) {
-		return pLevel.isClientSide ? TileEntityMGUSpawner::clientTick : TileEntityMGUSpawner::serverTick;
+		return pLevel.isClientSide() ? TileEntityMGUSpawner::clientTick : TileEntityMGUSpawner::serverTick;
 	}
 
 	@Override
@@ -70,7 +70,7 @@ public class BlockEntitySpawner extends Block implements EntityBlock {
 	@Nonnull
 	@Override
 	public InteractionResult useWithoutItem(BlockState state, @Nonnull Level world, @Nonnull BlockPos pos, @Nonnull Player player, @Nonnull BlockHitResult hitResult) {
-		if (!world.isClientSide) {
+		if (!world.isClientSide()) {
 			BlockEntity tileentity = world.getBlockEntity(pos);
 			if (tileentity instanceof TileEntityMGUSpawner tile)
 				player.openMenu(tile, pos);
@@ -80,19 +80,14 @@ public class BlockEntitySpawner extends Block implements EntityBlock {
 
 	@Override
 	public BlockState playerWillDestroy(Level world, @Nonnull BlockPos pos, @Nonnull BlockState state, @Nonnull Player player) {
-		if (!world.isClientSide && !player.getAbilities().instabuild) {
+		if (!world.isClientSide() && !player.getAbilities().instabuild) {
 			TileEntityMGUSpawner tile = (TileEntityMGUSpawner) world.getBlockEntity(pos);
 			if (tile != null) {
-				if(!tile.inputSlots.getStackInSlot(0).isEmpty())
-					Containers.dropItemStack(world, pos.getX(), pos.getY(), pos.getZ(), tile.inputSlots.getStackInSlot(0));
-				if(!tile.inputSlots.getStackInSlot(1).isEmpty())
-					Containers.dropItemStack(world, pos.getX(), pos.getY(), pos.getZ(), tile.inputSlots.getStackInSlot(1));
-				if(!tile.inputSlots.getStackInSlot(2).isEmpty())
-					Containers.dropItemStack(world, pos.getX(), pos.getY(), pos.getZ(), tile.inputSlots.getStackInSlot(2));
-				if(!tile.inputSlots.getStackInSlot(3).isEmpty())
-					Containers.dropItemStack(world, pos.getX(), pos.getY(), pos.getZ(), tile.inputSlots.getStackInSlot(3));
-				if(!tile.fuelSlot.getStackInSlot(0).isEmpty())
-					Containers.dropItemStack(world, pos.getX(), pos.getY(), pos.getZ(), tile.fuelSlot.getStackInSlot(0));
+				for (int slot = 0; slot < 4; slot++)
+					if (!tile.getInputStack(slot).isEmpty())
+						Containers.dropItemStack(world, pos.getX(), pos.getY(), pos.getZ(), tile.getInputStack(slot));
+				if (!tile.getFuelStack().isEmpty())
+					Containers.dropItemStack(world, pos.getX(), pos.getY(), pos.getZ(), tile.getFuelStack());
 				world.removeBlockEntity(pos);
 			}
 		}
@@ -100,20 +95,15 @@ public class BlockEntitySpawner extends Block implements EntityBlock {
 	}
 
 	@Override
-	public void onRemove(BlockState state, @Nonnull Level world, @Nonnull BlockPos pos, BlockState newState, boolean isMoving) {
-		if (!state.is(newState.getBlock())) {
-			TileEntityMGUSpawner tile = (TileEntityMGUSpawner) world.getBlockEntity(pos);
-			if (tile != null) {
-				//InventoryHelper.dropInventoryItems(world, pos, tile);
-				world.updateNeighbourForOutputSignal(pos, this);
-			}
-			super.onRemove(state, world, pos, newState, isMoving);
-		}
+	protected void affectNeighborsAfterRemoval(BlockState state, ServerLevel world, @Nonnull BlockPos pos, boolean isMoving) {
+		if (world.getBlockEntity(pos) instanceof TileEntityMGUSpawner)
+			world.updateNeighbourForOutputSignal(pos, this);
+		super.affectNeighborsAfterRemoval(state, world, pos, isMoving);
 	}
 
 	@Override
-	public void neighborChanged(@Nonnull BlockState state, Level world, @Nonnull BlockPos pos, @Nonnull Block block, @Nonnull BlockPos fromPos, boolean isMoving) {
-		if (!world.isClientSide) {
+	protected void neighborChanged(@Nonnull BlockState state, Level world, @Nonnull BlockPos pos, @Nonnull Block block, net.minecraft.world.level.redstone.Orientation orientation, boolean isMoving) {
+		if (!world.isClientSide()) {
 			TileEntityMGUSpawner tile = (TileEntityMGUSpawner) world.getBlockEntity(pos);
 			boolean flag = state.getValue(POWERED);
 			if (flag != world.hasNeighborSignal(pos))
@@ -129,7 +119,7 @@ public class BlockEntitySpawner extends Block implements EntityBlock {
 
 	@Override
 	public void tick(@Nonnull BlockState state, ServerLevel world, @Nonnull BlockPos pos, @Nonnull RandomSource rand) {
-		if (!world.isClientSide) {
+		if (!world.isClientSide()) {
 			TileEntityMGUSpawner tile = (TileEntityMGUSpawner) world.getBlockEntity(pos);
 			if (state.getValue(POWERED) && !world.hasNeighborSignal(pos)) {
 				world.setBlock(pos, state.cycle(POWERED), 2);

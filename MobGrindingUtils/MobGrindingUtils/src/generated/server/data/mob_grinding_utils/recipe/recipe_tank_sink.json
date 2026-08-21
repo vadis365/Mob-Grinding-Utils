@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "E": "minecraft:ender_eye",
+    "H": "minecraft:hopper",
+    "I": "minecraft:iron_bars",
+    "T": "mob_grinding_utils:tank"
+  },
+  "pattern": [
+    " I ",
+    "EHE",
+    " T "
+  ],
+  "result": {
+    "id": "mob_grinding_utils:tank_sink"
+  }
+}

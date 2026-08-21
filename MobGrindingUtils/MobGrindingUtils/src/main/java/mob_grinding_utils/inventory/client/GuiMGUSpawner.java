@@ -4,11 +4,12 @@ import mob_grinding_utils.inventory.server.ContainerMGUSpawner;
 import mob_grinding_utils.network.BEGuiClick;
 import mob_grinding_utils.tile.TileEntityMGUSpawner;
 import mob_grinding_utils.util.RL;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
-import net.neoforged.neoforge.network.PacketDistributor;
+import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 
 import javax.annotation.Nonnull;
 
@@ -17,11 +18,9 @@ public class GuiMGUSpawner extends MGUScreen<ContainerMGUSpawner> {
 	private final TileEntityMGUSpawner tile;
 
 	public GuiMGUSpawner(ContainerMGUSpawner container, Inventory playerInventory, Component name) {
-		super(container, playerInventory, name, RL.mgu("textures/gui/entity_spawner_gui.png"));
+		super(container, playerInventory, name, RL.mgu("textures/gui/entity_spawner_gui.png"), 176, 226);
 		this.container = container;
 		this.tile = this.container.tile;
-		imageHeight = 226;
-		imageWidth = 176;
 	}
 
 	@Override
@@ -31,11 +30,11 @@ public class GuiMGUSpawner extends MGUScreen<ContainerMGUSpawner> {
 
 		Button.OnPress message = button -> {
 			if (button instanceof GuiMGUButton)
-				PacketDistributor.sendToServer(new BEGuiClick(tile.getBlockPos(), ((GuiMGUButton)button).id));
+				ClientPacketDistributor.sendToServer(new BEGuiClick(tile.getBlockPos(), ((GuiMGUButton)button).id));
 		};
 
 		addRenderableWidget(new GuiMGUButton(leftPos + 101, topPos + 113, GuiMGUButton.Size.LARGE, 0, Component.empty(), (button) -> {
-			PacketDistributor.sendToServer(new BEGuiClick(tile.getBlockPos(), 0));
+			ClientPacketDistributor.sendToServer(new BEGuiClick(tile.getBlockPos(), 0));
 			tile.showRenderBox = !tile.showRenderBox;
 		}));
 
@@ -48,29 +47,33 @@ public class GuiMGUSpawner extends MGUScreen<ContainerMGUSpawner> {
 	}
 
 	@Override
-	protected void renderLabels(@Nonnull GuiGraphics gg, int mouseX, int mouseY) {
-		gg.drawString(font, title, 8, imageHeight - 220, 4210752, false);
+	protected void extractLabels(@Nonnull GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
+		graphics.text(font, title, 8, imageHeight - 220, 0xFF404040, false);
 
-		gg.drawString(font, Component.translatable("block.mob_grinding_utils.absorption_hopper_d_u"), 102, 14, 4210752, false);
+		graphics.text(font, Component.translatable("block.mob_grinding_utils.absorption_hopper_d_u"), 102, 14, 0xFF404040, false);
 
-		gg.drawString(font, Component.translatable("block.mob_grinding_utils.absorption_hopper_n_s"), 102, 48, 4210752, false);
-		gg.drawString(font, Component.translatable("block.mob_grinding_utils.absorption_hopper_w_e"), 102, 82, 4210752, false);
+		graphics.text(font, Component.translatable("block.mob_grinding_utils.absorption_hopper_n_s"), 102, 48, 0xFF404040, false);
+		graphics.text(font, Component.translatable("block.mob_grinding_utils.absorption_hopper_w_e"), 102, 82, 0xFF404040, false);
 
-		gg.drawCenteredString(font, !tile.showRenderBox ? "Show Area" : "Hide Area", 135, 117, 14737632);
+		center(graphics, !tile.showRenderBox ? "Show Area" : "Hide Area", 135, 117, 14737632);
 
 		if(tile.getProgress() > 0)
-			gg.drawCenteredString(font, "Attempting Spawn", 52, 98, 4210752);
+			center(graphics, "Attempting Spawn", 52, 98, 0xFF404040);
 
-		gg.drawCenteredString(font, String.valueOf(tile.getoffsetY()), 135, 29, 5285857);//NS
-		gg.drawCenteredString(font, String.valueOf(tile.getoffsetZ()), 135, 63, 5285857);//WE
-		gg.drawCenteredString(font, String.valueOf(tile.getoffsetX()), 135, 97, 5285857);//DU
+		center(graphics, String.valueOf(tile.getoffsetY()), 135, 29, 0xFF50A0A1);//NS
+		center(graphics, String.valueOf(tile.getoffsetZ()), 135, 63, 0xFF50A0A1);//WE
+		center(graphics, String.valueOf(tile.getoffsetX()), 135, 97, 0xFF50A0A1);//DU
 	}
 
 	@Override
-	protected void renderBg(@Nonnull GuiGraphics gg, float partialTicks, int mouseX, int mouseY) {
-		super.renderBg(gg, partialTicks, mouseX, mouseY);
+	public void extractBackground(@Nonnull GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
+		super.extractBackground(graphics, mouseX, mouseY, partialTicks);
 
-		gg.blit(TEX, leftPos + 44, topPos + 71 - tile.getProgressScaled(28), 178, 28 - tile.getProgressScaled(28), 16, 28);
+		graphics.blit(RenderPipelines.GUI_TEXTURED, TEX, leftPos + 44, topPos + 71 - tile.getProgressScaled(28), 178, 28 - tile.getProgressScaled(28), 16, 28, 256, 256);
+	}
+
+	private void center(GuiGraphicsExtractor graphics, String text, int x, int y, int color) {
+		graphics.text(font, text, x - font.width(text) / 2, y, color, false);
 	}
 
 }

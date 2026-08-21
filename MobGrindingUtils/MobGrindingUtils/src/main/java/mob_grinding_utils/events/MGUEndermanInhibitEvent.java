@@ -16,7 +16,7 @@ public class MGUEndermanInhibitEvent {
 	@SuppressWarnings("resource")
 	@SubscribeEvent(priority = EventPriority.LOWEST)
 	public void teleportEvent(EntityTeleportEvent event) {
-		if (event.getEntity().getCommandSenderWorld().isClientSide || event instanceof EntityTeleportEvent.TeleportCommand || event instanceof EntityTeleportEvent.SpreadPlayersCommand)
+		if (event.getEntity().level().isClientSide() || event instanceof EntityTeleportEvent.TeleportCommand || event instanceof EntityTeleportEvent.SpreadPlayersCommand)
 			return;
 		if (event.getEntity() instanceof LivingEntity) {
 			LivingEntity entity = (LivingEntity) event.getEntity();
@@ -38,7 +38,7 @@ public class MGUEndermanInhibitEvent {
 		for (int p1 = n; p1 < o; p1++)
 			for (int q1 = p; q1 < q; q1++)
 				for (int n2 = n1; n2 < o1; n2++) {
-					BlockState state = entity.getCommandSenderWorld().getBlockState(mutablePos.set(p1, q1, n2));
+					BlockState state = entity.level().getBlockState(mutablePos.set(p1, q1, n2));
 					if (state.getBlock() instanceof BlockEnderInhibitorOn && !(state.getBlock() instanceof BlockEnderInhibitorOff))
 						return true;
 				}

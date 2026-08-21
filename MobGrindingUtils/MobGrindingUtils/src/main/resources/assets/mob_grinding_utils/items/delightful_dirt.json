@@ -1,0 +1,7 @@
+{
+  "model": {
+    "type": "minecraft:model",
+    "model": "mob_grinding_utils:block/delightful_dirt",
+    "tints": [{ "type": "minecraft:constant", "value": -4260096 }]
+  }
+}

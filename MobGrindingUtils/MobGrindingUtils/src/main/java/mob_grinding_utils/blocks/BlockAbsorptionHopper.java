@@ -53,7 +53,7 @@ public class BlockAbsorptionHopper extends BaseEntityBlock {
 	@Nullable
 	@Override
 	public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level pLevel, @Nonnull BlockState pState, @Nonnull BlockEntityType<T> pBlockEntityType) {
-		return pLevel.isClientSide ? null : TileEntityAbsorptionHopper::serverTick;
+		return pLevel.isClientSide() ? null : TileEntityAbsorptionHopper::serverTick;
 	}
 
 	@Nonnull
@@ -71,7 +71,7 @@ public class BlockAbsorptionHopper extends BaseEntityBlock {
 	@Nonnull
 	@Override
 	public InteractionResult useWithoutItem(@Nonnull BlockState state, @Nonnull Level world, @Nonnull BlockPos pos, @Nonnull Player player, @Nonnull BlockHitResult hitResult) {
-		if (!world.isClientSide) {
+		if (!world.isClientSide()) {
 			BlockEntity tile = world.getBlockEntity(pos);
 
 			if (tile instanceof TileEntityAbsorptionHopper vacuum) {
@@ -92,7 +92,7 @@ public class BlockAbsorptionHopper extends BaseEntityBlock {
 	@Nonnull
 	@Override
 	public BlockState playerWillDestroy(Level world, @Nonnull BlockPos pos, @Nonnull BlockState state, @Nonnull Player player) {
-		if (!world.isClientSide) {
+		if (!world.isClientSide()) {
 			TileEntityAbsorptionHopper tile = (TileEntityAbsorptionHopper) world.getBlockEntity(pos);
 			if (tile != null) {
 				Containers.dropContents(world, pos, tile);

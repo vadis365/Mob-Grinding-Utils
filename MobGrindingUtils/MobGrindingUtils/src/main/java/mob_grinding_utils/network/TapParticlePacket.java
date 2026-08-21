@@ -6,12 +6,12 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 
 public record TapParticlePacket(BlockPos tilePos) implements CustomPacketPayload {
-	public static final Type<TapParticlePacket> TYPE = new Type<>(ResourceLocation.fromNamespaceAndPath(Reference.MOD_ID, "tap_particle"));
+	public static final Type<TapParticlePacket> TYPE = new Type<>(Identifier.fromNamespaceAndPath(Reference.MOD_ID, "tap_particle"));
 	public static final StreamCodec<RegistryFriendlyByteBuf, TapParticlePacket> STREAM_CODEC = StreamCodec.composite(
 			BlockPos.STREAM_CODEC, TapParticlePacket::tilePos, TapParticlePacket::new
 		);

@@ -1,63 +1,30 @@
 package mob_grinding_utils.client.render;
 
-import com.mojang.blaze3d.platform.GlStateManager;
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import mob_grinding_utils.tile.TileEntityMGUSpawner;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.LevelRenderer;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider.Context;
-import net.minecraft.world.entity.Entity;
+import net.minecraft.client.renderer.feature.ModelFeatureRenderer;
+import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.world.phys.AABB;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
+import net.minecraft.world.phys.Vec3;
+import org.jspecify.annotations.Nullable;
 
-import javax.annotation.Nonnull;
-
-@OnlyIn(Dist.CLIENT)
-public class TileEntityMGUSpawnerRenderer implements BlockEntityRenderer<TileEntityMGUSpawner> {
-
-	public TileEntityMGUSpawnerRenderer(Context context) {
-	}
-
-	@Override
-	public void render(@Nonnull TileEntityMGUSpawner tile, float partialTicks, @Nonnull PoseStack matrixStack, @Nonnull MultiBufferSource buffer, int combinedLight, int combinedOverlay) {
-		if (tile == null || !tile.hasLevel())
-			return;
-
-		if (tile.isOn && tile.hasSpawnEggItem() && tile.getEntityToRender() != null) {
-			float ticks = tile.animationTicks + (tile.animationTicks - tile.prevAnimationTicks)  * partialTicks;
-			Entity entity = tile.getEntityToRender();
-			matrixStack.pushPose();
-			matrixStack.translate(0.5D, 0.75D, 0.5D);
-			RenderSystem.enableBlend();
-			
-			RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
-			//RenderSystem.color4f(1.0F, 1.0F, 1.0F, 0.65F);
-			matrixStack.mulPose(Axis.YP.rotationDegrees(ticks));
-			matrixStack.scale(0.125F, 0.125F, 0.125F);
-			Minecraft.getInstance().getEntityRenderDispatcher().render(entity, 0D, 0D, 0D, 0F, 0F, matrixStack, buffer, combinedLight);
-			//RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-			matrixStack.popPose();
-		}
-
-		if (!tile.showRenderBox)
-			return;
-
-		matrixStack.pushPose();
-		matrixStack.translate(-0.0005D, -0.0005D, -0.0005D);
-		matrixStack.scale(0.999F, 0.999F, 0.999F);
-
-		LevelRenderer.renderLineBox(matrixStack, buffer.getBuffer(RenderType.lines()), tile.getAABBForRender(), 1F, 0F, 0F, 1F);
-		matrixStack.popPose();
-	}
-
-	@Override
-	public AABB getRenderBoundingBox(TileEntityMGUSpawner blockEntity) {
-		return blockEntity.getAABBWithModifiers();
-	}
+public class TileEntityMGUSpawnerRenderer implements BlockEntityRenderer<TileEntityMGUSpawner, MGUBlockEntityRenderState> {
+    public TileEntityMGUSpawnerRenderer(Context context) {}
+    @Override public MGUBlockEntityRenderState createRenderState() { return new MGUBlockEntityRenderState(); }
+    @Override public void extractRenderState(TileEntityMGUSpawner tile, MGUBlockEntityRenderState state, float partialTicks, Vec3 camera, ModelFeatureRenderer.@Nullable CrumblingOverlay breakProgress) {
+        BlockEntityRenderer.super.extractRenderState(tile, state, partialTicks, camera, breakProgress);
+        state.showRenderBox = tile.showRenderBox; state.renderBox = tile.getAABBForRender();
+        state.animation = tile.animationTicks + (tile.animationTicks - tile.prevAnimationTicks) * partialTicks;
+        if (tile.isOn && tile.hasSpawnEggItem() && tile.getEntityToRender() != null) state.spawnedEntity = Minecraft.getInstance().getEntityRenderDispatcher().extractEntity(tile.getEntityToRender(), partialTicks);
+    }
+    @Override public void submit(MGUBlockEntityRenderState state, PoseStack stack, SubmitNodeCollector nodes, CameraRenderState camera) {
+        if (state.spawnedEntity != null) { stack.pushPose(); stack.translate(.5D, .75D, .5D); stack.mulPose(Axis.YP.rotationDegrees(state.animation)); stack.scale(.125F, .125F, .125F); Minecraft.getInstance().getEntityRenderDispatcher().submit(state.spawnedEntity, camera, 0, 0, 0, stack, nodes); stack.popPose(); }
+        if (state.showRenderBox && state.renderBox != null) { stack.pushPose(); stack.translate(-.0005D, -.0005D, -.0005D); stack.scale(.999F, .999F, .999F); MGURenderUtil.submitLineBox(stack, nodes, state.renderBox, 1, 0, 0); stack.popPose(); }
+    }
+    @Override public AABB getRenderBoundingBox(TileEntityMGUSpawner blockEntity) { return blockEntity.getAABBWithModifiers(); }
 }

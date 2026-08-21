@@ -22,17 +22,16 @@ import mob_grinding_utils.tile.TileEntityTank;
 import mob_grinding_utils.tile.TileEntityXPSolidifier;
 import mob_grinding_utils.util.FakePlayerHandler;
 import mob_grinding_utils.util.RL;
-import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
-import net.minecraft.client.renderer.ItemBlockRenderTypes;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.client.renderer.block.FluidModel;
+import net.minecraft.client.resources.model.sprite.Material;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
@@ -52,15 +51,16 @@ import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
-import net.neoforged.neoforge.client.event.RecipesUpdatedEvent;
+import net.neoforged.neoforge.client.event.RecipesReceivedEvent;
+import net.neoforged.neoforge.client.event.RegisterFluidModelsEvent;
 import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
 import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
-import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
 import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent;
+import net.neoforged.neoforge.client.event.RegisterSpecialModelRendererEvent;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.common.crafting.IngredientType;
 import net.neoforged.neoforge.common.util.FakePlayer;
-import net.neoforged.neoforge.event.AddReloadListenerEvent;
+import net.neoforged.neoforge.event.AddServerReloadListenersEvent;
 import net.neoforged.neoforge.event.entity.living.MobEffectEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.level.LevelEvent;
@@ -103,12 +103,12 @@ public class MobGrindingUtils {
 
 	public static final DeferredHolder<ParticleType<?>, SimpleParticleType> PARTICLE_FLUID_XP = PARTICLES.register("fluid_xp_particles", () -> new SimpleParticleType(true));
 
-	public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<?>> CHICKEN_FEED = RECIPES.register(ChickenFeedRecipe.NAME, ChickenFeedRecipe.Serializer::new);
+	public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<ChickenFeedRecipe>> CHICKEN_FEED = RECIPES.register(ChickenFeedRecipe.NAME, () -> ChickenFeedRecipe.Serializer.INSTANCE);
 
 	public static final List<RecipeHolder<SolidifyRecipe>> SOLIDIFIER_RECIPES = new ArrayList<>();
 	public static final List<RecipeHolder<BeheadingRecipe>> BEHEADING_RECIPES = new ArrayList<>();
-	public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<?>> SOLIDIFIER_RECIPE = RECIPES.register(SolidifyRecipe.NAME, SolidifyRecipe.Serializer::new);
-	public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<?>> BEHEADING_RECIPE = RECIPES.register(BeheadingRecipe.NAME, BeheadingRecipe.Serializer::new);
+	public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<SolidifyRecipe>> SOLIDIFIER_RECIPE = RECIPES.register(SolidifyRecipe.NAME, () -> SolidifyRecipe.Serializer.INSTANCE);
+	public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<BeheadingRecipe>> BEHEADING_RECIPE = RECIPES.register(BeheadingRecipe.NAME, () -> BeheadingRecipe.Serializer.INSTANCE);
 	public static final DeferredHolder<RecipeType<?>, RecipeType<SolidifyRecipe>> SOLIDIFIER_TYPE = RECIPE_TYPES.register("solidify", RecipeType::simple);
 	public static final DeferredHolder<RecipeType<?>, RecipeType<BeheadingRecipe>> BEHEADING_TYPE = RECIPE_TYPES.register("beheading", RecipeType::simple);
 
@@ -131,8 +131,9 @@ public class MobGrindingUtils {
 			modBus.addListener(this::menuScreenEvent);
 
 			modBus.addListener(this::onClientExtensions);
-			modBus.addListener(ModColourManager::registerBlockHandlers);
-			modBus.addListener(ModColourManager::registerItemHandlers);
+			modBus.addListener(this::registerFluidModels);
+			modBus.addListener(this::registerSpecialModelRenderers);
+			modBus.addListener(ModColourManager::registerBlockTintSources);
 		}
 
 		modBus.addListener(this::setup);
@@ -159,8 +160,9 @@ public class MobGrindingUtils {
 
 		modBus.addListener(MGUNetwork::register);
 
-		//Central Data generator, called on runData
-		modBus.addListener(Generator::gatherData);
+		// Central data generator, called on runData.
+		modBus.addListener(Generator::gatherServerData);
+		modBus.addListener(Generator::gatherClientData);
 	}
 
 	public void setup(FMLCommonSetupEvent event) {
@@ -177,9 +179,6 @@ public class MobGrindingUtils {
 		neoBus.register(new BossBarHidingEvent());
 		neoBus.addListener(this::worldUnload);
 
-		ItemBlockRenderTypes.setRenderLayer(ModBlocks.FLUID_XP_FLOWING.get(), RenderType.translucent());
-		ItemBlockRenderTypes.setRenderLayer(ModBlocks.FLUID_XP.get(), RenderType.translucent());
-
 		//event.enqueueWork(ModColourManager::registerColourHandlers);
 	}
 
@@ -192,73 +191,26 @@ public class MobGrindingUtils {
 	}
 
 	public void onClientExtensions(RegisterClientExtensionsEvent event) {
-		event.registerItem(new IClientItemExtensions() {
-			@Nonnull
-			@Override
-			public BlockEntityWithoutLevelRenderer getCustomRenderer() {
-				return new TileTankStackItemRenderer(null, null);
-			}
-		}, ModBlocks.JUMBO_TANK.getItem());
-
-		event.registerItem(new IClientItemExtensions() {
-			@Nonnull
-			@Override
-			public BlockEntityWithoutLevelRenderer getCustomRenderer() {
-				return new TileXPSolidifierStackItemRenderer(null, null);
-			}
-		}, ModBlocks.XPSOLIDIFIER.getItem());
-
-		event.registerItem(new IClientItemExtensions() {
-			@Nonnull
-			@Override
-			public BlockEntityWithoutLevelRenderer getCustomRenderer() {
-				return new TileTankStackItemRenderer(null, null);
-			}
-		}, ModBlocks.TANK.getItem());
-
-		event.registerItem(new IClientItemExtensions() {
-			@Nonnull
-			@Override
-			public BlockEntityWithoutLevelRenderer getCustomRenderer() {
-				return new TileTankStackItemRenderer(null, null);
-			}
-		}, ModBlocks.TANK_SINK.getItem());
-
-		event.registerItem(new IClientItemExtensions() {
-			@Nonnull
-			@Override
-			public BlockEntityWithoutLevelRenderer getCustomRenderer() {
-				return new TileSawStackItemRenderer(null, null);
-			}
-		}, ModBlocks.SAW.getItem());
-
-		event.registerFluidType(new IClientFluidTypeExtensions() {
-			ResourceLocation texture = RL.mgu("block/fluid_xp");
-			@Override
-			public ResourceLocation getStillTexture() {
-				return texture;
-			}
-
-			@Override
-			public ResourceLocation getFlowingTexture() {
-				return texture;
-			}
-
-			@Override
-			public int getTintColor(FluidStack stack) {
-				return IClientFluidTypeExtensions.super.getTintColor(stack);
-			}
-
-
-		}, ModBlocks.XPTYPE.get());
+		// Fluid textures are supplied by the 26.1 fluid-state model system.
 	}
 
-	private void serverReloadListener(final AddReloadListenerEvent event) {
-		event.addListener(new ServerResourceReloader(event.getServerResources()));
+	public void registerFluidModels(RegisterFluidModelsEvent event) {
+		Material texture = new Material(RL.mgu("block/fluid_xp"), true);
+		event.register(new FluidModel.Unbaked(texture, texture, texture, state -> 0xFFFFFFFF), ModBlocks.FLUID_XP, ModBlocks.FLUID_XP_FLOWING);
 	}
-	private void clientRecipeReload(final RecipesUpdatedEvent event) {
+
+	public void registerSpecialModelRenderers(RegisterSpecialModelRendererEvent event) {
+		event.register(RL.mgu("tank"), TileTankStackItemRenderer.Unbaked.MAP_CODEC);
+		event.register(RL.mgu("xp_solidifier"), TileXPSolidifierStackItemRenderer.Unbaked.MAP_CODEC);
+		event.register(RL.mgu("saw"), TileSawStackItemRenderer.Unbaked.MAP_CODEC);
+	}
+
+	private void serverReloadListener(final AddServerReloadListenersEvent event) {
+		event.addListener(RL.mgu("recipe_cache"), new ServerResourceReloader(event.getServerResources()));
+	}
+	private void clientRecipeReload(final RecipesReceivedEvent event) {
 		SOLIDIFIER_RECIPES.clear();
-		SOLIDIFIER_RECIPES.addAll(event.getRecipeManager().getAllRecipesFor(SOLIDIFIER_TYPE.get()));
+		SOLIDIFIER_RECIPES.addAll(event.getRecipeMap().byType(SOLIDIFIER_TYPE.get()));
 	}
 
 	private void playerConnected(final PlayerEvent.PlayerLoggedInEvent event) {
@@ -281,7 +233,7 @@ public class MobGrindingUtils {
 	private void sendPersistentData(ServerPlayer playerEntity) {
 		CompoundTag nbt = playerEntity.getPersistentData();
 		if (nbt.contains("MGU_WitherMuffle") || nbt.contains("MGU_DragonMuffle")) {
-			PacketDistributor.sendToPlayer(playerEntity, new FlagSyncPacket(nbt.getBoolean("MGU_WitherMuffle"), nbt.getBoolean("MGU_DragonMuffle")));
+			PacketDistributor.sendToPlayer(playerEntity, new FlagSyncPacket(nbt.getBoolean("MGU_WitherMuffle").orElse(false), nbt.getBoolean("MGU_DragonMuffle").orElse(false)));
 		}
 	}
 
@@ -289,8 +241,8 @@ public class MobGrindingUtils {
 		CompoundTag nbt = event.getOriginal().getPersistentData();
 		if (nbt.contains("MGU_WitherMuffle") || nbt.contains("MGU_DragonMuffle")) {
 			CompoundTag newNBT = event.getEntity().getPersistentData();
-			newNBT.putBoolean("MGU_WitherMuffle", nbt.getBoolean("MGU_WitherMuffle"));
-			newNBT.putBoolean("MGU_DragonMuffle", nbt.getBoolean("MGU_DragonMuffle"));
+			newNBT.putBoolean("MGU_WitherMuffle", nbt.getBoolean("MGU_WitherMuffle").orElse(false));
+			newNBT.putBoolean("MGU_DragonMuffle", nbt.getBoolean("MGU_DragonMuffle").orElse(false));
 		}
 	}
 
@@ -302,20 +254,20 @@ public class MobGrindingUtils {
 
 	public static DamageSource getSpikeDamage(Level level) {
 		if (SPIKE_DAMAGE == null)
-			SPIKE_DAMAGE = new DamageSource(level.registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(MobGrindingUtils.SPIKE_TYPE));
+			SPIKE_DAMAGE = new DamageSource(level.registryAccess().lookupOrThrow(Registries.DAMAGE_TYPE).get(MobGrindingUtils.SPIKE_TYPE).orElseThrow());
 
 		return SPIKE_DAMAGE;
 	}
 
 	public void registerCaps(final RegisterCapabilitiesEvent evt) {
-		evt.registerBlockEntity(Capabilities.FluidHandler.BLOCK, ModBlocks.TANK.getTileEntityType(), TileEntityTank::getTank);
-		evt.registerBlockEntity(Capabilities.FluidHandler.BLOCK, ModBlocks.JUMBO_TANK.getTileEntityType(), TileEntityTank::getTank);
-		evt.registerBlockEntity(Capabilities.FluidHandler.BLOCK, ModBlocks.TANK_SINK.getTileEntityType(), TileEntityTank::getTank);
-		evt.registerBlockEntity(Capabilities.FluidHandler.BLOCK, ModBlocks.XPSOLIDIFIER.getTileEntityType(), TileEntityXPSolidifier::getTank);
-		evt.registerBlockEntity(Capabilities.ItemHandler.BLOCK, ModBlocks.XPSOLIDIFIER.getTileEntityType(), TileEntityXPSolidifier::getOutput);
-		evt.registerBlockEntity(Capabilities.ItemHandler.BLOCK, ModBlocks.ENTITY_SPAWNER.getTileEntityType(), TileEntityMGUSpawner::getFuelSlot);
-		evt.registerBlockEntity(Capabilities.ItemHandler.BLOCK, ModBlocks.ABSORPTION_HOPPER.getTileEntityType(), TileEntityAbsorptionHopper::getItemHandler);
-		evt.registerBlockEntity(Capabilities.FluidHandler.BLOCK, ModBlocks.ABSORPTION_HOPPER.getTileEntityType(), TileEntityAbsorptionHopper::getTank);
+		evt.registerBlockEntity(Capabilities.Fluid.BLOCK, ModBlocks.TANK.getTileEntityType(), (tile, side) -> tile.getTank(side));
+		evt.registerBlockEntity(Capabilities.Fluid.BLOCK, ModBlocks.JUMBO_TANK.getTileEntityType(), (tile, side) -> tile.getTank(side));
+		evt.registerBlockEntity(Capabilities.Fluid.BLOCK, ModBlocks.TANK_SINK.getTileEntityType(), (tile, side) -> tile.getTank(side));
+		evt.registerBlockEntity(Capabilities.Fluid.BLOCK, ModBlocks.XPSOLIDIFIER.getTileEntityType(), (tile, side) -> tile.getTank(side));
+		evt.registerBlockEntity(Capabilities.Item.BLOCK, ModBlocks.XPSOLIDIFIER.getTileEntityType(), (tile, side) -> tile.getOutput(side));
+		evt.registerBlockEntity(Capabilities.Item.BLOCK, ModBlocks.ENTITY_SPAWNER.getTileEntityType(), (tile, side) -> tile.getFuelSlot(side));
+		evt.registerBlockEntity(Capabilities.Item.BLOCK, ModBlocks.ABSORPTION_HOPPER.getTileEntityType(), (tile, side) -> tile.getItemHandler(side));
+		evt.registerBlockEntity(Capabilities.Fluid.BLOCK, ModBlocks.ABSORPTION_HOPPER.getTileEntityType(), (tile, side) -> tile.getTank(side));
 	}
 
 	public void effectApplicable(MobEffectEvent.Applicable event) {

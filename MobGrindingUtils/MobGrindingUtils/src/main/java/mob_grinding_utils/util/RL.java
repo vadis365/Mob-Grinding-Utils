@@ -1,7 +1,7 @@
 package mob_grinding_utils.util;
 
 import mob_grinding_utils.Reference;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.Contract;
 
 import javax.annotation.Nonnull;
@@ -9,39 +9,39 @@ import javax.annotation.Nonnull;
 public class RL {
 
     /**
-     * Creates a ResourceLocation with the specified namespace and path.
+     * Creates a Identifier with the specified namespace and path.
      *
      * @param namespace the namespace for the resource location
      * @param path the path for the resource location
-     * @return a new ResourceLocation instance
+     * @return a new Identifier instance
      */
     @Nonnull
     @Contract("_, _ -> new")
-    public static ResourceLocation rl(String namespace, String path) {
-        return ResourceLocation.fromNamespaceAndPath(namespace, path);
+    public static Identifier rl(String namespace, String path) {
+        return Identifier.fromNamespaceAndPath(namespace, path);
     }
 
     /**
-     * Creates a ResourceLocation with the mob_grinding_utils namespace from Reference.MOD_ID and the specified path.
+     * Creates a Identifier with the mob_grinding_utils namespace from Reference.MOD_ID and the specified path.
      *
      * @param path the path for the resource location
-     * @return a new ResourceLocation instance
+     * @return a new Identifier instance
      */
     @Nonnull
     @Contract("_ -> new")
-    public static ResourceLocation mgu(String path) {
-        return ResourceLocation.fromNamespaceAndPath(Reference.MOD_ID, path);
+    public static Identifier mgu(String path) {
+        return Identifier.fromNamespaceAndPath(Reference.MOD_ID, path);
     }
 
     /**
-     * Creates a ResourceLocation with the minecraft namespace and the specified path.
+     * Creates a Identifier with the minecraft namespace and the specified path.
      *
      * @param path the path for the resource location
-     * @return a new ResourceLocation instance
+     * @return a new Identifier instance
      */
     @Nonnull
     @Contract("_ -> new")
-    public static ResourceLocation mc(String path) {
-        return ResourceLocation.fromNamespaceAndPath("minecraft", path);
+    public static Identifier mc(String path) {
+        return Identifier.fromNamespaceAndPath("minecraft", path);
     }
 }

@@ -3,7 +3,7 @@ package mob_grinding_utils.util;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.data.recipes.RecipeOutput;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.crafting.Recipe;
 import net.neoforged.neoforge.common.conditions.ICondition;
 
@@ -13,8 +13,8 @@ import java.util.function.Function;
 @SuppressWarnings("unchecked")
 public class RecipeInjector<T extends Recipe<?>> implements RecipeOutput {
     private final RecipeOutput inner;
-    private final Function<T, ? extends T> constructor;
-    public RecipeInjector(RecipeOutput output, Function<T, ? extends T> constructorIn) {
+    private final Function<T, ? extends Recipe<?>> constructor;
+    public RecipeInjector(RecipeOutput output, Function<T, ? extends Recipe<?>> constructorIn) {
         inner = output;
         this.constructor = constructorIn;
     }
@@ -26,7 +26,12 @@ public class RecipeInjector<T extends Recipe<?>> implements RecipeOutput {
     }
 
     @Override
-    public void accept(@Nonnull ResourceLocation resourceLocation, @Nonnull Recipe<?> recipe, @Nullable AdvancementHolder advancementHolder, @Nonnull ICondition... iConditions) {
-        inner.accept(resourceLocation, constructor.apply((T) recipe), advancementHolder, iConditions);
+    public void includeRootAdvancement() {
+        inner.includeRootAdvancement();
+    }
+
+    @Override
+    public void accept(@Nonnull ResourceKey<Recipe<?>> id, @Nonnull Recipe<?> recipe, @Nullable AdvancementHolder advancementHolder, @Nonnull ICondition... conditions) {
+        inner.accept(id, constructor.apply((T) recipe), advancementHolder, conditions);
     }
 }

@@ -1,138 +1,41 @@
 package mob_grinding_utils.client.render;
 
-import com.mojang.blaze3d.platform.GlStateManager;
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.serialization.MapCodec;
+import java.util.function.Consumer;
 import mob_grinding_utils.client.ModelLayers;
 import mob_grinding_utils.components.FluidContents;
 import mob_grinding_utils.components.MGUComponents;
 import mob_grinding_utils.models.ModelXPSolidifier;
 import mob_grinding_utils.util.RL;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.model.geom.EntityModelSet;
-import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
+import net.minecraft.client.renderer.SubmitNodeCollector;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
+import net.minecraft.client.renderer.special.SpecialModelRenderer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.inventory.InventoryMenu;
-import net.minecraft.world.item.ItemDisplayContext;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
-import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.neoforged.neoforge.fluids.FluidStack;
+import org.joml.Vector3fc;
+import org.jspecify.annotations.Nullable;
 
-@OnlyIn(Dist.CLIENT)
-public class TileXPSolidifierStackItemRenderer extends BlockEntityWithoutLevelRenderer {
-
-	private static final ResourceLocation TEXTURE = RL.mgu("textures/tiles/xp_solidifier_no_push.png");
-	private final ModelXPSolidifier xp_solidifier_model;
-	private FluidStack fluidStack;
-
-	public TileXPSolidifierStackItemRenderer(BlockEntityRenderDispatcher renderer, EntityModelSet modelSet) {
-		super(renderer, modelSet);
-		EntityModelSet EntityModelSetThatIsntNULL = Minecraft.getInstance().getEntityModels();
-		xp_solidifier_model = new ModelXPSolidifier(EntityModelSetThatIsntNULL.bakeLayer(ModelLayers.XPSOLIDIFIER));
-	}
-
-	@Override
-	public void renderByItem(ItemStack stack, ItemDisplayContext transformType, PoseStack matrixStack, MultiBufferSource bufferIn, int combinedLight, int combinedOverlayIn) {
-		matrixStack.pushPose();
-		matrixStack.translate(0.5D, 1.5D, 0.5D);
-		matrixStack.scale(-0.9999F, -0.9999F, 0.9999F);
-		RenderSystem.enableBlend();
-		RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
-	
-		xp_solidifier_model.renderToBuffer(matrixStack, bufferIn.getBuffer(RenderType.entitySmoothCutout(TEXTURE)), combinedLight, OverlayTexture.NO_OVERLAY, 0xFFFFFFFF);
-
-		xp_solidifier_model.renderExport(matrixStack, bufferIn.getBuffer(RenderType.entitySmoothCutout(TEXTURE)), combinedLight, OverlayTexture.NO_OVERLAY, 0xFFFFFFFF);
-
-		xp_solidifier_model.renderRack(matrixStack, bufferIn.getBuffer(RenderType.entitySmoothCutout(TEXTURE)), combinedLight, OverlayTexture.NO_OVERLAY, 0xFFFFFFFF);
-
-		RenderSystem.disableBlend();
-	    RenderSystem.defaultBlendFunc();
-		matrixStack.popPose();
-
-		fluidStack = stack.getOrDefault(MGUComponents.FLUID, FluidContents.EMPTY).get();
-
-		float fluidLevel = fluidStack.getAmount();
-		if (fluidLevel < 1)
-			return;
-		float tankMax = 16000F;
-		float height = (0.46875F / tankMax) * fluidLevel; // volumes hardcoded until config
-
-		var fluidExtensions = IClientFluidTypeExtensions.of(fluidStack.getFluid());
-		
-		TextureAtlasSprite fluidStillSprite = Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(fluidExtensions.getStillTexture());
-		VertexConsumer buffer = bufferIn.getBuffer(RenderType.translucent());
-		int fluidColor = fluidExtensions.getTintColor();
-		matrixStack.pushPose();
-		matrixStack.translate(0D, 0D, 0D);
-		float xMax, zMax, xMin, zMin, yMin = 0;
-		xMax = 1.984375F;
-		zMax = 1.984375F;
-		xMin = 0.015625F;
-		zMin = 0.015625F;
-		yMin = 0.015625F;
-		float alpha = 1F;
-		float red = (fluidColor >> 16 & 0xFF) / 255.0F;
-		float green = (fluidColor >> 8 & 0xFF) / 255.0F;
-		float blue = (fluidColor & 0xFF) / 255.0F;
-		renderCuboid(buffer, matrixStack, xMax, xMin, yMin, height, zMin, zMax, fluidStillSprite, red, green, blue, alpha, combinedLight);
-		matrixStack.popPose();
-	}
-
-	private void renderCuboid(VertexConsumer buffer, PoseStack matrixStack, float xMax, float xMin, float yMin, float height, float zMin, float zMax, TextureAtlasSprite textureAtlasSprite, float red, float green, float blue, float alpha, int combinedLight) {
-
-		float uMin = textureAtlasSprite.getU0();
-		float uMax = textureAtlasSprite.getU1();
-		float vMin = textureAtlasSprite.getV0();
-		float vMax = textureAtlasSprite.getV1();
-
-		float vHeight = vMax - vMin;
-
-		// top
-		addVertexWithUV(buffer, matrixStack, xMax, height, zMax, uMax, vMin, red, green, blue, alpha, combinedLight);
-		addVertexWithUV(buffer, matrixStack, xMax, height, zMin, uMin, vMin, red, green, blue, alpha, combinedLight);
-		addVertexWithUV(buffer, matrixStack, xMin, height, zMin, uMin, vMax, red, green, blue, alpha, combinedLight);
-		addVertexWithUV(buffer, matrixStack, xMin, height, zMax, uMax, vMax, red, green, blue, alpha, combinedLight);
-
-		// north
-		addVertexWithUV(buffer, matrixStack, xMax, yMin, zMin, uMax, vMin, red, green, blue, alpha, combinedLight);
-		addVertexWithUV(buffer, matrixStack, xMin, yMin, zMin, uMin, vMin, red, green, blue, alpha, combinedLight);
-		addVertexWithUV(buffer, matrixStack, xMin, height, zMin, uMin, vMin + (vHeight * height), red, green, blue, alpha, combinedLight);
-		addVertexWithUV(buffer, matrixStack, xMax, height, zMin, uMax, vMin + (vHeight * height), red, green, blue, alpha, combinedLight);
-
-		// south
-		addVertexWithUV(buffer, matrixStack, xMax, yMin, zMax, uMin, vMin, red, green, blue, alpha, combinedLight);
-		addVertexWithUV(buffer, matrixStack, xMax, height, zMax, uMin, vMin + (vHeight * height), red, green, blue, alpha, combinedLight);
-		addVertexWithUV(buffer, matrixStack, xMin, height, zMax, uMax, vMin + (vHeight * height), red, green, blue, alpha, combinedLight);
-		addVertexWithUV(buffer, matrixStack, xMin, yMin, zMax, uMax, vMin, red, green, blue, alpha, combinedLight);
-
-		// east
-		addVertexWithUV(buffer, matrixStack, xMax, yMin, zMin, uMin, vMin, red, green, blue, alpha, combinedLight);
-		addVertexWithUV(buffer, matrixStack, xMax, height, zMin, uMin, vMin + (vHeight * height), red, green, blue, alpha, combinedLight);
-		addVertexWithUV(buffer, matrixStack, xMax, height, zMax, uMax, vMin + (vHeight * height), red, green, blue, alpha, combinedLight);
-		addVertexWithUV(buffer, matrixStack, xMax, yMin, zMax, uMax, vMin, red, green, blue, alpha, combinedLight);
-
-		// west
-		addVertexWithUV(buffer, matrixStack, xMin, yMin, zMax, uMin, vMin, red, green, blue, alpha, combinedLight);
-		addVertexWithUV(buffer, matrixStack, xMin, height, zMax, uMin, vMin + (vHeight * height), red, green, blue, alpha, combinedLight);
-		addVertexWithUV(buffer, matrixStack, xMin, height, zMin, uMax, vMin + (vHeight * height), red, green, blue, alpha, combinedLight);
-		addVertexWithUV(buffer, matrixStack, xMin, yMin, zMin, uMax, vMin, red, green, blue, alpha, combinedLight);
-
-		// down
-		addVertexWithUV(buffer, matrixStack, xMax, yMin, zMin, uMax, vMin, red, green, blue, alpha, combinedLight);
-		addVertexWithUV(buffer, matrixStack, xMax, yMin, zMax, uMin, vMin, red, green, blue, alpha, combinedLight);
-		addVertexWithUV(buffer, matrixStack, xMin, yMin, zMax, uMin, vMax, red, green, blue, alpha, combinedLight);
-		addVertexWithUV(buffer, matrixStack, xMin, yMin, zMin, uMax, vMax, red, green, blue, alpha, combinedLight);
-	}
-
-	private void addVertexWithUV(VertexConsumer buffer, PoseStack matrixStack, float x, float y, float z, float u, float v, float red, float green, float blue, float alpha, int combinedLight) {
-		buffer.addVertex(matrixStack.last().pose(), x / 2f, y, z / 2f).setColor(red, green, blue, alpha).setUv(u, v).setUv2(combinedLight, 240).setNormal(1, 0, 0);
-	}
+/** Component-aware item renderer replacing the removed BEWR path. */
+public final class TileXPSolidifierStackItemRenderer implements SpecialModelRenderer<FluidStack> {
+    private static final Identifier TEXTURE = RL.mgu("textures/tiles/xp_solidifier_no_push.png");
+    private final ModelXPSolidifier model;
+    private TileXPSolidifierStackItemRenderer(BakingContext context) { model = new ModelXPSolidifier(context.entityModelSet().bakeLayer(ModelLayers.XPSOLIDIFIER)); }
+    @Override public @Nullable FluidStack extractArgument(ItemStack stack) { return stack.getOrDefault(MGUComponents.FLUID, FluidContents.EMPTY).get().copy(); }
+    @Override public void submit(@Nullable FluidStack fluid, PoseStack p, SubmitNodeCollector n, int light, int overlay, boolean foil, int outline) {
+        p.pushPose(); p.translate(.5D,1.5D,.5D); p.scale(-.9999F,-.9999F,.9999F);
+        n.submitModelPart(model.tank,p,RenderTypes.entityCutout(TEXTURE),light,overlay,null,false,foil,-1,null,outline); n.submitModelPart(model.top,p,RenderTypes.entityCutout(TEXTURE),light,overlay,null,false,foil,-1,null,outline); n.submitModelPart(model.rack,p,RenderTypes.entityCutout(TEXTURE),light,overlay,null,false,foil,-1,null,outline); p.popPose();
+        if (fluid == null || fluid.isEmpty()) return; float height = .46875F / 16_000F * fluid.getAmount(); if (height <= 0) return;
+        TextureAtlasSprite sprite = Minecraft.getInstance().getModelManager().getFluidStateModelSet().get(fluid.getFluid().defaultFluidState()).stillMaterial().sprite(); MGURenderUtil.submitFluidCuboid(p,n,sprite,-1,light,1.984375F,.015625F,.015625F,height,.015625F,1.984375F);
+    }
+    @Override public void getExtents(Consumer<Vector3fc> output) { model.tank.getExtentsForGui(new PoseStack(), output); }
+    public record Unbaked() implements SpecialModelRenderer.Unbaked<FluidStack> {
+        public static final MapCodec<Unbaked> MAP_CODEC = MapCodec.unit(new Unbaked());
+        @Override public MapCodec<Unbaked> type() { return MAP_CODEC; }
+        @Override public TileXPSolidifierStackItemRenderer bake(BakingContext context) { return new TileXPSolidifierStackItemRenderer(context); }
+    }
 }

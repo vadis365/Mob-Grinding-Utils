@@ -5,6 +5,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -38,11 +39,13 @@ public class BlockWitherMuffler extends Block {
 	@Override
 	public InteractionResult useWithoutItem(BlockState state, Level world, @Nonnull BlockPos pos, @Nonnull Player player, @Nonnull BlockHitResult hit) {
 		boolean swap = !state.getValue(MODE);
-		if (!world.isClientSide)
+		if (!world.isClientSide())
 			world.setBlock(pos, state.setValue(MODE, swap), 3);
-		CompoundTag nbt = player.getPersistentData();
-		nbt.putBoolean("MGU_WitherMuffle", swap);
-		player.displayClientMessage(Component.literal(swap ? "Now hiding Wither boss bars.":"Now showing Wither boss bars."), true);
+		if (player instanceof ServerPlayer serverPlayer) {
+			CompoundTag nbt = serverPlayer.getPersistentData();
+			nbt.putBoolean("MGU_WitherMuffle", swap);
+			serverPlayer.sendSystemMessage(Component.literal(swap ? "Now hiding Wither boss bars.":"Now showing Wither boss bars."), true);
+		}
 		return InteractionResult.SUCCESS;
 	}
 }

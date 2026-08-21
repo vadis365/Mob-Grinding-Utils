@@ -11,16 +11,14 @@ import net.minecraft.client.model.geom.builders.CubeListBuilder;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 
-@OnlyIn(Dist.CLIENT)
 public class ModelTankBlock extends Model {
     public ModelPart tank_box;
 
 	public ModelTankBlock(ModelPart root) {
-		super(RenderType::entitySolid);
+		super(root, texture -> RenderTypes.entitySolid((net.minecraft.resources.Identifier) texture));
 		this.tank_box = root.getChild("tank_box");
 	}
 	
@@ -31,8 +29,4 @@ public class ModelTankBlock extends Model {
 		return LayerDefinition.create(meshdefinition, 64, 32);
 	}
 
-	@Override
-	public void renderToBuffer(PoseStack matrixStackIn, VertexConsumer bufferIn, int packedLightIn, int packedOverlayIn, int color) {
-		tank_box.render(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn, color);
-	}
 }

@@ -1,5 +1,5 @@
 {
-    "parent": "block/cube_all",
+    "parent": "block/block",
     "render_type": "cutout",
     "textures": {
         "0": "mob_grinding_utils:block/ender_inhibitor_off",

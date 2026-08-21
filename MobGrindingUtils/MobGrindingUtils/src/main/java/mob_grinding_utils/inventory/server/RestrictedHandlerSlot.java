@@ -1,18 +1,18 @@
 package mob_grinding_utils.inventory.server;
 
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.items.IItemHandler;
-import net.neoforged.neoforge.items.SlotItemHandler;
+import net.neoforged.neoforge.transfer.item.ItemStacksResourceHandler;
+import net.neoforged.neoforge.transfer.item.ResourceHandlerSlot;
 
 import javax.annotation.Nonnull;
 import java.util.function.Predicate;
 
-public class RestrictedHandlerSlot extends SlotItemHandler {
+public class RestrictedHandlerSlot extends ResourceHandlerSlot {
     Predicate<ItemStack> item;
     int maxItems;
 
-    public RestrictedHandlerSlot(IItemHandler itemHandler, int index, int xPosition, int yPosition, Predicate<ItemStack> itemStackPredicate, int max) {
-        super(itemHandler, index, xPosition, yPosition);
+    public RestrictedHandlerSlot(ItemStacksResourceHandler itemHandler, int index, int xPosition, int yPosition, Predicate<ItemStack> itemStackPredicate, int max) {
+        super(itemHandler, itemHandler::set, index, xPosition, yPosition);
         item = itemStackPredicate;
         maxItems = max;
     }

@@ -14,16 +14,16 @@ import mob_grinding_utils.models.ModelSawBlade;
 import mob_grinding_utils.models.ModelTankBlock;
 import mob_grinding_utils.models.ModelXPSolidifier;
 import net.minecraft.client.model.geom.ModelLayerLocation;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 
 public class ModelLayers {
-    public static final ModelLayerLocation SAW_BASE = new ModelLayerLocation(ResourceLocation.fromNamespaceAndPath(Reference.MOD_ID, "saw_base"), "saw_base");
-    public static final ModelLayerLocation SAW_BLADE = new ModelLayerLocation(ResourceLocation.fromNamespaceAndPath(Reference.MOD_ID, "saw_blade"), "saw_blade");
-    public static final ModelLayerLocation ABSORPTION_HOPPER = new ModelLayerLocation(ResourceLocation.fromNamespaceAndPath(Reference.MOD_ID, "absorption_hopper"), "absorption_hopper");
-    public static final ModelLayerLocation TANK = new ModelLayerLocation(ResourceLocation.fromNamespaceAndPath(Reference.MOD_ID, "tank"), "tank");
-    public static final ModelLayerLocation XPSOLIDIFIER = new ModelLayerLocation(ResourceLocation.fromNamespaceAndPath(Reference.MOD_ID, "xp_solidifier"), "xp_solidifier");
+    public static final ModelLayerLocation SAW_BASE = new ModelLayerLocation(Identifier.fromNamespaceAndPath(Reference.MOD_ID, "saw_base"), "saw_base");
+    public static final ModelLayerLocation SAW_BLADE = new ModelLayerLocation(Identifier.fromNamespaceAndPath(Reference.MOD_ID, "saw_blade"), "saw_blade");
+    public static final ModelLayerLocation ABSORPTION_HOPPER = new ModelLayerLocation(Identifier.fromNamespaceAndPath(Reference.MOD_ID, "absorption_hopper"), "absorption_hopper");
+    public static final ModelLayerLocation TANK = new ModelLayerLocation(Identifier.fromNamespaceAndPath(Reference.MOD_ID, "tank"), "tank");
+    public static final ModelLayerLocation XPSOLIDIFIER = new ModelLayerLocation(Identifier.fromNamespaceAndPath(Reference.MOD_ID, "xp_solidifier"), "xp_solidifier");
 
     public static void init(IEventBus bus) {
         bus.addListener(ModelLayers::registerEntityRenderers);

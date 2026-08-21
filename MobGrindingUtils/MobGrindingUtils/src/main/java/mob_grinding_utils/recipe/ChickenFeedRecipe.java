@@ -5,28 +5,26 @@ import com.mojang.serialization.MapCodec;
 import mob_grinding_utils.MobGrindingUtils;
 import mob_grinding_utils.ModItems;
 import mob_grinding_utils.components.MGUComponents;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CraftingInput;
+import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.ShapelessRecipe;
 
 import javax.annotation.Nonnull;
 
 
-public class ChickenFeedRecipe extends ShapelessRecipe {
+public class ChickenFeedRecipe implements CraftingRecipe {
     public static final String NAME = "chicken_feed";
-    public ChickenFeedRecipe(ShapelessRecipe recipe) {
-        super(recipe.getGroup(), recipe.category(), recipe.getResultItem(RegistryAccess.EMPTY), recipe.getIngredients());
-    }
+    private final ShapelessRecipe recipe;
+    public ChickenFeedRecipe(ShapelessRecipe recipe) { this.recipe = recipe; }
 
     @Nonnull
     @Override
-    public ItemStack assemble(@Nonnull CraftingInput inv, @Nonnull HolderLookup.Provider lol) {
-        ItemStack result = super.assemble(inv, lol);
+    public ItemStack assemble(@Nonnull CraftingInput inv) {
+        ItemStack result = recipe.assemble(inv);
 
         ItemStack swabItem = ItemStack.EMPTY;
 
@@ -49,34 +47,32 @@ public class ChickenFeedRecipe extends ShapelessRecipe {
 
     @Nonnull
     @Override
-    public RecipeSerializer<?> getSerializer() {
+    public RecipeSerializer<ChickenFeedRecipe> getSerializer() {
         return MobGrindingUtils.CHICKEN_FEED.get();
     }
 
-    public static class Serializer implements RecipeSerializer<ChickenFeedRecipe> {
-        public static final MapCodec<ChickenFeedRecipe> CODEC = ShapelessRecipe.Serializer.CODEC.xmap(ChickenFeedRecipe::new, recipe -> recipe);
+    @Override public boolean matches(CraftingInput input, net.minecraft.world.level.Level level) { return recipe.matches(input, level); }
+    @Override public net.minecraft.world.item.crafting.CraftingBookCategory category() { return recipe.category(); }
+    @Override public String group() { return recipe.group(); }
+    @Override public boolean showNotification() { return recipe.showNotification(); }
+    @Override public net.minecraft.world.item.crafting.PlacementInfo placementInfo() { return recipe.placementInfo(); }
+    @Override public net.minecraft.world.item.crafting.RecipeBookCategory recipeBookCategory() { return recipe.recipeBookCategory(); }
+
+    public static final class Serializer {
+        public static final MapCodec<ChickenFeedRecipe> CODEC = ShapelessRecipe.MAP_CODEC.xmap(ChickenFeedRecipe::new, recipe -> recipe.recipe);
         public static final StreamCodec<RegistryFriendlyByteBuf, ChickenFeedRecipe> STREAM_CODEC = StreamCodec.of(
             ChickenFeedRecipe.Serializer::toNetwork, ChickenFeedRecipe.Serializer::fromNetwork
         );
+        public static final RecipeSerializer<ChickenFeedRecipe> INSTANCE = new RecipeSerializer<>(CODEC, STREAM_CODEC);
 
         @Nonnull
-        @Override
-        public MapCodec<ChickenFeedRecipe> codec() {
-            return CODEC;
-        }
-
-        @Override
-        public StreamCodec<RegistryFriendlyByteBuf, ChickenFeedRecipe> streamCodec() {
-            return STREAM_CODEC;
-        }
-
         public static ChickenFeedRecipe fromNetwork(@Nonnull RegistryFriendlyByteBuf buffer) {
-            return new ChickenFeedRecipe(RecipeSerializer.SHAPELESS_RECIPE.streamCodec().decode(buffer));
+            return new ChickenFeedRecipe(ShapelessRecipe.STREAM_CODEC.decode(buffer));
         }
 
         public static void toNetwork(@Nonnull RegistryFriendlyByteBuf buffer, @Nonnull ChickenFeedRecipe recipe) {
             try {
-                RecipeSerializer.SHAPELESS_RECIPE.streamCodec().encode(buffer, recipe);
+                ShapelessRecipe.STREAM_CODEC.encode(buffer, recipe.recipe);
             }
             catch (Exception exception) {
                 MobGrindingUtils.LOGGER.info("Error writing "+ NAME +" Recipe to packet: ", exception);

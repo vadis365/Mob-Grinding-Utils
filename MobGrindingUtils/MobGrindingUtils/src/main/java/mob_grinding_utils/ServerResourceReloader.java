@@ -17,8 +17,8 @@ public class ServerResourceReloader implements ResourceManagerReloadListener {
     public void onResourceManagerReload(@Nonnull ResourceManager resourceManager) {
         RecipeManager recipeManager = this.dataPackRegistries.getRecipeManager();
         MobGrindingUtils.SOLIDIFIER_RECIPES.clear();
-        MobGrindingUtils.SOLIDIFIER_RECIPES.addAll(recipeManager.getAllRecipesFor(MobGrindingUtils.SOLIDIFIER_TYPE.get()));
+		MobGrindingUtils.SOLIDIFIER_RECIPES.addAll(recipeManager.getRecipes().stream().filter(recipe -> recipe.value().getType() == MobGrindingUtils.SOLIDIFIER_TYPE.get()).map(recipe -> (net.minecraft.world.item.crafting.RecipeHolder<mob_grinding_utils.recipe.SolidifyRecipe>) recipe).toList());
         MobGrindingUtils.BEHEADING_RECIPES.clear();
-        MobGrindingUtils.BEHEADING_RECIPES.addAll(recipeManager.getAllRecipesFor(MobGrindingUtils.BEHEADING_TYPE.get()));
+		MobGrindingUtils.BEHEADING_RECIPES.addAll(recipeManager.getRecipes().stream().filter(recipe -> recipe.value().getType() == MobGrindingUtils.BEHEADING_TYPE.get()).map(recipe -> (net.minecraft.world.item.crafting.RecipeHolder<mob_grinding_utils.recipe.BeheadingRecipe>) recipe).toList());
     }
 }
