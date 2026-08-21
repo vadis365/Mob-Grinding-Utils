@@ -377,16 +377,22 @@ public class TileEntityXPSolidifier extends BlockEntity implements MenuProvider,
 	@Override
 	protected void saveAdditional(@Nonnull ValueOutput output) {
 		super.saveAdditional(output);
-		output.store("fluid", FluidStack.CODEC, tank.stack());
-		output.store("input0", ItemStack.CODEC, stack(inputSlots, 0));
-		output.store("input1", ItemStack.CODEC, stack(inputSlots, 1));
-		output.store("output", ItemStack.CODEC, stack(outputSlot, 0));
+		if (!tank.stack().isEmpty())
+			output.store("fluid", FluidStack.CODEC, tank.stack());
+		storeStack(output, "input0", stack(inputSlots, 0));
+		storeStack(output, "input1", stack(inputSlots, 1));
+		storeStack(output, "output", stack(outputSlot, 0));
 		output.putString("outputDirection", outputDirection.getSerializedName());
 		output.putBoolean("isOn", isOn);
 		output.putBoolean("active", active);
 		output.putInt("moulding_progress", moulding_progress);
 		if (currentRecipe != null)
 			output.putString("currentRecipe", currentRecipe.id().toString());
+	}
+
+	private static void storeStack(ValueOutput output, String key, ItemStack stack) {
+		if (!stack.isEmpty())
+			output.store(key, ItemStack.CODEC, stack);
 	}
 
 	@Nonnull

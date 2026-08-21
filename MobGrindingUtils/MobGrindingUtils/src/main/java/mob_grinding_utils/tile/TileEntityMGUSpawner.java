@@ -295,14 +295,19 @@ public class TileEntityMGUSpawner extends BlockEntity implements MenuProvider, B
 	protected void saveAdditional(@Nonnull ValueOutput output) {
 		super.saveAdditional(output);
 		for (int slot = 0; slot < 4; slot++)
-			output.store("input" + slot, ItemStack.CODEC, stack(inputSlots, slot));
-		output.store("fuel", ItemStack.CODEC, stack(fuelSlot, 0));
+			storeStack(output, "input" + slot, stack(inputSlots, slot));
+		storeStack(output, "fuel", stack(fuelSlot, 0));
 		output.putBoolean("isOn", isOn);
 		output.putBoolean("showRenderBox", showRenderBox);
 		output.putInt("offsetX", offsetX);
 		output.putInt("offsetY", offsetY);
 		output.putInt("offsetZ", offsetZ);
 		output.putInt("spawning_progress", spawning_progress);
+	}
+
+	private static void storeStack(ValueOutput output, String key, ItemStack stack) {
+		if (!stack.isEmpty())
+			output.store(key, ItemStack.CODEC, stack);
 	}
 
 	@Nonnull
