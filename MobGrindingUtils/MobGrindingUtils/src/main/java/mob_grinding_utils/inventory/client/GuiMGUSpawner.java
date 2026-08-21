@@ -48,21 +48,21 @@ public class GuiMGUSpawner extends MGUScreen<ContainerMGUSpawner> {
 
 	@Override
 	protected void extractLabels(@Nonnull GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
-		graphics.text(font, title, 8, imageHeight - 220, 4210752, false);
+		graphics.text(font, title, 8, imageHeight - 220, 0xFF404040, false);
 
-		graphics.text(font, Component.translatable("block.mob_grinding_utils.absorption_hopper_d_u"), 102, 14, 4210752, false);
+		graphics.text(font, Component.translatable("block.mob_grinding_utils.absorption_hopper_d_u"), 102, 14, 0xFF404040, false);
 
-		graphics.text(font, Component.translatable("block.mob_grinding_utils.absorption_hopper_n_s"), 102, 48, 4210752, false);
-		graphics.text(font, Component.translatable("block.mob_grinding_utils.absorption_hopper_w_e"), 102, 82, 4210752, false);
+		graphics.text(font, Component.translatable("block.mob_grinding_utils.absorption_hopper_n_s"), 102, 48, 0xFF404040, false);
+		graphics.text(font, Component.translatable("block.mob_grinding_utils.absorption_hopper_w_e"), 102, 82, 0xFF404040, false);
 
 		center(graphics, !tile.showRenderBox ? "Show Area" : "Hide Area", 135, 117, 14737632);
 
 		if(tile.getProgress() > 0)
-			center(graphics, "Attempting Spawn", 52, 98, 4210752);
+			center(graphics, "Attempting Spawn", 52, 98, 0xFF404040);
 
-		center(graphics, String.valueOf(tile.getoffsetY()), 135, 29, 5285857);//NS
-		center(graphics, String.valueOf(tile.getoffsetZ()), 135, 63, 5285857);//WE
-		center(graphics, String.valueOf(tile.getoffsetX()), 135, 97, 5285857);//DU
+		center(graphics, String.valueOf(tile.getoffsetY()), 135, 29, 0xFF50A0A1);//NS
+		center(graphics, String.valueOf(tile.getoffsetZ()), 135, 63, 0xFF50A0A1);//WE
+		center(graphics, String.valueOf(tile.getoffsetX()), 135, 97, 0xFF50A0A1);//DU
 	}
 
 	@Override

@@ -27,7 +27,7 @@ public class GuiMGUButton extends Button {
         int tint = this.isHoveredOrFocused() ? 0xFFBFFFBF : 0x80BFBFBF;
         graphics.blit(RenderPipelines.GUI_TEXTURED, getTextures(size), getX(), getY(), size.u, size.v, width, height, 256, 256, tint);
 
-        int textColour = packedFGColor != UNSET_FG_COLOR ? packedFGColor : !this.active ? 10526880 : this.isHoveredOrFocused() ? 16777120 : 14737632;
+        int textColour = packedFGColor != UNSET_FG_COLOR ? packedFGColor : !this.active ? 0xFFA0A0A0 : this.isHoveredOrFocused() ? 0xFFFFFFE0 : 0xFFE0E0E0;
         graphics.text(Minecraft.getInstance().font, getMessage(), getX() + (width - Minecraft.getInstance().font.width(getMessage())) / 2, getY() + (height - 8) / 2, textColour, true);
     }
     

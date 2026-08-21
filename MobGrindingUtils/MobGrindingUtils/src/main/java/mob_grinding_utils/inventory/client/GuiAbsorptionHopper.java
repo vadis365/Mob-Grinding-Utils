@@ -74,14 +74,14 @@ public class GuiAbsorptionHopper extends MGUScreen<ContainerAbsorptionHopper> {
 
 	@Override
 	protected void extractLabels(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
-		graphics.text(font, getTitle(), 8, 6, 4210752, false);
+		graphics.text(font, getTitle(), 8, 6, 0xFF404040, false);
 
-		graphics.text(font, Component.translatable("block.mob_grinding_utils.absorption_hopper_d_u"), 174, 14, 4210752, false);
-		graphics.text(font, Component.translatable("block.mob_grinding_utils.absorption_hopper_n_s"), 174, 48, 4210752, false);
-		graphics.text(font, Component.translatable("block.mob_grinding_utils.absorption_hopper_w_e"), 174, 82, 4210752, false);
+		graphics.text(font, Component.translatable("block.mob_grinding_utils.absorption_hopper_d_u"), 174, 14, 0xFF404040, false);
+		graphics.text(font, Component.translatable("block.mob_grinding_utils.absorption_hopper_n_s"), 174, 48, 0xFF404040, false);
+		graphics.text(font, Component.translatable("block.mob_grinding_utils.absorption_hopper_w_e"), 174, 82, 0xFF404040, false);
 
 		String area = !tile.showRenderBox ? "Show Area" : "Hide Area";
-		graphics.text(font, area, 207 - font.width(area) / 2, 117, 14737632, true);
+		graphics.text(font, area, 207 - font.width(area) / 2, 117, 0xFFE0E0E0, true);
 
 		EnumStatus DOWN = tile.getSideStatus(Direction.DOWN);
 		EnumStatus UP = tile.getSideStatus(Direction.UP);
@@ -96,9 +96,9 @@ public class GuiAbsorptionHopper extends MGUScreen<ContainerAbsorptionHopper> {
 		center(graphics, SOUTH.getSerializedName(), 133, 21, getModeColour(SOUTH.ordinal()));
 		center(graphics, WEST.getSerializedName(), 133, 38, getModeColour(WEST.ordinal()));
 		center(graphics, EAST.getSerializedName(), 133, 55, getModeColour(EAST.ordinal()));
-		center(graphics, String.valueOf(tile.getoffsetY()), 207, 29, 5285857);//NS
-		center(graphics, String.valueOf(tile.getoffsetZ()), 207, 63, 5285857);//WE
-		center(graphics, String.valueOf(tile.getoffsetX()), 207, 97, 5285857);//DU
+		center(graphics, String.valueOf(tile.getoffsetY()), 207, 29, 0xFF50A0A1);//NS
+		center(graphics, String.valueOf(tile.getoffsetZ()), 207, 63, 0xFF50A0A1);//WE
+		center(graphics, String.valueOf(tile.getoffsetX()), 207, 97, 0xFF50A0A1);//DU
 	}
 
 	@Override
@@ -113,10 +113,10 @@ public class GuiAbsorptionHopper extends MGUScreen<ContainerAbsorptionHopper> {
 
 	public int getModeColour(int index) {
 		return switch (index) {
-			case 0 -> 16711680;
-			case 1 -> 5285857;
-			case 2 -> 16776960;
-			default -> 16776960;
+			case 0 -> 0xFFFF0000;
+			case 1 -> 0xFF50A0A1;
+			case 2 -> 0xFFFFFF00;
+			default -> 0xFFFFFF00;
 		};
 	}
 }

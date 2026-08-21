@@ -43,10 +43,10 @@ public class GuiXPSolidifier extends MGUScreen<ContainerXPSolidifier> {
 
     @Override
     protected void extractLabels(@Nonnull GuiGraphicsExtractor graphics, int x, int y) {
-        graphics.text(font, Component.translatable("block.mob_grinding_utils.xpsolidifier"), 7, 6, 0x404040, false);
-        graphics.text(font, Component.translatable("container.inventory"), 8, this.imageHeight - 94, 4210752, false);
+        graphics.text(font, Component.translatable("block.mob_grinding_utils.xpsolidifier"), 7, 6, 0xFF404040, false);
+        graphics.text(font, Component.translatable("container.inventory"), 8, this.imageHeight - 94, 0xFF404040, false);
         String power = tile.isOn ? "On" : "Off";
-        graphics.text(font, power, 158 - font.width(power) / 2, 12, 14737632, true);
+        graphics.text(font, power, 158 - font.width(power) / 2, 12, 0xFFE0E0E0, true);
     }
 
     @Override
@@ -54,7 +54,7 @@ public class GuiXPSolidifier extends MGUScreen<ContainerXPSolidifier> {
         super.extractBackground(graphics, mouseX, mouseY, partialTicks);
 
         String direction = tile.outputDirection.getSerializedName();
-        graphics.text(font, direction, leftPos + 124 - font.width(direction) / 2, topPos + 76, 5285857, false);
+        graphics.text(font, direction, leftPos + 124 - font.width(direction) / 2, topPos + 76, 0xFF50A0A1, false);
 
         graphics.blit(RenderPipelines.GUI_TEXTURED, TEX, leftPos + 7, topPos + 17, 178, 0, 6, 71, 256, 256);
 

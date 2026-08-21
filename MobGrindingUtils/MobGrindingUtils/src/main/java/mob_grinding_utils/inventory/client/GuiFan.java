@@ -39,6 +39,6 @@ public class GuiFan extends MGUScreen<ContainerFan> {
 		super.extractLabels(graphics, mouseX, mouseY);
 
 		String area = !tile.showRenderBox ? "Show Area" : "Hide Area";
-		graphics.text(font, area, imageWidth - 88 - font.width(area) / 2, 46, 14737632, true);
+		graphics.text(font, area, imageWidth - 88 - font.width(area) / 2, 46, 0xFFE0E0E0, true);
 	}
 }

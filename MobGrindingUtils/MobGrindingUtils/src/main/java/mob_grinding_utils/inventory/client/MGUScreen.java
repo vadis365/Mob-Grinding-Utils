@@ -30,7 +30,7 @@ public class MGUScreen<T extends AbstractContainerMenu> extends AbstractContaine
     @Override
     protected void extractLabels(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
         String title = getTitle().getString();
-        graphics.text(font, title, (imageWidth - font.width(title)) / 2, 6, 4210752, false);
+        graphics.text(font, title, (imageWidth - font.width(title)) / 2, 6, 0xFF404040, false);
     }
 
     protected void drawCenteredString(GuiGraphicsExtractor graphics, Component text, int x, int y, int color) {

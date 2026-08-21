@@ -36,7 +36,7 @@ public class RenderChickenSwell {
 					event.getPoseStack().translate(0D, - 0.5D - scale, 0D);
 					event.getPoseStack().mulPose(Axis.YN.rotationDegrees(state.bodyRot));
 					event.getPoseStack().scale(1F + scale, 1F + scale, 1F + scale * 0.75F);
-					event.getSubmitNodeCollector().submitCustomGeometry(event.getPoseStack(), RenderTypes.entityTranslucent(RL.mc("textures/entity/chicken.png")), (pose, buffer) -> {
+					event.getSubmitNodeCollector().submitCustomGeometry(event.getPoseStack(), RenderTypes.entityTranslucent(RL.mc("textures/entity/chicken/chicken.png")), (pose, buffer) -> {
 						PoseStack modelStack = new PoseStack();
 						modelStack.last().set(pose);
 						model.renderToBuffer(modelStack, buffer, state.lightCoords, OverlayTexture.NO_OVERLAY, 0xFFFFFFFF);
