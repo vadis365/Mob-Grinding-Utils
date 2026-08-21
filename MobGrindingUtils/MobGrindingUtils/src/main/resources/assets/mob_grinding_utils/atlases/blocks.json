@@ -1,0 +1,8 @@
+{
+  "sources": [
+    {
+      "type": "minecraft:single",
+      "resource": "mob_grinding_utils:block/fluid_xp"
+    }
+  ]
+}
