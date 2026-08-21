@@ -11,13 +11,13 @@ import net.minecraft.sounds.SoundEvents;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import net.neoforged.neoforge.fluids.FluidStack;
-import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.transfer.transaction.Transaction;
 
 public class FillXPBottleEvent {
 
 	@SubscribeEvent
 	public void clickBottle(PlayerInteractEvent.RightClickBlock event) {
-		if (!event.getLevel().isClientSide && event.getEntity() != null) {
+		if (!event.getLevel().isClientSide() && event.getEntity() != null) {
 			Player player = event.getEntity();
 			ItemStack handItem = player.getItemInHand(event.getHand());
 			if (!handItem.isEmpty()) {
@@ -25,9 +25,13 @@ public class FillXPBottleEvent {
 					if (event.getLevel().getBlockState(event.getPos()).getBlock() instanceof BlockTank) {
 						TileEntityTank tileentity = (TileEntityTank) event.getLevel().getBlockEntity(event.getPos());
 						if (tileentity != null) {
-							if (tileentity.tank.getFluid() != null && tileentity.tank.getFluid().is(ModBlocks.FLUID_XP.get())) {
-								if (tileentity.tank.getFluidAmount() >= 200) {
-									tileentity.tank.drain(new FluidStack(tileentity.tank.getFluid().getFluidHolder(), 200), IFluidHandler.FluidAction.EXECUTE);
+							if (!tileentity.tank.stack().isEmpty() && tileentity.tank.stack().is(ModBlocks.FLUID_XP.get())) {
+								if (tileentity.tank.amount() >= 200) {
+									try (Transaction transaction = Transaction.openRoot()) {
+										if (tileentity.tank.extract(tileentity.tank.getResource(0), 200, transaction) != 200)
+											return;
+										transaction.commit();
+									}
 									event.getLevel().playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.BOTTLE_FILL, SoundSource.NEUTRAL, 1.0F, 1.0F);
 									turnBottleIntoItem(handItem, player, new ItemStack(Items.EXPERIENCE_BOTTLE));
 									handItem.shrink(1);

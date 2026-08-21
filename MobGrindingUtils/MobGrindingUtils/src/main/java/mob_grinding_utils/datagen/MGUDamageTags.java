@@ -2,23 +2,24 @@ package mob_grinding_utils.datagen;
 
 import mob_grinding_utils.Reference;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.tags.DamageTypeTagsProvider;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.tags.DamageTypeTags;
-import net.neoforged.neoforge.common.data.ExistingFileHelper;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.concurrent.CompletableFuture;
 
 public class MGUDamageTags extends DamageTypeTagsProvider {
-    public MGUDamageTags(PackOutput output, CompletableFuture<HolderLookup.Provider> stupid, @Nullable ExistingFileHelper existingFileHelper) {
-        super(output, stupid, Reference.MOD_ID, existingFileHelper);
+    public MGUDamageTags(PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProvider) {
+        super(output, lookupProvider, Reference.MOD_ID);
     }
 
     @Override
     protected void addTags(@Nonnull HolderLookup.Provider useless) {
-        tag(DamageTypeTags.BYPASSES_ARMOR).addOptional(ResourceLocation.fromNamespaceAndPath(Reference.MOD_ID, "spikes"));
+		tag(DamageTypeTags.BYPASSES_ARMOR).addOptional(ResourceKey.create(Registries.DAMAGE_TYPE, Identifier.fromNamespaceAndPath(Reference.MOD_ID, "spikes")));
     }
 }

@@ -6,7 +6,7 @@ import net.minecraft.client.model.Model;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 
@@ -21,7 +21,7 @@ public class ModelXPSolidifier extends Model {
     public ModelPart rack_right;
 
     public ModelXPSolidifier(ModelPart root) {
-		super(RenderType::entitySolid);
+		super(root, texture -> RenderTypes.entitySolid((net.minecraft.resources.Identifier) texture));
 		this.tank = root.getChild("tank");
 		this.top = root.getChild("top");
 		this.rack = root.getChild("rack");
@@ -44,10 +44,6 @@ public class ModelXPSolidifier extends Model {
 		return LayerDefinition.create(meshdefinition, 64, 64);
 	}
 
-    @Override
-	public void renderToBuffer(PoseStack matrixStackIn, VertexConsumer bufferIn, int packedLightIn, int packedOverlayIn, int color) {
-        this.tank.render(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn, color);
-    }
 
 	public void renderExport(PoseStack matrixStackIn, VertexConsumer bufferIn, int packedLightIn, int packedOverlayIn, int color) {
         this.top.render(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn, color);

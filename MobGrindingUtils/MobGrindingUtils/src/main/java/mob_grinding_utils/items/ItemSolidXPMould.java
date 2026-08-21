@@ -5,11 +5,12 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.component.TooltipDisplay;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 
 import javax.annotation.Nonnull;
-import java.util.List;
+import java.util.function.Consumer;
 
 public class ItemSolidXPMould extends Item {
 	public enum Mould {
@@ -25,10 +26,10 @@ public class ItemSolidXPMould extends Item {
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void appendHoverText(@Nonnull ItemStack stack, @Nonnull TooltipContext context, @Nonnull List<Component> list, @Nonnull TooltipFlag flag) {
+	public void appendHoverText(@Nonnull ItemStack stack, @Nonnull TooltipContext context, TooltipDisplay display, Consumer<Component> tooltip, @Nonnull TooltipFlag flag) {
 		switch (mouldType) {
-			case BLANK -> list.add(Component.translatable("tooltip.solid_xp_mould_blank").withStyle(ChatFormatting.YELLOW));
-			case BABY -> list.add(Component.translatable("tooltip.solid_xp_mould").withStyle(ChatFormatting.YELLOW));
+			case BLANK -> tooltip.accept(Component.translatable("tooltip.solid_xp_mould_blank").withStyle(ChatFormatting.YELLOW));
+			case BABY -> tooltip.accept(Component.translatable("tooltip.solid_xp_mould").withStyle(ChatFormatting.YELLOW));
 		}
 	}
 }

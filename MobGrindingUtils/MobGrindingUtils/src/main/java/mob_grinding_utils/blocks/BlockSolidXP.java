@@ -19,19 +19,19 @@ public class BlockSolidXP extends HalfTransparentBlock {
    }
 
 	@Override
-	public void fallOn(@Nonnull Level level, @Nonnull BlockState state, @Nonnull BlockPos pos, Entity entity, float fallDistance) {
+	public void fallOn(@Nonnull Level level, @Nonnull BlockState state, @Nonnull BlockPos pos, Entity entity, double fallDistance) {
 		if (entity.isSuppressingBounce())
 			super.fallOn(level, state, pos, entity, fallDistance);
 		else {
 			entity.causeFallDamage(fallDistance, 0.0F, level.damageSources().fall());
-			entity.getCommandSenderWorld().playSound(null, entity.blockPosition(), ModSounds.SOLID_XP_BLOCK_BOING.get(), SoundSource.BLOCKS, 0.3F, 1F);
+			entity.level().playSound(null, entity.blockPosition(), ModSounds.SOLID_XP_BLOCK_BOING.get(), SoundSource.BLOCKS, 0.3F, 1F);
 		}
 	}
 
 	@Override
-	public void updateEntityAfterFallOn(@Nonnull BlockGetter level, Entity entity) {
+	public void updateEntityMovementAfterFallOn(@Nonnull BlockGetter level, Entity entity) {
 		if (entity.isSuppressingBounce())
-			super.updateEntityAfterFallOn(level, entity);
+			super.updateEntityMovementAfterFallOn(level, entity);
 		else 
 			this.bounceEntity(entity);
 	}

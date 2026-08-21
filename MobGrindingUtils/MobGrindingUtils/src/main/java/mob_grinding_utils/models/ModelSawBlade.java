@@ -12,7 +12,7 @@ import net.minecraft.client.model.geom.builders.CubeListBuilder;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 
@@ -59,7 +59,7 @@ public class ModelSawBlade extends Model {
     public ModelPart tooth16End;
 
 	public ModelSawBlade(ModelPart root) {
-		super(RenderType::entitySolid);
+		super(root, texture -> RenderTypes.entitySolid((net.minecraft.resources.Identifier) texture));
 		this.main = root.getChild("main");
 		this.back = root.getChild("back");
 		this.front = root.getChild("front");
@@ -143,15 +143,6 @@ public class ModelSawBlade extends Model {
 	}
 
 	
-	public void renderToBuffer(@Nonnull PoseStack matrixStackIn, @Nonnull VertexConsumer bufferIn, int packedLightIn, int packedOverlayIn, int color) {
-		ImmutableList.of(main, back, front, left, right, tooth1Main, tooth2Main, tooth3Main, tooth4Main, tooth5Main,
-				tooth6Main, tooth7Main, tooth8Main, tooth9Main, tooth10Main, tooth11Main, tooth12Main, tooth13Main,
-				tooth14Main, tooth15Main, tooth16Main, tooth1End, tooth2End, tooth3End, tooth4End, tooth5End, tooth6End,
-				tooth7End, tooth8End, tooth9End, tooth10End, tooth11End, tooth12End, tooth13End, tooth14End, tooth15End,
-				tooth16End).forEach((p_228279_8_) -> { p_228279_8_.render(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn, color);
-				});
-	}
-
 	private void setRotation(ModelPart model, float x, float y, float z) {
 		model.xRot = x;
 		model.yRot = y;

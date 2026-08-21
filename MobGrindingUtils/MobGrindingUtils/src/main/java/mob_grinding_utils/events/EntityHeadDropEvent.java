@@ -29,7 +29,7 @@ public class EntityHeadDropEvent {
 
 	@SubscribeEvent(priority = EventPriority.LOWEST)
 	public void dropEvent(LivingDropsEvent event) {
-		if (event.getEntity().level().isClientSide)
+		if (event.getEntity().level().isClientSide())
 			return;
 		if (event.getEntity().getHealth() > 0.0F)
 			return;
@@ -39,7 +39,7 @@ public class EntityHeadDropEvent {
 				ItemStack tempSword = fakePlayer.getMainHandItem();
 				if (tempSword.has(MGUComponents.BEHEADING))
 					beheadingLevel = tempSword.getOrDefault(MGUComponents.BEHEADING, 0);
-				int dropChance = event.getEntity().getCommandSenderWorld().random.nextInt(10);
+				int dropChance = event.getEntity().level().getRandom().nextInt(10);
 				if (dropChance < beheadingLevel) {
 					ItemStack stack = getHeadFromEntity(event.getEntity());
 					if (!stack.isEmpty())
@@ -55,7 +55,7 @@ public class EntityHeadDropEvent {
 
 		var recipeOptional = MobGrindingUtils.BEHEADING_RECIPES.stream().filter(recipe -> recipe.value().matches(target.getType())).findFirst();
 		if (recipeOptional.isPresent()) {
-			return recipeOptional.get().value().getResultItem(RegistryAccess.EMPTY);
+			return recipeOptional.get().value().result();
 		}
 		
 		if (target instanceof Mob) {
@@ -85,14 +85,14 @@ public class EntityHeadDropEvent {
 
 	public static ItemStack createHeadFor(GameProfile profile) {
 		ItemStack stack = new ItemStack(Items.PLAYER_HEAD, 1);
-		stack.set(DataComponents.PROFILE, new ResolvableProfile(profile));
+		stack.set(DataComponents.PROFILE, ResolvableProfile.createResolved(profile));
 		return stack;
 	}
 
 	private void addDrop(ItemStack stack, LivingEntity entity, Collection<ItemEntity> collection) {
 		if (stack.getCount() <= 0)
 			return;
-		ItemEntity entityItem = new ItemEntity(entity.getCommandSenderWorld(), entity.getX(), entity.getY(), entity.getZ(), stack);
+		ItemEntity entityItem = new ItemEntity(entity.level(), entity.getX(), entity.getY(), entity.getZ(), stack);
 		entityItem.setDefaultPickUpDelay();
 		collection.add(entityItem);
 	}

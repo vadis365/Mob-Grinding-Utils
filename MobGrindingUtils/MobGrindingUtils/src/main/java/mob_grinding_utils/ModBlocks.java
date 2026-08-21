@@ -142,7 +142,7 @@ public class ModBlocks {
 	public static DeferredHolder<Fluid, BaseFlowingFluid> FLUID_XP_FLOWING = FLUIDS.register("fluid_xp_flowing",
 		() -> new BaseFlowingFluid.Flowing(ModBlocks.xp_properties) );
 	public static DeferredBlock<MGUFlowingFluidBlock> FLUID_XP_BLOCK = BLOCKS.register("fluid_xp",
-		() -> new MGUFlowingFluidBlock(FLUID_XP,Block.Properties.of().liquid().noCollission().replaceable().strength(100.0F).pushReaction(PushReaction.DESTROY).noLootTable()));
+		() -> new MGUFlowingFluidBlock(FLUID_XP,Block.Properties.of().liquid().noCollision().replaceable().strength(100.0F).pushReaction(PushReaction.DESTROY).noLootTable()));
 
 	private static final BaseFlowingFluid.Properties xp_properties = new BaseFlowingFluid.Properties(() -> XPTYPE.get(), () -> FLUID_XP.get(), () -> FLUID_XP_FLOWING.get())
 			.block(() -> FLUID_XP_BLOCK.get())

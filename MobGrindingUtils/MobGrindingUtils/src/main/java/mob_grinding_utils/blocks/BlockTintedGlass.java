@@ -3,8 +3,6 @@ package mob_grinding_utils.blocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.context.BlockPlaceContext;
-import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
@@ -29,23 +27,18 @@ public class BlockTintedGlass extends Block {
 	}
 
 	@OnlyIn(Dist.CLIENT)
-	public boolean skipRendering(@Nonnull BlockState state, BlockState adjacentBlockState, @Nonnull Direction side) {
+	protected boolean skipRendering(@Nonnull BlockState state, BlockState adjacentBlockState, @Nonnull Direction side) {
 		return adjacentBlockState.is(this) || super.skipRendering(state, adjacentBlockState, side);
 	}
 
 	@Override
-	public boolean propagatesSkylightDown(@Nonnull BlockState state, @Nonnull BlockGetter reader, @Nonnull BlockPos pos) {
+	protected boolean propagatesSkylightDown(@Nonnull BlockState state) {
 		return false;
 	}
-	
-    @Override
-    public int getLightBlock (@Nonnull BlockState state, BlockGetter world, @Nonnull BlockPos pos) {
-        return world.getMaxLightLevel();
-    }
 
 	@Override
 	public BlockState getStateForPlacement(BlockPlaceContext context) {
-		BlockGetter world = context.getLevel();
+		net.minecraft.world.level.BlockGetter world = context.getLevel();
 		BlockPos pos = context.getClickedPos();
 		return super.getStateForPlacement(context)
 			.setValue(CONNECTED_DOWN, this.isSideConnectable(world, pos, Direction.DOWN))
@@ -58,7 +51,7 @@ public class BlockTintedGlass extends Block {
 	
 	@Nonnull
 	@Override
-	public BlockState updateShape(BlockState stateIn, @Nonnull Direction facing, @Nonnull BlockState facingState, @Nonnull LevelAccessor world, @Nonnull BlockPos pos, @Nonnull BlockPos facingPos) {
+	protected BlockState updateShape(BlockState stateIn, @Nonnull net.minecraft.world.level.LevelReader world, @Nonnull net.minecraft.world.level.ScheduledTickAccess ticks, @Nonnull BlockPos pos, @Nonnull Direction facing, @Nonnull BlockPos facingPos, @Nonnull BlockState facingState, @Nonnull net.minecraft.util.RandomSource random) {
 		return stateIn.setValue(CONNECTED_DOWN, this.isSideConnectable(world, pos, Direction.DOWN))
 			.setValue(CONNECTED_EAST, this.isSideConnectable(world, pos, Direction.EAST))
 			.setValue(CONNECTED_NORTH, this.isSideConnectable(world, pos, Direction.NORTH))
@@ -72,7 +65,7 @@ public class BlockTintedGlass extends Block {
 		builder.add(CONNECTED_DOWN, CONNECTED_UP, CONNECTED_NORTH, CONNECTED_SOUTH, CONNECTED_WEST, CONNECTED_EAST);
 	}
 
-	private boolean isSideConnectable(BlockGetter world, BlockPos pos, Direction side) {
+	private boolean isSideConnectable(net.minecraft.world.level.BlockGetter world, BlockPos pos, Direction side) {
 		final BlockState stateConnection = world.getBlockState(pos.relative(side));
 		return stateConnection != null && stateConnection.getBlock() == this;
 	}

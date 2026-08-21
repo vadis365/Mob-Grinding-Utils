@@ -4,7 +4,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
@@ -22,7 +22,7 @@ public class BlockDirtSpawner extends Block {
         randomTick(pState, pLevel, pPos, pRandom);
     }
 
-    public static boolean checkSpawnPosition(Mob mob, ServerLevelAccessor level, MobSpawnType spawnType) {
+    public static boolean checkSpawnPosition(Mob mob, ServerLevelAccessor level, EntitySpawnReason spawnType) {
         return mob.checkSpawnRules(level, spawnType) && mob.checkSpawnObstruction(level); // Yoinked from EventHooks.checkSpawnPosition, but without the event post.
     }
 }

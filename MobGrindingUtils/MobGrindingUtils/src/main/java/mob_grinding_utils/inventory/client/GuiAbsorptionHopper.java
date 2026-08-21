@@ -5,12 +5,13 @@ import mob_grinding_utils.network.BEGuiClick;
 import mob_grinding_utils.tile.TileEntityAbsorptionHopper;
 import mob_grinding_utils.tile.TileEntityAbsorptionHopper.EnumStatus;
 import mob_grinding_utils.util.RL;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
-import net.neoforged.neoforge.network.PacketDistributor;
+import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -22,11 +23,9 @@ public class GuiAbsorptionHopper extends MGUScreen<ContainerAbsorptionHopper> {
 	private final TileEntityAbsorptionHopper tile;
 	private TankGauge tankGauge;
 	public GuiAbsorptionHopper(ContainerAbsorptionHopper container, Inventory playerInventory, Component title) {
-		super(container, playerInventory, title, RL.mgu("textures/gui/absorption_hopper_gui.png"));
+		super(container, playerInventory, title, RL.mgu("textures/gui/absorption_hopper_gui.png"), 248, 226);
 		this.container = container;
 		this.tile = this.container.hopper;
-		imageHeight = 226;
-		imageWidth = 248;
 	}
 
 	@Override
@@ -39,7 +38,7 @@ public class GuiAbsorptionHopper extends MGUScreen<ContainerAbsorptionHopper> {
 
 		Button.OnPress message = button -> {
 			if (button instanceof GuiMGUButton)
-				PacketDistributor.sendToServer(new BEGuiClick(tile.getBlockPos(), ((GuiMGUButton)button).id));
+				ClientPacketDistributor.sendToServer(new BEGuiClick(tile.getBlockPos(), ((GuiMGUButton)button).id));
 		};
 
 		addRenderableWidget(new GuiMGUButton(leftPos + 7, topPos + 17, GuiMGUButton.Size.MEDIUM, 0, Component.literal("Down"), message));
@@ -50,7 +49,7 @@ public class GuiAbsorptionHopper extends MGUScreen<ContainerAbsorptionHopper> {
 		addRenderableWidget(new GuiMGUButton(leftPos + 82, topPos + 51, GuiMGUButton.Size.MEDIUM, 5, Component.literal("East"), message));
 
 		addRenderableWidget(new GuiMGUButton(leftPos + 173, topPos + 113, GuiMGUButton.Size.LARGE, 6, Component.empty(), (button) -> {
-			PacketDistributor.sendToServer(new BEGuiClick(tile.getBlockPos(), 6));
+			ClientPacketDistributor.sendToServer(new BEGuiClick(tile.getBlockPos(), 6));
 			tile.showRenderBox = !tile.showRenderBox;
 		}));
 
@@ -63,25 +62,26 @@ public class GuiAbsorptionHopper extends MGUScreen<ContainerAbsorptionHopper> {
 	}
 
 	@Override
-	protected void renderTooltip(@Nonnull GuiGraphics gg, int x, int y) {
-		super.renderTooltip(gg, x, y);
+	protected void extractTooltip(@Nonnull GuiGraphicsExtractor graphics, int x, int y) {
+		super.extractTooltip(graphics, x, y);
 		if (tankGauge.isHovered()) {
 			List<Component> tooltip = new ArrayList<>();
-			tooltip.add(tile.tank.getFluid().getHoverName());
-			tooltip.add(Component.literal(tile.tank.getFluidAmount() + "/" + tile.tank.getCapacity()));
-			gg.renderComponentTooltip(font, tooltip, x, y);
+			tooltip.add(tile.tank.stack().getHoverName());
+			tooltip.add(Component.literal(tile.tank.amount() + "/" + tile.tank.capacity()));
+			graphics.setTooltipForNextFrame(font, tooltip, java.util.Optional.empty(), x, y);
 		}
 	}
 
 	@Override
-	protected void renderLabels(GuiGraphics gg, int mouseX, int mouseY) {
-		gg.drawString(font, getTitle(), 8, 6, 4210752, false);
+	protected void extractLabels(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
+		graphics.text(font, getTitle(), 8, 6, 4210752, false);
 
-		gg.drawString(font, Component.translatable("block.mob_grinding_utils.absorption_hopper_d_u").getString(), 174, 14, 4210752, false);
-		gg.drawString(font, Component.translatable("block.mob_grinding_utils.absorption_hopper_n_s").getString(), 174, 48, 4210752, false);
-		gg.drawString(font, Component.translatable("block.mob_grinding_utils.absorption_hopper_w_e").getString(), 174, 82, 4210752, false);
+		graphics.text(font, Component.translatable("block.mob_grinding_utils.absorption_hopper_d_u"), 174, 14, 4210752, false);
+		graphics.text(font, Component.translatable("block.mob_grinding_utils.absorption_hopper_n_s"), 174, 48, 4210752, false);
+		graphics.text(font, Component.translatable("block.mob_grinding_utils.absorption_hopper_w_e"), 174, 82, 4210752, false);
 
-		gg.drawString(font, !tile.showRenderBox ? "Show Area" : "Hide Area", 207 - font.width(!tile.showRenderBox ? "Show Area" : "Hide Area") / 2.0f, 117, 14737632, true);
+		String area = !tile.showRenderBox ? "Show Area" : "Hide Area";
+		graphics.text(font, area, 207 - font.width(area) / 2, 117, 14737632, true);
 
 		EnumStatus DOWN = tile.getSideStatus(Direction.DOWN);
 		EnumStatus UP = tile.getSideStatus(Direction.UP);
@@ -90,22 +90,25 @@ public class GuiAbsorptionHopper extends MGUScreen<ContainerAbsorptionHopper> {
 		EnumStatus WEST = tile.getSideStatus(Direction.WEST);
 		EnumStatus EAST = tile.getSideStatus(Direction.EAST);
 
-		gg.drawCenteredString(font, DOWN.getSerializedName(), 58, 21, getModeColour(DOWN.ordinal()));
-		gg.drawCenteredString(font, UP.getSerializedName(), 58, 38, getModeColour(UP.ordinal()));
-		gg.drawCenteredString(font, NORTH.getSerializedName(), 58, 55, getModeColour(NORTH.ordinal()));
-		gg.drawCenteredString(font, SOUTH.getSerializedName(), 133, 21, getModeColour(SOUTH.ordinal()));
-		gg.drawCenteredString(font, WEST.getSerializedName(), 133, 38, getModeColour(WEST.ordinal()));
-		gg.drawCenteredString(font, EAST.getSerializedName(), 133, 55, getModeColour(EAST.ordinal()));
-		gg.drawCenteredString(font, String.valueOf(tile.getoffsetY()), 207, 29, 5285857);//NS
-		gg.drawCenteredString(font, String.valueOf(tile.getoffsetZ()), 207, 63, 5285857);//WE
-		gg.drawCenteredString(font, String.valueOf(tile.getoffsetX()), 207, 97, 5285857);//DU
+		center(graphics, DOWN.getSerializedName(), 58, 21, getModeColour(DOWN.ordinal()));
+		center(graphics, UP.getSerializedName(), 58, 38, getModeColour(UP.ordinal()));
+		center(graphics, NORTH.getSerializedName(), 58, 55, getModeColour(NORTH.ordinal()));
+		center(graphics, SOUTH.getSerializedName(), 133, 21, getModeColour(SOUTH.ordinal()));
+		center(graphics, WEST.getSerializedName(), 133, 38, getModeColour(WEST.ordinal()));
+		center(graphics, EAST.getSerializedName(), 133, 55, getModeColour(EAST.ordinal()));
+		center(graphics, String.valueOf(tile.getoffsetY()), 207, 29, 5285857);//NS
+		center(graphics, String.valueOf(tile.getoffsetZ()), 207, 63, 5285857);//WE
+		center(graphics, String.valueOf(tile.getoffsetX()), 207, 97, 5285857);//DU
 	}
 
 	@Override
-	protected void renderBg(GuiGraphics gg, float partialTicks, int mouseX, int mouseY) {
-		gg.blit(TEX, leftPos, topPos, 0, 0, imageWidth, imageHeight);
+	public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
+		super.extractBackground(graphics, mouseX, mouseY, partialTicks);
+		graphics.blit(RenderPipelines.GUI_TEXTURED, TEX, leftPos + 153, topPos + 8, 248, 0, 6, 120, 256, 256);
+	}
 
-		gg.blit(TEX, leftPos + 153, topPos + 8 , 248, 0, 6, 120);
+	private void center(GuiGraphicsExtractor graphics, String text, int x, int y, int color) {
+		graphics.text(font, text, x - font.width(text) / 2, y, color, false);
 	}
 
 	public int getModeColour(int index) {

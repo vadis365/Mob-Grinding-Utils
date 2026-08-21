@@ -5,11 +5,12 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.component.TooltipDisplay;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 
 import javax.annotation.Nonnull;
-import java.util.List;
+import java.util.function.Consumer;
 
 public class ItemSpawnerUpgrade extends Item {
 	public enum SpawnerUpgrade {
@@ -25,10 +26,10 @@ public class ItemSpawnerUpgrade extends Item {
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void appendHoverText(@Nonnull ItemStack stack, @Nonnull TooltipContext context, @Nonnull List<Component> list, @Nonnull TooltipFlag flag) {
+	public void appendHoverText(@Nonnull ItemStack stack, @Nonnull TooltipContext context, TooltipDisplay display, Consumer<Component> tooltip, @Nonnull TooltipFlag flag) {
 		switch (upgradeType) {
-			case WIDTH -> list.add(Component.translatable("tooltip.spawner_upgrade_width").withStyle(ChatFormatting.YELLOW));
-			case HEIGHT -> list.add(Component.translatable("tooltip.spawner_upgrade_height").withStyle(ChatFormatting.YELLOW));
+			case WIDTH -> tooltip.accept(Component.translatable("tooltip.spawner_upgrade_width").withStyle(ChatFormatting.YELLOW));
+			case HEIGHT -> tooltip.accept(Component.translatable("tooltip.spawner_upgrade_height").withStyle(ChatFormatting.YELLOW));
 		}
 	}
 

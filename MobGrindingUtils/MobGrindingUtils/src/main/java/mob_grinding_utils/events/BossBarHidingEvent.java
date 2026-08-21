@@ -16,12 +16,12 @@ public class BossBarHidingEvent {
 		Player player = Minecraft.getInstance().player;
 		if (player != null) {
 			CompoundTag nbt = player.getPersistentData();
-			if (nbt.getBoolean("MGU_WitherMuffle")) {
+			if (nbt.getBoolean("MGU_WitherMuffle").orElse(false)) {
 				if (event.getBossEvent().getName().getString().contains("Wither"))
 					event.setCanceled(true);
 			}
 
-			if (nbt.getBoolean("MGU_DragonMuffle")) {
+			if (nbt.getBoolean("MGU_DragonMuffle").orElse(false)) {
 				if (event.getBossEvent().getName().getString().contains("Dragon"))
 					event.setCanceled(true);
 			}

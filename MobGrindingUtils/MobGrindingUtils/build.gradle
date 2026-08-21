@@ -3,7 +3,7 @@ plugins {
     id 'idea'
     id 'maven-publish'
     id 'eclipse'
-    id 'net.neoforged.gradle.userdev' version '7.0.173'
+    id 'net.neoforged.gradle.userdev' version '7.1.38'
     id "me.modmuss50.mod-publish-plugin" version "0.4.5"
 }
 
@@ -18,7 +18,7 @@ base {
     archivesName = "mob_grinding_utils"
 }
 
-java.toolchain.languageVersion = JavaLanguageVersion.of(21)
+java.toolchain.languageVersion = JavaLanguageVersion.of(25)
 sourceSets.main.resources { srcDir 'src/generated/resources' }
 minecraft.accessTransformers.file rootProject.file('src/main/resources/META-INF/accesstransformer.cfg')
 
@@ -36,14 +36,14 @@ runs {
 
     server {
         systemProperty 'neoforge.enabledGameTestNamespaces', "mob_grinding_utils"
-        programArgument '--nogui'
+        arguments.add '--nogui'
     }
 
     gameTestServer {
-        systemProperty 'forge.enabledGameTestNamespaces', "mob_grinding_utils"
+        systemProperty 'neoforge.enabledGameTestNamespaces', "mob_grinding_utils"
     }
 
-    data {
+    clientData {
         arguments.addAll '--mod', "mob_grinding_utils", '--all', '--output', file('src/generated/resources/').getAbsolutePath(), '--existing', file('src/main/resources/').getAbsolutePath()
     }
 }
@@ -90,6 +90,7 @@ jar {
 
 tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8' // Use the UTF-8 charset for Java compilation
+    options.compilerArgs.addAll(['-Xmaxerrs', '1000', '-Xmaxwarns', '1000'])
 }
 
 idea {

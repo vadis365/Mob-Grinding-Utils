@@ -13,7 +13,11 @@ import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 
 public class MGUDamageType extends DatapackBuiltinEntriesProvider {
+    public static RegistrySetBuilder registries() {
+        return new RegistrySetBuilder().add(Registries.DAMAGE_TYPE, context -> context.register(MobGrindingUtils.SPIKE_TYPE, new DamageType("spikes", 1.0f)));
+    }
+
     public MGUDamageType(PackOutput output, CompletableFuture<HolderLookup.Provider> lookUpThingIHate) {
-        super(output, lookUpThingIHate, new RegistrySetBuilder().add(Registries.DAMAGE_TYPE, $ -> $.register(MobGrindingUtils.SPIKE_TYPE, new DamageType("spikes", 1.0f))), Set.of(Reference.MOD_ID));
+        super(output, lookUpThingIHate, registries(), Set.of(Reference.MOD_ID));
     }
 }

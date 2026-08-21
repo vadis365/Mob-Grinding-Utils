@@ -122,7 +122,7 @@ public class BlockEnderInhibitorOn extends Block {
 	}
 
 	@Override
-	public void neighborChanged(BlockState state, @Nonnull Level world, @Nonnull BlockPos pos, @Nonnull Block block, @Nonnull BlockPos fromPos, boolean isMoving) {
+	protected void neighborChanged(BlockState state, @Nonnull Level world, @Nonnull BlockPos pos, @Nonnull Block block, net.minecraft.world.level.redstone.Orientation orientation, boolean isMoving) {
 		EnumGemDirection newFacing = state.getValue(TYPE);
 		boolean flag = false;
 
@@ -151,13 +151,13 @@ public class BlockEnderInhibitorOn extends Block {
 			world.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
 		}
 
-		super.neighborChanged(state, world, pos, block, fromPos, isMoving);
+		super.neighborChanged(state, world, pos, block, orientation, isMoving);
 	}
 
 	@Nonnull
 	@Override
 	public InteractionResult useWithoutItem(@Nonnull BlockState state, @Nonnull Level world, @Nonnull BlockPos pos, @Nonnull Player player, @Nonnull BlockHitResult hitResult) {
-		if (!world.isClientSide) {
+		if (!world.isClientSide()) {
 			BlockState activeState = ModBlocks.ENDER_INHIBITOR_OFF.getBlock().defaultBlockState().setValue(BlockEnderInhibitorOff.TYPE, state.getValue(TYPE));
 			world.setBlock(pos, activeState, 3);
 			world.playSound(null, pos, SoundEvents.LEVER_CLICK, SoundSource.BLOCKS, 0.3F, 0.6F);

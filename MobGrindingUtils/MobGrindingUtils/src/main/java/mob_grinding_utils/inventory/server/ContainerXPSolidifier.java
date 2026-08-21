@@ -25,7 +25,7 @@ public class ContainerXPSolidifier extends AbstractContainerMenu {
     public ContainerXPSolidifier(final int windowId, final Inventory playerInventory, FriendlyByteBuf extra) {
         super(ModContainers.SOLIDIFIER.get(), windowId);
         BlockPos tilePos = extra.readBlockPos();
-        BlockEntity tile = playerInventory.player.getCommandSenderWorld().getBlockEntity(tilePos);
+        BlockEntity tile = playerInventory.player.level().getBlockEntity(tilePos);
         if (!(tile instanceof TileEntityXPSolidifier))
             return;
         this.tile = (TileEntityXPSolidifier) tile;

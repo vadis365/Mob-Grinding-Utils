@@ -13,7 +13,8 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.neoforged.neoforge.fluids.FluidStack;
-import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.transfer.fluid.FluidResource;
+import net.neoforged.neoforge.transfer.transaction.Transaction;
 import net.neoforged.neoforge.network.PacketDistributor;
 
 import java.util.List;
@@ -26,7 +27,7 @@ public class TileEntitySinkTank extends TileEntityTank {
 
 	public static <T extends BlockEntity> void serverTick(Level world, BlockPos worldPosition, BlockState blockState, T t) {
 		if (t instanceof TileEntitySinkTank tile) {
-			if (tile.tank.getFluid().isEmpty() || tile.tank.getFluid().is(ModBlocks.FLUID_XP.get()))
+			if (tile.tank.stack().isEmpty() || tile.tank.stack().is(ModBlocks.FLUID_XP.get()))
 				tile.captureDroppedXP();
 			TileEntityTank.serverTick(world, worldPosition, blockState, t);
 		}
@@ -39,10 +40,13 @@ public class TileEntitySinkTank extends TileEntityTank {
 			int xpAmount = getPlayerXP(player);
 			if (xpAmount <= 0)
 				return false;
-			if (tank.getFluidAmount() < tank.getCapacity()) {
-				tank.fill(new FluidStack(ModBlocks.FLUID_XP.get(), 20), IFluidHandler.FluidAction.EXECUTE);
+			if (tank.amount() < tank.capacity()) {
+				try (Transaction transaction = Transaction.openRoot()) {
+					if (tank.insert(FluidResource.of(new FluidStack(ModBlocks.FLUID_XP.get(), 20)), 20, transaction) == 20)
+						transaction.commit();
+				}
 				addPlayerXP(player, -1);
-				level.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.BOTTLE_FILL, SoundSource.NEUTRAL , 0.1F, 0.5F * ((getLevel().random.nextFloat() - getLevel().random.nextFloat()) * 0.7F + 1.8F));
+				level.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.BOTTLE_FILL, SoundSource.NEUTRAL , 0.1F, 0.5F * ((getLevel().getRandom().nextFloat() - getLevel().getRandom().nextFloat()) * 0.7F + 1.8F));
 				PacketDistributor.sendToPlayersNear((ServerLevel) level, null, getBlockPos().getX(), getBlockPos().getY(), getBlockPos().getZ(), 30, new TapParticlePacket(getBlockPos().above()));
 			}
 			return true;

@@ -74,7 +74,7 @@ public class BlockFan extends DirectionalBlock implements EntityBlock {
 	@Nonnull
 	@Override
 	public InteractionResult useWithoutItem(@Nonnull BlockState state, @Nonnull Level world, @Nonnull BlockPos pos, @Nonnull Player player, @Nonnull BlockHitResult hitResult) {
-		if (!world.isClientSide) {
+		if (!world.isClientSide()) {
 			BlockEntity tileentity = world.getBlockEntity(pos);
 			if (tileentity  instanceof TileEntityFan)
 				player.openMenu((TileEntityFan)tileentity, pos);
@@ -83,19 +83,17 @@ public class BlockFan extends DirectionalBlock implements EntityBlock {
 	}
 
 	@Override
-	public void onRemove(BlockState state, @Nonnull Level world, @Nonnull BlockPos pos, BlockState newState, boolean isMoving) {
-		if (!state.is(newState.getBlock())) {
-			TileEntityFan tile = (TileEntityFan) world.getBlockEntity(pos);
-			if (tile != null) {
-				Containers.dropContents(world, pos, tile);
-				world.updateNeighbourForOutputSignal(pos, this);
-			}
-			super.onRemove(state, world, pos, newState, isMoving);
+	protected void affectNeighborsAfterRemoval(BlockState state, ServerLevel world, @Nonnull BlockPos pos, boolean isMoving) {
+		TileEntityFan tile = (TileEntityFan) world.getBlockEntity(pos);
+		if (tile != null) {
+			Containers.dropContents(world, pos, tile);
+			world.updateNeighbourForOutputSignal(pos, this);
 		}
+		super.affectNeighborsAfterRemoval(state, world, pos, isMoving);
 	}
 
 	@Override
-	public void neighborChanged(BlockState state, Level world, @Nonnull BlockPos pos, @Nonnull Block block, @Nonnull BlockPos fromPos, boolean isMoving) {
+	protected void neighborChanged(BlockState state, Level world, @Nonnull BlockPos pos, @Nonnull Block block, net.minecraft.world.level.redstone.Orientation orientation, boolean isMoving) {
 		boolean flag = world.hasNeighborSignal(pos);
 		if (flag != state.getValue(POWERED))
 			world.setBlock(pos, state.setValue(POWERED, flag), 4);
@@ -103,7 +101,7 @@ public class BlockFan extends DirectionalBlock implements EntityBlock {
 
 	@Override
 	public void tick(@Nonnull BlockState state, ServerLevel world, @Nonnull BlockPos pos, @Nonnull RandomSource rand) {
-		if (!world.isClientSide) {
+		if (!world.isClientSide()) {
 			boolean flag = !world.hasNeighborSignal(pos);
 			if (flag != state.getValue(POWERED))
 				world.setBlock(pos, state.setValue(POWERED, flag), 4);

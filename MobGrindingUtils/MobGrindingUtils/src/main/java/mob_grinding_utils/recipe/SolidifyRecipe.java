@@ -4,7 +4,6 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import mob_grinding_utils.MobGrindingUtils;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
@@ -27,39 +26,43 @@ public record SolidifyRecipe(Ingredient mould, ItemStack result, int fluidAmount
 
     @Nonnull
     @Override
-    public ItemStack assemble(@Nonnull RecipeInput inv, @Nonnull HolderLookup.Provider registries) {
+    public ItemStack assemble(@Nonnull RecipeInput inv) {
         return result.copy();
     }
 
     @Override
-    public ItemStack result() {
-        return result.copy();
-    }
-
-    @Override
-    public boolean canCraftInDimensions(int width, int height) {
+    public boolean showNotification() {
         return false;
     }
 
-    @Nonnull
     @Override
-    public ItemStack getResultItem(@Nonnull HolderLookup.Provider registries) {
-        return result;
+    public String group() {
+        return "";
+    }
+
+    @Override
+    public PlacementInfo placementInfo() {
+        return PlacementInfo.NOT_PLACEABLE;
+    }
+
+    @Override
+    public RecipeBookCategory recipeBookCategory() {
+        return RecipeBookCategories.CRAFTING_MISC;
     }
 
     @Nonnull
     @Override
-    public RecipeSerializer<?> getSerializer() {
+    public RecipeSerializer<SolidifyRecipe> getSerializer() {
         return MobGrindingUtils.SOLIDIFIER_RECIPE.get();
     }
 
     @Nonnull
     @Override
-    public RecipeType<?> getType() {
+    public RecipeType<SolidifyRecipe> getType() {
         return MobGrindingUtils.SOLIDIFIER_TYPE.get();
     }
 
-    public static class Serializer implements RecipeSerializer<SolidifyRecipe> {
+    public static final class Serializer {
         public static final MapCodec<SolidifyRecipe> CODEC = RecordCodecBuilder.mapCodec(instance -> instance
                 .group(Ingredient.CODEC.fieldOf("ingredient").forGetter(recipe -> recipe.mould),
                         ItemStack.CODEC.fieldOf("result").forGetter(recipe -> recipe.result),
@@ -69,17 +72,7 @@ public record SolidifyRecipe(Ingredient mould, ItemStack result, int fluidAmount
         public static final StreamCodec<RegistryFriendlyByteBuf, SolidifyRecipe> STREAM_CODEC = StreamCodec.of(
                 SolidifyRecipe.Serializer::toNetwork, SolidifyRecipe.Serializer::fromNetwork
         );
-
-        @Nonnull
-        @Override
-        public MapCodec<SolidifyRecipe> codec() {
-            return CODEC;
-        }
-
-        @Override
-        public StreamCodec<RegistryFriendlyByteBuf, SolidifyRecipe> streamCodec() {
-            return STREAM_CODEC;
-        }
+        public static final RecipeSerializer<SolidifyRecipe> INSTANCE = new RecipeSerializer<>(CODEC, STREAM_CODEC);
 
         @Nonnull
         public static SolidifyRecipe fromNetwork(@Nonnull RegistryFriendlyByteBuf buffer) {

@@ -25,6 +25,6 @@ public class BlockTankSink extends BlockTank {
 	@Nullable
 	@Override
 	public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level pLevel, @Nonnull BlockState pState, @Nonnull BlockEntityType<T> pBlockEntityType) {
-		return pLevel.isClientSide ? null : TileEntitySinkTank::serverTick;
+		return pLevel.isClientSide() ? null : TileEntitySinkTank::serverTick;
 	}
 }

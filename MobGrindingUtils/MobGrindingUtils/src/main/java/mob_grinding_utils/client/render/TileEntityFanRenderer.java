@@ -1,47 +1,40 @@
 package mob_grinding_utils.client.render;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import mob_grinding_utils.tile.TileEntityFan;
-import net.minecraft.client.renderer.LevelRenderer;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.client.renderer.feature.ModelFeatureRenderer;
+import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.world.phys.AABB;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
+import net.minecraft.world.phys.Vec3;
+import org.jspecify.annotations.Nullable;
 
-import javax.annotation.Nonnull;
-
-@OnlyIn(Dist.CLIENT)
-public class TileEntityFanRenderer implements BlockEntityRenderer<TileEntityFan> {
+public class TileEntityFanRenderer implements BlockEntityRenderer<TileEntityFan, MGUBlockEntityRenderState> {
 
 	public TileEntityFanRenderer(BlockEntityRendererProvider.Context context) {
 	}
 
-	@Override
-	public void render(@Nonnull TileEntityFan tile, float partialTicks, @Nonnull PoseStack matrixStack, @Nonnull MultiBufferSource buffer, int combinedLight, int combinedOverlay) {
-		if (tile == null || !tile.hasLevel())
-			return;
+	@Override public MGUBlockEntityRenderState createRenderState() { return new MGUBlockEntityRenderState(); }
 
-		if (!tile.showRenderBox)
-			return;
+	@Override public void extractRenderState(TileEntityFan tile, MGUBlockEntityRenderState state, float partialTicks, Vec3 camera, ModelFeatureRenderer.@Nullable CrumblingOverlay breakProgress) {
+		BlockEntityRenderer.super.extractRenderState(tile, state, partialTicks, camera, breakProgress);
+		state.showRenderBox = tile.showRenderBox;
+		state.renderBox = tile.getAABBForRender();
+	}
 
-		VertexConsumer ivertexbuilder = buffer.getBuffer(RenderType.lines());
-		matrixStack.pushPose();
-		matrixStack.translate(-0.0005D, -0.0005D, -0.0005D);
-		matrixStack.scale(0.999F, 0.999F, 0.999F);
-
-		LevelRenderer.renderLineBox(matrixStack, ivertexbuilder, tile.getAABBForRender(), 0F, 0F, 1F, 1F);
-		matrixStack.popPose();
-		
+	@Override public void submit(MGUBlockEntityRenderState state, PoseStack stack, SubmitNodeCollector nodes, CameraRenderState camera) {
+		if (!state.showRenderBox || state.renderBox == null) return;
+		stack.pushPose();
+		stack.translate(-0.0005D, -0.0005D, -0.0005D);
+		stack.scale(0.999F, 0.999F, 0.999F);
+		MGURenderUtil.submitLineBox(stack, nodes, state.renderBox, 0, 0, 1);
+		stack.popPose();
 	}
 	
 
-	@Nonnull
 	@Override
-	@OnlyIn(Dist.CLIENT)
 	public AABB getRenderBoundingBox(TileEntityFan blockEntity) {
 		return blockEntity.getRenderBoundingBox();
 	}

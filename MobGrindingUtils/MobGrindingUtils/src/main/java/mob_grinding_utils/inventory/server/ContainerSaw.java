@@ -24,7 +24,7 @@ public class ContainerSaw extends AbstractContainerMenu {
 		super(ModContainers.SAW.get(), windowId);
 		
 		BlockPos tilePos = extra.readBlockPos();
-		BlockEntity tile = playerInventory.player.getCommandSenderWorld().getBlockEntity(tilePos);
+		BlockEntity tile = playerInventory.player.level().getBlockEntity(tilePos);
 		if (!(tile instanceof TileEntitySaw))
 			return;
 		saw = (TileEntitySaw) tile;

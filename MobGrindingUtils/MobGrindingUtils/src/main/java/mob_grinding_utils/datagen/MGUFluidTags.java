@@ -5,16 +5,18 @@ import mob_grinding_utils.ModTags;
 import mob_grinding_utils.Reference;
 import mob_grinding_utils.util.RL;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.data.DataGenerator;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.data.PackOutput;
 import net.minecraft.data.tags.FluidTagsProvider;
-import net.neoforged.neoforge.common.data.ExistingFileHelper;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.level.material.Fluid;
 
 import javax.annotation.Nonnull;
 import java.util.concurrent.CompletableFuture;
 
 public class MGUFluidTags extends FluidTagsProvider {
-    public MGUFluidTags(DataGenerator generatorIn, CompletableFuture<HolderLookup.Provider> something, ExistingFileHelper existingFileHelper) {
-        super(generatorIn.getPackOutput(), something, Reference.MOD_ID, existingFileHelper);
+    public MGUFluidTags(PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProvider) {
+        super(output, lookupProvider, Reference.MOD_ID);
     }
 
     @Override
@@ -22,7 +24,7 @@ public class MGUFluidTags extends FluidTagsProvider {
         tag(ModTags.Fluids.EXPERIENCE).add(ModBlocks.FLUID_XP.get());
         tag(ModTags.Fluids.XPJUICE).add(ModBlocks.FLUID_XP.get());
 
-        tag(ModTags.Fluids.EXPERIENCE).addOptional(RL.rl("pneumaticcraft", "memory_essence"));
-        tag(ModTags.Fluids.EXPERIENCE).addOptional(RL.rl("cofh_core","experience"));
+		getOrCreateRawBuilder(ModTags.Fluids.EXPERIENCE).addOptionalElement(RL.rl("pneumaticcraft", "memory_essence"));
+		getOrCreateRawBuilder(ModTags.Fluids.EXPERIENCE).addOptionalElement(RL.rl("cofh_core","experience"));
     }
 }

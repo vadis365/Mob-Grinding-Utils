@@ -1,7 +1,6 @@
 package mob_grinding_utils.client.render;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 import mob_grinding_utils.ModBlocks;
 import mob_grinding_utils.blocks.BlockSaw;
@@ -10,24 +9,23 @@ import mob_grinding_utils.models.ModelSawBase;
 import mob_grinding_utils.models.ModelSawBlade;
 import mob_grinding_utils.tile.TileEntitySaw;
 import mob_grinding_utils.util.RL;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.SubmitNodeCollector;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider.Context;
+import net.minecraft.client.renderer.feature.ModelFeatureRenderer;
+import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
+import net.minecraft.world.phys.Vec3;
+import org.jspecify.annotations.Nullable;
 
-import javax.annotation.Nonnull;
+public class TileEntitySawRenderer implements BlockEntityRenderer<TileEntitySaw, MGUBlockEntityRenderState> {
 
-@OnlyIn(Dist.CLIENT)
-public class TileEntitySawRenderer implements BlockEntityRenderer<TileEntitySaw> {
-
-	private static final ResourceLocation BASE_TEXTURE = RL.mgu("textures/tiles/saw_base.png");
-	private static final ResourceLocation BLADE_TEXTURE = RL.mgu("textures/tiles/saw_blade.png");
+	private static final Identifier BASE_TEXTURE = RL.mgu("textures/tiles/saw_base.png");
+	private static final Identifier BLADE_TEXTURE = RL.mgu("textures/tiles/saw_blade.png");
 	private final ModelSawBase saw_base;
 	private final ModelSawBlade saw_blade;
 
@@ -36,19 +34,19 @@ public class TileEntitySawRenderer implements BlockEntityRenderer<TileEntitySaw>
 		saw_blade = new ModelSawBlade(context.bakeLayer(ModelLayers.SAW_BLADE));
 	}
 
-	@Override
-	public void render(@Nonnull TileEntitySaw tile, float partialTicks, @Nonnull PoseStack matrixStack, @Nonnull MultiBufferSource buffer, int combinedLight, int combinedOverlay) {
-		if(tile == null || !tile.hasLevel())
-			return;
+	@Override public MGUBlockEntityRenderState createRenderState() { return new MGUBlockEntityRenderState(); }
 
-		BlockState state = tile.getLevel().getBlockState(tile.getBlockPos());
+	@Override public void extractRenderState(TileEntitySaw tile, MGUBlockEntityRenderState state, float partialTicks, Vec3 camera, ModelFeatureRenderer.@Nullable CrumblingOverlay breakProgress) {
+		BlockEntityRenderer.super.extractRenderState(tile, state, partialTicks, camera, breakProgress);
+		BlockState blockState = tile.getBlockState();
+		state.valid = blockState.getBlock() == ModBlocks.SAW.getBlock();
+		state.facing = state.valid ? blockState.getValue(BlockSaw.FACING) : Direction.NORTH;
+		state.animation = tile.animationTicks + (tile.animationTicks - tile.prevAnimationTicks) * partialTicks;
+	}
 
-		if(state == null || state.getBlock() != ModBlocks.SAW.getBlock())
-			return;
-
-		Direction facing = state.getValue(BlockSaw.FACING);
-
-		VertexConsumer ivertexbuilder = buffer.getBuffer(RenderType.entitySolid(BASE_TEXTURE));
+	@Override public void submit(MGUBlockEntityRenderState state, PoseStack matrixStack, SubmitNodeCollector nodes, CameraRenderState camera) {
+		if (!state.valid) return;
+		Direction facing = state.facing;
 
 		matrixStack.pushPose();
 		matrixStack.translate(0.5D, 0.5D, 0.5D);
@@ -63,49 +61,62 @@ public class TileEntitySawRenderer implements BlockEntityRenderer<TileEntitySaw>
 			case EAST -> matrixStack.mulPose(Axis.ZP.rotationDegrees(-90F));
 		}
 		matrixStack.translate(0F, -1F, 0F);
-		saw_base.renderToBuffer(matrixStack, ivertexbuilder, combinedLight, OverlayTexture.NO_OVERLAY, 0xFFFFFFFF);
+		submitBase(matrixStack, nodes, state);
 
 		matrixStack.pushPose();
 
-		float ticks = tile.animationTicks + (tile.animationTicks - tile.prevAnimationTicks)  * partialTicks;
+		float ticks = state.animation;
 		matrixStack.mulPose(Axis.YP.rotationDegrees(ticks));
-		saw_base.renderAxle(matrixStack, ivertexbuilder, combinedLight, OverlayTexture.NO_OVERLAY, 0xFFFFFFFF);
+		submitAxle(matrixStack, nodes, state);
 		
 		matrixStack.pushPose();
 		matrixStack.mulPose(Axis.YP.rotationDegrees(45F));
-		saw_base.renderMace(matrixStack, ivertexbuilder, combinedLight, OverlayTexture.NO_OVERLAY, 0xFFFFFFFF);
+		submitMace(matrixStack, nodes, state);
 		matrixStack.popPose();
 		
 		matrixStack.pushPose();
 		matrixStack.mulPose(Axis.YP.rotationDegrees(165F));
-		saw_base.renderMace(matrixStack, ivertexbuilder, combinedLight, OverlayTexture.NO_OVERLAY, 0xFFFFFFFF);
+		submitMace(matrixStack, nodes, state);
 		matrixStack.popPose();
 		
 		matrixStack.pushPose();
 		matrixStack.mulPose(Axis.YP.rotationDegrees(285F));
-		saw_base.renderMace(matrixStack, ivertexbuilder, combinedLight, OverlayTexture.NO_OVERLAY, 0xFFFFFFFF);
+		submitMace(matrixStack, nodes, state);
 		matrixStack.popPose();
 		
 		matrixStack.pushPose();
 		matrixStack.translate(0F, 0.2F, -0.16F);
 		matrixStack.mulPose(Axis.XP.rotationDegrees(8F));
-		saw_blade.renderToBuffer(matrixStack, buffer.getBuffer(RenderType.entitySolid(BLADE_TEXTURE)), combinedLight, OverlayTexture.NO_OVERLAY, 0xFFFFFFFF);
+		submitBlade(matrixStack, nodes, state);
 		matrixStack.popPose();
 
 		matrixStack.pushPose();
 		matrixStack.translate(0F, 0.00F, 0.16F);
 		matrixStack.mulPose(Axis.XP.rotationDegrees(-8F));
-		saw_blade.renderToBuffer(matrixStack, buffer.getBuffer(RenderType.entitySolid(BLADE_TEXTURE)), combinedLight, OverlayTexture.NO_OVERLAY, 0xFFFFFFFF);
+		submitBlade(matrixStack, nodes, state);
 		matrixStack.popPose();
 
 		matrixStack.pushPose();
 		matrixStack.translate(0F, -0.2F, -0.16F);
 		matrixStack.mulPose(Axis.XP.rotationDegrees(8F));
-		saw_blade.renderToBuffer(matrixStack, buffer.getBuffer(RenderType.entitySolid(BLADE_TEXTURE)), combinedLight, OverlayTexture.NO_OVERLAY, 0xFFFFFFFF);
+		submitBlade(matrixStack, nodes, state);
 		matrixStack.popPose();
 
 		matrixStack.popPose();
 		matrixStack.popPose();
 
+	}
+
+	private void submitBase(PoseStack stack, SubmitNodeCollector nodes, MGUBlockEntityRenderState state) { submit(nodes, stack, BASE_TEXTURE, state, saw_base.base, saw_base.plinth); }
+	private void submitAxle(PoseStack stack, SubmitNodeCollector nodes, MGUBlockEntityRenderState state) { submit(nodes, stack, BASE_TEXTURE, state, saw_base.axle, saw_base.axle2, saw_base.axleTop); }
+	private void submitMace(PoseStack stack, SubmitNodeCollector nodes, MGUBlockEntityRenderState state) { submit(nodes, stack, BASE_TEXTURE, state, saw_base.maceBase, saw_base.maceArm, saw_base.mace1, saw_base.mace2, saw_base.mace3, saw_base.mace4); }
+	private static void submit(SubmitNodeCollector nodes, PoseStack stack, Identifier texture, MGUBlockEntityRenderState state, net.minecraft.client.model.geom.ModelPart... parts) {
+		for (var part : parts) nodes.submitModelPart(part, stack, RenderTypes.entitySolid(texture), state.lightCoords, OverlayTexture.NO_OVERLAY, null, -1, state.breakProgress);
+	}
+	private void submitBlade(PoseStack stack, SubmitNodeCollector nodes, MGUBlockEntityRenderState state) {
+		nodes.submitCustomGeometry(stack, RenderTypes.entitySolid(BLADE_TEXTURE), (pose, buffer) -> {
+			PoseStack legacyStack = new PoseStack(); legacyStack.last().set(pose);
+			saw_blade.renderToBuffer(legacyStack, buffer, state.lightCoords, OverlayTexture.NO_OVERLAY, -1);
+		});
 	}
 }

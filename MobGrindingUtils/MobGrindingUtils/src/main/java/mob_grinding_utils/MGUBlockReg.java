@@ -34,7 +34,7 @@ public class MGUBlockReg<B extends Block,I extends Item, T extends BlockEntity> 
         this.name = name;
         block = ModBlocks.BLOCKS.register(name, blockSupplier);
         item = ModItems.ITEMS.register(name, () -> itemSupplier.apply(block.get()));
-        tile = ModBlocks.TILE_ENTITIES.register(name, () -> BlockEntityType.Builder.of(tileSupplier, block.get()).build(null));
+        tile = ModBlocks.TILE_ENTITIES.register(name, () -> new BlockEntityType<>(tileSupplier, block.get()));
     }
 
     public MGUBlockReg(String name, Supplier<B> blockSupplier, Function<B, I> itemSupplier) {

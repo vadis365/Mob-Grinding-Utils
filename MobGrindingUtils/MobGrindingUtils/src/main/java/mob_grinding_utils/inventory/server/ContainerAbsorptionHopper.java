@@ -22,7 +22,7 @@ public class ContainerAbsorptionHopper extends AbstractContainerMenu {
 	public ContainerAbsorptionHopper(final int windowId, final Inventory playerInventory, FriendlyByteBuf extra) {
 		super(ModContainers.ABSORPTION_HOPPER.get(), windowId);
 		BlockPos tilePos = extra.readBlockPos();
-		BlockEntity tile = playerInventory.player.getCommandSenderWorld().getBlockEntity(tilePos);
+		BlockEntity tile = playerInventory.player.level().getBlockEntity(tilePos);
 		if (!(tile instanceof TileEntityAbsorptionHopper))
 			return;
 		hopper = (TileEntityAbsorptionHopper) tile;

@@ -8,67 +8,72 @@ import mob_grinding_utils.models.ModelAHConnect;
 import mob_grinding_utils.tile.TileEntityAbsorptionHopper;
 import mob_grinding_utils.tile.TileEntityAbsorptionHopper.EnumStatus;
 import mob_grinding_utils.util.RL;
-import net.minecraft.client.renderer.LevelRenderer;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
+import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider.Context;
+import net.minecraft.client.renderer.feature.ModelFeatureRenderer;
+import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
+import net.minecraft.world.phys.Vec3;
+import org.jspecify.annotations.Nullable;
 
-import javax.annotation.Nonnull;
-
-@OnlyIn(Dist.CLIENT)
-public class TileEntityAbsorptionRenderer implements BlockEntityRenderer<TileEntityAbsorptionHopper> {
-	private static final ResourceLocation ITEM_TEXTURE = RL.mgu("textures/tiles/absorption_hopper_connects_items.png");
-	private static final ResourceLocation FLUID_TEXTURE = RL.mgu("textures/tiles/absorption_hopper_connects_fluids.png");
+public class TileEntityAbsorptionRenderer implements BlockEntityRenderer<TileEntityAbsorptionHopper, MGUBlockEntityRenderState> {
+	private static final Identifier ITEM_TEXTURE = RL.mgu("textures/tiles/absorption_hopper_connects_items.png");
+	private static final Identifier FLUID_TEXTURE = RL.mgu("textures/tiles/absorption_hopper_connects_fluids.png");
 	private final ModelAHConnect connectionModel;
 
 	public TileEntityAbsorptionRenderer(Context context) {
 		connectionModel = new ModelAHConnect(context.bakeLayer(ModelLayers.ABSORPTION_HOPPER));
 	}
 
-	@Override
-	public void render(TileEntityAbsorptionHopper tile, float partialTicks, @Nonnull PoseStack matrixStack, @Nonnull MultiBufferSource buffer, int combinedLight, int combinedOverlay) {
-		if (tile == null || !tile.hasLevel())
-			return;
+	@Override public MGUBlockEntityRenderState createRenderState() { return new MGUBlockEntityRenderState(); }
 
-		BlockState state = tile.getLevel().getBlockState(tile.getBlockPos());
+	@Override public void extractRenderState(TileEntityAbsorptionHopper tile, MGUBlockEntityRenderState renderState, float partialTicks, Vec3 camera, ModelFeatureRenderer.@Nullable CrumblingOverlay breakProgress) {
+		BlockEntityRenderer.super.extractRenderState(tile, renderState, partialTicks, camera, breakProgress);
+		BlockState state = tile.getBlockState();
+		renderState.valid = state.getBlock() == ModBlocks.ABSORPTION_HOPPER.getBlock();
+		renderState.absorptionStatus = tile.status.clone();
+		renderState.showRenderBox = tile.showRenderBox;
+		renderState.renderBox = tile.getAABBForRender();
+	}
 
-		if(state == null || state.getBlock() != ModBlocks.ABSORPTION_HOPPER.getBlock())
-			return;
-
-		matrixStack.pushPose();
-		matrixStack.translate(0.5D, 0.5D, 0.5D);
+	@Override public void submit(MGUBlockEntityRenderState state, PoseStack matrixStack, SubmitNodeCollector nodes, CameraRenderState camera) {
+		if (!state.valid) return;
+		matrixStack.pushPose(); matrixStack.translate(0.5D, 0.5D, 0.5D);
 		for (Direction facing : Direction.values()) {
-			if (tile.status[facing.ordinal()] == EnumStatus.STATUS_OUTPUT_ITEM) {
+			if (state.absorptionStatus[facing.ordinal()] == EnumStatus.STATUS_OUTPUT_ITEM) {
 				matrixStack.pushPose();
 				getRotTranslation(matrixStack, facing);
-				connectionModel.renderToBuffer(matrixStack, buffer.getBuffer(RenderType.entitySolid(ITEM_TEXTURE)), combinedLight, OverlayTexture.NO_OVERLAY, 0x7F7F7FFF);
+				submitConnection(matrixStack, nodes, ITEM_TEXTURE, state);
 				matrixStack.popPose();
 			}
-			if (tile.status[facing.ordinal()] == EnumStatus.STATUS_OUTPUT_FLUID) {
+			if (state.absorptionStatus[facing.ordinal()] == EnumStatus.STATUS_OUTPUT_FLUID) {
 				matrixStack.pushPose();
 				getRotTranslation(matrixStack, facing);
-				connectionModel.renderToBuffer(matrixStack, buffer.getBuffer(RenderType.entitySolid(FLUID_TEXTURE)), combinedLight, OverlayTexture.NO_OVERLAY, 0x7F7F7FFF);
+				submitConnection(matrixStack, nodes, FLUID_TEXTURE, state);
 				matrixStack.popPose();
 			}
 		}
 		matrixStack.popPose();
 
-		if (!tile.showRenderBox)
+		if (!state.showRenderBox || state.renderBox == null)
 			return;
 		matrixStack.pushPose();
 		matrixStack.translate(-0.0005D, -0.0005D, -0.0005D);
 		matrixStack.scale(0.999F, 0.999F, 0.999F);
 
-		LevelRenderer.renderLineBox(matrixStack, buffer.getBuffer(RenderType.lines()), tile.getAABBForRender(), 1F, 1F, 0F, 1F);
+		MGURenderUtil.submitLineBox(matrixStack, nodes, state.renderBox, 1, 1, 0);
 		matrixStack.popPose();
+	}
+
+	private void submitConnection(PoseStack stack, SubmitNodeCollector nodes, Identifier texture, MGUBlockEntityRenderState state) {
+		nodes.submitModelPart(connectionModel.plate, stack, RenderTypes.entitySolid(texture), state.lightCoords, OverlayTexture.NO_OVERLAY, null, 0x7F7F7FFF, state.breakProgress);
+		nodes.submitModelPart(connectionModel.pipe, stack, RenderTypes.entitySolid(texture), state.lightCoords, OverlayTexture.NO_OVERLAY, null, 0x7F7F7FFF, state.breakProgress);
 	}
 
 	public void getRotTranslation(PoseStack matrixStack, Direction facing) {

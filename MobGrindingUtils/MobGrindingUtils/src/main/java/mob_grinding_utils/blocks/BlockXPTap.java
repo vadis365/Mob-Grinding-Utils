@@ -85,7 +85,7 @@ public class BlockXPTap extends DirectionalBlock implements EntityBlock {
 	@Nonnull
 	@Override
 	public InteractionResult useWithoutItem(@Nonnull BlockState state, Level world, @Nonnull BlockPos pos, @Nonnull Player player, @Nonnull BlockHitResult hit) {
-		if (!world.isClientSide) {
+		if (!world.isClientSide()) {
 			boolean swap = state.getValue(POWERED);
 			world.setBlock(pos, state.setValue(POWERED, !swap), 3);
 			float f = state.getValue(POWERED) ? 0.6F : 0.5F;
@@ -115,13 +115,13 @@ public class BlockXPTap extends DirectionalBlock implements EntityBlock {
 	}
 
 	@Override
-	public void neighborChanged(@Nonnull BlockState state, Level world, @Nonnull BlockPos pos, @Nonnull Block block, @Nonnull BlockPos fromPos, boolean isMoving) {
+	protected void neighborChanged(@Nonnull BlockState state, Level world, @Nonnull BlockPos pos, @Nonnull Block block, net.minecraft.world.level.redstone.Orientation orientation, boolean isMoving) {
 		Direction facing = world.getBlockState(pos).getValue(FACING);
 		if (!canPlaceAt(world, pos.relative(facing.getOpposite()), facing)) {
 			popResource(world, pos, new ItemStack(ModBlocks.XP_TAP.getItem(), 1));
 			world.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
 		}
-		super.neighborChanged(state, world, pos, block, fromPos, isMoving);
+		super.neighborChanged(state, world, pos, block, orientation, isMoving);
 	}
 
 	@Override
@@ -137,6 +137,6 @@ public class BlockXPTap extends DirectionalBlock implements EntityBlock {
 	@Nullable
 	@Override
 	public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level pLevel, @Nonnull BlockState pState, @Nonnull BlockEntityType<T> pBlockEntityType) {
-		return pLevel.isClientSide? null : TileEntityXPTap::serverTick;
+		return pLevel.isClientSide()? null : TileEntityXPTap::serverTick;
 	}
 }
