@@ -22,7 +22,7 @@ import org.jspecify.annotations.Nullable;
 
 /** Component-aware item renderer replacing the removed BEWR path. */
 public final class TileXPSolidifierStackItemRenderer implements SpecialModelRenderer<FluidStack> {
-    private static final Identifier TEXTURE = RL.mgu("textures/tiles/xp_solidifier_no_push.png");
+    private static final Identifier TEXTURE = RL.mgu("tiles/xp_solidifier_no_push");
     private final ModelXPSolidifier model;
     private TileXPSolidifierStackItemRenderer(BakingContext context) { model = new ModelXPSolidifier(context.entityModelSet().bakeLayer(ModelLayers.XPSOLIDIFIER)); }
     @Override public @Nullable FluidStack extractArgument(ItemStack stack) { return stack.getOrDefault(MGUComponents.FLUID, FluidContents.EMPTY).get().copy(); }

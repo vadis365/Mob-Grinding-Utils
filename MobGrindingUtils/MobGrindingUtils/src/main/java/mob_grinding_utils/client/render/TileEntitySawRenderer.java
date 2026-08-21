@@ -24,8 +24,8 @@ import org.jspecify.annotations.Nullable;
 
 public class TileEntitySawRenderer implements BlockEntityRenderer<TileEntitySaw, MGUBlockEntityRenderState> {
 
-	private static final Identifier BASE_TEXTURE = RL.mgu("textures/tiles/saw_base.png");
-	private static final Identifier BLADE_TEXTURE = RL.mgu("textures/tiles/saw_blade.png");
+	private static final Identifier BASE_TEXTURE = RL.mgu("tiles/saw_base");
+	private static final Identifier BLADE_TEXTURE = RL.mgu("tiles/saw_blade");
 	private final ModelSawBase saw_base;
 	private final ModelSawBlade saw_blade;
 

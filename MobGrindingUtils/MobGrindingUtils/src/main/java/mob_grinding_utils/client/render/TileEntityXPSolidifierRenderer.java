@@ -28,7 +28,7 @@ import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.Nullable;
 
 public class TileEntityXPSolidifierRenderer implements BlockEntityRenderer<TileEntityXPSolidifier, MGUBlockEntityRenderState> {
-    private static final Identifier TEXTURE = RL.mgu("textures/tiles/xp_solidifier.png"), TEXTURE_NO_PUSH = RL.mgu("textures/tiles/xp_solidifier_no_push.png");
+    private static final Identifier TEXTURE = RL.mgu("tiles/xp_solidifier"), TEXTURE_NO_PUSH = RL.mgu("tiles/xp_solidifier_no_push");
     private final ModelXPSolidifier model;
     private final ItemModelResolver itemModels;
     public TileEntityXPSolidifierRenderer(Context context) { model = new ModelXPSolidifier(context.bakeLayer(ModelLayers.XPSOLIDIFIER)); itemModels = context.itemModelResolver(); }
