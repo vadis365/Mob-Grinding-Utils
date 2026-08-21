@@ -156,8 +156,9 @@ public class MobGrindingUtils {
 
 		modBus.addListener(MGUNetwork::register);
 
-		//Central Data generator, called on runData
-		modBus.addListener(Generator::gatherData);
+		// Central data generator, called on runData.
+		modBus.addListener(Generator::gatherServerData);
+		modBus.addListener(Generator::gatherClientData);
 	}
 
 	public void setup(FMLCommonSetupEvent event) {
