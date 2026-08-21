@@ -54,14 +54,14 @@ dependencies {
     compileOnly "mezz.jei:jei-${jei_mc_version}-neoforge-api:${jei_version}"
     runtimeOnly "mezz.jei:jei-${jei_mc_version}-neoforge:${jei_version}"
 
-    runtimeOnly "curse.maven:JADE-324717:5493270"
-    runtimeOnly "curse.maven:ATLAS-633577:5490697"
+    runtimeOnly "curse.maven:JADE-324717:8651070"
+    runtimeOnly "curse.maven:ATLAS-633577:7842742"
 
     //runtimeOnly "curse.maven:PP-657831:6304429"
     //runtimeOnly "curse.maven:top-245211:5084077"
     //runtimeOnly fg.deobf("curse.maven:playermobs-430513:3153298") //Not ported yet
-    runtimeOnly "curse.maven:mek-268560:6327955"
-    runtimeOnly "curse.maven:RS-243076:6391989"
+    //runtimeOnly "curse.maven:mek-268560:6327955"
+    runtimeOnly "curse.maven:RS-243076:8211383"
     //runtimeOnly fg.deobf("curse.maven:IF-266515:3261176")
     //runtimeOnly fg.deobf("curse.maven:TITANIUM-287342:3223141")
     //runtimeOnly fg.deobf("curse.maven:XNET-260912:3140153")
@@ -70,7 +70,7 @@ dependencies {
     //runtimeOnly fg.deobf("curse.maven:COFHCORE-69162:3249453")
     //runtimeOnly fg.deobf("curse.maven:TE-69163:3247000")
     //runtimeOnly fg.deobf("curse.maven:TF-222880:3248150")
-    //runtimeOnly fg.deobf("curse.maven:CLUMPS-256717:3481298")
+    runtimeOnly "curse.maven:clumps-256717:7911758"
     //runtimeOnly fg.deobf("curse.maven:CYCLIC-239286:3708026")
 }
 
