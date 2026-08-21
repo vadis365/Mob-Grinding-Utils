@@ -7,7 +7,6 @@ import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.shapes.Shapes;
 
@@ -25,7 +24,7 @@ final class MGURenderUtil {
     static void submitFluidCuboid(
         PoseStack stack, SubmitNodeCollector nodes, TextureAtlasSprite sprite, int color, int light, float xMax, float xMin, float yMin, float height, float zMin, float zMax
     ) {
-		nodes.submitCustomGeometry(stack, RenderTypes.entityTranslucent(TextureAtlas.LOCATION_BLOCKS), (pose, buffer) -> renderCuboid(buffer, pose, xMax, xMin, yMin, height, zMin, zMax, sprite, color, light));
+		nodes.submitCustomGeometry(stack, RenderTypes.translucentMovingBlock(), (pose, buffer) -> renderCuboid(buffer, pose, xMax, xMin, yMin, height, zMin, zMax, sprite, color, light));
     }
 
     private static void renderCuboid(VertexConsumer buffer, PoseStack.Pose pose, float xMax, float xMin, float yMin, float height, float zMin, float zMax, TextureAtlasSprite sprite, int color, int light) {
