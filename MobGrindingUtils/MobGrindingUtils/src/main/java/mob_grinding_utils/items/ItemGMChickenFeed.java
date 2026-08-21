@@ -9,7 +9,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.component.TooltipDisplay;
 import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 
 import javax.annotation.Nonnull;
 import java.util.function.Consumer;
@@ -25,7 +24,6 @@ public class ItemGMChickenFeed extends Item {
 	}
 
 	@Override
-	@OnlyIn(Dist.CLIENT)
 	public void appendHoverText(@Nonnull ItemStack stack, @Nonnull TooltipContext context, TooltipDisplay display, Consumer<Component> tooltip, @Nonnull TooltipFlag flag) {
 		tooltip.accept(Component.translatable("tooltip.chickenfeed_1").withStyle(ChatFormatting.YELLOW));
 		tooltip.accept(Component.translatable("tooltip.chickenfeed_2").withStyle(ChatFormatting.YELLOW));

@@ -12,7 +12,6 @@ import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.world.entity.animal.chicken.Chicken;
 import net.minecraft.world.phys.AABB;
 import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.client.event.RenderLivingEvent;
@@ -22,7 +21,6 @@ import java.util.Comparator;
 public class RenderChickenSwell {
 
 	@SubscribeEvent(priority = EventPriority.LOWEST)
-	@OnlyIn(Dist.CLIENT)
 	public void renderChickenSwell(RenderLivingEvent.Post<?, ?, ?> event) {
 		if (event.getRenderer() instanceof ChickenRenderer renderer && event.getRenderState() instanceof ChickenRenderState state && Minecraft.getInstance().level != null) {
 			Chicken chicken = Minecraft.getInstance().level.getEntitiesOfClass(Chicken.class, new AABB(state.x, state.y, state.z, state.x, state.y, state.z).inflate(1.0D)).stream()

@@ -18,7 +18,7 @@ import org.joml.Vector3fc;
 
 /** Modern data-driven replacement for BlockEntityWithoutLevelRenderer. */
 public final class TileSawStackItemRenderer implements NoDataSpecialModelRenderer {
-    private static final Identifier BASE = RL.mgu("tiles/saw_base"), BLADE = RL.mgu("tiles/saw_blade");
+    private static final Identifier BASE = RL.mgu("textures/tiles/saw_base.png"), BLADE = RL.mgu("textures/tiles/saw_blade.png");
     private final ModelSawBase base; private final ModelSawBlade blade;
     private TileSawStackItemRenderer(SpecialModelRenderer.BakingContext context) { base = new ModelSawBase(context.entityModelSet().bakeLayer(ModelLayers.SAW_BASE)); blade = new ModelSawBlade(context.entityModelSet().bakeLayer(ModelLayers.SAW_BLADE)); }
     @Override public void submit(PoseStack p, SubmitNodeCollector n, int light, int overlay, boolean foil, int outline) {

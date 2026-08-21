@@ -8,7 +8,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.component.TooltipDisplay;
 import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 
 import javax.annotation.Nonnull;
 import java.util.function.Consumer;
@@ -30,7 +29,6 @@ public class ItemSawUpgrade extends Item  {
 	}
 
 	@Override
-	@OnlyIn(Dist.CLIENT)
 	public void appendHoverText(@Nonnull ItemStack stack, @Nonnull TooltipContext context, @Nonnull TooltipDisplay display, @Nonnull Consumer<Component> tooltip, @Nonnull TooltipFlag flag) {
 		switch (upgradeType) {
 			case SHARPNESS -> tooltip.accept(Component.translatable("tooltip.sawupgrade_sharpness", ServerConfig.MASHER_MAX_UPGRADES.get()).withStyle(ChatFormatting.YELLOW));

@@ -5,7 +5,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.component.TooltipDisplay;
 import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import javax.annotation.Nonnull;
 import java.util.function.Consumer;
 
@@ -16,7 +15,6 @@ public class ItemMonocle extends Item {
 	}
 
 	@Override
-	@OnlyIn(Dist.CLIENT)
 	public void appendHoverText(@Nonnull ItemStack stack, @Nonnull TooltipContext context, TooltipDisplay display, Consumer<Component> tooltip, @Nonnull TooltipFlag flagIn) {
 		tooltip.accept(Component.translatable("tooltip.monocle").withStyle(ChatFormatting.YELLOW));
 	}

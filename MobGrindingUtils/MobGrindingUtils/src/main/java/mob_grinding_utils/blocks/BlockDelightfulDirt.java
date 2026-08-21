@@ -25,7 +25,6 @@ import net.minecraft.world.level.redstone.Orientation;
 import net.minecraft.world.level.ScheduledTickAccess;
 import net.minecraft.world.phys.AABB;
 import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import net.minecraft.util.TriState;
 import net.neoforged.neoforge.event.EventHooks;
 
@@ -154,7 +153,6 @@ public class BlockDelightfulDirt extends BlockDirtSpawner {
 	}
 
 	@Override
-	@OnlyIn(Dist.CLIENT)
 	public void animateTick(@Nonnull BlockState stateIn, Level level, @Nonnull BlockPos pos, @Nonnull RandomSource rand) {
 		if(level.getGameTime()%3 == 0 && level.getBlockState(pos.above()).isAir()) {
 			for (int i = 0; i < 4; ++i) {

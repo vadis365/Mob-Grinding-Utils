@@ -23,8 +23,8 @@ import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.Nullable;
 
 public class TileEntityAbsorptionRenderer implements BlockEntityRenderer<TileEntityAbsorptionHopper, MGUBlockEntityRenderState> {
-	private static final Identifier ITEM_TEXTURE = RL.mgu("tiles/absorption_hopper_connects_items");
-	private static final Identifier FLUID_TEXTURE = RL.mgu("tiles/absorption_hopper_connects_fluids");
+	private static final Identifier ITEM_TEXTURE = RL.mgu("textures/tiles/absorption_hopper_connects_items.png");
+	private static final Identifier FLUID_TEXTURE = RL.mgu("textures/tiles/absorption_hopper_connects_fluids.png");
 	private final ModelAHConnect connectionModel;
 
 	public TileEntityAbsorptionRenderer(Context context) {

@@ -23,7 +23,7 @@ import org.jspecify.annotations.Nullable;
 
 /** Component-aware special item renderer for all tank variants. */
 public final class TileTankStackItemRenderer implements SpecialModelRenderer<TileTankStackItemRenderer.Data> {
-    private static final Identifier TANK = RL.mgu("tiles/tank"), SINK = RL.mgu("tiles/tank_sink"), JUMBO = RL.mgu("tiles/tank_jumbo");
+    private static final Identifier TANK = RL.mgu("textures/tiles/tank.png"), SINK = RL.mgu("textures/tiles/tank_sink.png"), JUMBO = RL.mgu("textures/tiles/tank_jumbo.png");
     private final ModelTankBlock model;
     private TileTankStackItemRenderer(BakingContext context) { model = new ModelTankBlock(context.entityModelSet().bakeLayer(ModelLayers.TANK)); }
     @Override public @Nullable Data extractArgument(ItemStack stack) {

@@ -21,7 +21,7 @@ import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.Nullable;
 
 public class TileEntityTankRenderer implements BlockEntityRenderer<TileEntityTank, MGUBlockEntityRenderState> {
-    private static final Identifier TANK_TEXTURE = RL.mgu("tiles/tank"), TANK_SINK_TEXTURE = RL.mgu("tiles/tank_sink"), TANK_JUMBO_TEXTURE = RL.mgu("tiles/tank_jumbo");
+    private static final Identifier TANK_TEXTURE = RL.mgu("textures/tiles/tank.png"), TANK_SINK_TEXTURE = RL.mgu("textures/tiles/tank_sink.png"), TANK_JUMBO_TEXTURE = RL.mgu("textures/tiles/tank_jumbo.png");
     private final ModelTankBlock model;
     public TileEntityTankRenderer(Context context) { model = new ModelTankBlock(context.bakeLayer(ModelLayers.TANK)); }
     @Override public MGUBlockEntityRenderState createRenderState() { return new MGUBlockEntityRenderState(); }

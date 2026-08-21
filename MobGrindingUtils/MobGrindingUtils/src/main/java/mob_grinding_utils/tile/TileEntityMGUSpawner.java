@@ -29,7 +29,6 @@ import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.AABB;
 import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.event.EventHooks;
 import net.neoforged.neoforge.transfer.ResourceHandler;
 import net.neoforged.neoforge.transfer.item.ItemResource;
@@ -203,7 +202,6 @@ public class TileEntityMGUSpawner extends BlockEntity implements MenuProvider, B
 		setChanged();
 	}
 
-	@OnlyIn(Dist.CLIENT)
 	public int getProgressScaled(int count) {
 		return getProgress() * count / (MAX_SPAWNING_TIME);
 	}
@@ -251,7 +249,6 @@ public class TileEntityMGUSpawner extends BlockEntity implements MenuProvider, B
 		return new AABB(x - 1.5D - getWidthModifierAmount(), y - 0.5D - getHeightModifierAmount(), z - 1.5D - getWidthModifierAmount(), x + 1.5D + getWidthModifierAmount(), y + 0.5D + getHeightModifierAmount(), z + 1.5D + getWidthModifierAmount()).move(getoffsetX(), getoffsetY(), getoffsetZ());
 	}
 
-	@OnlyIn(Dist.CLIENT)
 	public AABB getAABBForRender() {
 		return new AABB(- 1D - getWidthModifierAmount(), - 0D - getHeightModifierAmount(), - 1D - getWidthModifierAmount(), 2D + getWidthModifierAmount(), 1D + getHeightModifierAmount(), 2D + getWidthModifierAmount()).move(getoffsetX(), getoffsetY(), getoffsetZ());
 	}
@@ -341,7 +338,6 @@ public class TileEntityMGUSpawner extends BlockEntity implements MenuProvider, B
 		return new ContainerMGUSpawner(windowID, playerInventory, new FriendlyByteBuf(Unpooled.buffer()).writeBlockPos(worldPosition));
 	}
 
-	@OnlyIn(Dist.CLIENT)
 	public Entity getEntityToRender() {
 		Entity entity = null;
 		if (hasSpawnEggItem()) {

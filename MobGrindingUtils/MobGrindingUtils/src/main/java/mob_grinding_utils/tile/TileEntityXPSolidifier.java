@@ -37,7 +37,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.transfer.ResourceHandler;
 import net.neoforged.neoforge.transfer.item.ItemResource;
@@ -243,7 +242,6 @@ public class TileEntityXPSolidifier extends BlockEntity implements MenuProvider,
 
     }
 
-	@OnlyIn(Dist.CLIENT)
 	public ItemStack getCachedOutPutRenderStack() {
 		if(hasMould()) {
 			if(stack(inputSlots, 0).getItem() == ModItems.SOLID_XP_MOULD_BABY.get())
@@ -252,7 +250,6 @@ public class TileEntityXPSolidifier extends BlockEntity implements MenuProvider,
 		return ItemStack.EMPTY;
 	}
 
-	@OnlyIn(Dist.CLIENT)
 	public int getProgressScaled(int count) {
 		return getProgress() * count / (MAX_MOULDING_TIME);
 	}

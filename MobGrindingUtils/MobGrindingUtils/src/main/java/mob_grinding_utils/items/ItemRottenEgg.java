@@ -17,7 +17,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 
 import javax.annotation.Nonnull;
 import java.util.function.Consumer;
@@ -29,7 +28,6 @@ public class ItemRottenEgg extends Item {
 	}
 
 	@Override
-	@OnlyIn(Dist.CLIENT)
 	public void appendHoverText(@Nonnull ItemStack stack, @Nonnull TooltipContext context, TooltipDisplay display, Consumer<Component> tooltip, @Nonnull TooltipFlag flag) {
 		tooltip.accept(Component.translatable("tooltip.rotten_egg_1").withStyle(ChatFormatting.YELLOW));
 		tooltip.accept(Component.translatable("tooltip.rotten_egg_2").withStyle(ChatFormatting.YELLOW));

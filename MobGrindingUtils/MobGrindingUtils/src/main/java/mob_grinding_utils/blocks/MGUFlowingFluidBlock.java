@@ -12,7 +12,6 @@ import net.minecraft.world.entity.InsideBlockEffectApplier;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.FlowingFluid;
 import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 
 import javax.annotation.Nonnull;
 import java.util.function.Supplier;
@@ -39,7 +38,6 @@ public class MGUFlowingFluidBlock extends LiquidBlock {
 	}
 
 	@Override
-	@OnlyIn(Dist.CLIENT)
 	public void animateTick(@Nonnull BlockState stateIn, Level world, BlockPos pos, @Nonnull RandomSource rand) {
 		if (world.isEmptyBlock(pos.above()) && world.getGameTime()%5 == 0) {
 			float xx = (float) pos.getX() + 0.5F;

@@ -34,7 +34,6 @@ import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.AABB;
 import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.transfer.RangedResourceHandler;
 import net.neoforged.neoforge.transfer.ResourceHandler;
@@ -322,7 +321,6 @@ public class TileEntityAbsorptionHopper extends TileEntityInventoryHelper implem
 		return new AABB(x - 3.5D - getModifierAmount(), y - 3.5D - getModifierAmount(), z - 3.5D - getModifierAmount(), x + 3.5D + getModifierAmount(), y + 3.5D + getModifierAmount(), z + 3.5D + getModifierAmount()).move(getoffsetX(), getoffsetY(), getoffsetZ());
 	}
 
-	@OnlyIn(Dist.CLIENT)
 	public AABB getAABBForRender() {
 		return new AABB(- 3D - getModifierAmount(), - 3D - getModifierAmount(), - 3D - getModifierAmount(), 4D + getModifierAmount(), 4D + getModifierAmount(), 4D + getModifierAmount()).move(getoffsetX(), getoffsetY(), getoffsetZ());
 	}
