@@ -103,11 +103,13 @@ public class BlockDreadfulDirt extends BlockDirtSpawner {
 			entity.setPos(pos.getX() + 0.5D, pos.getY() + 1D, pos.getZ() + 0.5D);
 			if (!checkSpawnPosition(entity, level, MobSpawnType.NATURAL))
 				return;
-			 if(level.getEntities(entity.getType(), entity.getBoundingBox(), EntitySelector.ENTITY_STILL_ALIVE).isEmpty() && level.noCollision(entity)) {
+			 if(level.getEntities(entity.getType(), entity.getBoundingBox(), EntitySelector.ENTITY_STILL_ALIVE).isEmpty()) {
 				 TriState result = DirtSpawnEvent.checkEvent(entity, level, pos.getX() + 0.5D, pos.getY() + 1D, pos.getZ() + 0.5D, DirtSpawnEvent.DirtType.DELIGHTFUL);
 				 if (result == TriState.FALSE)
 					 return;
 				 EventHooks.finalizeMobSpawn(entity, level, level.getCurrentDifficultyAt(pos), MobSpawnType.NATURAL, null);
+				 if (!level.noCollision(entity))
+					 return;
 				level.addFreshEntity(entity);
 			 }
 		}
