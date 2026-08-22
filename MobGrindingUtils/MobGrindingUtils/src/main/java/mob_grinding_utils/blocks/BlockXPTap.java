@@ -85,7 +85,7 @@ public class BlockXPTap extends DirectionalBlock implements EntityBlock {
 	@Nonnull
 	@Override
 	public InteractionResult useWithoutItem(@Nonnull BlockState state, Level world, @Nonnull BlockPos pos, @Nonnull Player player, @Nonnull BlockHitResult hit) {
-		if (!world.isClientSide) {
+		if (!world.isClientSide()) {
 			boolean swap = state.getValue(POWERED);
 			world.setBlock(pos, state.setValue(POWERED, !swap), 3);
 			float f = state.getValue(POWERED) ? 0.6F : 0.5F;
@@ -137,6 +137,6 @@ public class BlockXPTap extends DirectionalBlock implements EntityBlock {
 	@Nullable
 	@Override
 	public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level pLevel, @Nonnull BlockState pState, @Nonnull BlockEntityType<T> pBlockEntityType) {
-		return pLevel.isClientSide? null : TileEntityXPTap::serverTick;
+		return pLevel.isClientSide()? null : TileEntityXPTap::serverTick;
 	}
 }

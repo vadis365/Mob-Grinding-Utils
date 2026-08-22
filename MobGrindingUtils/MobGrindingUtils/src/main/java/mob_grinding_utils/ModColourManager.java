@@ -1,8 +1,6 @@
 package mob_grinding_utils;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.color.block.BlockColor;
-import net.minecraft.client.color.item.ItemColor;
 import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent;
 
 import java.awt.*;

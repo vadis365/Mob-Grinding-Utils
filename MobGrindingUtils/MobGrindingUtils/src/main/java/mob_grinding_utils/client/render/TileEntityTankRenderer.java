@@ -16,6 +16,7 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider.Context;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.neoforged.api.distmarker.Dist;
@@ -27,9 +28,9 @@ import javax.annotation.Nonnull;
 
 @OnlyIn(Dist.CLIENT)
 public class TileEntityTankRenderer implements BlockEntityRenderer<TileEntityTank> {
-	private static final ResourceLocation TANK_TEXTURE = RL.mgu("textures/tiles/tank.png");
-	private static final ResourceLocation TANK_SINK_TEXTURE = RL.mgu("textures/tiles/tank_sink.png");
-	private static final ResourceLocation TANK_JUMBO_TEXTURE = RL.mgu("textures/tiles/tank_jumbo.png");
+	private static final Identifier TANK_TEXTURE = RL.mgu("textures/tiles/tank.png");
+	private static final Identifier TANK_SINK_TEXTURE = RL.mgu("textures/tiles/tank_sink.png");
+	private static final Identifier TANK_JUMBO_TEXTURE = RL.mgu("textures/tiles/tank_jumbo.png");
 	private final ModelTankBlock tank_model;
 	
 	public TileEntityTankRenderer(Context context) {
@@ -74,7 +75,7 @@ public class TileEntityTankRenderer implements BlockEntityRenderer<TileEntityTan
 
 	}
 
-	private ResourceLocation getTexture(TileEntityTank tile) {
+	private Identifier getTexture(TileEntityTank tile) {
 		return tile instanceof TileEntityJumboTank ? TANK_JUMBO_TEXTURE : tile instanceof TileEntitySinkTank ? TANK_SINK_TEXTURE : TANK_TEXTURE;
 	}
 

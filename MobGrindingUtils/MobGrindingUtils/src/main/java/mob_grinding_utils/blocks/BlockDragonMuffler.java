@@ -38,11 +38,11 @@ public class BlockDragonMuffler extends Block {
 	@Override
 	public InteractionResult useWithoutItem(BlockState state, @Nonnull Level world, @Nonnull BlockPos pos, @Nonnull Player player, @Nonnull BlockHitResult hitResult) {
 		boolean swap = !state.getValue(MODE);
-		if (!world.isClientSide)
+		if (!world.isClientSide())
 			world.setBlock(pos, state.setValue(MODE, swap), 3);
 		CompoundTag nbt = player.getPersistentData();
 		nbt.putBoolean("MGU_DragonMuffle" , swap);
-		player.displayClientMessage(Component.literal(swap ? "Now hiding Dragon boss bars.":"Now showing Dragon boss bars."), true);
+		player.sendOverlayMessage(Component.literal(swap ? "Now hiding Dragon boss bars.":"Now showing Dragon boss bars."));
 		return InteractionResult.SUCCESS;
 	}
 }

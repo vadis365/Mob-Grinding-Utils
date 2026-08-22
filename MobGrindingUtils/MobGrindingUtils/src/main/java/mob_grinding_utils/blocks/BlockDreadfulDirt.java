@@ -10,6 +10,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
+import net.minecraft.util.TriState;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.level.BlockGetter;
@@ -25,7 +26,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
-import net.neoforged.neoforge.common.util.TriState;
 import net.neoforged.neoforge.event.EventHooks;
 
 import javax.annotation.Nonnull;
@@ -39,7 +39,7 @@ public class BlockDreadfulDirt extends BlockDirtSpawner {
 
 	public boolean shouldCatchFire(LevelAccessor level, BlockPos pos) {
 		// standard night to day ticks
-		return level.canSeeSkyFromBelowWater(pos) && (level.dayTime() < 13000 || level.dayTime() > 23000);
+		return level.canSeeSkyFromBelowWater(pos) && (level.getGameTime() < 13000 || level.getGameTime() > 23000);
 	}
 
 	public boolean shouldSpawnMob(LevelAccessor level, BlockPos pos) {
@@ -94,20 +94,20 @@ public class BlockDreadfulDirt extends BlockDirtSpawner {
 		List<SpawnerData> spawns = biome.getMobSettings().getMobs(MobCategory.MONSTER).unwrap();
 		if (!spawns.isEmpty()) {
 			int indexSize = spawns.size();
-			EntityType<?> type = spawns.get(level.getRandom().nextInt(indexSize)).type;
+			EntityType<?> type = spawns.get(level.getRandom().nextInt(indexSize)).type();
 			if (type.is(ModTags.Entities.NO_DIRT_SPAWN) || type.is(ModTags.Entities.NO_DREADFUL_SPAWN))
 				return;
 			Mob entity = (Mob) type.create(level);
 			if (entity == null)
 				return;
 			entity.setPos(pos.getX() + 0.5D, pos.getY() + 1D, pos.getZ() + 0.5D);
-			if (!checkSpawnPosition(entity, level, MobSpawnType.NATURAL))
+			if (!checkSpawnPosition(entity, level, EntitySpawnReason.NATURAL))
 				return;
 			 if(level.getEntities(entity.getType(), entity.getBoundingBox(), EntitySelector.ENTITY_STILL_ALIVE).isEmpty() && level.noCollision(entity)) {
 				 TriState result = DirtSpawnEvent.checkEvent(entity, level, pos.getX() + 0.5D, pos.getY() + 1D, pos.getZ() + 0.5D, DirtSpawnEvent.DirtType.DELIGHTFUL);
 				 if (result == TriState.FALSE)
 					 return;
-				 EventHooks.finalizeMobSpawn(entity, level, level.getCurrentDifficultyAt(pos), MobSpawnType.NATURAL, null);
+				 EventHooks.finalizeMobSpawn(entity, level, level.getCurrentDifficultyAt(pos), EntitySpawnReason.NATURAL, null);
 				level.addFreshEntity(entity);
 			 }
 		}

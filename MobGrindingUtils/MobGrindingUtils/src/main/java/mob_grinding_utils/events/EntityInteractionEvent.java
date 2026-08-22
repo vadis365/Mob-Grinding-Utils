@@ -10,9 +10,9 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.animal.Chicken;
-import net.minecraft.world.entity.animal.horse.AbstractHorse;
-import net.minecraft.world.entity.npc.WanderingTrader;
+import net.minecraft.world.entity.animal.chicken.Chicken;
+import net.minecraft.world.entity.animal.equine.AbstractHorse;
+import net.minecraft.world.entity.npc.wanderingtrader.WanderingTrader;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
@@ -31,10 +31,10 @@ public class EntityInteractionEvent {
 			}
 
 			if (entity instanceof Chicken && !entity.isBaby()) {
-				Level world = entity.getCommandSenderWorld();
+				Level world = entity.level();
 				ItemStack eventItem = event.getItemStack();
 				if (!eventItem.isEmpty() && eventItem.getItem() instanceof ItemGMChickenFeed) {
-					if (!world.isClientSide) {
+					if (!world.isClientSide()) {
 						CompoundTag nbt = entity.getPersistentData();
 						if (!nbt.contains("shouldExplode")) {
 							entity.setInvulnerable(true);
