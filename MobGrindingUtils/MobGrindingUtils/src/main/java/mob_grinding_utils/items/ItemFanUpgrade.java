@@ -5,11 +5,12 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.component.TooltipDisplay;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 
 import javax.annotation.Nonnull;
-import java.util.List;
+import java.util.function.Consumer;
 
 public class ItemFanUpgrade extends Item {
 	public enum UpgradeType {
@@ -24,13 +25,13 @@ public class ItemFanUpgrade extends Item {
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void appendHoverText(@Nonnull ItemStack stack, @Nonnull TooltipContext context, @Nonnull List<Component> list, @Nonnull TooltipFlag flag) {
+	public void appendHoverText(@Nonnull ItemStack stack, @Nonnull TooltipContext context, @Nonnull TooltipDisplay display, @Nonnull Consumer<Component> builder, @Nonnull TooltipFlag tooltipFlag) {
 		if (upgradeType == UpgradeType.WIDTH)
-			list.add(Component.translatable("tooltip.fanupgrade_width").withStyle(ChatFormatting.YELLOW));
+			builder.accept(Component.translatable("tooltip.fanupgrade_width").withStyle(ChatFormatting.YELLOW));
 		if (upgradeType == UpgradeType.HEIGHT)
-			list.add(Component.translatable("tooltip.fanupgrade_height").withStyle(ChatFormatting.YELLOW));
+            builder.accept(Component.translatable("tooltip.fanupgrade_height").withStyle(ChatFormatting.YELLOW));
 		if (upgradeType == UpgradeType.SPEED)
-			list.add(Component.translatable("tooltip.fanupgrade_distance").withStyle(ChatFormatting.YELLOW));
+            builder.accept(Component.translatable("tooltip.fanupgrade_distance").withStyle(ChatFormatting.YELLOW));
 	}
 
 }

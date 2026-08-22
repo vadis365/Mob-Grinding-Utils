@@ -26,12 +26,12 @@ import javax.annotation.Nonnull;
 import java.util.concurrent.CompletableFuture;
 
 public class Recipes extends RecipeProvider {
-    public Recipes(DataGenerator generatorIn, CompletableFuture<HolderLookup.Provider> registries) {
-        super(generatorIn.getPackOutput(), registries);
+    public Recipes(HolderLookup.Provider registries, RecipeOutput output) {
+        super(registries,output);
     }
     @Override
-    protected void buildRecipes(@Nonnull RecipeOutput theirConsumer) {
-        var consumer = new NoAdvRecipeOutput(theirConsumer);
+    protected void buildRecipes() {
+        var consumer = new NoAdvRecipeOutput(output);
         //Absorption Hopper
         var noneItem = has(Items.AIR);
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModBlocks.ABSORPTION_HOPPER.getItem())

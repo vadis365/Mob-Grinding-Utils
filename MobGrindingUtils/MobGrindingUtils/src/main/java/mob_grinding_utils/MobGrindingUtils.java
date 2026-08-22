@@ -22,9 +22,6 @@ import mob_grinding_utils.tile.TileEntityTank;
 import mob_grinding_utils.tile.TileEntityXPSolidifier;
 import mob_grinding_utils.util.FakePlayerHandler;
 import mob_grinding_utils.util.RL;
-import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
-import net.minecraft.client.renderer.ItemBlockRenderTypes;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -32,7 +29,6 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
@@ -302,7 +298,7 @@ public class MobGrindingUtils {
 
 	public static DamageSource getSpikeDamage(Level level) {
 		if (SPIKE_DAMAGE == null)
-			SPIKE_DAMAGE = new DamageSource(level.registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(MobGrindingUtils.SPIKE_TYPE));
+			SPIKE_DAMAGE = new DamageSource(level.registryAccess().lookupOrThrow(Registries.DAMAGE_TYPE).getOrThrow(MobGrindingUtils.SPIKE_TYPE));
 
 		return SPIKE_DAMAGE;
 	}

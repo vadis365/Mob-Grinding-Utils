@@ -3,13 +3,12 @@ plugins {
     id 'idea'
     id 'maven-publish'
     id 'eclipse'
-    id 'net.neoforged.gradle.userdev' version '7.0.173'
-    id "me.modmuss50.mod-publish-plugin" version "0.4.5"
+    id 'net.neoforged.moddev' version '2.0.141'
+    id "me.modmuss50.mod-publish-plugin" version "0.7.4"
 }
 
-repositories {
-    maven { url = 'https://maven.creeperhost.net/' }
-    maven { url "https://www.cursemaven.com" }
+tasks.named('wrapper', Wrapper).configure {
+    distributionType = Wrapper.DistributionType.BIN
 }
 
 version = "${mod_version}+mc${minecraft_version}"
@@ -18,50 +17,77 @@ base {
     archivesName = "mob_grinding_utils"
 }
 
-java.toolchain.languageVersion = JavaLanguageVersion.of(21)
+java.toolchain.languageVersion = JavaLanguageVersion.of(25)
 sourceSets.main.resources { srcDir 'src/generated/resources' }
-minecraft.accessTransformers.file rootProject.file('src/main/resources/META-INF/accesstransformer.cfg')
 
-runs {
-    configureEach {
-        jvmArgument '-Xmx8G'
-
-        modSource project.sourceSets.main
+neoForge {
+    version = project.neo_version
+    accessTransformers {
+        file('src/main/resources/META-INF/accesstransformer.cfg')
     }
 
-    client {
-        systemProperty 'neoforge.enabledGameTestNamespaces', "mob_grinding_utils"
-        arguments.addAll('--width', '1280', '--height', '720')
-    }
+    runs {
+        client {
+            client()
+            systemProperty 'neoforge.enabledGameTestNamespaces', "mob_grinding_utils"
+            programArguments.addAll('--width', '1280', '--height', '720')
+        }
+        client2 {
+            client()
+            systemProperty 'neoforge.enabledGameTestNamespaces', "mob_grinding_utils"
+            programArguments.addAll('--width', '1280', '--height', '720')
+            programArguments.addAll('--username', 'Dev2')
+        }
 
-    server {
-        systemProperty 'neoforge.enabledGameTestNamespaces', "mob_grinding_utils"
-        programArgument '--nogui'
-    }
+        server {
+            server()
+            systemProperty 'neoforge.enabledGameTestNamespaces', "mob_grinding_utils"
+            programArgument '--nogui'
+        }
 
-    gameTestServer {
-        systemProperty 'forge.enabledGameTestNamespaces', "mob_grinding_utils"
-    }
+        gameTestServer {
+            type = "gameTestServer"
+            systemProperty 'forge.enabledGameTestNamespaces', "mob_grinding_utils"
+        }
 
-    data {
-        arguments.addAll '--mod', "mob_grinding_utils", '--all', '--output', file('src/generated/resources/').getAbsolutePath(), '--existing', file('src/main/resources/').getAbsolutePath()
+        data {
+            clientData()
+            programArguments.addAll '--mod', "mob_grinding_utils", '--all', '--output', file('src/generated/resources/').getAbsolutePath(), '--existing', file('src/main/resources/').getAbsolutePath()
+        }
+
+        configureEach { run ->
+            jvmArgument '-Xmx8G'
+            if (run.project.javaToolchains.launcherFor(java.toolchain).map { it.metadata.vendor }.getOrElse("").contains("JetBrains")) {
+                run.jvmArgument("-XX:+AllowEnhancedClassRedefinition")
+            }
+        }
+    }
+    mods {
+        "mob_grinding_utils" {
+            sourceSet(sourceSets.main)
+        }
     }
 }
 
+
+repositories {
+    maven { url = 'https://maven.creeperhost.net/' }
+    maven { url "https://www.cursemaven.com" }
+}
+
 dependencies {
-    implementation "net.neoforged:neoforge:${neo_version}"
-    compileOnly "mezz.jei:jei-${jei_mc_version}-common-api:${jei_version}"//new
+    compileOnly "mezz.jei:jei-${jei_mc_version}-common-api:${jei_version}"
     compileOnly "mezz.jei:jei-${jei_mc_version}-neoforge-api:${jei_version}"
     runtimeOnly "mezz.jei:jei-${jei_mc_version}-neoforge:${jei_version}"
 
-    runtimeOnly "curse.maven:JADE-324717:5493270"
-    runtimeOnly "curse.maven:ATLAS-633577:5490697"
+    runtimeOnly "curse.maven:JADE-324717:7886513"
+    //runtimeOnly "curse.maven:ATLAS-633577:5490697"
 
     //runtimeOnly "curse.maven:PP-657831:6304429"
     //runtimeOnly "curse.maven:top-245211:5084077"
     //runtimeOnly fg.deobf("curse.maven:playermobs-430513:3153298") //Not ported yet
-    runtimeOnly "curse.maven:mek-268560:6327955"
-    runtimeOnly "curse.maven:RS-243076:6391989"
+    //runtimeOnly "curse.maven:mek-268560:6327955"
+    //runtimeOnly "curse.maven:RS-243076:6391989"
     //runtimeOnly fg.deobf("curse.maven:IF-266515:3261176")
     //runtimeOnly fg.deobf("curse.maven:TITANIUM-287342:3223141")
     //runtimeOnly fg.deobf("curse.maven:XNET-260912:3140153")

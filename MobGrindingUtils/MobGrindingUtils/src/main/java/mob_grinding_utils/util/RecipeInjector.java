@@ -3,7 +3,7 @@ package mob_grinding_utils.util;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.data.recipes.RecipeOutput;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.crafting.Recipe;
 import net.neoforged.neoforge.common.conditions.ICondition;
 
@@ -26,7 +26,7 @@ public class RecipeInjector<T extends Recipe<?>> implements RecipeOutput {
     }
 
     @Override
-    public void accept(@Nonnull ResourceLocation resourceLocation, @Nonnull Recipe<?> recipe, @Nullable AdvancementHolder advancementHolder, @Nonnull ICondition... iConditions) {
+    public void accept(@Nonnull Identifier resourceLocation, @Nonnull Recipe<?> recipe, @Nullable AdvancementHolder advancementHolder, @Nonnull ICondition... iConditions) {
         inner.accept(resourceLocation, constructor.apply((T) recipe), advancementHolder, iConditions);
     }
 }

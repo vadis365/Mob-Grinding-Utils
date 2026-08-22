@@ -4,12 +4,12 @@ import net.minecraft.data.DataGenerator;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
 
 public class Generator {
-    public static void gatherData(GatherDataEvent event) {
+    public static void gatherData(GatherDataEvent.Client event) {
         DataGenerator gen = event.getGenerator();
 
-        gen.addProvider(true, new Recipes(gen, event.getLookupProvider()));
+        gen.addProvider(true, new Recipes());
 
-        MGUBlockTags blockTags = new MGUBlockTags(gen, event.getLookupProvider(), event.getExistingFileHelper());
+        MGUBlockTags blockTags = new MGUBlockTags(gen, event.getLookupProvider());
         gen.addProvider(true, blockTags);
         gen.addProvider(true, MGULootTables.getProvider(gen.getPackOutput(), event.getLookupProvider()));
         gen.addProvider(true, new MGUFluidTags(gen, event.getLookupProvider(), event.getExistingFileHelper()));

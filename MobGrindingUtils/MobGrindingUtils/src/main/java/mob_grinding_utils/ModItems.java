@@ -4,6 +4,8 @@ import com.google.common.collect.ImmutableSet;
 import mob_grinding_utils.items.*;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.*;
+import net.minecraft.world.item.equipment.ArmorMaterials;
+import net.minecraft.world.item.equipment.ArmorType;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
@@ -42,7 +44,7 @@ public class ModItems {
 	public static DeferredItem<Item> XP_SOLIDIFIER_UPGRADE = ITEMS.register("xp_solidifier_upgrade", () -> new ItemSolidifierUpgrade(new Item.Properties().stacksTo(64)));
 	public static DeferredItem<Item> SPAWNER_UPGRADE_WIDTH = ITEMS.register("spawner_upgrade_width", () -> new ItemSpawnerUpgrade(new Item.Properties().stacksTo(64), ItemSpawnerUpgrade.SpawnerUpgrade.WIDTH));
 	public static DeferredItem<Item> SPAWNER_UPGRADE_HEIGHT = ITEMS.register("spawner_upgrade_height", () -> new ItemSpawnerUpgrade(new Item.Properties().stacksTo(64), ItemSpawnerUpgrade.SpawnerUpgrade.HEIGHT));
-	public static DeferredItem<Item> MONOCLE = ITEMS.register("monocle", () -> new ItemMonocle(ArmorMaterials.CHAIN, ArmorItem.Type.HELMET, new Item.Properties().stacksTo(1).durability(256)));
+	public static DeferredItem<Item> MONOCLE = ITEMS.register("monocle", () -> new ItemMonocle(ArmorMaterials.CHAINMAIL, ArmorType.HELMET, new Item.Properties().stacksTo(1).durability(256)));
 	//public static RegistryObject<Item> SPAWNEGG = ITEMS.register("witheregg", () -> new SpawnEggItem(EntityType.WITHER, 0x0, 0xffffff, new Item.Properties().group(MobGrindingUtils.TAB)));
 
 	public static final Set<DeferredItem<Item>> TAB_ORDER = ImmutableSet.of(

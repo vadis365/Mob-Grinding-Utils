@@ -6,14 +6,13 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.tags.BlockTags;
 import net.neoforged.neoforge.common.data.BlockTagsProvider;
-import net.neoforged.neoforge.common.data.ExistingFileHelper;
 
 import javax.annotation.Nonnull;
 import java.util.concurrent.CompletableFuture;
 
 public class  MGUBlockTags extends BlockTagsProvider {
-    public MGUBlockTags(DataGenerator generatorIn, CompletableFuture<HolderLookup.Provider> something, ExistingFileHelper existingFileHelper) {
-        super(generatorIn.getPackOutput(), something, Reference.MOD_ID, existingFileHelper);
+    public MGUBlockTags(DataGenerator generatorIn, CompletableFuture<HolderLookup.Provider> something) {
+        super(generatorIn.getPackOutput(), something, Reference.MOD_ID);
     }
 
     @Override

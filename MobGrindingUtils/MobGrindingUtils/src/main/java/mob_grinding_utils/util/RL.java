@@ -1,7 +1,7 @@
 package mob_grinding_utils.util;
 
 import mob_grinding_utils.Reference;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.Contract;
 
 import javax.annotation.Nonnull;
@@ -17,8 +17,8 @@ public class RL {
      */
     @Nonnull
     @Contract("_, _ -> new")
-    public static ResourceLocation rl(String namespace, String path) {
-        return ResourceLocation.fromNamespaceAndPath(namespace, path);
+    public static Identifier rl(String namespace, String path) {
+        return Identifier.fromNamespaceAndPath(namespace, path);
     }
 
     /**
@@ -29,8 +29,8 @@ public class RL {
      */
     @Nonnull
     @Contract("_ -> new")
-    public static ResourceLocation mgu(String path) {
-        return ResourceLocation.fromNamespaceAndPath(Reference.MOD_ID, path);
+    public static Identifier mgu(String path) {
+        return Identifier.fromNamespaceAndPath(Reference.MOD_ID, path);
     }
 
     /**
@@ -41,7 +41,7 @@ public class RL {
      */
     @Nonnull
     @Contract("_ -> new")
-    public static ResourceLocation mc(String path) {
-        return ResourceLocation.fromNamespaceAndPath("minecraft", path);
+    public static Identifier mc(String path) {
+        return Identifier.fromNamespaceAndPath("minecraft", path);
     }
 }
