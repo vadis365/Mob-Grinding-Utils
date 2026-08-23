@@ -21,7 +21,8 @@ public class MGUFluidTags extends FluidTagsProvider {
         tag(ModTags.Fluids.EXPERIENCE).add(ModBlocks.FLUID_XP.get());
         tag(ModTags.Fluids.XPJUICE).add(ModBlocks.FLUID_XP.get());
 
-        tag(ModTags.Fluids.EXPERIENCE).addOptional(RL.rl("pneumaticcraft", "memory_essence"));
-        tag(ModTags.Fluids.EXPERIENCE).addOptional(RL.rl("cofh_core","experience"));
+        getOrCreateRawBuilder(ModTags.Fluids.EXPERIENCE)
+            .addOptionalElement(RL.rl("pneumaticcraft", "memory_essence"))
+            .addOptionalElement(RL.rl("cofh_core","experience"));
     }
 }

@@ -1,12 +1,12 @@
 package mob_grinding_utils.events;
 
+import net.minecraft.util.TriState;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.level.LevelAccessor;
 import net.neoforged.bus.api.Event;
 import net.neoforged.bus.api.ICancellableEvent;
 import net.neoforged.neoforge.common.NeoForge;
-import net.neoforged.neoforge.common.util.TriState;
 
 public class DirtSpawnEvent extends Event implements ICancellableEvent {
     private final LevelAccessor world;

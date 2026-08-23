@@ -15,6 +15,7 @@ import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.entries.LootItem;
 import net.minecraft.world.level.storage.loot.functions.CopyComponentsFunction;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 import net.neoforged.neoforge.registries.DeferredHolder;
 
@@ -37,7 +38,7 @@ public class MGULootTables extends BlockLootSubProvider {
 
     @Override
     protected void generate() {
-        CopyComponentsFunction.Builder copyFluid = CopyComponentsFunction.copyComponents(CopyComponentsFunction.Source.BLOCK_ENTITY)
+        CopyComponentsFunction.Builder copyFluid = CopyComponentsFunction.copyComponentsFromBlockEntity(LootContextParams.BLOCK_ENTITY)
                 .include(MGUComponents.FLUID.get());
 
         dropComponents(ModBlocks.TANK, $ -> $.apply(copyFluid));

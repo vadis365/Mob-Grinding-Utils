@@ -8,15 +8,13 @@ import net.minecraft.data.DataGenerator;
 import net.minecraft.data.tags.BiomeTagsProvider;
 import net.minecraft.tags.BiomeTags;
 import net.neoforged.neoforge.common.Tags;
-import net.neoforged.neoforge.common.data.ExistingFileHelper;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.concurrent.CompletableFuture;
 
 public class MGUBiomeTags extends BiomeTagsProvider {
-    public MGUBiomeTags(DataGenerator generator, CompletableFuture<HolderLookup.Provider> something, @Nullable ExistingFileHelper existingFileHelper) {
-        super(generator.getPackOutput(), something, Reference.MOD_ID, existingFileHelper);
+    public MGUBiomeTags(DataGenerator generator, CompletableFuture<HolderLookup.Provider> something) {
+        super(generator.getPackOutput(), something, Reference.MOD_ID);
     }
 
     @Override
@@ -26,7 +24,8 @@ public class MGUBiomeTags extends BiomeTagsProvider {
 
         getOrCreateRawBuilder(ModTags.Biomes.HOSTILE_OVERRIDE);
 
-        tag(ModTags.Biomes.HOSTILE_OVERRIDE).addOptional(RL.rl("javd", "void"));
-        tag(ModTags.Biomes.HOSTILE_OVERRIDE).addOptional(RL.rl("jamd", "mining"));
+        getOrCreateRawBuilder(ModTags.Biomes.HOSTILE_OVERRIDE)
+            .addOptionalElement(RL.rl("javd", "void"))
+            .addOptionalElement(RL.rl("jamd", "mining"));
     }
 }

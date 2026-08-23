@@ -17,70 +17,70 @@ import javax.annotation.Nonnull;
 import java.util.Optional;
 
 public class EntityXPOrbFalling extends ExperienceOrb {
-	private int age;
-	public int delayBeforeCanPickup;
+    private int age;
+    public int delayBeforeCanPickup;
 
-	public EntityXPOrbFalling(Level level, double x, double y, double z, int expValue) {
-		super(EntityType.EXPERIENCE_ORB, level);
-		setPos(x, y, z);
-		setYRot((float) (Math.random() * 360.0D));
-		setDeltaMovement(0D ,0D ,0D);
-		setValue(expValue);
-	}
+    public EntityXPOrbFalling(Level level, double x, double y, double z, int expValue) {
+        super(EntityType.EXPERIENCE_ORB, level);
+        setPos(x, y, z);
+        setYRot((float) (Math.random() * 360.0D));
+        setDeltaMovement(0D ,0D ,0D);
+        setValue(expValue);
+    }
 
-	@Override
-	   public void tick() {
-		super.tick();
+    @Override
+    public void tick() {
+        super.tick();
 
-		if (delayBeforeCanPickup > 0)
-			--delayBeforeCanPickup;
+        if (delayBeforeCanPickup > 0)
+            --delayBeforeCanPickup;
 
-		xo = getX();
-		yo = getY();
-		zo = getZ();
-		setDeltaMovement(this.getDeltaMovement().add(0.0D, -0.03D, 0.0D));
+        xo = getX();
+        yo = getY();
+        zo = getZ();
+        setDeltaMovement(this.getDeltaMovement().add(0.0D, -0.03D, 0.0D));
 
-	      if (!this.level().noCollision(this.getBoundingBox()))
-	          this.moveTowardsClosestSpace(this.getX(), (this.getBoundingBox().minY + this.getBoundingBox().maxY) / 2.0D, this.getZ());
+        if (!this.level().noCollision(this.getBoundingBox()))
+            this.moveTowardsClosestSpace(this.getX(), (this.getBoundingBox().minY + this.getBoundingBox().maxY) / 2.0D, this.getZ());
 
-		this.move(MoverType.SELF, this.getDeltaMovement());
+        this.move(MoverType.SELF, this.getDeltaMovement());
 
-	     if (this.onGround())
-	         this.setDeltaMovement(this.getDeltaMovement().multiply(1.0D, -0.9D, 1.0D));
+        if (this.onGround())
+            this.setDeltaMovement(this.getDeltaMovement().multiply(1.0D, -0.9D, 1.0D));
 
-		++tickCount;
-		++age;
+        ++tickCount;
+        ++age;
 
-		if (age >= 6000)
-			removeAfterChangingDimensions();
-	}
+        if (age >= 6000)
+            removeAfterChangingDimensions();
+    }
 
-	@Override
-	public void playerTouch(@Nonnull Player player) {
-		if (!level().isClientSide()) {
-			if (delayBeforeCanPickup == 0 && player.takeXpDelay == 0) {
-				if (NeoForge.EVENT_BUS.post(new PlayerXpEvent.PickupXp(player, this)).isCanceled())
-					return;
-				player.takeXpDelay = 2;
-				player.take(this, 1);
-				 Optional<EnchantedItemInUse> entry = EnchantmentHelper.getRandomItemWith(EnchantmentEffectComponents.REPAIR_WITH_XP, player, ItemStack::isDamaged);
+    @Override
+    public void playerTouch(@Nonnull Player player) {
+        if (!level().isClientSide()) {
+            if (delayBeforeCanPickup == 0 && player.takeXpDelay == 0) {
+                if (NeoForge.EVENT_BUS.post(new PlayerXpEvent.PickupXp(player, this)).isCanceled())
+                    return;
+                player.takeXpDelay = 2;
+                player.take(this, 1);
+                Optional<EnchantedItemInUse> entry = EnchantmentHelper.getRandomItemWith(EnchantmentEffectComponents.REPAIR_WITH_XP, player, ItemStack::isDamaged);
 
-		            if (entry.isPresent()) {
-		                ItemStack itemstack = entry.get().itemStack();
-		                if (!itemstack.isEmpty() && itemstack.isDamaged()) {
-		                   int i = Math.min((int)(this.getValue() * itemstack.getXpRepairRatio()), itemstack.getDamageValue());
-		                   this.setValue(getValue() - durabilityToXp(i));
-		                   itemstack.setDamageValue(itemstack.getDamageValue() - i);
-		                }
-		             }
+                    if (entry.isPresent()) {
+                        ItemStack itemstack = entry.get().itemStack();
+                        if (!itemstack.isEmpty() && itemstack.isDamaged()) {
+                            int i = Math.min((int)(this.getValue() * itemstack.getXpRepairRatio()), itemstack.getDamageValue());
+                            this.setValue(getValue() - durabilityToXp(i));
+                            itemstack.setDamageValue(itemstack.getDamageValue() - i);
+                        }
+                    }
 
-				if (getValue() > 0)
-					TileEntitySinkTank.addPlayerXP(player, getValue());
+                if (getValue() > 0)
+                    TileEntitySinkTank.addPlayerXP(player, getValue());
 
-				remove(RemovalReason.DISCARDED);
-			}
-		}
-	}
+                remove(RemovalReason.DISCARDED);
+            }
+        }
+    }
 
     private int durabilityToXp(int durability) {
         return durability / 2;

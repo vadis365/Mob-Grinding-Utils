@@ -9,15 +9,13 @@ import mob_grinding_utils.blocks.BlockXPSolidifier;
 import net.minecraft.core.Direction;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.world.level.block.Block;
-import net.neoforged.neoforge.client.model.generators.BlockStateProvider;
-import net.neoforged.neoforge.client.model.generators.ConfiguredModel;
-import net.neoforged.neoforge.common.data.ExistingFileHelper;
+import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvider;
 
 import java.util.function.Supplier;
 
 public class MGUBlockStates extends BlockStateProvider {
-    public MGUBlockStates(DataGenerator gen, ExistingFileHelper exFileHelper) {
-        super(gen.getPackOutput(), Reference.MOD_ID, exFileHelper);
+    public MGUBlockStates(DataGenerator gen) {
+        super(gen.getPackOutput(), Reference.MOD_ID);
     }
 
     @Override
