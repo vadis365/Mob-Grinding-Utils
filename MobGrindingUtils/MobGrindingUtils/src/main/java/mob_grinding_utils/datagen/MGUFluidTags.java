@@ -7,14 +7,13 @@ import mob_grinding_utils.util.RL;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.tags.FluidTagsProvider;
-import net.neoforged.neoforge.common.data.ExistingFileHelper;
 
 import javax.annotation.Nonnull;
 import java.util.concurrent.CompletableFuture;
 
 public class MGUFluidTags extends FluidTagsProvider {
-    public MGUFluidTags(DataGenerator generatorIn, CompletableFuture<HolderLookup.Provider> something, ExistingFileHelper existingFileHelper) {
-        super(generatorIn.getPackOutput(), something, Reference.MOD_ID, existingFileHelper);
+    public MGUFluidTags(DataGenerator generatorIn, CompletableFuture<HolderLookup.Provider> something) {
+        super(generatorIn.getPackOutput(), something, Reference.MOD_ID);
     }
 
     @Override

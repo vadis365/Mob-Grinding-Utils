@@ -7,8 +7,7 @@ public class Generator {
     public static void gatherData(GatherDataEvent.Client event) {
         DataGenerator gen = event.getGenerator();
 
-        gen.addProvider(true, new Recipes(event., gen.getPackOutput()));
-
+        gen.addProvider(true, new MGURecipes(gen, event.getLookupProvider()));
         MGUBlockTags blockTags = new MGUBlockTags(gen, event.getLookupProvider());
         gen.addProvider(true, blockTags);
         gen.addProvider(true, MGULootTables.getProvider(gen.getPackOutput(), event.getLookupProvider()));
