@@ -36,12 +36,13 @@ public class ModBlocks {
 	public static DeferredRegister<BlockEntityType<?>> TILE_ENTITIES = DeferredRegister.create(BuiltInRegistries.BLOCK_ENTITY_TYPE, Reference.MOD_ID);
 
 	public static MGUBlockReg<BlockFan, MGUBlockItem, TileEntityFan> FAN = new MGUBlockReg<>("fan",
-		() -> new BlockFan(Block.Properties.of().mapColor(MapColor.COLOR_GRAY).strength(10.0F, 2000.0F).sound(SoundType.METAL)),
-		(b) -> new MGUBlockItem(b, new Item.Properties()), TileEntityFan::new);
+            BlockFan::new,
+            fan -> new MGUBlockItem(fan, new Item.Properties().useBlockDescriptionPrefix()),
+            TileEntityFan::new);
 
 	public static MGUBlockReg<BlockSaw, MGUBlockItem, TileEntitySaw> SAW = new MGUBlockReg<>("saw",
-		() -> new BlockSaw(Block.Properties.of().mapColor(MapColor.COLOR_GRAY).strength(10.0F, 2000.0F).sound(SoundType.METAL).noOcclusion()),
-		(b) -> new MGUBlockItem(b, new Item.Properties()), TileEntitySaw::new);
+		BlockSaw::new,
+		saw -> new MGUBlockItem(saw, new Item.Properties()), TileEntitySaw::new);
 
 	public static MGUBlockReg<BlockAbsorptionHopper, MGUBlockItem, TileEntityAbsorptionHopper> ABSORPTION_HOPPER = new MGUBlockReg<>("absorption_hopper",
 		() -> new BlockAbsorptionHopper(Block.Properties.of().mapColor(MapColor.COLOR_BLACK).forceSolidOn().strength(10.0F, 2000.0F).sound(SoundType.METAL).noOcclusion()),

@@ -1,5 +1,6 @@
 package mob_grinding_utils;
 
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -28,14 +29,14 @@ public class MGUBlockReg<B extends Block,I extends Item, T extends BlockEntity> 
         return name;
     }
 
-    public MGUBlockReg(String name, Supplier<B> blockSupplier, Function<B, I> itemSupplier, BlockEntityType.BlockEntitySupplier<T> tileSupplier) {
+    public MGUBlockReg(String name, Function<Identifier, B> blockSupplier, Function<B, I> itemSupplier, BlockEntityType.BlockEntitySupplier<T> tileSupplier) {
         this.name = name;
         block = ModBlocks.BLOCKS.register(name, blockSupplier);
         item = ModItems.ITEMS.register(name, () -> itemSupplier.apply(block.get()));
         tile = ModBlocks.TILE_ENTITIES.register(name, () -> new BlockEntityType<>(tileSupplier, block.get()));
     }
 
-    public MGUBlockReg(String name, Supplier<B> blockSupplier, Function<B, I> itemSupplier) {
+    public MGUBlockReg(String name, Function<Identifier, B> blockSupplier, Function<B, I> itemSupplier) {
         this.name = name;
         block = ModBlocks.BLOCKS.register(name, blockSupplier);
         item = ModItems.ITEMS.register(name, () -> itemSupplier.apply(block.get()));
