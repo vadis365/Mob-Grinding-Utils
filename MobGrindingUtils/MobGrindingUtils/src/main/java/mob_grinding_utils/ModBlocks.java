@@ -55,24 +55,27 @@ public class ModBlocks {
         spikes -> new MGUBlockItem(spikes, new Item.Properties().useBlockDescriptionPrefix()));
 
     public static MGUBlockReg<BlockTank, BlockItemTank, TileEntityTank> TANK = new MGUBlockReg<>("tank",
-        () -> new BlockTank(Block.Properties.of().mapColor(MapColor.COLOR_GRAY).strength(1.0F, 2000.0F).sound(SoundType.GLASS).noOcclusion()),
-        (b) -> new BlockItemTank(b, 32000,new Item.Properties()), TileEntityTank::new);
+        BlockTank::new,
+        tank -> new BlockItemTank(tank, 32000,new Item.Properties().useBlockDescriptionPrefix()),
+            TileEntityTank::new);
 
     public static MGUBlockReg<BlockTankSink, BlockItemTank, TileEntitySinkTank> TANK_SINK = new MGUBlockReg<>("tank_sink",
-        () -> new BlockTankSink(Block.Properties.of().mapColor(MapColor.COLOR_GRAY).strength(1.0F, 2000.0F).sound(SoundType.GLASS).noOcclusion()),
-        (b) -> new BlockItemTank(b, 32000, new Item.Properties()), TileEntitySinkTank::new);
+        BlockTankSink::new,
+        tankSink -> new BlockItemTank(tankSink, 32000, new Item.Properties().useBlockDescriptionPrefix()),
+            TileEntitySinkTank::new);
 
     public static MGUBlockReg<BlockXPTap, MGUBlockItem, TileEntityXPTap> XP_TAP = new MGUBlockReg<>("xp_tap",
-        () -> new BlockXPTap(Block.Properties.of().mapColor(MapColor.NONE).strength(1.0F, 2000.0F).forceSolidOn().sound(SoundType.METAL).noOcclusion()),
-        (b) -> new MGUBlockItem(b, new Item.Properties()), TileEntityXPTap::new);
+        BlockXPTap::new,
+        xpTap -> new MGUBlockItem(xpTap, new Item.Properties().useBlockDescriptionPrefix()),
+            TileEntityXPTap::new);
 
     public static MGUBlockReg<BlockWitherMuffler, MGUBlockItem, ?> WITHER_MUFFLER = new MGUBlockReg<>("wither_muffler",
-        () -> new BlockWitherMuffler(Block.Properties.of().mapColor(MapColor.COLOR_BLACK).strength(0.5F, 2000F).sound(SoundType.WOOL)),
-        (b) -> new MGUBlockItem(b, new Item.Properties()));
+        BlockWitherMuffler::new,
+        witherMuffler -> new MGUBlockItem(witherMuffler, new Item.Properties().useBlockDescriptionPrefix()));
 
     public static MGUBlockReg<BlockDragonMuffler, MGUBlockItem, ?> DRAGON_MUFFLER = new MGUBlockReg<>("dragon_muffler",
-        () -> new BlockDragonMuffler(Block.Properties.of().mapColor(MapColor.COLOR_BLACK).strength(0.5F, 2000F).sound(SoundType.WOOL)),
-        (b) -> new MGUBlockItem(b, new Item.Properties()));
+        BlockDragonMuffler::new,
+        dragonMuffler -> new MGUBlockItem(dragonMuffler, new Item.Properties().useBlockDescriptionPrefix()));
 
     public static MGUBlockReg<BlockDarkOakStone, MGUBlockItem, ?> DARK_OAK_STONE = new MGUBlockReg<>("dark_oak_stone",
         () -> new BlockDarkOakStone(Block.Properties.of().mapColor(MapColor.COLOR_BROWN).strength(1.5F, 10F).sound(SoundType.STONE).lightLevel(bState -> 7)),
