@@ -5,6 +5,7 @@ import mob_grinding_utils.entity.EntityXPOrbFalling;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.InsideBlockEffectApplier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.LiquidBlock;
@@ -26,13 +27,13 @@ public class MGUFlowingFluidBlock extends LiquidBlock {
 	}
 
 	@Override
-	public void entityInside(@Nonnull BlockState state, Level world, @Nonnull BlockPos pos, @Nonnull Entity entity) {
-		if (!world.isClientSide)
+    public void entityInside(@Nonnull BlockState state, @Nonnull Level level, @Nonnull BlockPos pos, @Nonnull Entity entity, @Nonnull InsideBlockEffectApplier effectApplier, boolean isPrecise) {
+        if (!level.isClientSide())
 			if (entity instanceof Player player) {
-				if (world.getGameTime() % 20 == 0 && player.getFoodData().getFoodLevel() > 0) {
+				if (level.getGameTime() % 20 == 0 && player.getFoodData().getFoodLevel() > 0) {
 					player.getFoodData().setFoodLevel(player.getFoodData().getFoodLevel() - 1);
-					EntityXPOrbFalling orb = new EntityXPOrbFalling(world, pos.getX() + 0.5D, pos.getY() - 0.125D, pos.getZ() + 0.5D, 1);
-					world.addFreshEntity(orb);
+					EntityXPOrbFalling orb = new EntityXPOrbFalling(level, pos.getX() + 0.5D, pos.getY() - 0.125D, pos.getZ() + 0.5D, 1);
+                    level.addFreshEntity(orb);
 				}
 			}
 	}
@@ -45,10 +46,10 @@ public class MGUFlowingFluidBlock extends LiquidBlock {
 			float zz = (float) pos.getZ() + 0.5F;
 			float fixedOffset = 0.25F;
 			float randomOffset = rand.nextFloat() * 0.6F - 0.3F;
-			world.addParticle(MobGrindingUtils.PARTICLE_FLUID_XP.get(), false, (double) (xx - fixedOffset), (double) pos.getY() + 0.8D, (double) (zz + randomOffset), 0.0D, 0.0D, 0.0D);
-			world.addParticle(MobGrindingUtils.PARTICLE_FLUID_XP.get(), false, (double) (xx + fixedOffset), (double) pos.getY() + 0.8D, (double) (zz + randomOffset), 0.0D, 0.0D, 0.0D);
-			world.addParticle(MobGrindingUtils.PARTICLE_FLUID_XP.get(), false, (double) (xx + randomOffset), (double) pos.getY() + 0.8D, (double) (zz - fixedOffset), 0.0D, 0.0D, 0.0D);
-			world.addParticle(MobGrindingUtils.PARTICLE_FLUID_XP.get(), false, (double) (xx + randomOffset), (double) pos.getY() + 0.8D, (double) (zz + fixedOffset), 0.0D, 0.0D, 0.0D);
+			world.addParticle(MobGrindingUtils.PARTICLE_FLUID_XP.get(), false, false, (double) (xx - fixedOffset), (double) pos.getY() + 0.8D, (double) (zz + randomOffset), 0.0D, 0.0D, 0.0D);
+			world.addParticle(MobGrindingUtils.PARTICLE_FLUID_XP.get(), false, false, (double) (xx + fixedOffset), (double) pos.getY() + 0.8D, (double) (zz + randomOffset), 0.0D, 0.0D, 0.0D);
+			world.addParticle(MobGrindingUtils.PARTICLE_FLUID_XP.get(), false, false, (double) (xx + randomOffset), (double) pos.getY() + 0.8D, (double) (zz - fixedOffset), 0.0D, 0.0D, 0.0D);
+			world.addParticle(MobGrindingUtils.PARTICLE_FLUID_XP.get(), false, false, (double) (xx + randomOffset), (double) pos.getY() + 0.8D, (double) (zz + fixedOffset), 0.0D, 0.0D, 0.0D);
 		}
 	}
 }

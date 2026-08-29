@@ -2,10 +2,11 @@ package mob_grinding_utils.network;
 
 import mob_grinding_utils.MobGrindingUtils;
 import net.minecraft.client.Minecraft;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.animal.Chicken;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.animal.chicken.Chicken;
 import net.minecraft.world.level.Level;
 
 public class MGUClientPackets {
@@ -15,20 +16,21 @@ public class MGUClientPackets {
         if (world == null)
             return;
 
-        else if (world.isClientSide) {
+        else if (world.isClientSide()) {
             LivingEntity chicken = (Chicken) world.getEntity(message.chickenID());
             if (chicken != null) {
-                CompoundTag nbt = new CompoundTag();
-                nbt = chicken.getPersistentData();
-                nbt.putBoolean("shouldExplode", message.nbt().getBoolean("shouldExplode"));
-                nbt.putInt("countDown", message.nbt().getInt("countDown"));
-                if (message.nbt().getInt("countDown") >= 20) {
+                RandomSource random = world.getRandom();
+                CompoundTag nbt = chicken.getPersistentData();
+                nbt.putBoolean("shouldExplode", message.nbt().getBooleanOr("shouldExplode", false));
+                nbt.putInt("countDown", message.nbt().getIntOr("countDown", 0));
+                if (message.nbt().getIntOr("countDown", 0) >= 20) {
                     for (int k = 0; k < 20; ++k) {
-                        double xSpeed = world.random.nextGaussian() * 0.02D;
-                        double ySpeed = world.random.nextGaussian() * 0.02D;
-                        double zSpeed = world.random.nextGaussian() * 0.02D;
-                        world.addParticle(ParticleTypes.EXPLOSION, chicken.getX() + (double) (world.random.nextFloat() * chicken.getBbWidth() * 2.0F) - (double) chicken.getBbWidth(), chicken.getY() + (double) (world.random.nextFloat() * chicken.getBbHeight()), chicken.getZ() + (double) (world.random.nextFloat() * chicken.getBbWidth() * 2.0F) - (double) chicken.getBbWidth(), xSpeed, ySpeed, zSpeed);
-                        world.addParticle(ParticleTypes.LAVA, chicken.getX() + (double) (world.random.nextFloat() * chicken.getBbWidth() * 2.0F) - (double) chicken.getBbWidth(), chicken.getY() + (double) (world.random.nextFloat() * chicken.getBbHeight()), chicken.getZ() + (double) (world.random.nextFloat() * chicken.getBbWidth() * 2.0F) - (double) chicken.getBbWidth(), xSpeed, ySpeed, zSpeed);
+
+                        double xSpeed = random.nextGaussian() * 0.02D;
+                        double ySpeed = random.nextGaussian() * 0.02D;
+                        double zSpeed = random.nextGaussian() * 0.02D;
+                        world.addParticle(ParticleTypes.EXPLOSION, chicken.getX() + (double) (random.nextFloat() * chicken.getBbWidth() * 2.0F) - (double) chicken.getBbWidth(), chicken.getY() + (double) (random.nextFloat() * chicken.getBbHeight()), chicken.getZ() + (double) (random.nextFloat() * chicken.getBbWidth() * 2.0F) - (double) chicken.getBbWidth(), xSpeed, ySpeed, zSpeed);
+                        world.addParticle(ParticleTypes.LAVA, chicken.getX() + (double) (random.nextFloat() * chicken.getBbWidth() * 2.0F) - (double) chicken.getBbWidth(), chicken.getY() + (double) (random.nextFloat() * chicken.getBbHeight()), chicken.getZ() + (double) (random.nextFloat() * chicken.getBbWidth() * 2.0F) - (double) chicken.getBbWidth(), xSpeed, ySpeed, zSpeed);
                     }
                 }
             } else {

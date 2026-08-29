@@ -1,16 +1,15 @@
 package mob_grinding_utils.network;
 
-import mob_grinding_utils.Reference;
+import mob_grinding_utils.util.RL;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 public record ChickenSyncPacket(int chickenID, CompoundTag nbt) implements CustomPacketPayload {
-	public static final Type<ChickenSyncPacket> TYPE = new Type<>(ResourceLocation.fromNamespaceAndPath(Reference.MOD_ID, "chicken_sync"));
+	public static final Type<ChickenSyncPacket> TYPE = new Type<>(RL.mgu("chicken_sync"));
 	public static final StreamCodec<FriendlyByteBuf, ChickenSyncPacket> STREAM_CODEC = CustomPacketPayload.codec(
 			ChickenSyncPacket::write,
 			ChickenSyncPacket::new

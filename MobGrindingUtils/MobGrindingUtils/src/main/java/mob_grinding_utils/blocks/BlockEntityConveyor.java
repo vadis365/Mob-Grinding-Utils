@@ -1,32 +1,47 @@
 package mob_grinding_utils.blocks;
 
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.HorizontalDirectionalBlock;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.InsideBlockEffectApplier;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.context.BlockPlaceContext;
-import net.minecraft.world.level.block.state.properties.DirectionProperty;
-import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraft.core.Direction;
-import net.minecraft.core.BlockPos;
-import net.minecraft.world.phys.shapes.CollisionContext;
-import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraft.world.phys.shapes.Shapes;
-import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.HorizontalDirectionalBlock;
+import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
+import net.minecraft.world.level.material.MapColor;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 
 import javax.annotation.Nonnull;
 
 public class BlockEntityConveyor extends Block {
-	public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
-	public static final VoxelShape CONVEYOR_AABB = Block.box(0D, 0D, 0D, 16D, 14D, 16D);
+    public static final EnumProperty<Direction> FACING = HorizontalDirectionalBlock.FACING;
+    public static final VoxelShape CONVEYOR_AABB = Block.box(0D, 0D, 0D, 16D, 14D, 16D);
 
-	public BlockEntityConveyor(Block.Properties properties) {
-		super(properties);
-	}
+    public BlockEntityConveyor(Identifier id) {
+        this(Block.Properties.of()
+                .mapColor(MapColor.COLOR_GRAY)
+                .strength(0.5F, 2000.0F)
+                .sound(SoundType.STONE)
+                .isValidSpawn((state, reader, pos, entitytype) -> true)
+                .setId(ResourceKey.create(Registries.BLOCK, id)));
+    }
+
+    public BlockEntityConveyor(Block.Properties properties) {
+        super(properties);
+    }
 
 	@Nonnull
 	@Override
@@ -52,8 +67,8 @@ public class BlockEntityConveyor extends Block {
 	}
 
 	@Override
-	public void entityInside(@Nonnull BlockState state, @Nonnull Level world, @Nonnull BlockPos pos, Entity entity) {
-		if (entity.isShiftKeyDown())
+    public void entityInside(@Nonnull BlockState state, @Nonnull Level level, @Nonnull BlockPos pos, @Nonnull Entity entity, @Nonnull InsideBlockEffectApplier effectApplier, boolean isPrecise) {
+        if (entity.isShiftKeyDown())
 			return;
 
 		if (entity instanceof Mob)

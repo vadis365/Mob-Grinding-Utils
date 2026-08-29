@@ -78,16 +78,16 @@ public class ModBlocks {
         dragonMuffler -> new MGUBlockItem(dragonMuffler, new Item.Properties().useBlockDescriptionPrefix()));
 
     public static MGUBlockReg<BlockDarkOakStone, MGUBlockItem, ?> DARK_OAK_STONE = new MGUBlockReg<>("dark_oak_stone",
-        () -> new BlockDarkOakStone(Block.Properties.of().mapColor(MapColor.COLOR_BROWN).strength(1.5F, 10F).sound(SoundType.STONE).lightLevel(bState -> 7)),
-        (b) -> new MGUBlockItem(b, new Item.Properties()));
+        BlockDarkOakStone::new,
+        (b) -> new MGUBlockItem(b, new Item.Properties().useBlockDescriptionPrefix()));
 
     public static MGUBlockReg<BlockEntityConveyor, MGUBlockItem, ?> ENTITY_CONVEYOR = new MGUBlockReg<>("entity_conveyor",
-        () -> new BlockEntityConveyor(Block.Properties.of().mapColor(MapColor.COLOR_GRAY).strength(0.5F, 2000.0F).sound(SoundType.STONE).isValidSpawn((state, reader, pos, entitytype) -> true)),
-        (b) -> new MGUBlockItem(b, new Item.Properties()));
+        BlockEntityConveyor::new,
+        (b) -> new MGUBlockItem(b, new Item.Properties().useBlockDescriptionPrefix()));
 
     public static MGUBlockReg<BlockEnderInhibitorOn, MGUBlockItem, ?> ENDER_INHIBITOR_ON = new MGUBlockReg<>("ender_inhibitor_on",
-        () -> new BlockEnderInhibitorOn(Block.Properties.of().mapColor(MapColor.COLOR_GRAY).forceSolidOn().strength(0.2F, 2000F).sound(SoundType.METAL).noOcclusion()),
-        (b) -> new MGUBlockItem(b, new Item.Properties()));
+        BlockEnderInhibitorOn::new,
+        (b) -> new MGUBlockItem(b, new Item.Properties().useBlockDescriptionPrefix()));
 
     public static MGUBlockReg<BlockEnderInhibitorOff, MGUBlockItem, ?> ENDER_INHIBITOR_OFF = new MGUBlockReg<>("ender_inhibitor_off",
         () -> new BlockEnderInhibitorOff(Block.Properties.of().mapColor(MapColor.COLOR_GRAY).forceSolidOn().strength(0.2F, 2000F).sound(SoundType.METAL).noOcclusion()),
