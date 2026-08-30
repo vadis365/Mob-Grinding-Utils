@@ -8,14 +8,11 @@ import mob_grinding_utils.itemblocks.MGUBlockItem;
 import mob_grinding_utils.tile.*;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.material.Fluid;
-import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.material.PushReaction;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.common.SoundActions;
@@ -36,19 +33,19 @@ public class ModBlocks {
     public static DeferredRegister<BlockEntityType<?>> TILE_ENTITIES = DeferredRegister.create(BuiltInRegistries.BLOCK_ENTITY_TYPE, Reference.MOD_ID);
 
     public static MGUBlockReg<BlockFan, MGUBlockItem, TileEntityFan> FAN = new MGUBlockReg<>("fan",
-            BlockFan::new,
-            fan -> new MGUBlockItem(fan, new Item.Properties().useBlockDescriptionPrefix()),
-            TileEntityFan::new);
+        BlockFan::new,
+        fan -> new MGUBlockItem(fan, new Item.Properties().useBlockDescriptionPrefix()),
+        TileEntityFan::new);
 
     public static MGUBlockReg<BlockSaw, MGUBlockItem, TileEntitySaw> SAW = new MGUBlockReg<>("saw",
         BlockSaw::new,
         saw -> new MGUBlockItem(saw, new Item.Properties().useBlockDescriptionPrefix()),
-            TileEntitySaw::new);
+        TileEntitySaw::new);
 
     public static MGUBlockReg<BlockAbsorptionHopper, MGUBlockItem, TileEntityAbsorptionHopper> ABSORPTION_HOPPER = new MGUBlockReg<>("absorption_hopper",
         BlockAbsorptionHopper::new,
         absorptionHopper -> new MGUBlockItem(absorptionHopper, new Item.Properties().useBlockDescriptionPrefix()),
-            TileEntityAbsorptionHopper::new);
+        TileEntityAbsorptionHopper::new);
 
     public static MGUBlockReg<BlockSpikes, MGUBlockItem, ?> SPIKES = new MGUBlockReg<>("spikes",
         BlockSpikes::new,
@@ -57,17 +54,17 @@ public class ModBlocks {
     public static MGUBlockReg<BlockTank, BlockItemTank, TileEntityTank> TANK = new MGUBlockReg<>("tank",
         BlockTank::new,
         tank -> new BlockItemTank(tank, 32000,new Item.Properties().useBlockDescriptionPrefix()),
-            TileEntityTank::new);
+        TileEntityTank::new);
 
     public static MGUBlockReg<BlockTankSink, BlockItemTank, TileEntitySinkTank> TANK_SINK = new MGUBlockReg<>("tank_sink",
         BlockTankSink::new,
         tankSink -> new BlockItemTank(tankSink, 32000, new Item.Properties().useBlockDescriptionPrefix()),
-            TileEntitySinkTank::new);
+        TileEntitySinkTank::new);
 
     public static MGUBlockReg<BlockXPTap, MGUBlockItem, TileEntityXPTap> XP_TAP = new MGUBlockReg<>("xp_tap",
         BlockXPTap::new,
         xpTap -> new MGUBlockItem(xpTap, new Item.Properties().useBlockDescriptionPrefix()),
-            TileEntityXPTap::new);
+        TileEntityXPTap::new);
 
     public static MGUBlockReg<BlockWitherMuffler, MGUBlockItem, ?> WITHER_MUFFLER = new MGUBlockReg<>("wither_muffler",
         BlockWitherMuffler::new,
@@ -79,52 +76,52 @@ public class ModBlocks {
 
     public static MGUBlockReg<BlockDarkOakStone, MGUBlockItem, ?> DARK_OAK_STONE = new MGUBlockReg<>("dark_oak_stone",
         BlockDarkOakStone::new,
-        (b) -> new MGUBlockItem(b, new Item.Properties().useBlockDescriptionPrefix()));
+        darkOakStone -> new MGUBlockItem(darkOakStone, new Item.Properties().useBlockDescriptionPrefix()));
 
     public static MGUBlockReg<BlockEntityConveyor, MGUBlockItem, ?> ENTITY_CONVEYOR = new MGUBlockReg<>("entity_conveyor",
         BlockEntityConveyor::new,
-        (b) -> new MGUBlockItem(b, new Item.Properties().useBlockDescriptionPrefix()));
+        entityConveyor -> new MGUBlockItem(entityConveyor, new Item.Properties().useBlockDescriptionPrefix()));
 
     public static MGUBlockReg<BlockEnderInhibitorOn, MGUBlockItem, ?> ENDER_INHIBITOR_ON = new MGUBlockReg<>("ender_inhibitor_on",
         BlockEnderInhibitorOn::new,
-        (b) -> new MGUBlockItem(b, new Item.Properties().useBlockDescriptionPrefix()));
+        enderInhibitorOn -> new MGUBlockItem(enderInhibitorOn, new Item.Properties().useBlockDescriptionPrefix()));
 
     public static MGUBlockReg<BlockEnderInhibitorOff, MGUBlockItem, ?> ENDER_INHIBITOR_OFF = new MGUBlockReg<>("ender_inhibitor_off",
-        () -> new BlockEnderInhibitorOff(Block.Properties.of().mapColor(MapColor.COLOR_GRAY).forceSolidOn().strength(0.2F, 2000F).sound(SoundType.METAL).noOcclusion()),
-        (b) -> new MGUBlockItem(b, new Item.Properties()));
+        BlockEnderInhibitorOff::new,
+        enderInhibitorOff -> new MGUBlockItem(enderInhibitorOff, new Item.Properties().useBlockDescriptionPrefix()));
 
     public static MGUBlockReg<BlockTintedGlass, MGUBlockItem, ?> TINTED_GLASS = new MGUBlockReg<>("tinted_glass",
-        () -> new BlockTintedGlass(Block.Properties.of().mapColor(MapColor.COLOR_BLACK).strength(1.0F, 2000.0F).sound(SoundType.GLASS).noOcclusion()),
-        (b) -> new MGUBlockItem(b, new Item.Properties()));
+        BlockTintedGlass::new,
+        tintedGlass -> new MGUBlockItem(tintedGlass, new Item.Properties().useBlockDescriptionPrefix()));
 
     public static MGUBlockReg<BlockTankJumbo, BlockItemTank, TileEntityJumboTank> JUMBO_TANK = new MGUBlockReg<>("jumbo_tank",
-        () -> new BlockTankJumbo(Block.Properties.of().mapColor(MapColor.COLOR_GRAY).strength(1.0F, 2000.0F).sound(SoundType.METAL).noOcclusion()),
-        (b) -> new BlockItemTank(b, 1024000, new Item.Properties()), TileEntityJumboTank::new);
+        BlockTankJumbo::new,
+        tankJumbo -> new BlockItemTank(tankJumbo, 1024000, new Item.Properties().useBlockDescriptionPrefix()),
+        TileEntityJumboTank::new);
 
     public static MGUBlockReg<BlockXPSolidifier, MGUBlockItem, TileEntityXPSolidifier> XPSOLIDIFIER = new MGUBlockReg<>("xpsolidifier",
-        () -> new BlockXPSolidifier(Block.Properties.of().mapColor(MapColor.COLOR_GRAY).strength(1.0F, 2000.0F).sound(SoundType.METAL).noOcclusion()),
-        (b) -> new MGUBlockItem(b, new Item.Properties()), TileEntityXPSolidifier::new);
+        BlockXPSolidifier::new,
+        xpSolidifier -> new MGUBlockItem(xpSolidifier, new Item.Properties().useBlockDescriptionPrefix()),
+        TileEntityXPSolidifier::new);
 
     //public static Material MATERIAL_DREADFUL_DIRT = new Material(MaterialColor.DIRT, false, true, false, true, true, false, PushReaction.NORMAL);
     public static MGUBlockReg<BlockDreadfulDirt, MGUBlockItem, ?> DREADFUL_DIRT = new MGUBlockReg<>("dreadful_dirt",
-        () -> new BlockDreadfulDirt(Block.Properties.of().mapColor(MapColor.COLOR_PURPLE).strength(1.0F, 2000.0F).sound(SoundType.GRAVEL).randomTicks()
-                .isValidSpawn((state, level, pos, entitytype) -> entitytype.getCategory() == MobCategory.CREATURE)
-        ),
-        (b) -> new MGUBlockItem(b, new Item.Properties()));
-
-    public static MGUBlockReg<BlockSolidXP, MGUBlockItem, ?> SOLID_XP_BLOCK = new MGUBlockReg<>("solid_xp_block",
-        () -> new BlockSolidXP(Block.Properties.of().mapColor(MapColor.COLOR_GREEN).friction(0.8F).sound(ModSounds.SOLID_XP_BLOCK).noOcclusion().strength(1.5F, 10F)),
-        (b) -> new MGUBlockItem(b, new Item.Properties()));
+        BlockDreadfulDirt::new
+        ,
+        dreadfulDirt -> new MGUBlockItem(dreadfulDirt, new Item.Properties().useBlockDescriptionPrefix()));
 
     public static MGUBlockReg<BlockDelightfulDirt, MGUBlockItem, ?> DELIGHTFUL_DIRT = new MGUBlockReg<>("delightful_dirt",
-        () -> new BlockDelightfulDirt(Block.Properties.of().mapColor(MapColor.COLOR_LIGHT_GREEN).strength(1.0F, 2000.0F).sound(SoundType.GRAVEL).randomTicks()
-                .isValidSpawn((state, level, pos, entitytype) -> entitytype.getCategory() == MobCategory.MONSTER)
-        ),
-        (b) -> new MGUBlockItem(b, new Item.Properties()));
+            BlockDelightfulDirt::new,
+            delightfulDirt -> new MGUBlockItem(delightfulDirt, new Item.Properties().useBlockDescriptionPrefix()));
+
+    public static MGUBlockReg<BlockSolidXP, MGUBlockItem, ?> SOLID_XP_BLOCK = new MGUBlockReg<>("solid_xp_block",
+        BlockSolidXP::new,
+        solidXP -> new MGUBlockItem(solidXP, new Item.Properties()));
 
     public static MGUBlockReg<BlockEntitySpawner, MGUBlockItem, TileEntityMGUSpawner> ENTITY_SPAWNER = new MGUBlockReg<>("entity_spawner",
-        () -> new BlockEntitySpawner(Block.Properties.of().mapColor(MapColor.COLOR_GRAY).strength(10.0F, 2000.0F).sound(SoundType.METAL).noOcclusion().randomTicks()),
-        (b) -> new MGUBlockItem(b, new Item.Properties()), TileEntityMGUSpawner::new);
+        BlockEntitySpawner::new,
+        entitySpawner -> new MGUBlockItem(entitySpawner, new Item.Properties().useBlockDescriptionPrefix()),
+        TileEntityMGUSpawner::new);
 
     public static DeferredHolder<FluidType, FluidType> XPTYPE = FLUID_TYPES.register("fluid_xp", () -> new FluidType(FluidType.Properties.create()
             .temperature(300)

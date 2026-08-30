@@ -49,6 +49,7 @@ import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
+import net.neoforged.neoforge.client.event.RecipesReceivedEvent;
 import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
 import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
@@ -56,6 +57,7 @@ import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsE
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.common.crafting.IngredientType;
 import net.neoforged.neoforge.common.util.FakePlayer;
+import net.neoforged.neoforge.event.AddServerReloadListenersEvent;
 import net.neoforged.neoforge.event.entity.living.MobEffectEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.level.LevelEvent;
@@ -248,12 +250,12 @@ public class MobGrindingUtils {
 		}, ModBlocks.XPTYPE.get());
 	}
 
-	private void serverReloadListener(final AddReloadListenerEvent event) {
-		event.addListener(new ServerResourceReloader(event.getServerResources()));
+	private void serverReloadListener(final AddServerReloadListenersEvent event) {
+		event.addListener(RL.mgu("recipe_cache"), new ServerResourceReloader(event.getServerResources()));
 	}
-	private void clientRecipeReload(final RecipesUpdatedEvent event) {
+	private void clientRecipeReload(final RecipesReceivedEvent event) {
 		SOLIDIFIER_RECIPES.clear();
-		SOLIDIFIER_RECIPES.addAll(event.getRecipeManager().getAllRecipesFor(SOLIDIFIER_TYPE.get()));
+		SOLIDIFIER_RECIPES.addAll(event.getRecipeMap().byType(SOLIDIFIER_TYPE.get()));
 	}
 
 	private void playerConnected(final PlayerEvent.PlayerLoggedInEvent event) {
@@ -303,14 +305,14 @@ public class MobGrindingUtils {
 	}
 
 	public void registerCaps(final RegisterCapabilitiesEvent evt) {
-		evt.registerBlockEntity(Capabilities.FluidHandler.BLOCK, ModBlocks.TANK.getTileEntityType(), TileEntityTank::getTank);
-		evt.registerBlockEntity(Capabilities.FluidHandler.BLOCK, ModBlocks.JUMBO_TANK.getTileEntityType(), TileEntityTank::getTank);
-		evt.registerBlockEntity(Capabilities.FluidHandler.BLOCK, ModBlocks.TANK_SINK.getTileEntityType(), TileEntityTank::getTank);
-		evt.registerBlockEntity(Capabilities.FluidHandler.BLOCK, ModBlocks.XPSOLIDIFIER.getTileEntityType(), TileEntityXPSolidifier::getTank);
-		evt.registerBlockEntity(Capabilities.ItemHandler.BLOCK, ModBlocks.XPSOLIDIFIER.getTileEntityType(), TileEntityXPSolidifier::getOutput);
-		evt.registerBlockEntity(Capabilities.ItemHandler.BLOCK, ModBlocks.ENTITY_SPAWNER.getTileEntityType(), TileEntityMGUSpawner::getFuelSlot);
-		evt.registerBlockEntity(Capabilities.ItemHandler.BLOCK, ModBlocks.ABSORPTION_HOPPER.getTileEntityType(), TileEntityAbsorptionHopper::getItemHandler);
-		evt.registerBlockEntity(Capabilities.FluidHandler.BLOCK, ModBlocks.ABSORPTION_HOPPER.getTileEntityType(), TileEntityAbsorptionHopper::getTank);
+		evt.registerBlockEntity(Capabilities.Fluid.BLOCK, ModBlocks.TANK.getTileEntityType(), TileEntityTank::getTank);
+		evt.registerBlockEntity(Capabilities.Fluid.BLOCK, ModBlocks.JUMBO_TANK.getTileEntityType(), TileEntityTank::getTank);
+		evt.registerBlockEntity(Capabilities.Fluid.BLOCK, ModBlocks.TANK_SINK.getTileEntityType(), TileEntityTank::getTank);
+		evt.registerBlockEntity(Capabilities.Fluid.BLOCK, ModBlocks.XPSOLIDIFIER.getTileEntityType(), TileEntityXPSolidifier::getTank);
+		evt.registerBlockEntity(Capabilities.Item.BLOCK, ModBlocks.XPSOLIDIFIER.getTileEntityType(), TileEntityXPSolidifier::getOutput);
+		evt.registerBlockEntity(Capabilities.Item.BLOCK, ModBlocks.ENTITY_SPAWNER.getTileEntityType(), TileEntityMGUSpawner::getFuelSlot);
+		evt.registerBlockEntity(Capabilities.Item.BLOCK, ModBlocks.ABSORPTION_HOPPER.getTileEntityType(), TileEntityAbsorptionHopper::getItemHandler);
+		evt.registerBlockEntity(Capabilities.Fluid.BLOCK, ModBlocks.ABSORPTION_HOPPER.getTileEntityType(), TileEntityAbsorptionHopper::getTank);
 	}
 
 	public void effectApplicable(MobEffectEvent.Applicable event) {

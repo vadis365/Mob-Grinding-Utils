@@ -7,6 +7,8 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
@@ -22,7 +24,9 @@ import net.minecraft.world.level.biome.Biomes;
 import net.minecraft.world.level.biome.MobSpawnSettings.SpawnerData;
 import net.minecraft.world.level.block.BaseFireBlock;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.phys.AABB;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
@@ -32,8 +36,17 @@ import javax.annotation.Nonnull;
 import java.util.List;
 
 public class BlockDreadfulDirt extends BlockDirtSpawner {
+    public BlockDreadfulDirt(Identifier id) {
+        this(Block.Properties.of()
+                .mapColor(MapColor.COLOR_PURPLE)
+                .strength(1.0F, 2000.0F)
+                .sound(SoundType.GRAVEL)
+                .randomTicks()
+                .isValidSpawn((state, level, pos, entitytype) -> entitytype.getCategory() == MobCategory.MONSTER)
+                .setId(ResourceKey.create(Registries.BLOCK, id)));
+    }
 
-	public BlockDreadfulDirt(Block.Properties properties) {
+    public BlockDreadfulDirt(Block.Properties properties) {
 		super(properties);
 	}
 
