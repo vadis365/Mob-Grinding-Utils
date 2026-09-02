@@ -5,7 +5,6 @@ import mob_grinding_utils.MobGrindingUtils;
 import mob_grinding_utils.components.MGUComponents;
 import mob_grinding_utils.items.ItemImaginaryInvisibleNotReallyThereSword;
 import mob_grinding_utils.util.FakePlayerHandler;
-import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -61,7 +60,7 @@ public class EntityHeadDropEvent {
 		if (target instanceof Mob) {
 			if (ModList.get().isLoaded("player_mobs"))
 				if (isPlayerMob(target))
-				return createHeadFor(getPlayerByUsername(target.getName().getString()));
+			    	return createHeadFor(getPlayerByUsername(target.getName().getString()));
 		}
 		if (target instanceof Player)
 			return createHeadFor((Player) target);
@@ -70,10 +69,10 @@ public class EntityHeadDropEvent {
 	}
 	
 
-	public static boolean isPlayerMob(Entity entity) {
-		Optional<EntityType<?>> entityMob = EntityType.byString("player_mobs:player_mob");
-		return entityMob.isPresent() && entityMob.get().equals(entity.getType());
-	}
+    public static boolean isPlayerMob(Entity entity) {
+        Optional<EntityType<?>> entityMob = EntityType.byString("player_mobs:player_mob");
+        return entityMob.isPresent() && entityMob.get().equals(entity.getType());
+    }
 
 	public static GameProfile getPlayerByUsername(String name) {
 		return new GameProfile(null, name);
@@ -83,11 +82,11 @@ public class EntityHeadDropEvent {
 		return createHeadFor(player.getGameProfile());
 	}
 
-	public static ItemStack createHeadFor(GameProfile profile) {
-		ItemStack stack = new ItemStack(Items.PLAYER_HEAD, 1);
-		stack.set(DataComponents.PROFILE, new ResolvableProfile(profile));
-		return stack;
-	}
+    public static ItemStack createHeadFor(GameProfile profile) {
+        ItemStack stack = new ItemStack(Items.PLAYER_HEAD, 1);
+        stack.set(DataComponents.PROFILE, ResolvableProfile.createResolved(profile));
+        return stack;
+    }
 
 	private void addDrop(ItemStack stack, LivingEntity entity, Collection<ItemEntity> collection) {
 		if (stack.getCount() <= 0)
