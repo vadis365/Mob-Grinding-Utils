@@ -12,10 +12,7 @@ import mob_grinding_utils.events.*;
 import mob_grinding_utils.inventory.client.*;
 import mob_grinding_utils.network.FlagSyncPacket;
 import mob_grinding_utils.network.MGUNetwork;
-import mob_grinding_utils.recipe.BeheadingRecipe;
-import mob_grinding_utils.recipe.ChickenFeedRecipe;
-import mob_grinding_utils.recipe.FluidIngredient;
-import mob_grinding_utils.recipe.SolidifyRecipe;
+import mob_grinding_utils.recipe.*;
 import mob_grinding_utils.tile.TileEntityAbsorptionHopper;
 import mob_grinding_utils.tile.TileEntityMGUSpawner;
 import mob_grinding_utils.tile.TileEntityTank;
@@ -36,6 +33,7 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
@@ -98,14 +96,14 @@ public class MobGrindingUtils {
 				}
 			).build());
 
-	public static final DeferredHolder<ParticleType<?>, SimpleParticleType> PARTICLE_FLUID_XP = PARTICLES.register("fluid_xp_particles", () -> new SimpleParticleType(true));
+    public static final DeferredHolder<ParticleType<?>, SimpleParticleType> PARTICLE_FLUID_XP = PARTICLES.register("fluid_xp_particles", () -> new SimpleParticleType(true));
 
-	public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<?>> CHICKEN_FEED = RECIPES.register(ChickenFeedRecipe.NAME, ChickenFeedRecipe.Serializer::new);
+    public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<ChickenFeedRecipe>> CHICKEN_FEED = RECIPES.register(ChickenFeedRecipe.NAME, () -> ChickenFeedRecipe.SERIALIZER);
 
 	public static final List<RecipeHolder<SolidifyRecipe>> SOLIDIFIER_RECIPES = new ArrayList<>();
 	public static final List<RecipeHolder<BeheadingRecipe>> BEHEADING_RECIPES = new ArrayList<>();
-	public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<?>> SOLIDIFIER_RECIPE = RECIPES.register(SolidifyRecipe.NAME, SolidifyRecipe.Serializer::new);
-	public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<?>> BEHEADING_RECIPE = RECIPES.register(BeheadingRecipe.NAME, BeheadingRecipe.Serializer::new);
+	public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<SolidifyRecipe>> SOLIDIFIER_RECIPE = RECIPES.register(SolidifyRecipe.NAME, SolidifyRecipe.Serializer::new);
+	public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<BeheadingRecipe>> BEHEADING_RECIPE = RECIPES.register(BeheadingRecipe.NAME, () -> BeheadingRecipe.SERIALIZER);
 	public static final DeferredHolder<RecipeType<?>, RecipeType<SolidifyRecipe>> SOLIDIFIER_TYPE = RECIPE_TYPES.register("solidify", RecipeType::simple);
 	public static final DeferredHolder<RecipeType<?>, RecipeType<BeheadingRecipe>> BEHEADING_TYPE = RECIPE_TYPES.register("beheading", RecipeType::simple);
 

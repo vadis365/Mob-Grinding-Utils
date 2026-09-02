@@ -1,3 +1,4 @@
+/*  //Unused for now.
 package mob_grinding_utils;
 
 import net.minecraft.core.HolderSet;
@@ -30,3 +31,4 @@ public class TagLookup<T> {
         return this.get().stream().findAny().isPresent();
     }
 }
+*/

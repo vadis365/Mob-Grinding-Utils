@@ -41,7 +41,7 @@ public class MGUClientPackets {
 
     public static void spawnGlitterParticles( double x, double y, double z, double vecX, double vecY, double vecZ) {
         Level world = Minecraft.getInstance().level;
-        world.addParticle(MobGrindingUtils.PARTICLE_FLUID_XP.get(), false, x, y, z, vecX, vecY, vecZ);
+        world.addParticle(MobGrindingUtils.PARTICLE_FLUID_XP.get(), false, false, x, y, z, vecX, vecY, vecZ);
     }
 
     public static void handleFlagSyncPacket(FlagSyncPacket packet) {

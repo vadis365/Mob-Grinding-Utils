@@ -55,7 +55,7 @@ public class EntityHeadDropEvent {
 
 		var recipeOptional = MobGrindingUtils.BEHEADING_RECIPES.stream().filter(recipe -> recipe.value().matches(target.getType())).findFirst();
 		if (recipeOptional.isPresent()) {
-			return recipeOptional.get().value().getResultItem(RegistryAccess.EMPTY);
+			return recipeOptional.get().value().getResultItem();
 		}
 		
 		if (target instanceof Mob) {
