@@ -54,7 +54,7 @@ public class TileEntityFan extends TileEntityInventoryHelper implements MenuProv
 				if (level.getBlockState(pos).getValue(BlockFan.POWERED)) {
 					fan.activateBlock();
 				}
-			if (!level.isClientSide)
+			if (!level.isClientSide())
 				fan.setAABBWithModifiers();
 		}
 	}
@@ -205,13 +205,13 @@ public class TileEntityFan extends TileEntityInventoryHelper implements MenuProv
 	@Override
 	public void loadAdditional(CompoundTag nbt, HolderLookup.Provider registries) {
 		super.loadAdditional(nbt, registries);
-		showRenderBox = nbt.getBoolean("showRenderBox");
-		xPos = nbt.getFloat("xPos");
-		yPos = nbt.getFloat("yPos");
-		zPos = nbt.getFloat("zPos");
-		xNeg = nbt.getFloat("xNeg");
-		yNeg = nbt.getFloat("yNeg");
-		zNeg = nbt.getFloat("zNeg");
+		showRenderBox = nbt.getBooleanOr("showRenderBox", false);
+		xPos = nbt.getFloatOr("xPos", 0F);
+		yPos = nbt.getFloatOr("yPos", 0F);
+		zPos = nbt.getFloatOr("zPos", 0F);
+		xNeg = nbt.getFloatOr("xNeg", 0F);
+		yNeg = nbt.getFloatOr("yNeg", 0F);
+		zNeg = nbt.getFloatOr("zNeg", 0F);
 	}
 
 	@Nonnull
@@ -236,7 +236,7 @@ public class TileEntityFan extends TileEntityInventoryHelper implements MenuProv
 	}
 
 	public void onContentsChanged() {
-		if (!getLevel().isClientSide) {
+		if (!getLevel().isClientSide()) {
 			final BlockState state = getLevel().getBlockState(getBlockPos());
 			setAABBWithModifiers();
 			getLevel().sendBlockUpdated(getBlockPos(), state, state, 8);

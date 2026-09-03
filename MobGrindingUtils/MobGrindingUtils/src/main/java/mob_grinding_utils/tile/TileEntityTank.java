@@ -6,6 +6,7 @@ import mob_grinding_utils.components.MGUComponents;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
@@ -14,13 +15,16 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
+import net.neoforged.neoforge.transfer.fluid.FluidResource;
+import net.neoforged.neoforge.transfer.fluid.FluidStacksResourceHandler;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public class TileEntityTank extends BlockEntity {
-	public FluidTank tank = new FluidTank(1000 *  32);
+	public FluidStacksResourceHandler tank = new FluidStacksResourceHandler(1, 1000 *  32);
 	public int prevTankAmount;
 
 	public TileEntityTank(BlockPos pos, BlockState state) {
@@ -31,18 +35,18 @@ public class TileEntityTank extends BlockEntity {
 		super(TANK_SINK_TILE, pos, state);
 	}
 
-	public TileEntityTank(BlockEntityType<TileEntityJumboTank> JUMBO_TANK_TILE, FluidTank tankIn, BlockPos pos, BlockState state) {
+	public TileEntityTank(BlockEntityType<TileEntityJumboTank> JUMBO_TANK_TILE, FluidStacksResourceHandler tankIn, BlockPos pos, BlockState state) {
 		super(JUMBO_TANK_TILE, pos, state);
 		this.tank = tankIn;
 	}
 
 	public static <T extends BlockEntity> void serverTick(Level world, BlockPos worldPosition, BlockState blockState, T t) {
 		if (t instanceof TileEntityTank tile) {
-			if(tile.prevTankAmount != tile.tank.getFluidAmount()) {
+			if(tile.prevTankAmount != tile.tank.getAmountAsInt(0)) {
 				tile.updateBlock();
 				tile.setChanged();
 			}
-			tile.prevTankAmount = tile.tank.getFluidAmount();
+			tile.prevTankAmount = tile.tank.getAmountAsInt(0);
 		}
 	}
 
@@ -72,39 +76,40 @@ public class TileEntityTank extends BlockEntity {
 	}
 
 	@Override
-	public void loadAdditional(@Nonnull CompoundTag nbt, @Nonnull HolderLookup.Provider registries) {
-		super.loadAdditional(nbt, registries);
-		tank.readFromNBT(registries, nbt);
+	public void loadAdditional(@Nonnull ValueInput input) {
+		super.loadAdditional(input);
+		tank.readFromNBT(input);
 	}
 
 	@Override
-	public void saveAdditional(@Nonnull CompoundTag nbt, @Nonnull HolderLookup.Provider registries) {
-		super.saveAdditional(nbt, registries);
-		tank.writeToNBT(registries, nbt);
+	public void saveAdditional(@Nonnull ValueOutput output) {
+		super.saveAdditional(output);
+		tank.writeToNBT(output);
 	}
 
-	public FluidTank getTank(){
+	public FluidStacksResourceHandler getTank(){
 		return this.tank;
 	}
-	public FluidTank getTank(@Nullable Direction direction){
+	public FluidStacksResourceHandler getTank(@Nullable Direction direction){
 		return this.tank;
 	}
 
 	public int getScaledFluid(int scale) {
-		return tank.getFluid() != null ? (int) ((float) tank.getFluidAmount() / (float) tank.getCapacity() * scale) : 0;
+		return !tank.getResource(0).isEmpty() ? (int) ((float) tank.getAmountAsInt(0) / tank.getCapacityAsInt(0, tank.getResource(0)) * scale) : 0;
 	}
 
 	@Override
-	protected void applyImplicitComponents(@Nonnull DataComponentInput componentInput) {
+	protected void applyImplicitComponents(@Nonnull DataComponentGetter componentInput) {
 		super.applyImplicitComponents(componentInput);
 
-		tank.setFluid(componentInput.getOrDefault(MGUComponents.FLUID, FluidContents.EMPTY).get());
+        var fluidStack = componentInput.getOrDefault(MGUComponents.FLUID, FluidContents.EMPTY).get();
+		tank.set(0, FluidResource.of(fluidStack), fluidStack.amount());
 	}
 
 	@Override
 	protected void collectImplicitComponents(@Nonnull DataComponentMap.Builder builder) {
 		super.collectImplicitComponents(builder);
 
-		builder.set(MGUComponents.FLUID, FluidContents.of(tank.getFluid()));
+		builder.set(MGUComponents.FLUID, FluidContents.of(tank.getResource(0).toStack(tank.getAmountAsInt(0))));
 	}
 }

@@ -125,16 +125,16 @@ public class TileEntityAbsorptionHopper extends TileEntityInventoryHelper implem
 	@Override
 	public void loadAdditional(CompoundTag tagCompound, HolderLookup.Provider registries) {
 		super.loadAdditional(tagCompound, registries);
-		status[0] = EnumStatus.values()[tagCompound.getByte("down")];
-		status[1] = EnumStatus.values()[tagCompound.getByte("up")];
-		status[2] = EnumStatus.values()[tagCompound.getByte("north")];
-		status[3] = EnumStatus.values()[tagCompound.getByte("south")];
-		status[4] = EnumStatus.values()[tagCompound.getByte("west")];
-		status[5] = EnumStatus.values()[tagCompound.getByte("east")];
-		showRenderBox = tagCompound.getBoolean("showRenderBox");
-		offsetX = tagCompound.getInt("offsetX");
-		offsetY = tagCompound.getInt("offsetY");
-		offsetZ = tagCompound.getInt("offsetZ");
+		status[0] = EnumStatus.values()[tagCompound.getByteOr("down", (byte) 0)];
+		status[1] = EnumStatus.values()[tagCompound.getByteOr("up", (byte) 0)];
+		status[2] = EnumStatus.values()[tagCompound.getByteOr("north", (byte) 0)];
+		status[3] = EnumStatus.values()[tagCompound.getByteOr("south", (byte) 0)];
+		status[4] = EnumStatus.values()[tagCompound.getByteOr("west", (byte) 0)];
+		status[5] = EnumStatus.values()[tagCompound.getByteOr("east", (byte) 0)];
+		showRenderBox = tagCompound.getBooleanOr("showRenderBox", false);
+		offsetX = tagCompound.getIntOr("offsetX", 0);
+		offsetY = tagCompound.getIntOr("offsetY", 0);
+		offsetZ = tagCompound.getIntOr("offsetZ", 0);
 		tank.readFromNBT(registries, tagCompound);
 	}
 
