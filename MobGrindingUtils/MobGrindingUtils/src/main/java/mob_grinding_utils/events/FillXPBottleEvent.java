@@ -1,8 +1,8 @@
 package mob_grinding_utils.events;
 
 import mob_grinding_utils.ModBlocks;
+import mob_grinding_utils.BlockEntities.BlockEntityTank;
 import mob_grinding_utils.blocks.BlockTank;
-import mob_grinding_utils.tile.TileEntityTank;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -23,7 +23,7 @@ public class FillXPBottleEvent {
 			if (!handItem.isEmpty()) {
 				if (handItem.getItem() == Items.GLASS_BOTTLE) {
 					if (event.getLevel().getBlockState(event.getPos()).getBlock() instanceof BlockTank) {
-						TileEntityTank tileentity = (TileEntityTank) event.getLevel().getBlockEntity(event.getPos());
+						BlockEntityTank tileentity = (BlockEntityTank) event.getLevel().getBlockEntity(event.getPos());
 						if (tileentity != null) {
 							if (tileentity.tank.getFluid() != null && tileentity.tank.getFluid().is(ModBlocks.FLUID_XP.get())) {
 								if (tileentity.tank.getFluidAmount() >= 200) {

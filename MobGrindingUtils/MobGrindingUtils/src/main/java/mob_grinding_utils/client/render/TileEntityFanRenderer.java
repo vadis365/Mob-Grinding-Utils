@@ -2,7 +2,7 @@ package mob_grinding_utils.client.render;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import mob_grinding_utils.tile.TileEntityFan;
+import mob_grinding_utils.BlockEntities.BlockEntityFan;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -15,13 +15,13 @@ import net.neoforged.api.distmarker.OnlyIn;
 import javax.annotation.Nonnull;
 
 @OnlyIn(Dist.CLIENT)
-public class TileEntityFanRenderer implements BlockEntityRenderer<TileEntityFan> {
+public class TileEntityFanRenderer implements BlockEntityRenderer<BlockEntityFan> {
 
 	public TileEntityFanRenderer(BlockEntityRendererProvider.Context context) {
 	}
 
 	@Override
-	public void render(@Nonnull TileEntityFan tile, float partialTicks, @Nonnull PoseStack matrixStack, @Nonnull MultiBufferSource buffer, int combinedLight, int combinedOverlay) {
+	public void render(@Nonnull BlockEntityFan tile, float partialTicks, @Nonnull PoseStack matrixStack, @Nonnull MultiBufferSource buffer, int combinedLight, int combinedOverlay) {
 		if (tile == null || !tile.hasLevel())
 			return;
 
@@ -42,7 +42,7 @@ public class TileEntityFanRenderer implements BlockEntityRenderer<TileEntityFan>
 	@Nonnull
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public AABB getRenderBoundingBox(TileEntityFan blockEntity) {
+	public AABB getRenderBoundingBox(BlockEntityFan blockEntity) {
 		return blockEntity.getRenderBoundingBox();
 	}
 }

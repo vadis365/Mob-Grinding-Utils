@@ -4,7 +4,7 @@ import mob_grinding_utils.MobGrindingUtils;
 import mob_grinding_utils.ModContainers;
 import mob_grinding_utils.ModItems;
 import mob_grinding_utils.recipe.SolidifyRecipe;
-import mob_grinding_utils.tile.TileEntityXPSolidifier;
+import mob_grinding_utils.BlockEntities.BlockEntityXPSolidifier;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
@@ -20,15 +20,15 @@ import java.util.function.Predicate;
 
 
 public class ContainerXPSolidifier extends AbstractContainerMenu {
-    public TileEntityXPSolidifier tile;
+    public BlockEntityXPSolidifier tile;
 
     public ContainerXPSolidifier(final int windowId, final Inventory playerInventory, FriendlyByteBuf extra) {
         super(ModContainers.SOLIDIFIER.get(), windowId);
         BlockPos tilePos = extra.readBlockPos();
         BlockEntity tile = playerInventory.player.getCommandSenderWorld().getBlockEntity(tilePos);
-        if (!(tile instanceof TileEntityXPSolidifier))
+        if (!(tile instanceof BlockEntityXPSolidifier))
             return;
-        this.tile = (TileEntityXPSolidifier) tile;
+        this.tile = (BlockEntityXPSolidifier) tile;
 
 
         addPlayerSlots(playerInventory);

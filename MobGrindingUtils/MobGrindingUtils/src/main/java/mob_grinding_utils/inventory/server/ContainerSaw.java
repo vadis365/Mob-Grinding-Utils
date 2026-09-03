@@ -1,9 +1,9 @@
 package mob_grinding_utils.inventory.server;
 
+import mob_grinding_utils.BlockEntities.BlockEntitySaw;
 import mob_grinding_utils.ModContainers;
 import mob_grinding_utils.ModItems;
 import mob_grinding_utils.config.ServerConfig;
-import mob_grinding_utils.tile.TileEntitySaw;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.Container;
@@ -18,16 +18,16 @@ import javax.annotation.Nonnull;
 
 public class ContainerSaw extends AbstractContainerMenu {
 	private final int numRows = 2;
-	public TileEntitySaw saw;
+	public BlockEntitySaw saw;
 	
 	public ContainerSaw(final int windowId, final Inventory playerInventory, FriendlyByteBuf extra) {
 		super(ModContainers.SAW.get(), windowId);
 		
 		BlockPos tilePos = extra.readBlockPos();
 		BlockEntity tile = playerInventory.player.getCommandSenderWorld().getBlockEntity(tilePos);
-		if (!(tile instanceof TileEntitySaw))
+		if (!(tile instanceof BlockEntitySaw))
 			return;
-		saw = (TileEntitySaw) tile;
+		saw = (BlockEntitySaw) tile;
 		int i = (numRows - 4) * 18;
 
 		addSlot(new SlotRestriction((Container) tile, 0, 18, 18, new ItemStack(ModItems.SAW_UPGRADE_SHARPNESS.get(), 1), ServerConfig.MASHER_MAX_UPGRADES.get()));

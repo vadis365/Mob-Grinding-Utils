@@ -1,8 +1,8 @@
 package mob_grinding_utils.blocks;
 
 import com.mojang.serialization.MapCodec;
+import mob_grinding_utils.BlockEntities.BlockEntitySaw;
 import mob_grinding_utils.ModBlocks;
-import mob_grinding_utils.tile.TileEntitySaw;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.Registries;
@@ -64,13 +64,13 @@ public class BlockSaw extends DirectionalBlock implements EntityBlock {
 
     @Override
     public BlockEntity newBlockEntity(@Nonnull BlockPos pos, @Nonnull BlockState state) {
-        return new TileEntitySaw(pos, state);
+        return new BlockEntitySaw(pos, state);
     }
 
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level pLevel, @Nonnull BlockState pState, @Nonnull BlockEntityType<T> pBlockEntityType) {
-        return pLevel.isClientSide() ? TileEntitySaw::clientTick : TileEntitySaw::serverTick;
+        return pLevel.isClientSide() ? BlockEntitySaw::clientTick : BlockEntitySaw::serverTick;
     }
 
     @Nonnull
@@ -100,7 +100,7 @@ public class BlockSaw extends DirectionalBlock implements EntityBlock {
     @Override
     public void setPlacedBy(@Nonnull Level world, @Nonnull BlockPos pos, @Nonnull BlockState state, @Nullable LivingEntity placer, @Nonnull ItemStack stack) {
         BlockEntity be = world.getBlockEntity(pos);
-        if (be instanceof TileEntitySaw tile) {
+        if (be instanceof BlockEntitySaw tile) {
             if (state.getValue(POWERED))
                 tile.setActive(true);
             if (placer instanceof Player player)
@@ -118,15 +118,15 @@ public class BlockSaw extends DirectionalBlock implements EntityBlock {
     public InteractionResult useWithoutItem(@Nonnull BlockState state, @Nonnull Level world, @Nonnull BlockPos pos, @Nonnull Player player, @Nonnull BlockHitResult hitResult) {
         if (!world.isClientSide()) {
             BlockEntity tileentity = world.getBlockEntity(pos);
-            if (tileentity instanceof TileEntitySaw)
-                player.openMenu((TileEntitySaw) tileentity, pos);
+            if (tileentity instanceof BlockEntitySaw)
+                player.openMenu((BlockEntitySaw) tileentity, pos);
         }
         return InteractionResult.SUCCESS;
     }
 
     @Override
     public void affectNeighborsAfterRemoval(@Nonnull BlockState state, ServerLevel level, @Nonnull BlockPos pos, boolean movedByPiston) {
-        TileEntitySaw tile = (TileEntitySaw) level.getBlockEntity(pos);
+        BlockEntitySaw tile = (BlockEntitySaw) level.getBlockEntity(pos);
         if (tile != null) {
             Containers.dropContents(level, pos, tile);
             level.updateNeighbourForOutputSignal(pos, this);
@@ -137,7 +137,7 @@ public class BlockSaw extends DirectionalBlock implements EntityBlock {
     @Override
     public void neighborChanged(@Nonnull BlockState state, Level level, @Nonnull BlockPos pos, @Nonnull Block block, Orientation orientation, boolean movedByPiston) {
         if (!level.isClientSide()) {
-            TileEntitySaw tile = (TileEntitySaw) level.getBlockEntity(pos);
+            BlockEntitySaw tile = (BlockEntitySaw) level.getBlockEntity(pos);
             boolean flag = state.getValue(POWERED);
             if (flag != level.hasNeighborSignal(pos)) {
                 if (flag)
@@ -155,7 +155,7 @@ public class BlockSaw extends DirectionalBlock implements EntityBlock {
     @Override
     public void tick(@Nonnull BlockState state, ServerLevel world, @Nonnull BlockPos pos, @Nonnull RandomSource rand) {
         if (!world.isClientSide()) {
-            TileEntitySaw tile = (TileEntitySaw) world.getBlockEntity(pos);
+            BlockEntitySaw tile = (BlockEntitySaw) world.getBlockEntity(pos);
             if (state.getValue(POWERED) && !world.hasNeighborSignal(pos)) {
                 world.setBlock(pos, state.cycle(POWERED), 2);
                 if (tile != null)

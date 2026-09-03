@@ -5,7 +5,7 @@ import com.google.common.collect.ImmutableSet;
 import mob_grinding_utils.blocks.*;
 import mob_grinding_utils.itemblocks.BlockItemTank;
 import mob_grinding_utils.itemblocks.MGUBlockItem;
-import mob_grinding_utils.tile.*;
+import mob_grinding_utils.BlockEntities.*;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.item.Item;
@@ -32,39 +32,39 @@ public class ModBlocks {
     public static DeferredRegister<FluidType> FLUID_TYPES = DeferredRegister.create(NeoForgeRegistries.Keys.FLUID_TYPES, Reference.MOD_ID);
     public static DeferredRegister<BlockEntityType<?>> TILE_ENTITIES = DeferredRegister.create(BuiltInRegistries.BLOCK_ENTITY_TYPE, Reference.MOD_ID);
 
-    public static MGUBlockReg<BlockFan, MGUBlockItem, TileEntityFan> FAN = new MGUBlockReg<>("fan",
+    public static MGUBlockReg<BlockFan, MGUBlockItem, BlockEntityFan> FAN = new MGUBlockReg<>("fan",
         BlockFan::new,
         fan -> new MGUBlockItem(fan, new Item.Properties().useBlockDescriptionPrefix()),
-        TileEntityFan::new);
+        BlockEntityFan::new);
 
-    public static MGUBlockReg<BlockSaw, MGUBlockItem, TileEntitySaw> SAW = new MGUBlockReg<>("saw",
+    public static MGUBlockReg<BlockSaw, MGUBlockItem, BlockEntitySaw> SAW = new MGUBlockReg<>("saw",
         BlockSaw::new,
         saw -> new MGUBlockItem(saw, new Item.Properties().useBlockDescriptionPrefix()),
-        TileEntitySaw::new);
+        BlockEntitySaw::new);
 
-    public static MGUBlockReg<BlockAbsorptionHopper, MGUBlockItem, TileEntityAbsorptionHopper> ABSORPTION_HOPPER = new MGUBlockReg<>("absorption_hopper",
+    public static MGUBlockReg<BlockAbsorptionHopper, MGUBlockItem, BlockEntityAbsorptionHopper> ABSORPTION_HOPPER = new MGUBlockReg<>("absorption_hopper",
         BlockAbsorptionHopper::new,
         absorptionHopper -> new MGUBlockItem(absorptionHopper, new Item.Properties().useBlockDescriptionPrefix()),
-        TileEntityAbsorptionHopper::new);
+        BlockEntityAbsorptionHopper::new);
 
     public static MGUBlockReg<BlockSpikes, MGUBlockItem, ?> SPIKES = new MGUBlockReg<>("spikes",
         BlockSpikes::new,
         spikes -> new MGUBlockItem(spikes, new Item.Properties().useBlockDescriptionPrefix()));
 
-    public static MGUBlockReg<BlockTank, BlockItemTank, TileEntityTank> TANK = new MGUBlockReg<>("tank",
+    public static MGUBlockReg<BlockTank, BlockItemTank, BlockEntityTank> TANK = new MGUBlockReg<>("tank",
         BlockTank::new,
         tank -> new BlockItemTank(tank, 32000,new Item.Properties().useBlockDescriptionPrefix()),
-        TileEntityTank::new);
+        BlockEntityTank::new);
 
-    public static MGUBlockReg<BlockTankSink, BlockItemTank, TileEntitySinkTank> TANK_SINK = new MGUBlockReg<>("tank_sink",
+    public static MGUBlockReg<BlockTankSink, BlockItemTank, BlockEntitySinkTank> TANK_SINK = new MGUBlockReg<>("tank_sink",
         BlockTankSink::new,
         tankSink -> new BlockItemTank(tankSink, 32000, new Item.Properties().useBlockDescriptionPrefix()),
-        TileEntitySinkTank::new);
+        BlockEntitySinkTank::new);
 
-    public static MGUBlockReg<BlockXPTap, MGUBlockItem, TileEntityXPTap> XP_TAP = new MGUBlockReg<>("xp_tap",
+    public static MGUBlockReg<BlockXPTap, MGUBlockItem, BlockEntityXPTap> XP_TAP = new MGUBlockReg<>("xp_tap",
         BlockXPTap::new,
         xpTap -> new MGUBlockItem(xpTap, new Item.Properties().useBlockDescriptionPrefix()),
-        TileEntityXPTap::new);
+        BlockEntityXPTap::new);
 
     public static MGUBlockReg<BlockWitherMuffler, MGUBlockItem, ?> WITHER_MUFFLER = new MGUBlockReg<>("wither_muffler",
         BlockWitherMuffler::new,
@@ -94,15 +94,15 @@ public class ModBlocks {
         BlockTintedGlass::new,
         tintedGlass -> new MGUBlockItem(tintedGlass, new Item.Properties().useBlockDescriptionPrefix()));
 
-    public static MGUBlockReg<BlockTankJumbo, BlockItemTank, TileEntityJumboTank> JUMBO_TANK = new MGUBlockReg<>("jumbo_tank",
+    public static MGUBlockReg<BlockTankJumbo, BlockItemTank, BlockEntityJumboTank> JUMBO_TANK = new MGUBlockReg<>("jumbo_tank",
         BlockTankJumbo::new,
         tankJumbo -> new BlockItemTank(tankJumbo, 1024000, new Item.Properties().useBlockDescriptionPrefix()),
-        TileEntityJumboTank::new);
+        BlockEntityJumboTank::new);
 
-    public static MGUBlockReg<BlockXPSolidifier, MGUBlockItem, TileEntityXPSolidifier> XPSOLIDIFIER = new MGUBlockReg<>("xpsolidifier",
+    public static MGUBlockReg<BlockXPSolidifier, MGUBlockItem, BlockEntityXPSolidifier> XPSOLIDIFIER = new MGUBlockReg<>("xpsolidifier",
         BlockXPSolidifier::new,
         xpSolidifier -> new MGUBlockItem(xpSolidifier, new Item.Properties().useBlockDescriptionPrefix()),
-        TileEntityXPSolidifier::new);
+        BlockEntityXPSolidifier::new);
 
     //public static Material MATERIAL_DREADFUL_DIRT = new Material(MaterialColor.DIRT, false, true, false, true, true, false, PushReaction.NORMAL);
     public static MGUBlockReg<BlockDreadfulDirt, MGUBlockItem, ?> DREADFUL_DIRT = new MGUBlockReg<>("dreadful_dirt",
@@ -118,10 +118,10 @@ public class ModBlocks {
         BlockSolidXP::new,
         solidXP -> new MGUBlockItem(solidXP, new Item.Properties()));
 
-    public static MGUBlockReg<BlockEntitySpawner, MGUBlockItem, TileEntityMGUSpawner> ENTITY_SPAWNER = new MGUBlockReg<>("entity_spawner",
+    public static MGUBlockReg<BlockEntitySpawner, MGUBlockItem, BlockEntityMGUSpawner> ENTITY_SPAWNER = new MGUBlockReg<>("entity_spawner",
         BlockEntitySpawner::new,
         entitySpawner -> new MGUBlockItem(entitySpawner, new Item.Properties().useBlockDescriptionPrefix()),
-        TileEntityMGUSpawner::new);
+        BlockEntityMGUSpawner::new);
 
     public static DeferredHolder<FluidType, FluidType> XPTYPE = FLUID_TYPES.register("fluid_xp", () -> new FluidType(FluidType.Properties.create()
             .temperature(300)

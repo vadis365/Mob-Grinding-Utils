@@ -1,4 +1,4 @@
-package mob_grinding_utils.tile;
+package mob_grinding_utils.BlockEntities;
 
 import mob_grinding_utils.ModBlocks;
 import mob_grinding_utils.ModTags;
@@ -21,16 +21,16 @@ import net.neoforged.neoforge.network.PacketDistributor;
 import javax.annotation.Nonnull;
 import java.util.Optional;
 
-public class TileEntityXPTap extends BlockEntity {
+public class BlockEntityXPTap extends BlockEntity {
 	
-	public TileEntityXPTap(BlockPos pos, BlockState state) {
+	public BlockEntityXPTap(BlockPos pos, BlockState state) {
 		super(ModBlocks.XP_TAP.getTileEntityType(), pos, state);
 	}
 
 	public boolean active;
 
 	public static <T extends BlockEntity> void serverTick(Level world, BlockPos worldPosition, BlockState blockState, T t) {
-		if (t instanceof TileEntityXPTap tileEntityXPTap && tileEntityXPTap.active) {
+		if (t instanceof BlockEntityXPTap blockEntityXPTap && blockEntityXPTap.active) {
 			BlockPos blockPos = worldPosition.relative(world.getBlockState(worldPosition).getValue(BlockXPTap.FACING).getOpposite());
 			BlockEntity tileentity = world.getBlockEntity(blockPos);
 			if (tileentity != null) {
@@ -39,7 +39,7 @@ public class TileEntityXPTap extends BlockEntity {
 					if (handler.getTanks() > 0 && handler.getFluidInTank(0).getAmount() >= 20 && handler.getFluidInTank(0).getFluid().is(ModTags.Fluids.EXPERIENCE) && world.getGameTime() % 3 == 0) {
 						int xpAmount = EntityXPOrbFalling.getExperienceValue(Math.min(20, handler.getFluidInTank(0).getAmount() / 20));
 						if (!handler.drain(xpAmount * 20, IFluidHandler.FluidAction.EXECUTE).isEmpty()) {
-							tileEntityXPTap.spawnXP(world, worldPosition, xpAmount, tileentity);
+							blockEntityXPTap.spawnXP(world, worldPosition, xpAmount, tileentity);
 							PacketDistributor.sendToPlayersNear((ServerLevel) world, null, t.getBlockPos().getX(), t.getBlockPos().getY(), t.getBlockPos().getZ(), 30,new TapParticlePacket(worldPosition));
 						}
 					}

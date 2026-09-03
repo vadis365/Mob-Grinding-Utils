@@ -4,7 +4,7 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
-import mob_grinding_utils.tile.TileEntityMGUSpawner;
+import mob_grinding_utils.BlockEntities.BlockEntityMGUSpawner;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -19,13 +19,13 @@ import net.neoforged.api.distmarker.OnlyIn;
 import javax.annotation.Nonnull;
 
 @OnlyIn(Dist.CLIENT)
-public class TileEntityMGUSpawnerRenderer implements BlockEntityRenderer<TileEntityMGUSpawner> {
+public class TileEntityMGUSpawnerRenderer implements BlockEntityRenderer<BlockEntityMGUSpawner> {
 
 	public TileEntityMGUSpawnerRenderer(Context context) {
 	}
 
 	@Override
-	public void render(@Nonnull TileEntityMGUSpawner tile, float partialTicks, @Nonnull PoseStack matrixStack, @Nonnull MultiBufferSource buffer, int combinedLight, int combinedOverlay) {
+	public void render(@Nonnull BlockEntityMGUSpawner tile, float partialTicks, @Nonnull PoseStack matrixStack, @Nonnull MultiBufferSource buffer, int combinedLight, int combinedOverlay) {
 		if (tile == null || !tile.hasLevel())
 			return;
 
@@ -57,7 +57,7 @@ public class TileEntityMGUSpawnerRenderer implements BlockEntityRenderer<TileEnt
 	}
 
 	@Override
-	public AABB getRenderBoundingBox(TileEntityMGUSpawner blockEntity) {
+	public AABB getRenderBoundingBox(BlockEntityMGUSpawner blockEntity) {
 		return blockEntity.getAABBWithModifiers();
 	}
 }

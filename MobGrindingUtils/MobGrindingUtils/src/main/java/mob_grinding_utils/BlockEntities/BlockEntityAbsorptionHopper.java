@@ -1,4 +1,4 @@
-package mob_grinding_utils.tile;
+package mob_grinding_utils.BlockEntities;
 
 import io.netty.buffer.Unpooled;
 import mob_grinding_utils.ModBlocks;
@@ -45,12 +45,12 @@ import java.util.List;
 import java.util.Optional;
 
 
-public class TileEntityAbsorptionHopper extends TileEntityInventoryHelper implements MenuProvider, BEGuiClickable {
+public class BlockEntityAbsorptionHopper extends BlockEntityInventoryHelper implements MenuProvider, BEGuiClickable {
 	public FluidTank tank = new FluidTank(1000 *  16);
 	private final IItemHandler itemHandler;
 	private static final int[] SLOTS = new int[] {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16};
 	public int prevTankAmount;
-	public TileEntityAbsorptionHopper(BlockPos pos, BlockState state) {
+	public BlockEntityAbsorptionHopper(BlockPos pos, BlockState state) {
 		super(ModBlocks.ABSORPTION_HOPPER.getTileEntityType(), 17, pos, state);
 		itemHandler = createUnSidedHandler();
 	}
@@ -213,7 +213,7 @@ public class TileEntityAbsorptionHopper extends TileEntityInventoryHelper implem
 	}
 
 	public static <T extends BlockEntity> void serverTick(Level level, BlockPos worldPosition, BlockState blockState, T t) {
-		if (t instanceof TileEntityAbsorptionHopper tile) {
+		if (t instanceof BlockEntityAbsorptionHopper tile) {
 			tile.prevTankAmount = tile.tank.getFluidAmount();
 			for (Direction facing : Direction.values()) {
 				if (tile.status[facing.ordinal()] == EnumStatus.STATUS_OUTPUT_ITEM) {
@@ -405,7 +405,7 @@ public class TileEntityAbsorptionHopper extends TileEntityInventoryHelper implem
 	}
 
 	public static ItemStack putStackInInventoryAllSlots(Container inventory, ItemStack stack, @Nullable Direction facing) {
-		if (inventory instanceof WorldlyContainer && facing != null && !(inventory instanceof TileEntityAbsorptionHopper) && inventory.canPlaceItem(0, stack.copy())) {
+		if (inventory instanceof WorldlyContainer && facing != null && !(inventory instanceof BlockEntityAbsorptionHopper) && inventory.canPlaceItem(0, stack.copy())) {
 			WorldlyContainer isidedinventory = (WorldlyContainer)inventory;
 			int[] aint = isidedinventory.getSlotsForFace(facing);
 			for (int k = 0; k < aint.length && !stack.isEmpty(); ++k)
@@ -421,7 +421,7 @@ public class TileEntityAbsorptionHopper extends TileEntityInventoryHelper implem
 	public static boolean putDropInInventoryAllSlots(Container inventoryIn, ItemEntity itemIn) {
 		boolean flag = false;
 
-		if (itemIn == null || inventoryIn instanceof TileEntityAbsorptionHopper && inventoryIn.canPlaceItem(0, itemIn.getItem().copy())) {
+		if (itemIn == null || inventoryIn instanceof BlockEntityAbsorptionHopper && inventoryIn.canPlaceItem(0, itemIn.getItem().copy())) {
 			return false;
 		} else {
 			ItemStack itemstack = itemIn.getItem().copy();

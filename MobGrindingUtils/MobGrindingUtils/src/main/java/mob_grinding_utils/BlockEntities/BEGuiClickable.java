@@ -1,4 +1,4 @@
-package mob_grinding_utils.tile;
+package mob_grinding_utils.BlockEntities;
 
 public interface BEGuiClickable {
     public void buttonClicked(int buttonID);

@@ -1,4 +1,4 @@
-package mob_grinding_utils.tile;
+package mob_grinding_utils.BlockEntities;
 
 import io.netty.buffer.Unpooled;
 import mob_grinding_utils.ModBlocks;
@@ -38,7 +38,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class TileEntityMGUSpawner extends BlockEntity implements MenuProvider, BEGuiClickable {
+public class BlockEntityMGUSpawner extends BlockEntity implements MenuProvider, BEGuiClickable {
 
 	public int spawning_progress = 0;
 	public int MAX_SPAWNING_TIME = 100;
@@ -56,7 +56,7 @@ public class TileEntityMGUSpawner extends BlockEntity implements MenuProvider, B
 	public boolean showRenderBox;
 	public int offsetX, offsetY, offsetZ;
 
-	public TileEntityMGUSpawner(BlockPos pos, BlockState state) {
+	public BlockEntityMGUSpawner(BlockPos pos, BlockState state) {
 		super(ModBlocks.ENTITY_SPAWNER.getTileEntityType(), pos, state);
 	}
 
@@ -69,7 +69,7 @@ public class TileEntityMGUSpawner extends BlockEntity implements MenuProvider, B
 	}
 
 	public static <T extends BlockEntity> void serverTick(Level level, BlockPos blockPos, BlockState blockState, T t) {
-		if (t instanceof TileEntityMGUSpawner tile) {
+		if (t instanceof BlockEntityMGUSpawner tile) {
 			if (tile.isOn) {
 				if (tile.canOperate()) {
 					tile.setProgress(tile.getProgress() + 1 + tile.getSpeedModifierAmount());
@@ -90,7 +90,7 @@ public class TileEntityMGUSpawner extends BlockEntity implements MenuProvider, B
 		}
 	}
 	public static <T extends BlockEntity> void clientTick(Level level, BlockPos blockPos, BlockState blockState, T t) {
-		if (t instanceof TileEntityMGUSpawner tile) {
+		if (t instanceof BlockEntityMGUSpawner tile) {
 			if (tile.isOn) {
 				tile.prevAnimationTicks = tile.animationTicks;
 				if (tile.animationTicks < 360)

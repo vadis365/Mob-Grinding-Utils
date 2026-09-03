@@ -1,4 +1,4 @@
-package mob_grinding_utils.tile;
+package mob_grinding_utils.BlockEntities;
 
 import io.netty.buffer.Unpooled;
 import mob_grinding_utils.ModBlocks;
@@ -37,19 +37,19 @@ import net.neoforged.api.distmarker.OnlyIn;
 import javax.annotation.Nonnull;
 import java.util.List;
 
-public class TileEntityFan extends TileEntityInventoryHelper implements MenuProvider, BEGuiClickable {
+public class BlockEntityFan extends BlockEntityInventoryHelper implements MenuProvider, BEGuiClickable {
 
 	private static final int[] SLOTS = new int[] {0, 1, 2};
 	public boolean showRenderBox;
 	float xPos, yPos, zPos;
 	float xNeg, yNeg, zNeg;
 
-	public TileEntityFan(BlockPos pos, BlockState state) {
+	public BlockEntityFan(BlockPos pos, BlockState state) {
 		super(ModBlocks.FAN.getTileEntityType(), 3, pos, state);
 	}
 
 	public static <T extends BlockEntity> void tick(Level level, BlockPos pos, BlockState blockState, T t) {
-		if(t instanceof TileEntityFan fan) {
+		if(t instanceof BlockEntityFan fan) {
 			if (level.getGameTime() % 2 == 0 && level.getBlockState(pos).getBlock() instanceof BlockFan)
 				if (level.getBlockState(pos).getValue(BlockFan.POWERED)) {
 					fan.activateBlock();

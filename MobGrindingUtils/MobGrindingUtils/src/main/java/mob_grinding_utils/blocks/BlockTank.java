@@ -1,7 +1,7 @@
 package mob_grinding_utils.blocks;
 
 import com.mojang.serialization.MapCodec;
-import mob_grinding_utils.tile.TileEntityTank;
+import mob_grinding_utils.BlockEntities.BlockEntityTank;
 import mob_grinding_utils.util.CapHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
@@ -53,13 +53,13 @@ public class BlockTank extends BaseEntityBlock {
 
 	@Override
 	public BlockEntity newBlockEntity(@Nonnull BlockPos pos, @Nonnull BlockState state) {
-		return new TileEntityTank(pos, state);
+		return new BlockEntityTank(pos, state);
 	}
 
 	@Nullable
 	@Override
 	public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level pLevel, @Nonnull BlockState pState, @Nonnull BlockEntityType<T> pBlockEntityType) {
-		return pLevel.isClientSide() ? null : TileEntityTank::serverTick;
+		return pLevel.isClientSide() ? null : BlockEntityTank::serverTick;
 	}
 
 	@Nonnull
@@ -74,7 +74,7 @@ public class BlockTank extends BaseEntityBlock {
 		if (world.isClientSide())
 			return ItemInteractionResult.SUCCESS;
 		BlockEntity tileentity = world.getBlockEntity(pos);
-		if (tileentity instanceof TileEntityTank) {
+		if (tileentity instanceof BlockEntityTank) {
 			Optional<IFluidHandler> fluidHandler = CapHelper.getFluidHandler(world, pos, hit.getDirection());
 			fluidHandler.ifPresent((handler) -> {
 				if (player.getItemInHand(hand).isEmpty() || !FluidUtil.interactWithFluidHandler(player, hand, world, pos, hit.getDirection())) {

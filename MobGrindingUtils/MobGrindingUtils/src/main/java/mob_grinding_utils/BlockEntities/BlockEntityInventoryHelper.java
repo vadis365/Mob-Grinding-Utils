@@ -1,4 +1,4 @@
-package mob_grinding_utils.tile;
+package mob_grinding_utils.BlockEntities;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
@@ -14,11 +14,11 @@ import net.minecraft.world.level.block.state.BlockState;
 
 import javax.annotation.Nullable;
 
-public abstract class TileEntityInventoryHelper extends BlockEntity implements WorldlyContainer {
+public abstract class BlockEntityInventoryHelper extends BlockEntity implements WorldlyContainer {
 
 	private NonNullList<ItemStack> inventory;
 
-	public TileEntityInventoryHelper(BlockEntityType<?> tileEntityTypeIn, int invtSize, BlockPos pos, BlockState state) {
+	public BlockEntityInventoryHelper(BlockEntityType<?> tileEntityTypeIn, int invtSize, BlockPos pos, BlockState state) {
 		super(tileEntityTypeIn, pos, state);
 		inventory = NonNullList.<ItemStack>withSize(invtSize, ItemStack.EMPTY);
 	}

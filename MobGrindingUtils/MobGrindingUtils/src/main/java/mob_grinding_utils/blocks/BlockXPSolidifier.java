@@ -3,7 +3,7 @@ package mob_grinding_utils.blocks;
 import com.mojang.serialization.MapCodec;
 import mob_grinding_utils.components.FluidContents;
 import mob_grinding_utils.components.MGUComponents;
-import mob_grinding_utils.tile.TileEntityXPSolidifier;
+import mob_grinding_utils.BlockEntities.BlockEntityXPSolidifier;
 import mob_grinding_utils.util.CapHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
@@ -66,13 +66,13 @@ public class BlockXPSolidifier extends BaseEntityBlock {
     @Nullable
     @Override
     public BlockEntity newBlockEntity(@Nonnull BlockPos pos, @Nonnull BlockState state) {
-        return new TileEntityXPSolidifier(pos, state);
+        return new BlockEntityXPSolidifier(pos, state);
     }
 
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(@Nonnull Level pLevel, @Nonnull BlockState pState, @Nonnull BlockEntityType<T> pBlockEntityType) {
-        return TileEntityXPSolidifier::tick;
+        return BlockEntityXPSolidifier::tick;
     }
 
     @Nonnull
@@ -91,7 +91,7 @@ public class BlockXPSolidifier extends BaseEntityBlock {
     protected void onRemove(@Nonnull BlockState state, @Nonnull Level level, @Nonnull BlockPos pos, @Nonnull BlockState newState, boolean movedByPiston) {
         if (state.getBlock() != newState.getBlock()) {
             BlockEntity blockEntity = level.getBlockEntity(pos);
-            if (blockEntity instanceof TileEntityXPSolidifier entity) {
+            if (blockEntity instanceof BlockEntityXPSolidifier entity) {
                 if(!entity.inputSlots.getStackInSlot(0).isEmpty())
                     Containers.dropItemStack(level, pos.getX(), pos.getY(), pos.getZ(), entity.inputSlots.getStackInSlot(0));
                 if(!entity.inputSlots.getStackInSlot(1).isEmpty())
@@ -116,7 +116,7 @@ public class BlockXPSolidifier extends BaseEntityBlock {
             return ItemInteractionResult.SUCCESS;
         } else {
             BlockEntity blockEntity = level.getBlockEntity(pos);
-            if (blockEntity instanceof TileEntityXPSolidifier entityXPSolidifier) {
+            if (blockEntity instanceof BlockEntityXPSolidifier entityXPSolidifier) {
                 if (!player.getItemInHand(hand).isEmpty() && player.getItemInHand(hand).getItem() instanceof BucketItem) { // fixy later, Flanks: ?!?
                     Optional<IFluidHandler> fluidHandler = CapHelper.getFluidHandler(level, pos, hit.getDirection());
                     fluidHandler.ifPresent((handler) -> {

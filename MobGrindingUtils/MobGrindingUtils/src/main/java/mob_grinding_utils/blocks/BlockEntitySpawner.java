@@ -1,7 +1,7 @@
 package mob_grinding_utils.blocks;
 
+import mob_grinding_utils.BlockEntities.BlockEntityMGUSpawner;
 import mob_grinding_utils.ModBlocks;
-import mob_grinding_utils.tile.TileEntityMGUSpawner;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.Registries;
@@ -59,13 +59,13 @@ public class BlockEntitySpawner extends Block implements EntityBlock {
 
     @Override
     public BlockEntity newBlockEntity(@Nonnull BlockPos pos, @Nonnull BlockState state) {
-        return new TileEntityMGUSpawner(pos, state);
+        return new BlockEntityMGUSpawner(pos, state);
     }
 
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level pLevel, @Nonnull BlockState pState, @Nonnull BlockEntityType<T> pBlockEntityType) {
-        return pLevel.isClientSide() ? TileEntityMGUSpawner::clientTick : TileEntityMGUSpawner::serverTick;
+        return pLevel.isClientSide() ? BlockEntityMGUSpawner::clientTick : BlockEntityMGUSpawner::serverTick;
     }
 
     @Override
@@ -84,7 +84,7 @@ public class BlockEntitySpawner extends Block implements EntityBlock {
     public InteractionResult useWithoutItem(BlockState state, @Nonnull Level world, @Nonnull BlockPos pos, @Nonnull Player player, @Nonnull BlockHitResult hitResult) {
         if (!world.isClientSide()) {
             BlockEntity tileentity = world.getBlockEntity(pos);
-            if (tileentity instanceof TileEntityMGUSpawner tile)
+            if (tileentity instanceof BlockEntityMGUSpawner tile)
                 player.openMenu(tile, pos);
         }
         return InteractionResult.SUCCESS;
@@ -93,7 +93,7 @@ public class BlockEntitySpawner extends Block implements EntityBlock {
     @Override
     public BlockState playerWillDestroy(Level world, @Nonnull BlockPos pos, @Nonnull BlockState state, @Nonnull Player player) {
         if (!world.isClientSide() && !player.getAbilities().instabuild) {
-            TileEntityMGUSpawner tile = (TileEntityMGUSpawner) world.getBlockEntity(pos);
+            BlockEntityMGUSpawner tile = (BlockEntityMGUSpawner) world.getBlockEntity(pos);
             if (tile != null) {
                 if(!tile.inputSlots.getStackInSlot(0).isEmpty())
                     Containers.dropItemStack(world, pos.getX(), pos.getY(), pos.getZ(), tile.inputSlots.getStackInSlot(0));
@@ -114,7 +114,7 @@ public class BlockEntitySpawner extends Block implements EntityBlock {
     @Override
     public void onRemove(BlockState state, @Nonnull Level world, @Nonnull BlockPos pos, BlockState newState, boolean isMoving) {
         if (!state.is(newState.getBlock())) {
-            TileEntityMGUSpawner tile = (TileEntityMGUSpawner) world.getBlockEntity(pos);
+            BlockEntityMGUSpawner tile = (BlockEntityMGUSpawner) world.getBlockEntity(pos);
             if (tile != null) {
                 //InventoryHelper.dropInventoryItems(world, pos, tile);
                 world.updateNeighbourForOutputSignal(pos, this);
@@ -126,7 +126,7 @@ public class BlockEntitySpawner extends Block implements EntityBlock {
     @Override
     public void neighborChanged(@Nonnull BlockState state, Level world, @Nonnull BlockPos pos, @Nonnull Block block, @Nonnull BlockPos fromPos, boolean isMoving) {
         if (!world.isClientSide()) {
-            TileEntityMGUSpawner tile = (TileEntityMGUSpawner) world.getBlockEntity(pos);
+            BlockEntityMGUSpawner tile = (BlockEntityMGUSpawner) world.getBlockEntity(pos);
             boolean flag = state.getValue(POWERED);
             if (flag != world.hasNeighborSignal(pos))
                 if (flag)
@@ -142,7 +142,7 @@ public class BlockEntitySpawner extends Block implements EntityBlock {
     @Override
     public void tick(@Nonnull BlockState state, ServerLevel world, @Nonnull BlockPos pos, @Nonnull RandomSource rand) {
         if (!world.isClientSide()) {
-            TileEntityMGUSpawner tile = (TileEntityMGUSpawner) world.getBlockEntity(pos);
+            BlockEntityMGUSpawner tile = (BlockEntityMGUSpawner) world.getBlockEntity(pos);
             if (state.getValue(POWERED) && !world.hasNeighborSignal(pos)) {
                 world.setBlock(pos, state.cycle(POWERED), 2);
                 if (tile != null)

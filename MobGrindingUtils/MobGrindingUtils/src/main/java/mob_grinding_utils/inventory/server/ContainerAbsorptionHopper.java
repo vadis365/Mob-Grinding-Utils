@@ -1,8 +1,8 @@
 package mob_grinding_utils.inventory.server;
 
+import mob_grinding_utils.BlockEntities.BlockEntityAbsorptionHopper;
 import mob_grinding_utils.ModContainers;
 import mob_grinding_utils.ModItems;
-import mob_grinding_utils.tile.TileEntityAbsorptionHopper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.Container;
@@ -18,14 +18,14 @@ import javax.annotation.Nonnull;
 public class ContainerAbsorptionHopper extends AbstractContainerMenu {
 
 	public int numRows = 2;
-	public TileEntityAbsorptionHopper hopper;
+	public BlockEntityAbsorptionHopper hopper;
 	public ContainerAbsorptionHopper(final int windowId, final Inventory playerInventory, FriendlyByteBuf extra) {
 		super(ModContainers.ABSORPTION_HOPPER.get(), windowId);
 		BlockPos tilePos = extra.readBlockPos();
 		BlockEntity tile = playerInventory.player.getCommandSenderWorld().getBlockEntity(tilePos);
-		if (!(tile instanceof TileEntityAbsorptionHopper))
+		if (!(tile instanceof BlockEntityAbsorptionHopper))
 			return;
-		hopper = (TileEntityAbsorptionHopper) tile;
+		hopper = (BlockEntityAbsorptionHopper) tile;
 		int i = (numRows - 4) * 18;
 		int j;
 		int k;

@@ -1,6 +1,6 @@
 package mob_grinding_utils.blocks;
 
-import mob_grinding_utils.tile.TileEntityJumboTank;
+import mob_grinding_utils.BlockEntities.BlockEntityJumboTank;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.Identifier;
@@ -29,6 +29,6 @@ public class BlockTankJumbo extends BlockTank {
 
 	@Override
 	public BlockEntity newBlockEntity(@Nonnull BlockPos pos, @Nonnull BlockState state) {
-		return new TileEntityJumboTank(pos, state);
+		return new BlockEntityJumboTank(pos, state);
 	}
 }

@@ -1,7 +1,7 @@
 package mob_grinding_utils.blocks;
 
 import com.mojang.serialization.MapCodec;
-import mob_grinding_utils.tile.TileEntityAbsorptionHopper;
+import mob_grinding_utils.BlockEntities.BlockEntityAbsorptionHopper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.Identifier;
@@ -56,7 +56,7 @@ public class BlockAbsorptionHopper extends BaseEntityBlock {
 
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-        return new TileEntityAbsorptionHopper(pos, state);
+        return new BlockEntityAbsorptionHopper(pos, state);
     }
 
     @Nonnull
@@ -68,7 +68,7 @@ public class BlockAbsorptionHopper extends BaseEntityBlock {
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level pLevel, @Nonnull BlockState pState, @Nonnull BlockEntityType<T> pBlockEntityType) {
-        return pLevel.isClientSide() ? null : TileEntityAbsorptionHopper::serverTick;
+        return pLevel.isClientSide() ? null : BlockEntityAbsorptionHopper::serverTick;
     }
 
     @Nonnull
@@ -89,7 +89,7 @@ public class BlockAbsorptionHopper extends BaseEntityBlock {
         if (!world.isClientSide()) {
             BlockEntity tile = world.getBlockEntity(pos);
 
-            if (tile instanceof TileEntityAbsorptionHopper vacuum) {
+            if (tile instanceof BlockEntityAbsorptionHopper vacuum) {
 
                 if (!player.isShiftKeyDown()) {
                     world.sendBlockUpdated(pos, state, state, 3);
@@ -108,7 +108,7 @@ public class BlockAbsorptionHopper extends BaseEntityBlock {
     @Override
     public BlockState playerWillDestroy(Level world, @Nonnull BlockPos pos, @Nonnull BlockState state, @Nonnull Player player) {
         if (!world.isClientSide()) {
-            TileEntityAbsorptionHopper tile = (TileEntityAbsorptionHopper) world.getBlockEntity(pos);
+            BlockEntityAbsorptionHopper tile = (BlockEntityAbsorptionHopper) world.getBlockEntity(pos);
             if (tile != null) {
                 Containers.dropContents(world, pos, tile);
                 world.removeBlockEntity(pos);

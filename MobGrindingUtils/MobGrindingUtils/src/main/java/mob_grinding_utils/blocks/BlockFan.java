@@ -1,7 +1,7 @@
 package mob_grinding_utils.blocks;
 
 import com.mojang.serialization.MapCodec;
-import mob_grinding_utils.tile.TileEntityFan;
+import mob_grinding_utils.BlockEntities.BlockEntityFan;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.Registries;
@@ -61,13 +61,13 @@ public class BlockFan extends DirectionalBlock implements EntityBlock {
 
     @Override
     public BlockEntity newBlockEntity(@Nonnull BlockPos pos, @Nonnull BlockState state) {
-        return new TileEntityFan(pos, state);
+        return new BlockEntityFan(pos, state);
     }
 
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(@Nonnull Level pLevel, @Nonnull BlockState pState, @Nonnull BlockEntityType<T> pBlockEntityType) {
-        return TileEntityFan::tick;
+        return BlockEntityFan::tick;
     }
 
     @Override
@@ -86,15 +86,15 @@ public class BlockFan extends DirectionalBlock implements EntityBlock {
     public InteractionResult useWithoutItem(@Nonnull BlockState state, @Nonnull Level world, @Nonnull BlockPos pos, @Nonnull Player player, @Nonnull BlockHitResult hitResult) {
         if (!world.isClientSide()) {
             BlockEntity tileentity = world.getBlockEntity(pos);
-            if (tileentity  instanceof TileEntityFan)
-                player.openMenu((TileEntityFan)tileentity, pos);
+            if (tileentity  instanceof BlockEntityFan)
+                player.openMenu((BlockEntityFan)tileentity, pos);
         }
         return InteractionResult.SUCCESS;
     }
 
     @Override
     public void affectNeighborsAfterRemoval(@Nonnull BlockState state, ServerLevel level, @Nonnull BlockPos pos, boolean movedByPiston) {
-        TileEntityFan tile = (TileEntityFan) level.getBlockEntity(pos);
+        BlockEntityFan tile = (BlockEntityFan) level.getBlockEntity(pos);
         if (tile != null) {
             Containers.dropContents(level, pos, tile);
             level.updateNeighbourForOutputSignal(pos, this);

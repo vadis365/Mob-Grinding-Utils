@@ -1,8 +1,8 @@
 package mob_grinding_utils.inventory.client;
 
+import mob_grinding_utils.BlockEntities.BlockEntityFan;
 import mob_grinding_utils.inventory.server.ContainerFan;
 import mob_grinding_utils.network.BEGuiClick;
-import mob_grinding_utils.tile.TileEntityFan;
 import mob_grinding_utils.util.RL;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
@@ -16,7 +16,7 @@ import javax.annotation.Nonnull;
 @OnlyIn(Dist.CLIENT)
 public class GuiFan extends MGUScreen<ContainerFan> {
 	protected final ContainerFan container;
-	private final TileEntityFan tile;
+	private final BlockEntityFan tile;
 
 	public GuiFan(ContainerFan container, Inventory inventory, Component title) {
 		super(container, inventory, title, RL.mgu("textures/gui/fan_gui.png"));

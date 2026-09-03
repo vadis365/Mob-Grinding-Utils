@@ -3,7 +3,7 @@ package mob_grinding_utils.blocks;
 import com.mojang.serialization.MapCodec;
 import mob_grinding_utils.ModBlocks;
 import mob_grinding_utils.ModSounds;
-import mob_grinding_utils.tile.TileEntityXPTap;
+import mob_grinding_utils.BlockEntities.BlockEntityXPTap;
 import mob_grinding_utils.util.CapHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -104,7 +104,7 @@ public class BlockXPTap extends DirectionalBlock implements EntityBlock {
             world.setBlock(pos, state.setValue(POWERED, !swap), 3);
             float f = state.getValue(POWERED) ? 0.6F : 0.5F;
             world.playSound(null, pos, ModSounds.TAP_SQUEAK.get(), SoundSource.BLOCKS, 0.3F, f);
-            TileEntityXPTap tileentity = (TileEntityXPTap) world.getBlockEntity(pos);
+            BlockEntityXPTap tileentity = (BlockEntityXPTap) world.getBlockEntity(pos);
             tileentity.setActive(!swap);
         }
         return InteractionResult.SUCCESS;
@@ -145,12 +145,12 @@ public class BlockXPTap extends DirectionalBlock implements EntityBlock {
 
     @Override
     public BlockEntity newBlockEntity(@Nonnull BlockPos pos, @Nonnull BlockState state) {
-        return new TileEntityXPTap(pos, state);
+        return new BlockEntityXPTap(pos, state);
     }
 
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level pLevel, @Nonnull BlockState pState, @Nonnull BlockEntityType<T> pBlockEntityType) {
-        return pLevel.isClientSide()? null : TileEntityXPTap::serverTick;
+        return pLevel.isClientSide()? null : BlockEntityXPTap::serverTick;
     }
 }

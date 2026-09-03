@@ -3,12 +3,12 @@ package mob_grinding_utils.client.render;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
+import mob_grinding_utils.BlockEntities.BlockEntitySaw;
 import mob_grinding_utils.ModBlocks;
 import mob_grinding_utils.blocks.BlockSaw;
 import mob_grinding_utils.client.ModelLayers;
 import mob_grinding_utils.models.ModelSawBase;
 import mob_grinding_utils.models.ModelSawBlade;
-import mob_grinding_utils.tile.TileEntitySaw;
 import mob_grinding_utils.util.RL;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -24,7 +24,7 @@ import net.neoforged.api.distmarker.OnlyIn;
 import javax.annotation.Nonnull;
 
 @OnlyIn(Dist.CLIENT)
-public class TileEntitySawRenderer implements BlockEntityRenderer<TileEntitySaw> {
+public class TileEntitySawRenderer implements BlockEntityRenderer<BlockEntitySaw> {
 
 	private static final ResourceLocation BASE_TEXTURE = RL.mgu("textures/tiles/saw_base.png");
 	private static final ResourceLocation BLADE_TEXTURE = RL.mgu("textures/tiles/saw_blade.png");
@@ -37,7 +37,7 @@ public class TileEntitySawRenderer implements BlockEntityRenderer<TileEntitySaw>
 	}
 
 	@Override
-	public void render(@Nonnull TileEntitySaw tile, float partialTicks, @Nonnull PoseStack matrixStack, @Nonnull MultiBufferSource buffer, int combinedLight, int combinedOverlay) {
+	public void render(@Nonnull BlockEntitySaw tile, float partialTicks, @Nonnull PoseStack matrixStack, @Nonnull MultiBufferSource buffer, int combinedLight, int combinedOverlay) {
 		if(tile == null || !tile.hasLevel())
 			return;
 

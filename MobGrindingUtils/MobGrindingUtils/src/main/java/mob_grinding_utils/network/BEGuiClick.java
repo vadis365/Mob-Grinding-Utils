@@ -1,6 +1,6 @@
 package mob_grinding_utils.network;
 
-import mob_grinding_utils.tile.BEGuiClickable;
+import mob_grinding_utils.BlockEntities.BEGuiClickable;
 import mob_grinding_utils.util.RL;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;

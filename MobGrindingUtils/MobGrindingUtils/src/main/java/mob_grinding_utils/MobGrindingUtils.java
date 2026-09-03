@@ -1,5 +1,6 @@
 package mob_grinding_utils;
 
+import mob_grinding_utils.BlockEntities.BlockEntityMGUSpawner;
 import mob_grinding_utils.blocks.BlockSpikes;
 import mob_grinding_utils.client.ModelLayers;
 import mob_grinding_utils.client.render.TileSawStackItemRenderer;
@@ -13,10 +14,9 @@ import mob_grinding_utils.inventory.client.*;
 import mob_grinding_utils.network.FlagSyncPacket;
 import mob_grinding_utils.network.MGUNetwork;
 import mob_grinding_utils.recipe.*;
-import mob_grinding_utils.tile.TileEntityAbsorptionHopper;
-import mob_grinding_utils.tile.TileEntityMGUSpawner;
-import mob_grinding_utils.tile.TileEntityTank;
-import mob_grinding_utils.tile.TileEntityXPSolidifier;
+import mob_grinding_utils.BlockEntities.BlockEntityAbsorptionHopper;
+import mob_grinding_utils.BlockEntities.BlockEntityTank;
+import mob_grinding_utils.BlockEntities.BlockEntityXPSolidifier;
 import mob_grinding_utils.util.FakePlayerHandler;
 import mob_grinding_utils.util.RL;
 import net.minecraft.core.particles.ParticleType;
@@ -33,7 +33,6 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
@@ -303,14 +302,14 @@ public class MobGrindingUtils {
 	}
 
 	public void registerCaps(final RegisterCapabilitiesEvent evt) {
-		evt.registerBlockEntity(Capabilities.Fluid.BLOCK, ModBlocks.TANK.getTileEntityType(), TileEntityTank::getTank);
-		evt.registerBlockEntity(Capabilities.Fluid.BLOCK, ModBlocks.JUMBO_TANK.getTileEntityType(), TileEntityTank::getTank);
-		evt.registerBlockEntity(Capabilities.Fluid.BLOCK, ModBlocks.TANK_SINK.getTileEntityType(), TileEntityTank::getTank);
-		evt.registerBlockEntity(Capabilities.Fluid.BLOCK, ModBlocks.XPSOLIDIFIER.getTileEntityType(), TileEntityXPSolidifier::getTank);
-		evt.registerBlockEntity(Capabilities.Item.BLOCK, ModBlocks.XPSOLIDIFIER.getTileEntityType(), TileEntityXPSolidifier::getOutput);
-		evt.registerBlockEntity(Capabilities.Item.BLOCK, ModBlocks.ENTITY_SPAWNER.getTileEntityType(), TileEntityMGUSpawner::getFuelSlot);
-		evt.registerBlockEntity(Capabilities.Item.BLOCK, ModBlocks.ABSORPTION_HOPPER.getTileEntityType(), TileEntityAbsorptionHopper::getItemHandler);
-		evt.registerBlockEntity(Capabilities.Fluid.BLOCK, ModBlocks.ABSORPTION_HOPPER.getTileEntityType(), TileEntityAbsorptionHopper::getTank);
+		evt.registerBlockEntity(Capabilities.Fluid.BLOCK, ModBlocks.TANK.getTileEntityType(), BlockEntityTank::getTank);
+		evt.registerBlockEntity(Capabilities.Fluid.BLOCK, ModBlocks.JUMBO_TANK.getTileEntityType(), BlockEntityTank::getTank);
+		evt.registerBlockEntity(Capabilities.Fluid.BLOCK, ModBlocks.TANK_SINK.getTileEntityType(), BlockEntityTank::getTank);
+		evt.registerBlockEntity(Capabilities.Fluid.BLOCK, ModBlocks.XPSOLIDIFIER.getTileEntityType(), BlockEntityXPSolidifier::getTank);
+		evt.registerBlockEntity(Capabilities.Item.BLOCK, ModBlocks.XPSOLIDIFIER.getTileEntityType(), BlockEntityXPSolidifier::getOutput);
+		evt.registerBlockEntity(Capabilities.Item.BLOCK, ModBlocks.ENTITY_SPAWNER.getTileEntityType(), BlockEntityMGUSpawner::getFuelSlot);
+		evt.registerBlockEntity(Capabilities.Item.BLOCK, ModBlocks.ABSORPTION_HOPPER.getTileEntityType(), BlockEntityAbsorptionHopper::getItemHandler);
+		evt.registerBlockEntity(Capabilities.Fluid.BLOCK, ModBlocks.ABSORPTION_HOPPER.getTileEntityType(), BlockEntityAbsorptionHopper::getTank);
 	}
 
 	public void effectApplicable(MobEffectEvent.Applicable event) {

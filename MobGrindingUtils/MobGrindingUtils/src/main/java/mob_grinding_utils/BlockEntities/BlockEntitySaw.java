@@ -1,4 +1,4 @@
-package mob_grinding_utils.tile;
+package mob_grinding_utils.BlockEntities;
 
 import io.netty.buffer.Unpooled;
 import mob_grinding_utils.ModBlocks;
@@ -39,7 +39,7 @@ import java.lang.ref.WeakReference;
 import java.util.List;
 import java.util.UUID;
 
-public class TileEntitySaw extends TileEntityInventoryHelper implements MenuProvider {
+public class BlockEntitySaw extends BlockEntityInventoryHelper implements MenuProvider {
 
 	public boolean active;
 	public int animationTicks, prevAnimationTicks;
@@ -48,14 +48,14 @@ public class TileEntitySaw extends TileEntityInventoryHelper implements MenuProv
 	private UUID placer = null;
 	private WeakReference<FakePlayer> fakePlayer = new WeakReference<>(null);
 
-	public TileEntitySaw(BlockPos pos, BlockState state) {
+	public BlockEntitySaw(BlockPos pos, BlockState state) {
 		super(ModBlocks.SAW.getTileEntityType(), 6, pos, state);
 	}
 
 
 
 	public static <T extends BlockEntity> void clientTick(Level level, BlockPos blockPos, BlockState blockState, T t) {
-		if (t instanceof TileEntitySaw tile ) {
+		if (t instanceof BlockEntitySaw tile ) {
 			if (tile.active) {
 				tile.prevAnimationTicks = tile.animationTicks;
 				if (tile.animationTicks < 360)
@@ -69,7 +69,7 @@ public class TileEntitySaw extends TileEntityInventoryHelper implements MenuProv
 		}
 	}
 	public static <T extends BlockEntity > void serverTick(Level level, BlockPos blockPos, BlockState blockState, T t) {
-		if (t instanceof TileEntitySaw tile) {
+		if (t instanceof BlockEntitySaw tile) {
 			if (level.getGameTime() % 10 == 0 && level.getBlockState(blockPos).getBlock() instanceof BlockSaw)
 				if (level.getBlockState(blockPos).getValue(BlockSaw.POWERED))
 					tile.activateBlock();

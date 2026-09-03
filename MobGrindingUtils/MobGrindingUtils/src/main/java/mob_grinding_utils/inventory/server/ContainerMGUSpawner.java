@@ -2,7 +2,7 @@ package mob_grinding_utils.inventory.server;
 
 import mob_grinding_utils.ModContainers;
 import mob_grinding_utils.ModItems;
-import mob_grinding_utils.tile.TileEntityMGUSpawner;
+import mob_grinding_utils.BlockEntities.BlockEntityMGUSpawner;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
@@ -17,15 +17,15 @@ import javax.annotation.Nonnull;
 
 
 public class ContainerMGUSpawner extends AbstractContainerMenu {
-    public TileEntityMGUSpawner tile;
+    public BlockEntityMGUSpawner tile;
 
     public ContainerMGUSpawner(final int windowId, final Inventory playerInventory, FriendlyByteBuf extra) {
         super(ModContainers.ENTITY_SPAWNER.get(), windowId);
         BlockPos tilePos = extra.readBlockPos();
         BlockEntity tile = playerInventory.player.getCommandSenderWorld().getBlockEntity(tilePos);
-        if (!(tile instanceof TileEntityMGUSpawner))
+        if (!(tile instanceof BlockEntityMGUSpawner))
             return;
-        this.tile = (TileEntityMGUSpawner) tile;
+        this.tile = (BlockEntityMGUSpawner) tile;
 
         addPlayerSlots(playerInventory);
     }

@@ -4,9 +4,9 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import mob_grinding_utils.client.ModelLayers;
 import mob_grinding_utils.models.ModelTankBlock;
-import mob_grinding_utils.tile.TileEntityJumboTank;
-import mob_grinding_utils.tile.TileEntitySinkTank;
-import mob_grinding_utils.tile.TileEntityTank;
+import mob_grinding_utils.BlockEntities.BlockEntityJumboTank;
+import mob_grinding_utils.BlockEntities.BlockEntitySinkTank;
+import mob_grinding_utils.BlockEntities.BlockEntityTank;
 import mob_grinding_utils.util.RL;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -27,7 +27,7 @@ import net.neoforged.neoforge.fluids.FluidStack;
 import javax.annotation.Nonnull;
 
 @OnlyIn(Dist.CLIENT)
-public class TileEntityTankRenderer implements BlockEntityRenderer<TileEntityTank> {
+public class TileEntityTankRenderer implements BlockEntityRenderer<BlockEntityTank> {
 	private static final Identifier TANK_TEXTURE = RL.mgu("textures/tiles/tank.png");
 	private static final Identifier TANK_SINK_TEXTURE = RL.mgu("textures/tiles/tank_sink.png");
 	private static final Identifier TANK_JUMBO_TEXTURE = RL.mgu("textures/tiles/tank_jumbo.png");
@@ -38,7 +38,7 @@ public class TileEntityTankRenderer implements BlockEntityRenderer<TileEntityTan
 	}
 
 	@Override
-	public void render(@Nonnull TileEntityTank tile, float partialTicks, PoseStack matrixStack, MultiBufferSource bufferIn, int combinedLight, int combinedOverlay) {
+	public void render(@Nonnull BlockEntityTank tile, float partialTicks, PoseStack matrixStack, MultiBufferSource bufferIn, int combinedLight, int combinedOverlay) {
 		matrixStack.pushPose();
 		matrixStack.translate(0.5D, 1.5D, 0.5D);
 		matrixStack.scale(-0.9999F, -0.9999F, 0.9999F); //don't want to cull, but also don't want z-fighty nonsense
@@ -75,8 +75,8 @@ public class TileEntityTankRenderer implements BlockEntityRenderer<TileEntityTan
 
 	}
 
-	private Identifier getTexture(TileEntityTank tile) {
-		return tile instanceof TileEntityJumboTank ? TANK_JUMBO_TEXTURE : tile instanceof TileEntitySinkTank ? TANK_SINK_TEXTURE : TANK_TEXTURE;
+	private Identifier getTexture(BlockEntityTank tile) {
+		return tile instanceof BlockEntityJumboTank ? TANK_JUMBO_TEXTURE : tile instanceof BlockEntitySinkTank ? TANK_SINK_TEXTURE : TANK_TEXTURE;
 	}
 
 	private void renderCuboid(VertexConsumer buffer, PoseStack matrixStack, float xMax, float xMin, float yMin, float height, float zMin, float zMax, TextureAtlasSprite textureAtlasSprite, float red, float green, float blue, float alpha, int combinedLight) {

@@ -9,8 +9,8 @@ import mob_grinding_utils.ModBlocks;
 import mob_grinding_utils.blocks.BlockXPSolidifier;
 import mob_grinding_utils.client.ModelLayers;
 import mob_grinding_utils.models.ModelXPSolidifier;
-import mob_grinding_utils.tile.TileEntityXPSolidifier;
-import mob_grinding_utils.tile.TileEntityXPSolidifier.OutputDirection;
+import mob_grinding_utils.BlockEntities.BlockEntityXPSolidifier;
+import mob_grinding_utils.BlockEntities.BlockEntityXPSolidifier.OutputDirection;
 import mob_grinding_utils.util.RL;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -31,7 +31,7 @@ import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtension
 import net.neoforged.neoforge.fluids.FluidStack;
 
 @OnlyIn(Dist.CLIENT)
-public class TileEntityXPSolidifierRenderer implements BlockEntityRenderer<TileEntityXPSolidifier> {
+public class TileEntityXPSolidifierRenderer implements BlockEntityRenderer<BlockEntityXPSolidifier> {
 	private static final ResourceLocation TEXTURE = RL.mgu("textures/tiles/xp_solidifier.png");
 	private static final ResourceLocation TEXTURE_NO_PUSH = RL.mgu("textures/tiles/xp_solidifier_no_push.png");
 	private final ModelXPSolidifier xp_solidifier_model;
@@ -41,7 +41,7 @@ public class TileEntityXPSolidifierRenderer implements BlockEntityRenderer<TileE
 	}
 
 	@Override
-	public void render(TileEntityXPSolidifier tile, float partialTicks, PoseStack matrixStack, MultiBufferSource bufferIn, int combinedLight, int combinedOverlay) {
+	public void render(BlockEntityXPSolidifier tile, float partialTicks, PoseStack matrixStack, MultiBufferSource bufferIn, int combinedLight, int combinedOverlay) {
 		if(tile == null || !tile.hasLevel())
 			return;
 

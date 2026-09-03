@@ -2,7 +2,7 @@ package mob_grinding_utils.inventory.client;
 
 import mob_grinding_utils.inventory.server.ContainerXPSolidifier;
 import mob_grinding_utils.network.BEGuiClick;
-import mob_grinding_utils.tile.TileEntityXPSolidifier;
+import mob_grinding_utils.BlockEntities.BlockEntityXPSolidifier;
 import mob_grinding_utils.util.RL;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
@@ -15,7 +15,7 @@ import java.util.List;
 
 public class GuiXPSolidifier extends MGUScreen<ContainerXPSolidifier> {
     protected final ContainerXPSolidifier container;
-    private final TileEntityXPSolidifier tile;
+    private final BlockEntityXPSolidifier tile;
 
     private TankGauge tankGauge;
 

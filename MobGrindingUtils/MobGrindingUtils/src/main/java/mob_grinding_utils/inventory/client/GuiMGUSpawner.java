@@ -1,8 +1,8 @@
 package mob_grinding_utils.inventory.client;
 
+import mob_grinding_utils.BlockEntities.BlockEntityMGUSpawner;
 import mob_grinding_utils.inventory.server.ContainerMGUSpawner;
 import mob_grinding_utils.network.BEGuiClick;
-import mob_grinding_utils.tile.TileEntityMGUSpawner;
 import mob_grinding_utils.util.RL;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
@@ -14,7 +14,7 @@ import javax.annotation.Nonnull;
 
 public class GuiMGUSpawner extends MGUScreen<ContainerMGUSpawner> {
 	protected final ContainerMGUSpawner container;
-	private final TileEntityMGUSpawner tile;
+	private final BlockEntityMGUSpawner tile;
 
 	public GuiMGUSpawner(ContainerMGUSpawner container, Inventory playerInventory, Component name) {
 		super(container, playerInventory, name, RL.mgu("textures/gui/entity_spawner_gui.png"));

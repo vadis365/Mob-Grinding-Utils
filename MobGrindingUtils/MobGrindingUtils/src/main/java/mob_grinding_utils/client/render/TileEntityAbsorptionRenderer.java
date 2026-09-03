@@ -2,11 +2,11 @@ package mob_grinding_utils.client.render;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
+import mob_grinding_utils.BlockEntities.BlockEntityAbsorptionHopper;
 import mob_grinding_utils.ModBlocks;
 import mob_grinding_utils.client.ModelLayers;
 import mob_grinding_utils.models.ModelAHConnect;
-import mob_grinding_utils.tile.TileEntityAbsorptionHopper;
-import mob_grinding_utils.tile.TileEntityAbsorptionHopper.EnumStatus;
+import mob_grinding_utils.BlockEntities.BlockEntityAbsorptionHopper.EnumStatus;
 import mob_grinding_utils.util.RL;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -24,7 +24,7 @@ import net.neoforged.api.distmarker.OnlyIn;
 import javax.annotation.Nonnull;
 
 @OnlyIn(Dist.CLIENT)
-public class TileEntityAbsorptionRenderer implements BlockEntityRenderer<TileEntityAbsorptionHopper> {
+public class TileEntityAbsorptionRenderer implements BlockEntityRenderer<BlockEntityAbsorptionHopper> {
 	private static final ResourceLocation ITEM_TEXTURE = RL.mgu("textures/tiles/absorption_hopper_connects_items.png");
 	private static final ResourceLocation FLUID_TEXTURE = RL.mgu("textures/tiles/absorption_hopper_connects_fluids.png");
 	private final ModelAHConnect connectionModel;
@@ -34,7 +34,7 @@ public class TileEntityAbsorptionRenderer implements BlockEntityRenderer<TileEnt
 	}
 
 	@Override
-	public void render(TileEntityAbsorptionHopper tile, float partialTicks, @Nonnull PoseStack matrixStack, @Nonnull MultiBufferSource buffer, int combinedLight, int combinedOverlay) {
+	public void render(BlockEntityAbsorptionHopper tile, float partialTicks, @Nonnull PoseStack matrixStack, @Nonnull MultiBufferSource buffer, int combinedLight, int combinedOverlay) {
 		if (tile == null || !tile.hasLevel())
 			return;
 
@@ -94,7 +94,7 @@ public class TileEntityAbsorptionRenderer implements BlockEntityRenderer<TileEnt
 	}
 
 	@Override
-	public AABB getRenderBoundingBox(TileEntityAbsorptionHopper blockEntity) {
+	public AABB getRenderBoundingBox(BlockEntityAbsorptionHopper blockEntity) {
 		return blockEntity.getAABBWithModifiers();
 	}
 }

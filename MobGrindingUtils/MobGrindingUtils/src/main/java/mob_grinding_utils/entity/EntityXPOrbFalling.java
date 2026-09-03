@@ -1,6 +1,6 @@
 package mob_grinding_utils.entity;
 
-import mob_grinding_utils.tile.TileEntitySinkTank;
+import mob_grinding_utils.BlockEntities.BlockEntitySinkTank;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ExperienceOrb;
 import net.minecraft.world.entity.MoverType;
@@ -75,7 +75,7 @@ public class EntityXPOrbFalling extends ExperienceOrb {
                     }
 
                 if (getValue() > 0)
-                    TileEntitySinkTank.addPlayerXP(player, getValue());
+                    BlockEntitySinkTank.addPlayerXP(player, getValue());
 
                 remove(RemovalReason.DISCARDED);
             }

@@ -1,8 +1,8 @@
 package mob_grinding_utils.inventory.server;
 
+import mob_grinding_utils.BlockEntities.BlockEntityFan;
 import mob_grinding_utils.ModContainers;
 import mob_grinding_utils.ModItems;
-import mob_grinding_utils.tile.TileEntityFan;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.Container;
@@ -17,15 +17,15 @@ import javax.annotation.Nonnull;
 
 public class ContainerFan extends AbstractContainerMenu {
 	private final int numRows = 2;
-	public TileEntityFan fan;
+	public BlockEntityFan fan;
 
 	public ContainerFan(final int windowId, final Inventory playerInventory, FriendlyByteBuf extra) {
 		super(ModContainers.FAN.get(), windowId);
 		BlockPos tilePos = extra.readBlockPos();
 		BlockEntity tile = playerInventory.player.getCommandSenderWorld().getBlockEntity(tilePos);
-		if (!(tile instanceof TileEntityFan))
+		if (!(tile instanceof BlockEntityFan))
 			return;
-		fan = (TileEntityFan) tile;
+		fan = (BlockEntityFan) tile;
 
 		int i = (numRows - 4) * 18;
 		addSlot(new SlotRestriction((Container) tile, 0, 44, 18, new ItemStack(ModItems.FAN_UPGRADE_WIDTH.get(), 1), 3));

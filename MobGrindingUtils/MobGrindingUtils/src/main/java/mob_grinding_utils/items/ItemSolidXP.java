@@ -1,6 +1,6 @@
 package mob_grinding_utils.items;
 
-import mob_grinding_utils.tile.TileEntitySinkTank;
+import mob_grinding_utils.BlockEntities.BlockEntitySinkTank;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
@@ -42,10 +42,10 @@ public class ItemSolidXP extends Item {
 			if (xpValue > 0)
 				if (!world.isClientSide()) {
 					if (stack.getCount() > 1 && entity.isShiftKeyDown()) {
-						TileEntitySinkTank.addPlayerXP(player, xpValue * stack.getCount());
+						BlockEntitySinkTank.addPlayerXP(player, xpValue * stack.getCount());
 						stack.shrink(stack.getCount()-1);
 					} else
-						TileEntitySinkTank.addPlayerXP(player, xpValue);
+						BlockEntitySinkTank.addPlayerXP(player, xpValue);
 					world.playSound(null, player.blockPosition(), SoundEvents.EXPERIENCE_ORB_PICKUP, SoundSource.PLAYERS, 0.5F, 0.8F + world.getRandom().nextFloat() * 0.4F);
 				}
 		}

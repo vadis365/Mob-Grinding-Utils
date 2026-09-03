@@ -2,8 +2,8 @@ package mob_grinding_utils.inventory.client;
 
 import mob_grinding_utils.inventory.server.ContainerAbsorptionHopper;
 import mob_grinding_utils.network.BEGuiClick;
-import mob_grinding_utils.tile.TileEntityAbsorptionHopper;
-import mob_grinding_utils.tile.TileEntityAbsorptionHopper.EnumStatus;
+import mob_grinding_utils.BlockEntities.BlockEntityAbsorptionHopper;
+import mob_grinding_utils.BlockEntities.BlockEntityAbsorptionHopper.EnumStatus;
 import mob_grinding_utils.util.RL;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
@@ -19,7 +19,7 @@ import java.util.List;
 public class GuiAbsorptionHopper extends MGUScreen<ContainerAbsorptionHopper> {
 
 	protected final ContainerAbsorptionHopper container;
-	private final TileEntityAbsorptionHopper tile;
+	private final BlockEntityAbsorptionHopper tile;
 	private TankGauge tankGauge;
 	public GuiAbsorptionHopper(ContainerAbsorptionHopper container, Inventory playerInventory, Component title) {
 		super(container, playerInventory, title, RL.mgu("textures/gui/absorption_hopper_gui.png"));

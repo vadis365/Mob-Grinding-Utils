@@ -1,4 +1,4 @@
-package mob_grinding_utils.tile;
+package mob_grinding_utils.BlockEntities;
 
 import io.netty.buffer.Unpooled;
 import mob_grinding_utils.MobGrindingUtils;
@@ -19,7 +19,7 @@ import net.minecraft.network.Connection;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.Container;
 import net.minecraft.world.MenuProvider;
@@ -44,7 +44,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Optional;
 
-public class TileEntityXPSolidifier extends BlockEntity implements MenuProvider, BEGuiClickable {
+public class BlockEntityXPSolidifier extends BlockEntity implements MenuProvider, BEGuiClickable {
 	public FluidTank tank = new FluidTank(1000 *  16);
 	private int prevFluidLevel = 0;
 	public int moulding_progress = 0;
@@ -58,7 +58,7 @@ public class TileEntityXPSolidifier extends BlockEntity implements MenuProvider,
 	public boolean active;
 	public int animationTicks, prevAnimationTicks;
 
-	public TileEntityXPSolidifier(BlockPos pos, BlockState state) {
+	public BlockEntityXPSolidifier(BlockPos pos, BlockState state) {
 		super(ModBlocks.XPSOLIDIFIER.getTileEntityType(), pos, state);
 	}
 
@@ -118,7 +118,7 @@ public class TileEntityXPSolidifier extends BlockEntity implements MenuProvider,
 	}
 
 	public static <T extends BlockEntity> void tick(Level level, BlockPos worldPosition, BlockState blockState, T t) {
-		if(t instanceof TileEntityXPSolidifier tile) {
+		if(t instanceof BlockEntityXPSolidifier tile) {
 			if(tile.isOn) {
 				if (level.isClientSide && tile.active) {
 					tile.prevAnimationTicks = tile.animationTicks;
@@ -130,7 +130,7 @@ public class TileEntityXPSolidifier extends BlockEntity implements MenuProvider,
 					}
 				}
 
-				if (level.isClientSide && !tile.active)
+				if (level.isClientSide() && !tile.active)
 					tile.prevAnimationTicks = tile.animationTicks = 0;
 
 				if (tile.currentRecipe != null) {
@@ -158,7 +158,7 @@ public class TileEntityXPSolidifier extends BlockEntity implements MenuProvider,
 					}
 				}
 
-				if (!level.isClientSide &&  tile.outputDirection != OutputDirection.NONE && tile.getOutputFacing() != null) {
+				if (!level.isClientSide() &&  tile.outputDirection != OutputDirection.NONE && tile.getOutputFacing() != null) {
 					BlockEntity otherTile = level.getBlockEntity(worldPosition.relative(tile.getOutputFacing()));
 					Optional<IItemHandler> handlerOptional = CapHelper.getItemHandler(level, worldPosition.relative(tile.getOutputFacing()), tile.getOutputFacing().getOpposite());
 					if (otherTile != null && handlerOptional.isPresent()) {
@@ -188,7 +188,7 @@ public class TileEntityXPSolidifier extends BlockEntity implements MenuProvider,
 				}
 			}
 			else {
-				if (level.isClientSide)
+				if (level.isClientSide())
 					tile.prevAnimationTicks = tile.animationTicks = 0;
 
 				if (tile.getProgress() > 0) {
@@ -295,7 +295,7 @@ public class TileEntityXPSolidifier extends BlockEntity implements MenuProvider,
 	}
 
 	public static ItemStack putStackInInventoryAllSlots(Container inventory, ItemStack stack, @Nullable Direction facing) {
-		if (inventory instanceof WorldlyContainer isidedinventory && facing != null && !(inventory instanceof TileEntityXPSolidifier) && inventory.canPlaceItem(0, stack.copy())) {
+		if (inventory instanceof WorldlyContainer isidedinventory && facing != null && !(inventory instanceof BlockEntityXPSolidifier) && inventory.canPlaceItem(0, stack.copy())) {
 			int[] aint = isidedinventory.getSlotsForFace(facing);
 			for (int k = 0; k < aint.length && !stack.isEmpty(); ++k)
 				stack = insertStack(inventory, stack, aint[k], facing);
@@ -343,7 +343,7 @@ public class TileEntityXPSolidifier extends BlockEntity implements MenuProvider,
 		active = nbt.getBoolean("active");
 		moulding_progress = nbt.getInt("moulding_progress");
 		if (nbt.contains("currentRecipe")) {
-			ResourceLocation id = ResourceLocation.tryParse(nbt.getString("currentRecipe"));
+			Identifier id = Identifier.tryParse(nbt.getString("currentRecipe"));
 			MobGrindingUtils.SOLIDIFIER_RECIPES.stream().filter(recipe -> recipe.id().equals(id))
 				.findFirst().ifPresent(recipe -> this.currentRecipe = recipe);
 		}
@@ -390,7 +390,7 @@ public class TileEntityXPSolidifier extends BlockEntity implements MenuProvider,
 	}
 
 	public void onContentsChanged() {
-		if (this.level != null && level.isClientSide) {
+		if (this.level != null && level.isClientSide()) {
 			final BlockState state = level.getBlockState(getBlockPos());
 			level.sendBlockUpdated(getBlockPos(), state, state, 8);
 			setChanged();

@@ -1,6 +1,6 @@
 package mob_grinding_utils.blocks;
 
-import mob_grinding_utils.tile.TileEntitySinkTank;
+import mob_grinding_utils.BlockEntities.BlockEntitySinkTank;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.Identifier;
@@ -33,12 +33,12 @@ public class BlockTankSink extends BlockTank {
 
 	@Override
 	public BlockEntity newBlockEntity(@Nonnull BlockPos pos, @Nonnull BlockState state) {
-		return new TileEntitySinkTank(pos, state);
+		return new BlockEntitySinkTank(pos, state);
 	}
 
 	@Nullable
 	@Override
 	public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level pLevel, @Nonnull BlockState pState, @Nonnull BlockEntityType<T> pBlockEntityType) {
-		return pLevel.isClientSide() ? null : TileEntitySinkTank::serverTick;
+		return pLevel.isClientSide() ? null : BlockEntitySinkTank::serverTick;
 	}
 }
