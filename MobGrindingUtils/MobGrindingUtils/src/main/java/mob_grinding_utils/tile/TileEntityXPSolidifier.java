@@ -21,6 +21,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.StringRepresentable;
+import net.minecraft.world.Clearable;
 import net.minecraft.world.Container;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.WorldlyContainer;
@@ -44,7 +45,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Optional;
 
-public class TileEntityXPSolidifier extends BlockEntity implements MenuProvider, BEGuiClickable {
+public class TileEntityXPSolidifier extends BlockEntity implements Clearable, MenuProvider, BEGuiClickable {
 	public FluidTank tank = new FluidTank(1000 *  16);
 	private int prevFluidLevel = 0;
 	public int moulding_progress = 0;
@@ -60,6 +61,13 @@ public class TileEntityXPSolidifier extends BlockEntity implements MenuProvider,
 
 	public TileEntityXPSolidifier(BlockPos pos, BlockState state) {
 		super(ModBlocks.XPSOLIDIFIER.getTileEntityType(), pos, state);
+	}
+
+	@Override
+	public void clearContent() {
+		inputSlots.setStackInSlot(0, ItemStack.EMPTY);
+		inputSlots.setStackInSlot(1, ItemStack.EMPTY);
+		outputSlot.setStackInSlot(0, ItemStack.EMPTY);
 	}
 
 	@Override
