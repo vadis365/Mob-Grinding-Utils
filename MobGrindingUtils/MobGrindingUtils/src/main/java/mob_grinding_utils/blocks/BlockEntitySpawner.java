@@ -3,6 +3,7 @@ package mob_grinding_utils.blocks;
 import mob_grinding_utils.BlockEntities.BlockEntityMGUSpawner;
 import mob_grinding_utils.ModBlocks;
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.redstone.Orientation;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.Identifier;
@@ -12,6 +13,7 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
@@ -23,7 +25,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
-import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.phys.BlockHitResult;
@@ -95,16 +96,14 @@ public class BlockEntitySpawner extends Block implements EntityBlock {
         if (!world.isClientSide() && !player.getAbilities().instabuild) {
             BlockEntityMGUSpawner tile = (BlockEntityMGUSpawner) world.getBlockEntity(pos);
             if (tile != null) {
-                if(!tile.inputSlots.getStackInSlot(0).isEmpty())
-                    Containers.dropItemStack(world, pos.getX(), pos.getY(), pos.getZ(), tile.inputSlots.getStackInSlot(0));
-                if(!tile.inputSlots.getStackInSlot(1).isEmpty())
-                    Containers.dropItemStack(world, pos.getX(), pos.getY(), pos.getZ(), tile.inputSlots.getStackInSlot(1));
-                if(!tile.inputSlots.getStackInSlot(2).isEmpty())
-                    Containers.dropItemStack(world, pos.getX(), pos.getY(), pos.getZ(), tile.inputSlots.getStackInSlot(2));
-                if(!tile.inputSlots.getStackInSlot(3).isEmpty())
-                    Containers.dropItemStack(world, pos.getX(), pos.getY(), pos.getZ(), tile.inputSlots.getStackInSlot(3));
-                if(!tile.fuelSlot.getStackInSlot(0).isEmpty())
-                    Containers.dropItemStack(world, pos.getX(), pos.getY(), pos.getZ(), tile.fuelSlot.getStackInSlot(0));
+                for (int i = 0; i < tile.inputSlots.size(); i++) {
+                    ItemStack stack = net.neoforged.neoforge.transfer.item.ItemUtil.getStack(tile.inputSlots, i);
+                    if (!stack.isEmpty())
+                        Containers.dropItemStack(world, pos.getX(), pos.getY(), pos.getZ(), stack);
+                }
+                ItemStack fuel = net.neoforged.neoforge.transfer.item.ItemUtil.getStack(tile.fuelSlot, 0);
+                if (!fuel.isEmpty())
+                    Containers.dropItemStack(world, pos.getX(), pos.getY(), pos.getZ(), fuel);
                 world.removeBlockEntity(pos);
             }
         }
@@ -112,19 +111,12 @@ public class BlockEntitySpawner extends Block implements EntityBlock {
     }
 
     @Override
-    public void onRemove(BlockState state, @Nonnull Level world, @Nonnull BlockPos pos, BlockState newState, boolean isMoving) {
-        if (!state.is(newState.getBlock())) {
-            BlockEntityMGUSpawner tile = (BlockEntityMGUSpawner) world.getBlockEntity(pos);
-            if (tile != null) {
-                //InventoryHelper.dropInventoryItems(world, pos, tile);
-                world.updateNeighbourForOutputSignal(pos, this);
-            }
-            super.onRemove(state, world, pos, newState, isMoving);
-        }
+    protected void affectNeighborsAfterRemoval(BlockState state, @Nonnull ServerLevel world, @Nonnull BlockPos pos, boolean isMoving) {
+        world.updateNeighbourForOutputSignal(pos, this);
     }
 
     @Override
-    public void neighborChanged(@Nonnull BlockState state, Level world, @Nonnull BlockPos pos, @Nonnull Block block, @Nonnull BlockPos fromPos, boolean isMoving) {
+    protected void neighborChanged(@Nonnull BlockState state, Level world, @Nonnull BlockPos pos, @Nonnull Block block, @Nullable Orientation orientation, boolean isMoving) {
         if (!world.isClientSide()) {
             BlockEntityMGUSpawner tile = (BlockEntityMGUSpawner) world.getBlockEntity(pos);
             boolean flag = state.getValue(POWERED);

@@ -25,9 +25,7 @@ public record ChickenSyncPacket(int chickenID, CompoundTag nbt) implements Custo
 	}
 
 	public static void handle(ChickenSyncPacket message, final IPayloadContext ctx) {
-		ctx.enqueueWork(() -> {
-			MGUClientPackets.HandleChickenSync(message);
-		});
+		ctx.enqueueWork(() -> mob_grinding_utils.client.ClientPacketHandlers.handleChickenSync(message));
 	}
 
 	public void write(FriendlyByteBuf buf) {

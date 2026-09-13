@@ -17,7 +17,7 @@ public record FlagSyncPacket(boolean wither, boolean dragon) implements CustomPa
         );
 
     public static void handle(FlagSyncPacket message, final IPayloadContext ctx) {
-        ctx.enqueueWork(() -> MGUClientPackets.handleFlagSyncPacket(message));
+        ctx.enqueueWork(() -> mob_grinding_utils.client.ClientPacketHandlers.handleFlagSync(message));
     }
 
     @Override

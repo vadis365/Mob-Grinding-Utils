@@ -1,108 +1,82 @@
 package mob_grinding_utils.inventory.client;
 
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.*;
+import mob_grinding_utils.util.RL;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
-import net.minecraft.client.renderer.texture.AbstractTexture;
-import net.minecraft.client.renderer.texture.TextureAtlas;
+import net.minecraft.client.renderer.RenderPipelines;
+import net.minecraft.client.renderer.block.FluidModel;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.data.AtlasIds;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.FastColor;
-import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.level.material.Fluid;
-import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
+import net.minecraft.world.level.material.FluidState;
+import net.neoforged.neoforge.client.fluid.FluidTintSource;
 import net.neoforged.neoforge.fluids.FluidStack;
-import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
+import net.neoforged.neoforge.transfer.fluid.FluidStacksResourceHandler;
+import net.neoforged.neoforge.transfer.fluid.FluidUtil;
 
 import javax.annotation.Nonnull;
 
 public class TankGauge extends AbstractWidget {
-    private final FluidTank tank;
+    private final FluidStacksResourceHandler tank;
     private Fluid oldFluid;
     private TextureAtlasSprite sprite;
-    public TankGauge(int pX, int pY, int pWidth, int pHeight, FluidTank tankIn) {
+    private int color = 0xFFFFFFFF;
+
+    public TankGauge(int pX, int pY, int pWidth, int pHeight, FluidStacksResourceHandler tankIn) {
         super(pX, pY, pWidth, pHeight, Component.empty());
         tank = tankIn;
     }
 
     @Override
-    protected void renderWidget(@Nonnull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
-        // Byscos fix from AA
-
+    protected void extractWidgetRenderState(@Nonnull GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
         float fluidLevel = getFluidLevel();
 
         if (tank == null)
             return;
 
-        FluidStack stack = tank.getFluid();
+        FluidStack stack = FluidUtil.getStack(tank, 0);
 
-        if (fluidLevel > 0) {
-            IClientFluidTypeExtensions fluidTypeExtension = IClientFluidTypeExtensions.of(stack.getFluid());
-            int color = fluidTypeExtension.getTintColor(stack);
-            float red = (float)(FastColor.ARGB32.red(color) / 255.0);
-            float green = (float)(FastColor.ARGB32.green(color) / 255.0);
-            float blue = (float)(FastColor.ARGB32.blue(color) / 255.0);
-            float alpha = (float)(FastColor.ARGB32.alpha(color) / 255.0);
-            ResourceLocation stillTexture = fluidTypeExtension.getStillTexture();
-
+        if (fluidLevel > 0 && !stack.isEmpty()) {
             if (this.sprite == null || this.oldFluid != stack.getFluid()) {
                 this.oldFluid = stack.getFluid();
-
-                AbstractTexture texture = Minecraft.getInstance().getTextureManager().getTexture(InventoryMenu.BLOCK_ATLAS);
-                if (texture instanceof TextureAtlas) {
-                    TextureAtlasSprite sprite = ((TextureAtlas) texture).getSprite(stillTexture);
-                    if (sprite != null) {
-                        this.sprite = sprite;
-                    }
-                }
+                resolveSprite(stack);
             }
 
             if (this.sprite != null) {
-                float minU = sprite.getU0();
-                float maxU = sprite.getU1();
-                float minV = sprite.getV0();
-                float maxV = sprite.getV1();
-                float deltaV = maxV - minV;
-
                 double tankLevel = fluidLevel * height;
-
-                RenderSystem.setShaderTexture(0, InventoryMenu.BLOCK_ATLAS);
-                RenderSystem.setShaderColor(red, green, blue, alpha);
-                RenderSystem.enableBlend();
                 int count = 1 + ((int) Math.ceil(tankLevel)) / 16;
                 for (int i = 0; i < count; i++) {
                     float subHeight = (float) Math.min(16.0f, tankLevel - (16.0f * i));
                     double offsetY = height - 16.0 * i - subHeight;
-                    drawQuad(getX(), (float)(getY() + offsetY), width, subHeight, minU, (float) (maxV - deltaV * (subHeight / 16.0)), maxU, maxV);
+                    graphics.blitSprite(RenderPipelines.GUI_TEXTURED, this.sprite, getX(), (int) (getY() + offsetY), width, (int) subHeight, color);
                 }
-                RenderSystem.disableBlend();
-                RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
             }
         }
     }
 
-    private void drawQuad(float x, float y, float width, float height, float minU, float minV, float maxU, float maxV) {
-        Tesselator tesselator = Tesselator.getInstance();
-        BufferBuilder buffer = tesselator.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
-        buffer.addVertex(x, y + height, 0).setUv(minU, maxV);
-        buffer.addVertex(x + width, y + height, 0).setUv(maxU, maxV);
-        buffer.addVertex(x + width, y, 0).setUv(maxU, minV);
-        buffer.addVertex(x, y, 0).setUv(minU, minV);
-
-        //buffer.build();
-        BufferUploader.drawWithShader(buffer.buildOrThrow());
+    private void resolveSprite(FluidStack stack) {
+        FluidState fluidState = stack.getFluid().defaultFluidState();
+        FluidModel fluidModel = Minecraft.getInstance().getModelManager().getFluidStateModelSet().get(fluidState);
+        this.sprite = fluidModel.stillMaterial().sprite();
+        FluidTintSource tint = fluidModel.fluidTintSource();
+        this.color = tint != null ? tint.colorAsStack(stack) : 0xFFFFFFFF;
+        if (this.sprite == null) {
+            // AtlasManager.getAtlasOrThrow expects AtlasIds.* (e.g. minecraft:blocks), not TextureAtlas.LOCATION_* texture paths
+            this.sprite = Minecraft.getInstance().getAtlasManager().getAtlasOrThrow(AtlasIds.BLOCKS).getSprite(RL.mgu("block/fluid_xp"));
+            this.color = 0xFFFFFFFF;
+        }
     }
 
     public float getFluidLevel() {
-        return tank != null ? ((float) tank.getFluid().getAmount() / tank.getCapacity()) : 0.0f;
+        if (tank == null || tank.getResource(0).isEmpty())
+            return 0.0f;
+        return (float) tank.getAmountAsInt(0) / tank.getCapacityAsInt(0, tank.getResource(0));
     }
 
     @Override
     protected void updateWidgetNarration(@Nonnull NarrationElementOutput narrationElementOutput) {
-
     }
 }

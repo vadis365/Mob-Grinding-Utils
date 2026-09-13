@@ -10,6 +10,7 @@ import net.neoforged.neoforge.registries.DeferredItem;
 
 import javax.annotation.Nonnull;
 import java.util.Objects;
+import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -29,17 +30,17 @@ public class MGUBlockReg<B extends Block,I extends Item, T extends BlockEntity> 
         return name;
     }
 
-    public MGUBlockReg(String name, Function<Identifier, B> blockSupplier, Function<B, I> itemSupplier, BlockEntityType.BlockEntitySupplier<T> tileSupplier) {
+    public MGUBlockReg(String name, Function<Identifier, B> blockSupplier, BiFunction<B, Item.Properties, I> itemSupplier, BlockEntityType.BlockEntitySupplier<T> tileSupplier) {
         this.name = name;
         block = ModBlocks.BLOCKS.register(name, blockSupplier);
-        item = ModItems.ITEMS.register(name, () -> itemSupplier.apply(block.get()));
+        item = ModItems.ITEMS.registerItem(name, props -> itemSupplier.apply(block.get(), props));
         tile = ModBlocks.TILE_ENTITIES.register(name, () -> new BlockEntityType<>(tileSupplier, block.get()));
     }
 
-    public MGUBlockReg(String name, Function<Identifier, B> blockSupplier, Function<B, I> itemSupplier) {
+    public MGUBlockReg(String name, Function<Identifier, B> blockSupplier, BiFunction<B, Item.Properties, I> itemSupplier) {
         this.name = name;
         block = ModBlocks.BLOCKS.register(name, blockSupplier);
-        item = ModItems.ITEMS.register(name, () -> itemSupplier.apply(block.get()));
+        item = ModItems.ITEMS.registerItem(name, props -> itemSupplier.apply(block.get(), props));
     }
 
     @Nonnull

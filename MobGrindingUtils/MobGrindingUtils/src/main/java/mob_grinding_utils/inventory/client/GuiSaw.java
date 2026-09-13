@@ -7,7 +7,6 @@ import net.minecraft.world.entity.player.Inventory;
 
 public class GuiSaw extends MGUScreen<ContainerSaw> {
 	public GuiSaw(ContainerSaw containerSaw, Inventory playerInventory, Component title) {
-		super(containerSaw, playerInventory, title, RL.mgu("textures/gui/saw_gui.png"));
-		imageHeight = 132;
+		super(containerSaw, playerInventory, title, RL.mgu("textures/gui/saw_gui.png"), 176, 132);
 	}
 }

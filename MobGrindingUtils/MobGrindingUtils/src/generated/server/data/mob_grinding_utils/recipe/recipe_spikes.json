@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "I": "#c:storage_blocks/iron",
+    "S": "minecraft:iron_sword"
+  },
+  "pattern": [
+    " S ",
+    "SIS"
+  ],
+  "result": {
+    "count": 1,
+    "id": "mob_grinding_utils:spikes"
+  }
+}

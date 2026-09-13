@@ -12,8 +12,8 @@ import java.util.function.Function;
 @SuppressWarnings("unchecked")
 public class RecipeInjector<T extends Recipe<?>> implements RecipeOutput {
     private final RecipeOutput inner;
-    private final Function<T, ? extends T> constructor;
-    public RecipeInjector(RecipeOutput output, Function<T, ? extends T> constructorIn) {
+    private final Function<T, ? extends Recipe<?>> constructor;
+    public RecipeInjector(RecipeOutput output, Function<T, ? extends Recipe<?>> constructorIn) {
         inner = output;
         this.constructor = constructorIn;
     }

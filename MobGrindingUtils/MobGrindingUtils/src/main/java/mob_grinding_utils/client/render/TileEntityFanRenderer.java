@@ -1,48 +1,48 @@
 package mob_grinding_utils.client.render;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import mob_grinding_utils.BlockEntities.BlockEntityFan;
-import net.minecraft.client.renderer.LevelRenderer;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.client.renderer.blockentity.state.BlockEntityRenderState;
+import net.minecraft.client.renderer.feature.ModelFeatureRenderer;
+import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.world.phys.AABB;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
-
-import javax.annotation.Nonnull;
-
-@OnlyIn(Dist.CLIENT)
-public class TileEntityFanRenderer implements BlockEntityRenderer<BlockEntityFan> {
+import net.minecraft.world.phys.Vec3;
+import org.jspecify.annotations.Nullable;
+public class TileEntityFanRenderer implements BlockEntityRenderer<BlockEntityFan, TileEntityFanRenderer.FanRenderState> {
 
 	public TileEntityFanRenderer(BlockEntityRendererProvider.Context context) {
 	}
 
 	@Override
-	public void render(@Nonnull BlockEntityFan tile, float partialTicks, @Nonnull PoseStack matrixStack, @Nonnull MultiBufferSource buffer, int combinedLight, int combinedOverlay) {
-		if (tile == null || !tile.hasLevel())
-			return;
-
-		if (!tile.showRenderBox)
-			return;
-
-		VertexConsumer ivertexbuilder = buffer.getBuffer(RenderType.lines());
-		matrixStack.pushPose();
-		matrixStack.translate(-0.0005D, -0.0005D, -0.0005D);
-		matrixStack.scale(0.999F, 0.999F, 0.999F);
-
-		LevelRenderer.renderLineBox(matrixStack, ivertexbuilder, tile.getAABBForRender(), 0F, 0F, 1F, 1F);
-		matrixStack.popPose();
-		
+	public FanRenderState createRenderState() {
+		return new FanRenderState();
 	}
-	
 
-	@Nonnull
 	@Override
-	@OnlyIn(Dist.CLIENT)
+	public void extractRenderState(BlockEntityFan tile, FanRenderState state, float partialTicks, Vec3 cameraPosition, ModelFeatureRenderer.@Nullable CrumblingOverlay breakProgress) {
+		BlockEntityRenderer.super.extractRenderState(tile, state, partialTicks, cameraPosition, breakProgress);
+		state.showBox = tile.hasLevel() && tile.showRenderBox;
+		if (state.showBox) {
+			state.renderBox = tile.getAABBForRender();
+		}
+	}
+
+	@Override
+	public void submit(FanRenderState state, PoseStack poseStack, SubmitNodeCollector submitNodeCollector, CameraRenderState camera) {
+		if (state.showBox && state.renderBox != null) {
+			RenderHelpers.drawDebugBox(state.renderBox, state.blockPos, 0F, 0F, 1F);
+		}
+	}
+
+	@Override
 	public AABB getRenderBoundingBox(BlockEntityFan blockEntity) {
 		return blockEntity.getRenderBoundingBox();
+	}
+	public static class FanRenderState extends BlockEntityRenderState {
+		public boolean showBox;
+		public @Nullable AABB renderBox;
 	}
 }

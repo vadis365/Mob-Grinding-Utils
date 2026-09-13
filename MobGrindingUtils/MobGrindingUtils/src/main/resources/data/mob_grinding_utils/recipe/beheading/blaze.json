@@ -1,0 +1,15 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "tconstruct"
+    }
+  ],
+  "type": "mob_grinding_utils:beheading",
+  "entity": "minecraft:blaze",
+  "result": {
+    "count": 1,
+    "id": "tconstruct:blaze_head"
+  }
+}
+

@@ -55,7 +55,7 @@ public class BlockWitherMuffler extends Block {
             world.setBlock(pos, state.setValue(MODE, swap), 3);
         CompoundTag nbt = player.getPersistentData();
         nbt.putBoolean("MGU_WitherMuffle", swap);
-        player.sendOverlayMessage(Component.literal(swap ? "Now hiding Wither boss bars.":"Now showing Wither boss bars.")); //TODO check this
+        player.sendOverlayMessage(Component.literal(swap ? "Now hiding Wither boss bars.":"Now showing Wither boss bars."));
         return InteractionResult.SUCCESS;
     }
 }

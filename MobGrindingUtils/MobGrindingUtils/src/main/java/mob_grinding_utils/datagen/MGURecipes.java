@@ -462,15 +462,15 @@ public class MGURecipes extends RecipeProvider.Runner {
 
     /*
             //Heads
-            OptionalHead(consumer, "blaze", "tconstruct", EntityType.BLAZE, new ResourceLocation("tconstruct", "blaze_head"));
-            OptionalHead(consumer, "enderman", "tconstruct", EntityType.ENDERMAN, new ResourceLocation("tconstruct", "enderman_head"));
-            OptionalHead(consumer, "husk", "tconstruct", EntityType.HUSK, new ResourceLocation("tconstruct", "husk_head"));
-            OptionalHead(consumer, "drowned", "tconstruct", EntityType.DROWNED, new ResourceLocation("tconstruct", "drowned_head"));
-            OptionalHead(consumer, "spider", "tconstruct", EntityType.SPIDER, new ResourceLocation("tconstruct", "spider_head"));
-            OptionalHead(consumer, "cave_spider", "tconstruct", EntityType.CAVE_SPIDER, new ResourceLocation("tconstruct", "cave_spider_head"));
-            OptionalHead(consumer, "piglin", "tconstruct", EntityType.PIGLIN, new ResourceLocation("tconstruct", "piglin_head"));
-            OptionalHead(consumer, "piglin_brute", "tconstruct", EntityType.PIGLIN_BRUTE, new ResourceLocation("tconstruct", "piglin_brute_head"));
-            OptionalHead(consumer, "zombified_piglin_brute", "tconstruct", EntityType.ZOMBIFIED_PIGLIN, new ResourceLocation("tconstruct", "zombified_piglin_head"));
+            OptionalHead(consumer, "blaze", "tconstruct", EntityType.BLAZE, new Identifier("tconstruct", "blaze_head"));
+            OptionalHead(consumer, "enderman", "tconstruct", EntityType.ENDERMAN, new Identifier("tconstruct", "enderman_head"));
+            OptionalHead(consumer, "husk", "tconstruct", EntityType.HUSK, new Identifier("tconstruct", "husk_head"));
+            OptionalHead(consumer, "drowned", "tconstruct", EntityType.DROWNED, new Identifier("tconstruct", "drowned_head"));
+            OptionalHead(consumer, "spider", "tconstruct", EntityType.SPIDER, new Identifier("tconstruct", "spider_head"));
+            OptionalHead(consumer, "cave_spider", "tconstruct", EntityType.CAVE_SPIDER, new Identifier("tconstruct", "cave_spider_head"));
+            OptionalHead(consumer, "piglin", "tconstruct", EntityType.PIGLIN, new Identifier("tconstruct", "piglin_head"));
+            OptionalHead(consumer, "piglin_brute", "tconstruct", EntityType.PIGLIN_BRUTE, new Identifier("tconstruct", "piglin_brute_head"));
+            OptionalHead(consumer, "zombified_piglin_brute", "tconstruct", EntityType.ZOMBIFIED_PIGLIN, new Identifier("tconstruct", "zombified_piglin_head"));
     */
         }
 
@@ -478,11 +478,11 @@ public class MGURecipes extends RecipeProvider.Runner {
             return new BeheadingRecipe(type, new ItemStack(item));
         }
 
-    /*    private BeheadingRecipe HeadRecipe(EntityType<?> type, ResourceLocation item) {
+    /*    private BeheadingRecipe HeadRecipe(EntityType<?> type, Identifier item) {
             return new BeheadingRecipe(type, item);
         }*/
 
-        /*    private void OptionalHead(RecipeOutput consumer, String name, String modid, EntityType<?> type, ResourceLocation item) {
+        /*    private void OptionalHead(RecipeOutput consumer, String name, String modid, EntityType<?> type, Identifier item) {
                 consumer.accept(RL.rl( "beheading/" + name), HeadRecipe(type, item), null,
                         new ModLoadedCondition(modid));
             }*/

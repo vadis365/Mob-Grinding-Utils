@@ -13,10 +13,10 @@ public class LocalDragonSoundEvent {
 	@SubscribeEvent
 	public void onDragonDeath(LivingDeathEvent event) {
 		if (event.getEntity() instanceof EnderDragon dragon) {
-			Level world = dragon.getCommandSenderWorld();
+			Level world = dragon.level();
 			BlockPos.MutableBlockPos mutablePos = new BlockPos.MutableBlockPos();
 			boolean playsound = true;
-			if (!world.isClientSide) {
+			if (!world.isClientSide()) {
 				for (int x = -32; x < 32; x++)
 					for (int y = -32; y < 32; y++)
 						for (int z = -32; z < 32; z++)

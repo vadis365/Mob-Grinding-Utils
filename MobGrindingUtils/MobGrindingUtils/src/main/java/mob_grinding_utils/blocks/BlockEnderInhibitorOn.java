@@ -2,6 +2,8 @@ package mob_grinding_utils.blocks;
 
 import mob_grinding_utils.ModBlocks;
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.redstone.Orientation;
+import org.jetbrains.annotations.Nullable;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.Registries;
@@ -26,8 +28,6 @@ import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 
 import javax.annotation.Nonnull;
 import java.util.Locale;
@@ -71,7 +71,6 @@ public class BlockEnderInhibitorOn extends Block {
     }
 
     @Override
-    @OnlyIn(Dist.CLIENT)
     public void animateTick(@Nonnull BlockState stateIn, @Nonnull Level world, @Nonnull BlockPos pos, @Nonnull RandomSource rand) {
         for (int i = 0; i < 4; ++i) {
             double d0 = (double) ((float) pos.getX() + rand.nextFloat());
@@ -133,7 +132,7 @@ public class BlockEnderInhibitorOn extends Block {
     }
 
     @Override
-    public void neighborChanged(BlockState state, @Nonnull Level world, @Nonnull BlockPos pos, @Nonnull Block block, @Nonnull BlockPos fromPos, boolean isMoving) {
+    protected void neighborChanged(BlockState state, @Nonnull Level world, @Nonnull BlockPos pos, @Nonnull Block block, @Nullable Orientation orientation, boolean isMoving) {
         EnumGemDirection newFacing = state.getValue(TYPE);
         boolean flag = false;
 
@@ -162,7 +161,7 @@ public class BlockEnderInhibitorOn extends Block {
             world.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
         }
 
-        super.neighborChanged(state, world, pos, block, fromPos, isMoving);
+        super.neighborChanged(state, world, pos, block, orientation, isMoving);
     }
 
     @Nonnull

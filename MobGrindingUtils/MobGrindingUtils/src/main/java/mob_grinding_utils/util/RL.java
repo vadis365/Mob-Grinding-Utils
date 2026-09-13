@@ -9,11 +9,11 @@ import javax.annotation.Nonnull;
 public class RL {
 
     /**
-     * Creates a ResourceLocation with the specified namespace and path.
+     * Creates a Identifier with the specified namespace and path.
      *
      * @param namespace the namespace for the resource location
      * @param path the path for the resource location
-     * @return a new ResourceLocation instance
+     * @return a new Identifier instance
      */
     @Nonnull
     @Contract("_, _ -> new")
@@ -22,10 +22,10 @@ public class RL {
     }
 
     /**
-     * Creates a ResourceLocation with the mob_grinding_utils namespace from Reference.MOD_ID and the specified path.
+     * Creates a Identifier with the mob_grinding_utils namespace from Reference.MOD_ID and the specified path.
      *
      * @param path the path for the resource location
-     * @return a new ResourceLocation instance
+     * @return a new Identifier instance
      */
     @Nonnull
     @Contract("_ -> new")
@@ -34,10 +34,10 @@ public class RL {
     }
 
     /**
-     * Creates a ResourceLocation with the minecraft namespace and the specified path.
+     * Creates a Identifier with the minecraft namespace and the specified path.
      *
      * @param path the path for the resource location
-     * @return a new ResourceLocation instance
+     * @return a new Identifier instance
      */
     @Nonnull
     @Contract("_ -> new")

@@ -8,7 +8,6 @@ import mob_grinding_utils.itemblocks.MGUBlockItem;
 import mob_grinding_utils.BlockEntities.*;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -34,93 +33,92 @@ public class ModBlocks {
 
     public static MGUBlockReg<BlockFan, MGUBlockItem, BlockEntityFan> FAN = new MGUBlockReg<>("fan",
         BlockFan::new,
-        fan -> new MGUBlockItem(fan, new Item.Properties().useBlockDescriptionPrefix()),
+        (fan, props) -> new MGUBlockItem(fan, props.useBlockDescriptionPrefix()),
         BlockEntityFan::new);
 
     public static MGUBlockReg<BlockSaw, MGUBlockItem, BlockEntitySaw> SAW = new MGUBlockReg<>("saw",
         BlockSaw::new,
-        saw -> new MGUBlockItem(saw, new Item.Properties().useBlockDescriptionPrefix()),
+        (saw, props) -> new MGUBlockItem(saw, props.useBlockDescriptionPrefix()),
         BlockEntitySaw::new);
 
     public static MGUBlockReg<BlockAbsorptionHopper, MGUBlockItem, BlockEntityAbsorptionHopper> ABSORPTION_HOPPER = new MGUBlockReg<>("absorption_hopper",
         BlockAbsorptionHopper::new,
-        absorptionHopper -> new MGUBlockItem(absorptionHopper, new Item.Properties().useBlockDescriptionPrefix()),
+        (absorptionHopper, props) -> new MGUBlockItem(absorptionHopper, props.useBlockDescriptionPrefix()),
         BlockEntityAbsorptionHopper::new);
 
     public static MGUBlockReg<BlockSpikes, MGUBlockItem, ?> SPIKES = new MGUBlockReg<>("spikes",
         BlockSpikes::new,
-        spikes -> new MGUBlockItem(spikes, new Item.Properties().useBlockDescriptionPrefix()));
+        (spikes, props) -> new MGUBlockItem(spikes, props.useBlockDescriptionPrefix()));
 
     public static MGUBlockReg<BlockTank, BlockItemTank, BlockEntityTank> TANK = new MGUBlockReg<>("tank",
         BlockTank::new,
-        tank -> new BlockItemTank(tank, 32000,new Item.Properties().useBlockDescriptionPrefix()),
+        (tank, props) -> new BlockItemTank(tank, 32000, props.useBlockDescriptionPrefix()),
         BlockEntityTank::new);
 
     public static MGUBlockReg<BlockTankSink, BlockItemTank, BlockEntitySinkTank> TANK_SINK = new MGUBlockReg<>("tank_sink",
         BlockTankSink::new,
-        tankSink -> new BlockItemTank(tankSink, 32000, new Item.Properties().useBlockDescriptionPrefix()),
+        (tankSink, props) -> new BlockItemTank(tankSink, 32000, props.useBlockDescriptionPrefix()),
         BlockEntitySinkTank::new);
 
     public static MGUBlockReg<BlockXPTap, MGUBlockItem, BlockEntityXPTap> XP_TAP = new MGUBlockReg<>("xp_tap",
         BlockXPTap::new,
-        xpTap -> new MGUBlockItem(xpTap, new Item.Properties().useBlockDescriptionPrefix()),
+        (xpTap, props) -> new MGUBlockItem(xpTap, props.useBlockDescriptionPrefix()),
         BlockEntityXPTap::new);
 
     public static MGUBlockReg<BlockWitherMuffler, MGUBlockItem, ?> WITHER_MUFFLER = new MGUBlockReg<>("wither_muffler",
         BlockWitherMuffler::new,
-        witherMuffler -> new MGUBlockItem(witherMuffler, new Item.Properties().useBlockDescriptionPrefix()));
+        (witherMuffler, props) -> new MGUBlockItem(witherMuffler, props.useBlockDescriptionPrefix()));
 
     public static MGUBlockReg<BlockDragonMuffler, MGUBlockItem, ?> DRAGON_MUFFLER = new MGUBlockReg<>("dragon_muffler",
         BlockDragonMuffler::new,
-        dragonMuffler -> new MGUBlockItem(dragonMuffler, new Item.Properties().useBlockDescriptionPrefix()));
+        (dragonMuffler, props) -> new MGUBlockItem(dragonMuffler, props.useBlockDescriptionPrefix()));
 
     public static MGUBlockReg<BlockDarkOakStone, MGUBlockItem, ?> DARK_OAK_STONE = new MGUBlockReg<>("dark_oak_stone",
         BlockDarkOakStone::new,
-        darkOakStone -> new MGUBlockItem(darkOakStone, new Item.Properties().useBlockDescriptionPrefix()));
+        (darkOakStone, props) -> new MGUBlockItem(darkOakStone, props.useBlockDescriptionPrefix()));
 
     public static MGUBlockReg<BlockEntityConveyor, MGUBlockItem, ?> ENTITY_CONVEYOR = new MGUBlockReg<>("entity_conveyor",
         BlockEntityConveyor::new,
-        entityConveyor -> new MGUBlockItem(entityConveyor, new Item.Properties().useBlockDescriptionPrefix()));
+        (entityConveyor, props) -> new MGUBlockItem(entityConveyor, props.useBlockDescriptionPrefix()));
 
     public static MGUBlockReg<BlockEnderInhibitorOn, MGUBlockItem, ?> ENDER_INHIBITOR_ON = new MGUBlockReg<>("ender_inhibitor_on",
         BlockEnderInhibitorOn::new,
-        enderInhibitorOn -> new MGUBlockItem(enderInhibitorOn, new Item.Properties().useBlockDescriptionPrefix()));
+        (enderInhibitorOn, props) -> new MGUBlockItem(enderInhibitorOn, props.useBlockDescriptionPrefix()));
 
     public static MGUBlockReg<BlockEnderInhibitorOff, MGUBlockItem, ?> ENDER_INHIBITOR_OFF = new MGUBlockReg<>("ender_inhibitor_off",
         BlockEnderInhibitorOff::new,
-        enderInhibitorOff -> new MGUBlockItem(enderInhibitorOff, new Item.Properties().useBlockDescriptionPrefix()));
+        (enderInhibitorOff, props) -> new MGUBlockItem(enderInhibitorOff, props.useBlockDescriptionPrefix()));
 
     public static MGUBlockReg<BlockTintedGlass, MGUBlockItem, ?> TINTED_GLASS = new MGUBlockReg<>("tinted_glass",
         BlockTintedGlass::new,
-        tintedGlass -> new MGUBlockItem(tintedGlass, new Item.Properties().useBlockDescriptionPrefix()));
+        (tintedGlass, props) -> new MGUBlockItem(tintedGlass, props.useBlockDescriptionPrefix()));
 
     public static MGUBlockReg<BlockTankJumbo, BlockItemTank, BlockEntityJumboTank> JUMBO_TANK = new MGUBlockReg<>("jumbo_tank",
         BlockTankJumbo::new,
-        tankJumbo -> new BlockItemTank(tankJumbo, 1024000, new Item.Properties().useBlockDescriptionPrefix()),
+        (tankJumbo, props) -> new BlockItemTank(tankJumbo, 1024000, props.useBlockDescriptionPrefix()),
         BlockEntityJumboTank::new);
 
     public static MGUBlockReg<BlockXPSolidifier, MGUBlockItem, BlockEntityXPSolidifier> XPSOLIDIFIER = new MGUBlockReg<>("xpsolidifier",
         BlockXPSolidifier::new,
-        xpSolidifier -> new MGUBlockItem(xpSolidifier, new Item.Properties().useBlockDescriptionPrefix()),
+        (xpSolidifier, props) -> new MGUBlockItem(xpSolidifier, props.useBlockDescriptionPrefix()),
         BlockEntityXPSolidifier::new);
 
     //public static Material MATERIAL_DREADFUL_DIRT = new Material(MaterialColor.DIRT, false, true, false, true, true, false, PushReaction.NORMAL);
     public static MGUBlockReg<BlockDreadfulDirt, MGUBlockItem, ?> DREADFUL_DIRT = new MGUBlockReg<>("dreadful_dirt",
-        BlockDreadfulDirt::new
-        ,
-        dreadfulDirt -> new MGUBlockItem(dreadfulDirt, new Item.Properties().useBlockDescriptionPrefix()));
+        BlockDreadfulDirt::new,
+        (dreadfulDirt, props) -> new MGUBlockItem(dreadfulDirt, props.useBlockDescriptionPrefix()));
 
     public static MGUBlockReg<BlockDelightfulDirt, MGUBlockItem, ?> DELIGHTFUL_DIRT = new MGUBlockReg<>("delightful_dirt",
             BlockDelightfulDirt::new,
-            delightfulDirt -> new MGUBlockItem(delightfulDirt, new Item.Properties().useBlockDescriptionPrefix()));
+            (delightfulDirt, props) -> new MGUBlockItem(delightfulDirt, props.useBlockDescriptionPrefix()));
 
     public static MGUBlockReg<BlockSolidXP, MGUBlockItem, ?> SOLID_XP_BLOCK = new MGUBlockReg<>("solid_xp_block",
         BlockSolidXP::new,
-        solidXP -> new MGUBlockItem(solidXP, new Item.Properties()));
+        MGUBlockItem::new);
 
     public static MGUBlockReg<BlockEntitySpawner, MGUBlockItem, BlockEntityMGUSpawner> ENTITY_SPAWNER = new MGUBlockReg<>("entity_spawner",
         BlockEntitySpawner::new,
-        entitySpawner -> new MGUBlockItem(entitySpawner, new Item.Properties().useBlockDescriptionPrefix()),
+        (entitySpawner, props) -> new MGUBlockItem(entitySpawner, props.useBlockDescriptionPrefix()),
         BlockEntityMGUSpawner::new);
 
     public static DeferredHolder<FluidType, FluidType> XPTYPE = FLUID_TYPES.register("fluid_xp", () -> new FluidType(FluidType.Properties.create()
@@ -144,8 +142,9 @@ public class ModBlocks {
         () -> new BaseFlowingFluid.Source(ModBlocks.xp_properties) );
     public static DeferredHolder<Fluid, BaseFlowingFluid> FLUID_XP_FLOWING = FLUIDS.register("fluid_xp_flowing",
         () -> new BaseFlowingFluid.Flowing(ModBlocks.xp_properties) );
-    public static DeferredBlock<MGUFlowingFluidBlock> FLUID_XP_BLOCK = BLOCKS.register("fluid_xp",
-        () -> new MGUFlowingFluidBlock(FLUID_XP,Block.Properties.of().liquid().noCollision().replaceable().strength(100.0F).pushReaction(PushReaction.DESTROY).noLootTable()));
+    public static DeferredBlock<MGUFlowingFluidBlock> FLUID_XP_BLOCK = BLOCKS.registerBlock("fluid_xp",
+        props -> new MGUFlowingFluidBlock(FLUID_XP, props),
+        p -> p.liquid().noCollision().replaceable().strength(100.0F).pushReaction(PushReaction.DESTROY).noLootTable());
 
     private static final BaseFlowingFluid.Properties xp_properties = new BaseFlowingFluid.Properties(() -> XPTYPE.get(), () -> FLUID_XP.get(), () -> FLUID_XP_FLOWING.get())
             .block(() -> FLUID_XP_BLOCK.get())

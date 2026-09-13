@@ -22,7 +22,7 @@ public class ContainerMGUSpawner extends AbstractContainerMenu {
     public ContainerMGUSpawner(final int windowId, final Inventory playerInventory, FriendlyByteBuf extra) {
         super(ModContainers.ENTITY_SPAWNER.get(), windowId);
         BlockPos tilePos = extra.readBlockPos();
-        BlockEntity tile = playerInventory.player.getCommandSenderWorld().getBlockEntity(tilePos);
+        BlockEntity tile = playerInventory.player.level().getBlockEntity(tilePos);
         if (!(tile instanceof BlockEntityMGUSpawner))
             return;
         this.tile = (BlockEntityMGUSpawner) tile;

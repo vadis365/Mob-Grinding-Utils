@@ -3,30 +3,28 @@ package mob_grinding_utils.client.render;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import mob_grinding_utils.BlockEntities.BlockEntityAbsorptionHopper;
+import mob_grinding_utils.BlockEntities.BlockEntityAbsorptionHopper.EnumStatus;
 import mob_grinding_utils.ModBlocks;
 import mob_grinding_utils.client.ModelLayers;
 import mob_grinding_utils.models.ModelAHConnect;
-import mob_grinding_utils.BlockEntities.BlockEntityAbsorptionHopper.EnumStatus;
 import mob_grinding_utils.util.RL;
-import net.minecraft.client.renderer.LevelRenderer;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider.Context;
+import net.minecraft.client.renderer.blockentity.state.BlockEntityRenderState;
+import net.minecraft.client.renderer.feature.ModelFeatureRenderer;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
+import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.resources.Identifier;
+import net.minecraft.util.Unit;
 import net.minecraft.world.phys.AABB;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
-
-import javax.annotation.Nonnull;
-
-@OnlyIn(Dist.CLIENT)
-public class TileEntityAbsorptionRenderer implements BlockEntityRenderer<BlockEntityAbsorptionHopper> {
-	private static final ResourceLocation ITEM_TEXTURE = RL.mgu("textures/tiles/absorption_hopper_connects_items.png");
-	private static final ResourceLocation FLUID_TEXTURE = RL.mgu("textures/tiles/absorption_hopper_connects_fluids.png");
+import net.minecraft.world.phys.Vec3;
+import org.jspecify.annotations.Nullable;
+public class TileEntityAbsorptionRenderer implements BlockEntityRenderer<BlockEntityAbsorptionHopper, TileEntityAbsorptionRenderer.AbsorptionRenderState> {
+	private static final Identifier ITEM_TEXTURE = RL.mgu("textures/tiles/absorption_hopper_connects_items.png");
+	private static final Identifier FLUID_TEXTURE = RL.mgu("textures/tiles/absorption_hopper_connects_fluids.png");
 	private final ModelAHConnect connectionModel;
 
 	public TileEntityAbsorptionRenderer(Context context) {
@@ -34,67 +32,68 @@ public class TileEntityAbsorptionRenderer implements BlockEntityRenderer<BlockEn
 	}
 
 	@Override
-	public void render(BlockEntityAbsorptionHopper tile, float partialTicks, @Nonnull PoseStack matrixStack, @Nonnull MultiBufferSource buffer, int combinedLight, int combinedOverlay) {
-		if (tile == null || !tile.hasLevel())
-			return;
-
-		BlockState state = tile.getLevel().getBlockState(tile.getBlockPos());
-
-		if(state == null || state.getBlock() != ModBlocks.ABSORPTION_HOPPER.getBlock())
-			return;
-
-		matrixStack.pushPose();
-		matrixStack.translate(0.5D, 0.5D, 0.5D);
-		for (Direction facing : Direction.values()) {
-			if (tile.status[facing.ordinal()] == EnumStatus.STATUS_OUTPUT_ITEM) {
-				matrixStack.pushPose();
-				getRotTranslation(matrixStack, facing);
-				connectionModel.renderToBuffer(matrixStack, buffer.getBuffer(RenderType.entitySolid(ITEM_TEXTURE)), combinedLight, OverlayTexture.NO_OVERLAY, 0x7F7F7FFF);
-				matrixStack.popPose();
-			}
-			if (tile.status[facing.ordinal()] == EnumStatus.STATUS_OUTPUT_FLUID) {
-				matrixStack.pushPose();
-				getRotTranslation(matrixStack, facing);
-				connectionModel.renderToBuffer(matrixStack, buffer.getBuffer(RenderType.entitySolid(FLUID_TEXTURE)), combinedLight, OverlayTexture.NO_OVERLAY, 0x7F7F7FFF);
-				matrixStack.popPose();
-			}
-		}
-		matrixStack.popPose();
-
-		if (!tile.showRenderBox)
-			return;
-		matrixStack.pushPose();
-		matrixStack.translate(-0.0005D, -0.0005D, -0.0005D);
-		matrixStack.scale(0.999F, 0.999F, 0.999F);
-
-		LevelRenderer.renderLineBox(matrixStack, buffer.getBuffer(RenderType.lines()), tile.getAABBForRender(), 1F, 1F, 0F, 1F);
-		matrixStack.popPose();
+	public AbsorptionRenderState createRenderState() {
+		return new AbsorptionRenderState();
 	}
 
-	public void getRotTranslation(PoseStack matrixStack, Direction facing) {
+	@Override
+	public void extractRenderState(BlockEntityAbsorptionHopper tile, AbsorptionRenderState state, float partialTicks, Vec3 cameraPosition, ModelFeatureRenderer.@Nullable CrumblingOverlay breakProgress) {
+		BlockEntityRenderer.super.extractRenderState(tile, state, partialTicks, cameraPosition, breakProgress);
+		state.valid = tile.hasLevel() && tile.getBlockState().is(ModBlocks.ABSORPTION_HOPPER.getBlock());
+		if (!state.valid) {
+			return;
+		}
+		System.arraycopy(tile.status, 0, state.status, 0, tile.status.length);
+		state.showBox = tile.showRenderBox;
+		if (state.showBox) {
+			state.renderBox = tile.getAABBForRender();
+		}
+	}
+
+	@Override
+	public void submit(AbsorptionRenderState state, PoseStack poseStack, SubmitNodeCollector submitNodeCollector, CameraRenderState camera) {
+		if (!state.valid) {
+			return;
+		}
+
+		poseStack.pushPose();
+		poseStack.translate(0.5D, 0.5D, 0.5D);
+		for (Direction facing : Direction.values()) {
+			EnumStatus status = state.status[facing.ordinal()];
+			if (status == EnumStatus.STATUS_OUTPUT_ITEM || status == EnumStatus.STATUS_OUTPUT_FLUID) {
+				Identifier texture = status == EnumStatus.STATUS_OUTPUT_ITEM ? ITEM_TEXTURE : FLUID_TEXTURE;
+				poseStack.pushPose();
+				getRotTranslation(poseStack, facing);
+				submitNodeCollector.submitModel(connectionModel, Unit.INSTANCE, poseStack, RenderTypes.entitySolid(texture), state.lightCoords, OverlayTexture.NO_OVERLAY, 0x7F7F7FFF, null, 0, state.breakProgress);
+				poseStack.popPose();
+			}
+		}
+		poseStack.popPose();
+
+		if (state.showBox && state.renderBox != null) {
+			RenderHelpers.drawDebugBox(state.renderBox, state.blockPos, 1F, 1F, 0F);
+		}
+	}
+
+	private static void getRotTranslation(PoseStack matrixStack, Direction facing) {
 		switch (facing) {
-		case UP:
-			matrixStack.mulPose(Axis.XP.rotationDegrees(180F));
-			break;
-		case DOWN:
-			break;
-		case NORTH:
-			matrixStack.mulPose(Axis.XP.rotationDegrees(90F));
-			break;
-		case SOUTH:
-			matrixStack.mulPose(Axis.XN.rotationDegrees(90F));
-			break;
-		case WEST:
-			matrixStack.mulPose(Axis.ZN.rotationDegrees(90F));
-			break;
-		case EAST:
-			matrixStack.mulPose(Axis.ZP.rotationDegrees(90F));
-			break;
+			case UP -> matrixStack.mulPose(Axis.XP.rotationDegrees(180F));
+			case DOWN -> {}
+			case NORTH -> matrixStack.mulPose(Axis.XP.rotationDegrees(90F));
+			case SOUTH -> matrixStack.mulPose(Axis.XN.rotationDegrees(90F));
+			case WEST -> matrixStack.mulPose(Axis.ZN.rotationDegrees(90F));
+			case EAST -> matrixStack.mulPose(Axis.ZP.rotationDegrees(90F));
 		}
 	}
 
 	@Override
 	public AABB getRenderBoundingBox(BlockEntityAbsorptionHopper blockEntity) {
 		return blockEntity.getAABBWithModifiers();
+	}
+	public static class AbsorptionRenderState extends BlockEntityRenderState {
+		public boolean valid;
+		public final EnumStatus[] status = new EnumStatus[Direction.values().length];
+		public boolean showBox;
+		public @Nullable AABB renderBox;
 	}
 }

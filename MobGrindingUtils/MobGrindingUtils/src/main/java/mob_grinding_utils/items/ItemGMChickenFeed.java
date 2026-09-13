@@ -7,8 +7,8 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
+import net.minecraft.world.item.component.TooltipDisplay;
+import java.util.function.Consumer;
 
 import javax.annotation.Nonnull;
 import java.util.List;
@@ -24,20 +24,19 @@ public class ItemGMChickenFeed extends Item {
 	}
 
 	@Override
-	@OnlyIn(Dist.CLIENT)
-	public void appendHoverText(@Nonnull ItemStack stack, @Nonnull TooltipContext context, List<Component> list, @Nonnull TooltipFlag flag) {
-		list.add(Component.translatable("tooltip.chickenfeed_1").withStyle(ChatFormatting.YELLOW));
-		list.add(Component.translatable("tooltip.chickenfeed_2").withStyle(ChatFormatting.YELLOW));
+	public void appendHoverText(@Nonnull ItemStack stack, @Nonnull TooltipContext context, @Nonnull TooltipDisplay display, @Nonnull Consumer<Component> builder, @Nonnull TooltipFlag tooltipFlag) {
+		builder.accept(Component.translatable("tooltip.chickenfeed_1").withStyle(ChatFormatting.YELLOW));
+		builder.accept(Component.translatable("tooltip.chickenfeed_2").withStyle(ChatFormatting.YELLOW));
 
 		if (type == FeedType.MOB)
 			if (stack.has(MGUComponents.MOB_DNA))
-				list.add(Component.translatable("tooltip.chickenfeed_3").withStyle(ChatFormatting.GREEN).append(stack.getOrDefault(MGUComponents.MOB_DNA, RL.mc("nobody")) + " 'DNA'."));
+				builder.accept(Component.translatable("tooltip.chickenfeed_3").withStyle(ChatFormatting.GREEN).append(stack.getOrDefault(MGUComponents.MOB_DNA, RL.mc("nobody")) + " 'DNA'."));
 
 		if (type == FeedType.CURSED)
-			list.add(Component.translatable("tooltip.chickenfeed_4").withStyle(ChatFormatting.YELLOW));
+			builder.accept(Component.translatable("tooltip.chickenfeed_4").withStyle(ChatFormatting.YELLOW));
 
 		if (type == FeedType.NUTRITIOUS)
-			list.add(Component.translatable("tooltip.chickenfeed_5").withStyle(ChatFormatting.YELLOW));
+			builder.accept(Component.translatable("tooltip.chickenfeed_5").withStyle(ChatFormatting.YELLOW));
 	}
 
 }

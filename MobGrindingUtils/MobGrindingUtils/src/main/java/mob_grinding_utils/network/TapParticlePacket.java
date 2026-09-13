@@ -16,9 +16,7 @@ public record TapParticlePacket(BlockPos tilePos) implements CustomPacketPayload
         );
 
     public static void handle(TapParticlePacket message, final IPayloadContext ctx) {
-        ctx.enqueueWork(() -> {
-            MGUClientPackets.spawnGlitterParticles(message.tilePos.getX(), message.tilePos.getY(), message.tilePos.getZ(), 0D, 0D, 0D);
-        });
+        ctx.enqueueWork(() -> mob_grinding_utils.client.ClientPacketHandlers.handleTapParticle(message));
     }
 
     @Override

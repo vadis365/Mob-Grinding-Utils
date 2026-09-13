@@ -1,5 +1,5 @@
 {
-    "parent": "mob_grinding_utils:block/blank",
+    "parent": "mob_grinding_utils:item/special_base",
      "display": {
      
       "thirdperson_righthand": {

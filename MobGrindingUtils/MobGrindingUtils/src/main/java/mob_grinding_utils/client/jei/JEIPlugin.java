@@ -15,7 +15,7 @@ import mob_grinding_utils.recipe.SolidifyRecipe;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.Level;
@@ -24,12 +24,12 @@ import javax.annotation.Nonnull;
 
 @JeiPlugin
 public class JEIPlugin implements IModPlugin {
-    public static final ResourceLocation ID = ResourceLocation.fromNamespaceAndPath(Reference.MOD_ID, "jei_plugin");
+    public static final Identifier ID = Identifier.fromNamespaceAndPath(Reference.MOD_ID, "jei_plugin");
     public static final RecipeType<SolidifyRecipe> SOLIDIFY_TYPE = RecipeType.create(Reference.MOD_ID, "solidify", SolidifyRecipe.class);
 
     @Nonnull
     @Override
-    public ResourceLocation getPluginUid() {
+    public Identifier getPluginUid() {
         return ID;
     }
 
@@ -41,8 +41,7 @@ public class JEIPlugin implements IModPlugin {
                 registration.addIngredientInfo(new ItemStack(item.get()), VanillaTypes.ITEM_STACK, Component.translatable(key));
             }
         });
-        Level level = Minecraft.getInstance().level;
-        registration.addRecipes(SOLIDIFY_TYPE, level.getRecipeManager().getAllRecipesFor(MobGrindingUtils.SOLIDIFIER_TYPE.get()).stream().map(RecipeHolder::value).toList());
+        registration.addRecipes(SOLIDIFY_TYPE, MobGrindingUtils.SOLIDIFIER_RECIPES.stream().map(RecipeHolder::value).toList());
     }
 
     @Override

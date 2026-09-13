@@ -1,0 +1,9 @@
+{
+  "model": {
+    "type": "minecraft:special",
+    "base": "mob_grinding_utils:item/saw",
+    "model": {
+      "type": "mob_grinding_utils:saw"
+    }
+  }
+}

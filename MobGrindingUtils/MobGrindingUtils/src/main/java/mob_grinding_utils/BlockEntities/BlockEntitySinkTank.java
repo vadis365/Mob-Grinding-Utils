@@ -40,13 +40,14 @@ public class BlockEntitySinkTank extends BlockEntityTank {
             if (xpAmount <= 0)
                 return false;
             if (tank.getAmountAsInt(0) < tank.getCapacityAsInt(0, tank.getResource(0))) {
-                Transaction transaction = Transaction.openRoot();
-                if (tank.insert(0, FluidResource.of(ModBlocks.FLUID_XP.get()), 20, transaction) == 20) {
-                    transaction.commit();
-                    addPlayerXP(player, -1);
-                    level.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.BOTTLE_FILL, SoundSource.NEUTRAL , 0.1F, 0.5F * ((getLevel().getRandom().nextFloat() - getLevel().getRandom().nextFloat()) * 0.7F + 1.8F));
-                    PacketDistributor.sendToPlayersNear((ServerLevel) level, null, getBlockPos().getX(), getBlockPos().getY(), getBlockPos().getZ(), 30, new TapParticlePacket(getBlockPos().above()));
-                    return true;
+                try (Transaction transaction = Transaction.openRoot()) {
+                    if (tank.insert(0, FluidResource.of(ModBlocks.FLUID_XP.get()), 20, transaction) == 20) {
+                        transaction.commit();
+                        addPlayerXP(player, -1);
+                        level.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.BOTTLE_FILL, SoundSource.NEUTRAL , 0.1F, 0.5F * ((getLevel().getRandom().nextFloat() - getLevel().getRandom().nextFloat()) * 0.7F + 1.8F));
+                        PacketDistributor.sendToPlayersNear((ServerLevel) level, null, getBlockPos().getX(), getBlockPos().getY(), getBlockPos().getZ(), 30, new TapParticlePacket(getBlockPos().above()));
+                        return true;
+                    }
                 }
             }
         }

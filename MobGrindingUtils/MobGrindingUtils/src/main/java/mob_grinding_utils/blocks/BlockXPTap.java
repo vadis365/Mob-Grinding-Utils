@@ -6,6 +6,7 @@ import mob_grinding_utils.ModSounds;
 import mob_grinding_utils.BlockEntities.BlockEntityXPTap;
 import mob_grinding_utils.util.CapHelper;
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.redstone.Orientation;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.Identifier;
@@ -129,13 +130,13 @@ public class BlockXPTap extends DirectionalBlock implements EntityBlock {
     }
 
     @Override
-    public void neighborChanged(@Nonnull BlockState state, Level world, @Nonnull BlockPos pos, @Nonnull Block block, @Nonnull BlockPos fromPos, boolean isMoving) {
+    protected void neighborChanged(@Nonnull BlockState state, Level world, @Nonnull BlockPos pos, @Nonnull Block block, @Nullable Orientation orientation, boolean isMoving) {
         Direction facing = world.getBlockState(pos).getValue(FACING);
         if (!canPlaceAt(world, pos.relative(facing.getOpposite()), facing)) {
             popResource(world, pos, new ItemStack(ModBlocks.XP_TAP.getItem(), 1));
             world.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
         }
-        super.neighborChanged(state, world, pos, block, fromPos, isMoving);
+        super.neighborChanged(state, world, pos, block, orientation, isMoving);
     }
 
     @Override

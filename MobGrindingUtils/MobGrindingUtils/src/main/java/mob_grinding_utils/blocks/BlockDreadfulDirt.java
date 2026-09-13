@@ -13,12 +13,18 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.util.TriState;
-import net.minecraft.world.entity.*;
+import net.minecraft.util.random.WeightedList;
+import net.minecraft.world.entity.EntitySelector;
+import net.minecraft.world.entity.EntitySpawnReason;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.ScheduledTickAccess;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.Biomes;
 import net.minecraft.world.level.biome.MobSpawnSettings.SpawnerData;
@@ -27,31 +33,29 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.MapColor;
+import net.minecraft.world.level.redstone.Orientation;
 import net.minecraft.world.phys.AABB;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.event.EventHooks;
+import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.Nonnull;
-import java.util.List;
 
 public class BlockDreadfulDirt extends BlockDirtSpawner {
-    public BlockDreadfulDirt(Identifier id) {
-        this(Block.Properties.of()
-                .mapColor(MapColor.COLOR_PURPLE)
-                .strength(1.0F, 2000.0F)
-                .sound(SoundType.GRAVEL)
-                .randomTicks()
-                .isValidSpawn((state, level, pos, entitytype) -> entitytype.getCategory() == MobCategory.MONSTER)
-                .setId(ResourceKey.create(Registries.BLOCK, id)));
-    }
+	public BlockDreadfulDirt(Identifier id) {
+		this(Block.Properties.of()
+				.mapColor(MapColor.COLOR_BLACK)
+				.strength(1.0F, 2000.0F)
+				.sound(SoundType.GRAVEL)
+				.randomTicks()
+				.isValidSpawn((state, level, pos, entitytype) -> entitytype.getCategory() == MobCategory.MONSTER)
+				.setId(ResourceKey.create(Registries.BLOCK, id)));
+	}
 
-    public BlockDreadfulDirt(Block.Properties properties) {
+	public BlockDreadfulDirt(Block.Properties properties) {
 		super(properties);
 	}
 
 	public boolean shouldCatchFire(LevelAccessor level, BlockPos pos) {
-		// standard night to day ticks
 		return level.canSeeSkyFromBelowWater(pos) && (level.getGameTime() < 13000 || level.getGameTime() > 23000);
 	}
 
@@ -63,20 +67,18 @@ public class BlockDreadfulDirt extends BlockDirtSpawner {
 	public void onPlace(@Nonnull BlockState state, @Nonnull Level level, @Nonnull BlockPos pos, @Nonnull BlockState oldState, boolean isMoving) {
 		if (shouldCatchFire(level, pos) || shouldSpawnMob(level, pos))
 			level.scheduleTick(pos, this, Mth.nextInt(level.getRandom(), 20,60));
-		//List<SpawnerData> spawns = level.getBiome(pos).value().getMobSettings().getMobs(MobCategory.MONSTER).unwrap();
-		//spawns.forEach(spawn -> MobGrindingUtils.LOGGER.info(spawn.type.getRegistryName().toString()));
 	}
 
 	@Nonnull
-    @Override
-	public BlockState updateShape(@Nonnull BlockState stateIn, @Nonnull Direction facing, @Nonnull BlockState facingState, @Nonnull LevelAccessor level, @Nonnull BlockPos pos, @Nonnull BlockPos facingPos) {
-		if (shouldCatchFire(level, pos) || shouldSpawnMob(level, pos))
-			level.scheduleTick(pos, this, Mth.nextInt(level.getRandom(), 20, 60));
-		return super.updateShape(stateIn, facing, facingState, level, pos, facingPos);
+	@Override
+	protected BlockState updateShape(@Nonnull BlockState stateIn, @Nonnull LevelReader level, @Nonnull ScheduledTickAccess ticks, @Nonnull BlockPos pos, @Nonnull Direction facing, @Nonnull BlockPos facingPos, @Nonnull BlockState facingState, @Nonnull RandomSource random) {
+		if (level instanceof LevelAccessor levelAccessor && (shouldCatchFire(levelAccessor, pos) || shouldSpawnMob(levelAccessor, pos)))
+			ticks.scheduleTick(pos, this, Mth.nextInt(random, 20, 60));
+		return super.updateShape(stateIn, level, ticks, pos, facing, facingPos, facingState, random);
 	}
 
 	@Override
-	public void neighborChanged(@Nonnull BlockState state, @Nonnull Level level, @Nonnull BlockPos pos, @Nonnull Block blockIn, @Nonnull BlockPos fromPos, boolean isMoving) {
+	protected void neighborChanged(@Nonnull BlockState state, @Nonnull Level level, @Nonnull BlockPos pos, @Nonnull Block blockIn, @Nullable Orientation orientation, boolean isMoving) {
 		if (shouldCatchFire(level, pos) || shouldSpawnMob(level, pos))
 			level.scheduleTick(pos, this, Mth.nextInt(level.getRandom(), 20, 60));
 	}
@@ -100,24 +102,24 @@ public class BlockDreadfulDirt extends BlockDirtSpawner {
 
 	public void spawnMob(ServerLevel level, BlockPos pos) {
 		Holder<Biome> biomeHolder = level.getBiome(pos);
-		Biome biome = !biomeHolder.is(ModTags.Biomes.HOSTILE_OVERRIDE) ? biomeHolder.value() : level.registryAccess().registry(Registries.BIOME)
-				.flatMap(reg -> reg.getOptional(Biomes.PLAINS))
+		Biome biome = !biomeHolder.is(ModTags.Biomes.HOSTILE_OVERRIDE) ? biomeHolder.value() : level.registryAccess().lookupOrThrow(Registries.BIOME)
+				.get(Biomes.PLAINS)
+				.map(Holder::value)
 				.orElseGet(biomeHolder::value);
 
-		List<SpawnerData> spawns = biome.getMobSettings().getMobs(MobCategory.MONSTER).unwrap();
+		WeightedList<SpawnerData> spawns = biome.getMobSettings().getMobs(MobCategory.MONSTER);
 		if (!spawns.isEmpty()) {
-			int indexSize = spawns.size();
-			EntityType<?> type = spawns.get(level.getRandom().nextInt(indexSize)).type();
-			if (type.is(ModTags.Entities.NO_DIRT_SPAWN) || type.is(ModTags.Entities.NO_DREADFUL_SPAWN))
+			EntityType<?> type = spawns.getRandomOrThrow(level.getRandom()).type();
+			if (type.builtInRegistryHolder().is(ModTags.Entities.NO_DIRT_SPAWN) || type.builtInRegistryHolder().is(ModTags.Entities.NO_DREADFUL_SPAWN))
 				return;
-			Mob entity = (Mob) type.create(level);
+			Mob entity = (Mob) type.create(level, EntitySpawnReason.NATURAL);
 			if (entity == null)
 				return;
 			entity.setPos(pos.getX() + 0.5D, pos.getY() + 1D, pos.getZ() + 0.5D);
 			if (!checkSpawnPosition(entity, level, EntitySpawnReason.NATURAL))
 				return;
 			 if(level.getEntities(entity.getType(), entity.getBoundingBox(), EntitySelector.ENTITY_STILL_ALIVE).isEmpty() && level.noCollision(entity)) {
-				 TriState result = DirtSpawnEvent.checkEvent(entity, level, pos.getX() + 0.5D, pos.getY() + 1D, pos.getZ() + 0.5D, DirtSpawnEvent.DirtType.DELIGHTFUL);
+				 TriState result = DirtSpawnEvent.checkEvent(entity, level, pos.getX() + 0.5D, pos.getY() + 1D, pos.getZ() + 0.5D, DirtSpawnEvent.DirtType.DREADFUL);
 				 if (result == TriState.FALSE)
 					 return;
 				 EventHooks.finalizeMobSpawn(entity, level, level.getCurrentDifficultyAt(pos), EntitySpawnReason.NATURAL, null);
@@ -142,7 +144,6 @@ public class BlockDreadfulDirt extends BlockDirtSpawner {
 	}
 
 	@Override
-	@OnlyIn(Dist.CLIENT)
 	public void animateTick(@Nonnull BlockState stateIn, @Nonnull Level level, @Nonnull BlockPos pos, @Nonnull RandomSource rand) {
 		for (int i = 0; i < 4; ++i) {
 			double d0 = (double) ((float) pos.getX() + rand.nextFloat());

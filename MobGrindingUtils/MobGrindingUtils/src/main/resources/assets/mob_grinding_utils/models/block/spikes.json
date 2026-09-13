@@ -1,9 +1,9 @@
 {
-    "parent": "block/cube",
+    "parent": "minecraft:block/block",
     "render_type": "cutout",
     "textures": {
-        "0": "block/iron_block",
-        "particle": "block/iron_block"
+        "0": "minecraft:block/iron_block",
+        "particle": "minecraft:block/iron_block"
     },
     "elements": [
         {

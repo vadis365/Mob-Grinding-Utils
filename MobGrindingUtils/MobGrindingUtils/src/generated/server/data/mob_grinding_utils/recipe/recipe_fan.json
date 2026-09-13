@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "I": "#c:ingots/iron",
+    "R": "#c:storage_blocks/redstone",
+    "S": "minecraft:stone_slab"
+  },
+  "pattern": [
+    "SIS",
+    "IRI",
+    "SIS"
+  ],
+  "result": {
+    "count": 1,
+    "id": "mob_grinding_utils:fan"
+  }
+}

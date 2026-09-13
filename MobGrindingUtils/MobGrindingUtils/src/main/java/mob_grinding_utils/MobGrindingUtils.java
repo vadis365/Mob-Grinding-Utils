@@ -46,11 +46,18 @@ import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
+import net.minecraft.client.renderer.block.FluidModel;
+import net.minecraft.client.renderer.block.model.EmptyBlockModel;
+import net.minecraft.client.resources.model.sprite.Material;
 import net.neoforged.neoforge.client.event.RecipesReceivedEvent;
+import net.neoforged.neoforge.client.event.RegisterBlockModelsEvent;
+import net.neoforged.neoforge.client.event.RegisterFluidModelsEvent;
 import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
+import net.neoforged.neoforge.client.event.RegisterSpecialModelRendererEvent;
 import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
 import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent;
+import net.neoforged.neoforge.client.fluid.FluidTintSources;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.common.crafting.IngredientType;
 import net.neoforged.neoforge.common.util.FakePlayer;
@@ -101,7 +108,7 @@ public class MobGrindingUtils {
 
 	public static final List<RecipeHolder<SolidifyRecipe>> SOLIDIFIER_RECIPES = new ArrayList<>();
 	public static final List<RecipeHolder<BeheadingRecipe>> BEHEADING_RECIPES = new ArrayList<>();
-	public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<SolidifyRecipe>> SOLIDIFIER_RECIPE = RECIPES.register(SolidifyRecipe.NAME, SolidifyRecipe.Serializer::new);
+	public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<SolidifyRecipe>> SOLIDIFIER_RECIPE = RECIPES.register(SolidifyRecipe.NAME, () -> SolidifyRecipe.SERIALIZER);
 	public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<BeheadingRecipe>> BEHEADING_RECIPE = RECIPES.register(BeheadingRecipe.NAME, () -> BeheadingRecipe.SERIALIZER);
 	public static final DeferredHolder<RecipeType<?>, RecipeType<SolidifyRecipe>> SOLIDIFIER_TYPE = RECIPE_TYPES.register("solidify", RecipeType::simple);
 	public static final DeferredHolder<RecipeType<?>, RecipeType<BeheadingRecipe>> BEHEADING_TYPE = RECIPE_TYPES.register("beheading", RecipeType::simple);
@@ -121,12 +128,17 @@ public class MobGrindingUtils {
 
 		if (dist.isClient()) {
 			ModelLayers.init(modBus);
+			ModParticles.init(modBus);
 			modBus.addListener(this::doClientStuff);
 			modBus.addListener(this::menuScreenEvent);
 
 			modBus.addListener(this::onClientExtensions);
+			modBus.addListener(this::registerSpecialModelRenderers);
+			modBus.addListener(this::registerBlockModels);
+			modBus.addListener(this::registerFluidModels);
 			modBus.addListener(ModColourManager::registerBlockHandlers);
-			modBus.addListener(ModColourManager::registerItemHandlers);
+			modBus.addListener(RenderChickenSwell::registerRenderStateModifiers);
+			neoBus.addListener(this::clientRecipeReload);
 		}
 
 		modBus.addListener(this::setup);
@@ -147,14 +159,14 @@ public class MobGrindingUtils {
 		neoBus.addListener(this::playerRespawn);
 		neoBus.addListener(this::cloneEvent);
 		neoBus.addListener(this::serverReloadListener);
-		neoBus.addListener(this::clientRecipeReload);
 		neoBus.addListener(this::effectApplicable);
 		modBus.addListener(this::registerCaps);
 
 		modBus.addListener(MGUNetwork::register);
 
-		//Central Data generator, called on runData
-		modBus.addListener(Generator::gatherData);
+		// Split client/server datagen so regen does not wipe the other side.
+		modBus.addListener(Generator::gatherClientData);
+		modBus.addListener(Generator::gatherServerData);
 	}
 
 	public void setup(FMLCommonSetupEvent event) {
@@ -164,17 +176,12 @@ public class MobGrindingUtils {
 	private void doClientStuff(final FMLClientSetupEvent event) {
 		IEventBus neoBus = NeoForge.EVENT_BUS;
 
-		//neoBus.register(new FluidTextureStitchEvent());
+		// Fluid textures are registered via fluid type client extensions
 		neoBus.register(new RenderChickenSwell());
 		neoBus.register(new GlobalWitherSoundEvent());
 		neoBus.register(new GlobalDragonSoundEvent());
 		neoBus.register(new BossBarHidingEvent());
 		neoBus.addListener(this::worldUnload);
-
-		ItemBlockRenderTypes.setRenderLayer(ModBlocks.FLUID_XP_FLOWING.get(), RenderType.translucent());
-		ItemBlockRenderTypes.setRenderLayer(ModBlocks.FLUID_XP.get(), RenderType.translucent());
-
-		//event.enqueueWork(ModColourManager::registerColourHandlers);
 	}
 
 	private void menuScreenEvent(final RegisterMenuScreensEvent event) {
@@ -185,66 +192,39 @@ public class MobGrindingUtils {
 		event.register(ModContainers.ENTITY_SPAWNER.get(), GuiMGUSpawner::new);
 	}
 
+	public void registerSpecialModelRenderers(RegisterSpecialModelRendererEvent event) {
+		event.register(RL.mgu("tank"), TileTankStackItemRenderer.Unbaked.MAP_CODEC);
+		event.register(RL.mgu("saw"), TileSawStackItemRenderer.Unbaked.MAP_CODEC);
+		event.register(RL.mgu("xp_solidifier"), TileXPSolidifierStackItemRenderer.Unbaked.MAP_CODEC);
+	}
+
+	public void registerBlockModels(RegisterBlockModelsEvent event) {
+		// BER/special models draw these; keep empty baked geometry so JSON placeholders never cover them.
+		event.register(new EmptyBlockModel.Unbaked(), ModBlocks.TANK.getBlock());
+		event.register(new EmptyBlockModel.Unbaked(), ModBlocks.TANK_SINK.getBlock());
+		event.register(new EmptyBlockModel.Unbaked(), ModBlocks.JUMBO_TANK.getBlock());
+		event.register(new EmptyBlockModel.Unbaked(), ModBlocks.SAW.getBlock());
+		event.register(new EmptyBlockModel.Unbaked(), ModBlocks.XPSOLIDIFIER.getBlock());
+	}
+
+	public void registerFluidModels(RegisterFluidModelsEvent event) {
+		Material still = new Material(RL.mgu("block/fluid_xp"), true);
+		Material flowing = new Material(RL.mgu("block/fluid_xp"), true);
+		event.register(
+				new FluidModel.Unbaked(still, flowing, null, FluidTintSources.constant(0xFFFFFFFF)),
+				ModBlocks.FLUID_XP,
+				ModBlocks.FLUID_XP_FLOWING);
+	}
+
 	public void onClientExtensions(RegisterClientExtensionsEvent event) {
-		event.registerItem(new IClientItemExtensions() {
-			@Nonnull
-			@Override
-			public BlockEntityWithoutLevelRenderer getCustomRenderer() {
-				return new TileTankStackItemRenderer(null, null);
-			}
-		}, ModBlocks.JUMBO_TANK.getItem());
+		event.registerFluidType(new IClientFluidTypeExtensions() {}, ModBlocks.XPTYPE.get());
 
 		event.registerItem(new IClientItemExtensions() {
-			@Nonnull
 			@Override
-			public BlockEntityWithoutLevelRenderer getCustomRenderer() {
-				return new TileXPSolidifierStackItemRenderer(null, null);
+			public Identifier getArmorTexture(ItemStack stack, net.minecraft.client.resources.model.EquipmentClientInfo.LayerType type, net.minecraft.client.resources.model.EquipmentClientInfo.Layer layer, Identifier _default) {
+				return RL.mgu("textures/item/monocle_armour.png");
 			}
-		}, ModBlocks.XPSOLIDIFIER.getItem());
-
-		event.registerItem(new IClientItemExtensions() {
-			@Nonnull
-			@Override
-			public BlockEntityWithoutLevelRenderer getCustomRenderer() {
-				return new TileTankStackItemRenderer(null, null);
-			}
-		}, ModBlocks.TANK.getItem());
-
-		event.registerItem(new IClientItemExtensions() {
-			@Nonnull
-			@Override
-			public BlockEntityWithoutLevelRenderer getCustomRenderer() {
-				return new TileTankStackItemRenderer(null, null);
-			}
-		}, ModBlocks.TANK_SINK.getItem());
-
-		event.registerItem(new IClientItemExtensions() {
-			@Nonnull
-			@Override
-			public BlockEntityWithoutLevelRenderer getCustomRenderer() {
-				return new TileSawStackItemRenderer(null, null);
-			}
-		}, ModBlocks.SAW.getItem());
-
-		event.registerFluidType(new IClientFluidTypeExtensions() {
-			Identifier texture = RL.mgu("block/fluid_xp");
-			@Override
-			public Identifier getStillTexture() {
-				return texture;
-			}
-
-			@Override
-			public Identifier getFlowingTexture() {
-				return texture;
-			}
-
-			@Override
-			public int getTintColor(FluidStack stack) {
-				return IClientFluidTypeExtensions.super.getTintColor(stack);
-			}
-
-
-		}, ModBlocks.XPTYPE.get());
+		}, ModItems.MONOCLE.get());
 	}
 
 	private void serverReloadListener(final AddServerReloadListenersEvent event) {
@@ -275,7 +255,7 @@ public class MobGrindingUtils {
 	private void sendPersistentData(ServerPlayer playerEntity) {
 		CompoundTag nbt = playerEntity.getPersistentData();
 		if (nbt.contains("MGU_WitherMuffle") || nbt.contains("MGU_DragonMuffle")) {
-			PacketDistributor.sendToPlayer(playerEntity, new FlagSyncPacket(nbt.getBoolean("MGU_WitherMuffle"), nbt.getBoolean("MGU_DragonMuffle")));
+			PacketDistributor.sendToPlayer(playerEntity, new FlagSyncPacket(nbt.getBooleanOr("MGU_WitherMuffle", false), nbt.getBooleanOr("MGU_DragonMuffle", false)));
 		}
 	}
 
@@ -283,8 +263,8 @@ public class MobGrindingUtils {
 		CompoundTag nbt = event.getOriginal().getPersistentData();
 		if (nbt.contains("MGU_WitherMuffle") || nbt.contains("MGU_DragonMuffle")) {
 			CompoundTag newNBT = event.getEntity().getPersistentData();
-			newNBT.putBoolean("MGU_WitherMuffle", nbt.getBoolean("MGU_WitherMuffle"));
-			newNBT.putBoolean("MGU_DragonMuffle", nbt.getBoolean("MGU_DragonMuffle"));
+			newNBT.putBoolean("MGU_WitherMuffle", nbt.getBooleanOr("MGU_WitherMuffle", false));
+			newNBT.putBoolean("MGU_DragonMuffle", nbt.getBooleanOr("MGU_DragonMuffle", false));
 		}
 	}
 

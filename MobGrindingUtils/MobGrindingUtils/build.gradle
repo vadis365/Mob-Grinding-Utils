@@ -18,7 +18,10 @@ base {
 }
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(25)
-sourceSets.main.resources { srcDir 'src/generated/resources' }
+sourceSets.main.resources {
+    srcDir 'src/generated/client'
+    srcDir 'src/generated/server'
+}
 
 neoForge {
     version = project.neo_version
@@ -50,14 +53,21 @@ neoForge {
             systemProperty 'forge.enabledGameTestNamespaces', "mob_grinding_utils"
         }
 
-        data {
+        // Split outputs so client/server datagen no longer wipe each other.
+        clientData {
             clientData()
-            programArguments.addAll '--mod', "mob_grinding_utils", '--all', '--output', file('src/generated/resources/').getAbsolutePath(), '--existing', file('src/main/resources/').getAbsolutePath()
+            programArguments.addAll '--mod', "mob_grinding_utils", '--output', file('src/generated/client/').getAbsolutePath(), '--existing', file('src/main/resources/').getAbsolutePath()
+        }
+        serverData {
+            serverData()
+            programArguments.addAll '--mod', "mob_grinding_utils", '--output', file('src/generated/server/').getAbsolutePath(), '--existing', file('src/main/resources/').getAbsolutePath()
         }
 
         configureEach { run ->
             jvmArgument '-Xmx8G'
-            if (run.project.javaToolchains.launcherFor(java.toolchain).map { it.metadata.vendor }.getOrElse("").contains("JetBrains")) {
+            // Avoid eager toolchain resolution during configuration; apply only if a launcher is already known.
+            def vendorProvider = run.project.javaToolchains.launcherFor(java.toolchain).map { it.metadata.vendor }
+            if (vendorProvider.isPresent() && vendorProvider.get().contains("JetBrains")) {
                 run.jvmArgument("-XX:+AllowEnhancedClassRedefinition")
             }
         }

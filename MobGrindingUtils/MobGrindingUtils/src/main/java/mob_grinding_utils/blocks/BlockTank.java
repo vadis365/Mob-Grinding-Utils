@@ -9,6 +9,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -22,8 +23,10 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.phys.BlockHitResult;
-import net.neoforged.neoforge.fluids.FluidUtil;
-import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.fluid.FluidResource;
+import net.neoforged.neoforge.transfer.fluid.FluidUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -65,27 +68,30 @@ public class BlockTank extends BaseEntityBlock {
 	@Nonnull
 	@Override
 	public RenderShape getRenderShape(@Nonnull BlockState state) {
-		return RenderShape.MODEL;
+		// BER draws the glass tank + fluid; block model must not cover it with an opaque cube.
+		return RenderShape.INVISIBLE;
 	}
 
 	@Nonnull
 	@Override
-	public ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+	public InteractionResult useItemOn(ItemStack stack, BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
 		if (world.isClientSide())
-			return ItemInteractionResult.SUCCESS;
+			return InteractionResult.SUCCESS;
 		BlockEntity tileentity = world.getBlockEntity(pos);
 		if (tileentity instanceof BlockEntityTank) {
-			Optional<IFluidHandler> fluidHandler = CapHelper.getFluidHandler(world, pos, hit.getDirection());
+			Optional<ResourceHandler<FluidResource>> fluidHandler = CapHelper.getFluidHandler(world, pos, hit.getDirection());
 			fluidHandler.ifPresent((handler) -> {
 				if (player.getItemInHand(hand).isEmpty() || !FluidUtil.interactWithFluidHandler(player, hand, world, pos, hit.getDirection())) {
-					if (!handler.getFluidInTank(0).isEmpty())
-						player.displayClientMessage(Component.literal(handler.getFluidInTank(0).getHoverName().getString() + ": " + handler.getFluidInTank(0).getAmount() + "/" + handler.getTankCapacity(0)), true);
+					FluidStack fluid = FluidUtil.getStack(handler, 0);
+					int capacity = handler.getCapacityAsInt(0, handler.getResource(0));
+					if (!fluid.isEmpty())
+						player.sendOverlayMessage(Component.literal(fluid.getHoverName().getString() + ": " + fluid.getAmount() + "/" + capacity));
 					else
-						player.displayClientMessage(Component.literal("Empty: 0/" + handler.getTankCapacity(0)), true);
+						player.sendOverlayMessage(Component.literal("Empty: 0/" + capacity));
 				}
 			});
-			return ItemInteractionResult.SUCCESS;
+			return InteractionResult.SUCCESS;
 		}
-		return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+		return InteractionResult.TRY_WITH_EMPTY_HAND;
 	}
 }

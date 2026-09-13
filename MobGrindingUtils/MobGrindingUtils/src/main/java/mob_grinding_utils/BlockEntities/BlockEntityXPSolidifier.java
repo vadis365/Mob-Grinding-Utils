@@ -13,6 +13,7 @@ import mob_grinding_utils.util.CapHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
@@ -32,28 +33,32 @@ import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
-import net.neoforged.neoforge.fluids.capability.IFluidHandler;
-import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
-import net.neoforged.neoforge.items.IItemHandler;
-import net.neoforged.neoforge.items.ItemHandlerHelper;
-import net.neoforged.neoforge.items.ItemStackHandler;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.fluid.FluidResource;
+import net.neoforged.neoforge.transfer.fluid.FluidStacksResourceHandler;
+import net.neoforged.neoforge.transfer.fluid.FluidUtil;
+import net.neoforged.neoforge.transfer.item.ItemResource;
+import net.neoforged.neoforge.transfer.item.ItemStacksResourceHandler;
+import net.neoforged.neoforge.transfer.item.ItemUtil;
+import net.neoforged.neoforge.transfer.transaction.Transaction;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Optional;
 
 public class BlockEntityXPSolidifier extends BlockEntity implements MenuProvider, BEGuiClickable {
-	public FluidTank tank = new FluidTank(1000 *  16);
+	public FluidStacksResourceHandler tank = new FluidStacksResourceHandler(1, 1000 * 16);
 	private int prevFluidLevel = 0;
 	public int moulding_progress = 0;
 	public int MAX_MOULDING_TIME = 100;
 	public boolean isOn = false;
 	private RecipeHolder<SolidifyRecipe> currentRecipe = null;
 
-	public ItemStackHandler inputSlots = new ItemStackHandler(2);
-	public ItemStackHandler outputSlot = new ItemStackHandler(1);
+	public ItemStacksResourceHandler inputSlots = new ItemStacksResourceHandler(2);
+	public ItemStacksResourceHandler outputSlot = new ItemStacksResourceHandler(1);
 
 	public boolean active;
 	public int animationTicks, prevAnimationTicks;
@@ -93,10 +98,11 @@ public class BlockEntityXPSolidifier extends BlockEntity implements MenuProvider
 		}
 	}
 
-	public FluidTank getTank(@Nullable Direction side) {
+	public FluidStacksResourceHandler getTank(@Nullable Direction side) {
 		return tank;
 	}
-	public IItemHandler getOutput(@Nullable Direction side) {
+
+	public ResourceHandler<ItemResource> getOutput(@Nullable Direction side) {
 		return outputSlot;
 	}
 
@@ -120,7 +126,7 @@ public class BlockEntityXPSolidifier extends BlockEntity implements MenuProvider
 	public static <T extends BlockEntity> void tick(Level level, BlockPos worldPosition, BlockState blockState, T t) {
 		if(t instanceof BlockEntityXPSolidifier tile) {
 			if(tile.isOn) {
-				if (level.isClientSide && tile.active) {
+				if (level.isClientSide() && tile.active) {
 					tile.prevAnimationTicks = tile.animationTicks;
 					if (tile.animationTicks < tile.MAX_MOULDING_TIME)
 						tile.animationTicks += 1 + tile.getModifierAmount();
@@ -133,12 +139,13 @@ public class BlockEntityXPSolidifier extends BlockEntity implements MenuProvider
 				if (level.isClientSide() && !tile.active)
 					tile.prevAnimationTicks = tile.animationTicks = 0;
 
+				ItemStack mouldStack = ItemUtil.getStack(tile.inputSlots, 0);
 				if (tile.currentRecipe != null) {
-					if (!tile.currentRecipe.value().matches(tile.inputSlots.getStackInSlot(0)))
+					if (!tile.currentRecipe.value().matches(mouldStack))
 						tile.currentRecipe = null;
 				} else {
-					if (!tile.inputSlots.getStackInSlot(0).isEmpty())
-						tile.currentRecipe = getRecipeForMould(tile.inputSlots.getStackInSlot(0));
+					if (!mouldStack.isEmpty())
+						tile.currentRecipe = getRecipeForMould(mouldStack);
 				}
 
 
@@ -147,8 +154,12 @@ public class BlockEntityXPSolidifier extends BlockEntity implements MenuProvider
 					tile.setProgress(tile.getProgress() + 1 + tile.getModifierAmount());
 					if (tile.getProgress() >= tile.MAX_MOULDING_TIME) {
 						tile.setActive(false);
-						tile.outputSlot.setStackInSlot(0, tile.currentRecipe.value().result());
-						tile.tank.drain(tile.currentRecipe.value().fluidAmount(), IFluidHandler.FluidAction.EXECUTE);
+						ItemStack result = tile.currentRecipe.value().result();
+						tile.outputSlot.set(0, ItemResource.of(result), result.getCount());
+						try (Transaction tx = Transaction.openRoot()) {
+							tile.tank.extract(0, tile.tank.getResource(0), tile.currentRecipe.value().fluidAmount(), tx);
+							tx.commit();
+						}
 						return;
 					}
 				} else {
@@ -160,15 +171,21 @@ public class BlockEntityXPSolidifier extends BlockEntity implements MenuProvider
 
 				if (!level.isClientSide() &&  tile.outputDirection != OutputDirection.NONE && tile.getOutputFacing() != null) {
 					BlockEntity otherTile = level.getBlockEntity(worldPosition.relative(tile.getOutputFacing()));
-					Optional<IItemHandler> handlerOptional = CapHelper.getItemHandler(level, worldPosition.relative(tile.getOutputFacing()), tile.getOutputFacing().getOpposite());
+					Optional<ResourceHandler<ItemResource>> handlerOptional = CapHelper.getItemHandler(level, worldPosition.relative(tile.getOutputFacing()), tile.getOutputFacing().getOpposite());
 					if (otherTile != null && handlerOptional.isPresent()) {
 						handlerOptional.ifPresent((handler) -> {
-							if (!tile.outputSlot.getStackInSlot(0).isEmpty()) {
-								ItemStack stack = tile.outputSlot.getStackInSlot(0).copy();
+							ItemStack out = ItemUtil.getStack(tile.outputSlot, 0);
+							if (!out.isEmpty()) {
+								ItemStack stack = out.copy();
 								stack.setCount(1);
-								ItemStack stack1 = ItemHandlerHelper.insertItem(handler, stack, true);
+								ItemStack stack1 = ItemUtil.insertItemReturnRemaining(handler, stack, true, null);
 								if (stack1.isEmpty()) {
-									ItemHandlerHelper.insertItem(handler, tile.outputSlot.extractItem(0, 1, false), false);
+									ItemStack extracted = ItemUtil.getStack(tile.outputSlot, 0).copyWithCount(1);
+									try (Transaction tx = Transaction.openRoot()) {
+										tile.outputSlot.extract(0, ItemResource.of(extracted), 1, tx);
+										tx.commit();
+									}
+									ItemUtil.insertItemReturnRemaining(handler, extracted, false, null);
 									tile.setChanged();
 								}
 							}
@@ -176,13 +193,19 @@ public class BlockEntityXPSolidifier extends BlockEntity implements MenuProvider
 					} else if (otherTile instanceof Container iinventory) {
 						if (tile.isInventoryFull(iinventory, tile.getOutputFacing()))
 							return;
-						if (!tile.outputSlot.getStackInSlot(0).isEmpty()) {
-							ItemStack stack = tile.outputSlot.getStackInSlot(0).copy();
-							ItemStack stack1 = putStackInInventoryAllSlots(iinventory, tile.outputSlot.extractItem(0, 1, false), tile.getOutputFacing().getOpposite());
+						ItemStack out = ItemUtil.getStack(tile.outputSlot, 0);
+						if (!out.isEmpty()) {
+							ItemStack stack = out.copy();
+							ItemStack extracted = ItemUtil.getStack(tile.outputSlot, 0).copyWithCount(1);
+							try (Transaction tx = Transaction.openRoot()) {
+								tile.outputSlot.extract(0, ItemResource.of(extracted), 1, tx);
+								tx.commit();
+							}
+							ItemStack stack1 = putStackInInventoryAllSlots(iinventory, extracted, tile.getOutputFacing().getOpposite());
 							if (stack1.isEmpty() || stack1.getCount() == 0)
 								iinventory.setChanged();
 							else
-								tile.outputSlot.setStackInSlot(0, stack);
+								tile.outputSlot.set(0, ItemResource.of(stack), stack.getCount());
 						}
 					}
 				}
@@ -197,9 +220,9 @@ public class BlockEntityXPSolidifier extends BlockEntity implements MenuProvider
 				}
 			}
 
-			if (tile.prevFluidLevel != tile.tank.getFluidAmount()){
+			if (tile.prevFluidLevel != tile.tank.getAmountAsInt(0)){
 				tile.updateBlock();
-				tile.prevFluidLevel = tile.tank.getFluidAmount();
+				tile.prevFluidLevel = tile.tank.getAmountAsInt(0);
 			}
 		}
 	}
@@ -218,23 +241,20 @@ public class BlockEntityXPSolidifier extends BlockEntity implements MenuProvider
         };
 
     }
-
-	@OnlyIn(Dist.CLIENT)
 	public ItemStack getCachedOutPutRenderStack() {
 		if(hasMould()) {
-			if(inputSlots.getStackInSlot(0).getItem() == ModItems.SOLID_XP_MOULD_BABY.get())
+			if(ItemUtil.getStack(inputSlots, 0).getItem() == ModItems.SOLID_XP_MOULD_BABY.get())
 				return new ItemStack(ModItems.SOLID_XP_BABY.get(), 1);
 		}
 		return ItemStack.EMPTY;
 	}
-
-	@OnlyIn(Dist.CLIENT)
 	public int getProgressScaled(int count) {
 		return getProgress() * count / (MAX_MOULDING_TIME);
 	}
 
 	private boolean hasFluid() {
-		return currentRecipe != null && !tank.getFluid().isEmpty() && tank.getFluid().getAmount() >= currentRecipe.value().fluidAmount() && tank.getFluidInTank(0).getFluid().is(ModTags.Fluids.EXPERIENCE);
+		FluidStack fluid = FluidUtil.getStack(tank, 0);
+		return currentRecipe != null && !fluid.isEmpty() && fluid.getAmount() >= currentRecipe.value().fluidAmount() && fluid.getFluid().is(ModTags.Fluids.EXPERIENCE);
 	}
 
 	private boolean canOperate() {
@@ -242,7 +262,7 @@ public class BlockEntityXPSolidifier extends BlockEntity implements MenuProvider
 	}
 
 	private boolean hasMould() {
-		return currentRecipe != null && currentRecipe.value().matches(inputSlots.getStackInSlot(0));
+		return currentRecipe != null && currentRecipe.value().matches(ItemUtil.getStack(inputSlots, 0));
 	}
 
 	@Nullable
@@ -251,15 +271,16 @@ public class BlockEntityXPSolidifier extends BlockEntity implements MenuProvider
 	}
 
 	private boolean isOutputEmpty() {
-		return outputSlot.getStackInSlot(0).isEmpty();
+		return ItemUtil.getStack(outputSlot, 0).isEmpty();
 	}
 
 	private boolean hasUpgrade() {
-		return !inputSlots.getStackInSlot(1).isEmpty() && inputSlots.getStackInSlot(1).getItem() == ModItems.XP_SOLIDIFIER_UPGRADE.get();
+		ItemStack upgrade = ItemUtil.getStack(inputSlots, 1);
+		return !upgrade.isEmpty() && upgrade.getItem() == ModItems.XP_SOLIDIFIER_UPGRADE.get();
 	}
 
 	public int getModifierAmount() {
-		return hasUpgrade() ? inputSlots.getStackInSlot(1).getCount() : 0;
+		return hasUpgrade() ? ItemUtil.getStack(inputSlots, 1).getCount() : 0;
 	}
 
 	private void setProgress(int counter) {
@@ -333,55 +354,52 @@ public class BlockEntityXPSolidifier extends BlockEntity implements MenuProvider
 	}
 
 	@Override
-	public void loadAdditional(@Nonnull CompoundTag nbt, @Nonnull HolderLookup.Provider registries) {
-		super.loadAdditional(nbt, registries);
-		tank.readFromNBT(registries, nbt);
-		inputSlots.deserializeNBT(registries, nbt.getCompound("inputSlots"));
-		outputSlot.deserializeNBT(registries, nbt.getCompound("outputSlot"));
-		outputDirection = OutputDirection.fromString(nbt.getString("outputDirection"));
-		isOn = nbt.getBoolean("isOn");
-		active = nbt.getBoolean("active");
-		moulding_progress = nbt.getInt("moulding_progress");
-		if (nbt.contains("currentRecipe")) {
-			Identifier id = Identifier.tryParse(nbt.getString("currentRecipe"));
+	protected void loadAdditional(@Nonnull ValueInput input) {
+		super.loadAdditional(input);
+		FluidStack fluidStack = input.read("tank", FluidStack.CODEC).orElse(FluidStack.EMPTY);
+		tank.set(0, FluidResource.of(fluidStack), fluidStack.amount());
+		inputSlots.deserialize(input.childOrEmpty("inputSlots"));
+		outputSlot.deserialize(input.childOrEmpty("outputSlot"));
+		outputDirection = OutputDirection.fromString(input.getStringOr("outputDirection", "north"));
+		isOn = input.getBooleanOr("isOn", false);
+		active = input.getBooleanOr("active", false);
+		moulding_progress = input.getIntOr("moulding_progress", 0);
+		input.getString("currentRecipe").ifPresent(recipeId -> {
+			Identifier id = Identifier.tryParse(recipeId);
 			MobGrindingUtils.SOLIDIFIER_RECIPES.stream().filter(recipe -> recipe.id().equals(id))
 				.findFirst().ifPresent(recipe -> this.currentRecipe = recipe);
-		}
+		});
 	}
 
 	@Override
-	public void saveAdditional(@Nonnull CompoundTag nbt, @Nonnull HolderLookup.Provider registries) {
-		super.saveAdditional(nbt, registries);
-		tank.writeToNBT(registries, nbt);
-		nbt.put("inputSlots", inputSlots.serializeNBT(registries));
-		nbt.put("outputSlot", outputSlot.serializeNBT(registries));
-		nbt.putString("outputDirection", outputDirection.getSerializedName());
-		nbt.putBoolean("isOn", isOn);
-		nbt.putBoolean("active", active);
-		nbt.putInt("moulding_progress", moulding_progress);
+	protected void saveAdditional(@Nonnull ValueOutput output) {
+		super.saveAdditional(output);
+		if (!tank.getResource(0).isEmpty() && tank.getAmountAsInt(0) > 0)
+			output.store("tank", FluidStack.CODEC, FluidUtil.getStack(tank, 0));
+		inputSlots.serialize(output.child("inputSlots"));
+		outputSlot.serialize(output.child("outputSlot"));
+		output.putString("outputDirection", outputDirection.getSerializedName());
+		output.putBoolean("isOn", isOn);
+		output.putBoolean("active", active);
+		output.putInt("moulding_progress", moulding_progress);
 		if (currentRecipe != null)
-			nbt.putString("currentRecipe", currentRecipe.id().toString());
+			output.putString("currentRecipe", currentRecipe.id().toString());
 	}
 
 	@Nonnull
 	@Override
 	public CompoundTag getUpdateTag(@Nonnull HolderLookup.Provider registries) {
-		CompoundTag nbt = new CompoundTag();
-		saveAdditional(nbt, registries);
-		return nbt;
+		return saveCustomOnly(registries);
 	}
 
 	@Override
 	public ClientboundBlockEntityDataPacket getUpdatePacket() {
-		CompoundTag nbt = new CompoundTag();
-		saveAdditional(nbt, level.registryAccess());
 		return ClientboundBlockEntityDataPacket.create(this);
 	}
 
 	@Override
-	public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket packet, @Nonnull HolderLookup.Provider registries) {
-		super.onDataPacket(net, packet, registries);
-		loadAdditional(packet.getTag(), registries);
+	public void onDataPacket(Connection net, ValueInput valueInput) {
+		super.onDataPacket(net, valueInput);
 		onContentsChanged();
 	}
 
@@ -398,7 +416,7 @@ public class BlockEntityXPSolidifier extends BlockEntity implements MenuProvider
 	}
 
 	public int getScaledFluid(int scale) {
-		return tank.getFluid() != null ? (int) ((float) tank.getFluid().getAmount() / (float) tank.getCapacity() * scale) : 0;
+		return !tank.getResource(0).isEmpty() ? (int) ((float) tank.getAmountAsInt(0) / (float) tank.getCapacityAsInt(0, tank.getResource(0)) * scale) : 0;
 	}
 
 	@Nonnull
@@ -414,16 +432,17 @@ public class BlockEntityXPSolidifier extends BlockEntity implements MenuProvider
 	}
 
 	@Override
-	protected void applyImplicitComponents(@Nonnull DataComponentInput componentInput) {
+	protected void applyImplicitComponents(@Nonnull DataComponentGetter componentInput) {
 		super.applyImplicitComponents(componentInput);
 
-		tank.setFluid(componentInput.getOrDefault(MGUComponents.FLUID, FluidContents.EMPTY).get());
+		var fluidStack = componentInput.getOrDefault(MGUComponents.FLUID, FluidContents.EMPTY).get();
+		tank.set(0, FluidResource.of(fluidStack), fluidStack.amount());
 	}
 
 	@Override
 	protected void collectImplicitComponents(@Nonnull DataComponentMap.Builder builder) {
 		super.collectImplicitComponents(builder);
 
-		builder.set(MGUComponents.FLUID, FluidContents.of(tank.getFluid()));
+		builder.set(MGUComponents.FLUID, FluidContents.of(FluidUtil.getStack(tank, 0)));
 	}
 }

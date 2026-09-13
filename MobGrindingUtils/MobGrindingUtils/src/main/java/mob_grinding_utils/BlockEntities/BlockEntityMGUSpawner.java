@@ -25,12 +25,15 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.AABB;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.event.EventHooks;
-import net.neoforged.neoforge.items.IItemHandler;
-import net.neoforged.neoforge.items.ItemStackHandler;
+import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.item.ItemResource;
+import net.neoforged.neoforge.transfer.item.ItemStacksResourceHandler;
+import net.neoforged.neoforge.transfer.item.ItemUtil;
+import net.neoforged.neoforge.transfer.transaction.Transaction;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -44,11 +47,11 @@ public class BlockEntityMGUSpawner extends BlockEntity implements MenuProvider, 
 	public int MAX_SPAWNING_TIME = 100;
 	public boolean isOn = false;
 
-	public ItemStackHandler inputSlots = new ItemStackHandler(4);
-	public ItemStackHandler fuelSlot = new ItemStackHandler(1) {
+	public ItemStacksResourceHandler inputSlots = new ItemStacksResourceHandler(4);
+	public ItemStacksResourceHandler fuelSlot = new ItemStacksResourceHandler(1) {
 		@Override
-		public boolean isItemValid(int slot, @Nonnull ItemStack stack) {
-			return stack.getItem() == ModItems.SOLID_XP_BABY.get();
+		public boolean isValid(int index, @Nonnull ItemResource resource) {
+			return resource.is(ModItems.SOLID_XP_BABY.get());
 		}
 	};
 
@@ -60,7 +63,7 @@ public class BlockEntityMGUSpawner extends BlockEntity implements MenuProvider, 
 		super(ModBlocks.ENTITY_SPAWNER.getTileEntityType(), pos, state);
 	}
 
-	public IItemHandler getFuelSlot(@Nullable Direction side) {
+	public ResourceHandler<ItemResource> getFuelSlot(@Nullable Direction side) {
 		return fuelSlot;
 	}
 
@@ -74,8 +77,15 @@ public class BlockEntityMGUSpawner extends BlockEntity implements MenuProvider, 
 				if (tile.canOperate()) {
 					tile.setProgress(tile.getProgress() + 1 + tile.getSpeedModifierAmount());
 					if (tile.getProgress() >= tile.MAX_SPAWNING_TIME) {
-						if (tile.spawnMobInArea())
-							tile.fuelSlot.getStackInSlot(0).shrink(1);
+						if (tile.spawnMobInArea()) {
+							ItemStack fuel = ItemUtil.getStack(tile.fuelSlot, 0);
+							if (!fuel.isEmpty()) {
+								try (Transaction tx = Transaction.openRoot()) {
+									tile.fuelSlot.extract(0, ItemResource.of(fuel), 1, tx);
+									tx.commit();
+								}
+							}
+						}
 						tile.setProgress(0);
 					}
 				} else {
@@ -108,11 +118,11 @@ public class BlockEntityMGUSpawner extends BlockEntity implements MenuProvider, 
 
 	private boolean spawnMobInArea() {
 		EntityType<?> type = null;
-		ItemStack eggStack = inputSlots.getStackInSlot(0);
+		ItemStack eggStack = ItemUtil.getStack(inputSlots, 0);
 		SpawnEggItem eggItem = (SpawnEggItem) eggStack.getItem();
 		type = eggItem.getType(eggStack);
 
-		if (type != null && !type.is(ModTags.Entities.NO_SPAWN)) {
+		if (type != null && !type.builtInRegistryHolder().is(ModTags.Entities.NO_SPAWN)) {
 			AABB axisalignedbb = getAABBWithModifiers();
 			int minX = Mth.floor(axisalignedbb.minX);
 			int maxX = Mth.floor(axisalignedbb.maxX);
@@ -121,7 +131,7 @@ public class BlockEntityMGUSpawner extends BlockEntity implements MenuProvider, 
 			int minZ = Mth.floor(axisalignedbb.minZ);
 			int maxZ = Mth.floor(axisalignedbb.maxZ);
 			BlockPos.MutableBlockPos mutablePos = new BlockPos.MutableBlockPos();
-			Mob entity = (Mob) type.create(getLevel());
+			Mob entity = (Mob) type.create(getLevel(), EntitySpawnReason.SPAWNER);
 			List<BlockPos> posArrayList = new ArrayList<BlockPos>();
 			if (entity != null) {
 				for (int x = minX; x < maxX; x++) {
@@ -138,7 +148,7 @@ public class BlockEntityMGUSpawner extends BlockEntity implements MenuProvider, 
 				if (!posArrayList.isEmpty()) {
 					Collections.shuffle(posArrayList);
 					entity.setPos(posArrayList.get(0).getX() + 0.5D, posArrayList.get(0).getY(), posArrayList.get(0).getZ() + 0.5D);
-					EventHooks.finalizeMobSpawn(entity, (ServerLevelAccessor) getLevel(), getLevel().getCurrentDifficultyAt(posArrayList.getFirst()), MobSpawnType.SPAWNER, null);
+					EventHooks.finalizeMobSpawn(entity, (ServerLevelAccessor) getLevel(), ((net.minecraft.server.level.ServerLevel) getLevel()).getCurrentDifficultyAt(posArrayList.getFirst()), EntitySpawnReason.SPAWNER, null);
 					getLevel().addFreshEntity(entity);
 					return true;
 				}
@@ -148,7 +158,7 @@ public class BlockEntityMGUSpawner extends BlockEntity implements MenuProvider, 
 	}
 
 	public boolean isValidSpawnLocation(Level world, Mob entity) {
-		return EventHooks.checkSpawnPosition(entity, (ServerLevelAccessor) world, MobSpawnType.SPAWNER) && world.getEntities(entity.getType(), entity.getBoundingBox(), EntitySelector.ENTITY_STILL_ALIVE).isEmpty() && getLevel().noCollision(entity);
+		return EventHooks.checkSpawnPosition(entity, (ServerLevelAccessor) world, EntitySpawnReason.SPAWNER) && world.getEntities(entity.getType(), entity.getBoundingBox(), EntitySelector.ENTITY_STILL_ALIVE).isEmpty() && getLevel().noCollision(entity);
 	}
 
 	public void toggleRenderBox() {
@@ -185,8 +195,6 @@ public class BlockEntityMGUSpawner extends BlockEntity implements MenuProvider, 
 		}
 		setChanged();
 	}
-
-	@OnlyIn(Dist.CLIENT)
 	public int getProgressScaled(int count) {
 		return getProgress() * count / (MAX_SPAWNING_TIME);
 	}
@@ -196,35 +204,35 @@ public class BlockEntityMGUSpawner extends BlockEntity implements MenuProvider, 
 	}
 
 	public boolean hasSpawnEggItem() {
-		return !inputSlots.getStackInSlot(0).isEmpty() && inputSlots.getStackInSlot(0).getItem() instanceof SpawnEggItem;
+		return !ItemUtil.getStack(inputSlots, 0).isEmpty() && ItemUtil.getStack(inputSlots, 0).getItem() instanceof SpawnEggItem;
 	}
 
 	private boolean hasFuel() {
-		return !fuelSlot.getStackInSlot(0).isEmpty() && fuelSlot.getStackInSlot(0).getItem() == ModItems.SOLID_XP_BABY.get();
+		return !ItemUtil.getStack(fuelSlot, 0).isEmpty() && ItemUtil.getStack(fuelSlot, 0).getItem() == ModItems.SOLID_XP_BABY.get();
 	}
 
 	private boolean hasWidthUpgrade() {
-		return !inputSlots.getStackInSlot(1).isEmpty() && inputSlots.getStackInSlot(1).getItem() == ModItems.SPAWNER_UPGRADE_WIDTH.get();
+		return !ItemUtil.getStack(inputSlots, 1).isEmpty() && ItemUtil.getStack(inputSlots, 1).getItem() == ModItems.SPAWNER_UPGRADE_WIDTH.get();
 	}
 
 	public int getWidthModifierAmount() {
-		return hasWidthUpgrade() ? inputSlots.getStackInSlot(1).getCount() : 0;
+		return hasWidthUpgrade() ? ItemUtil.getStack(inputSlots, 1).getCount() : 0;
 	}
 
 	private boolean hasHeightUpgrade() {
-		return !inputSlots.getStackInSlot(2).isEmpty() && inputSlots.getStackInSlot(2).getItem() == ModItems.SPAWNER_UPGRADE_HEIGHT.get();
+		return !ItemUtil.getStack(inputSlots, 2).isEmpty() && ItemUtil.getStack(inputSlots, 2).getItem() == ModItems.SPAWNER_UPGRADE_HEIGHT.get();
 	}
 
 	public int getHeightModifierAmount() {
-		return hasHeightUpgrade() ? inputSlots.getStackInSlot(2).getCount() : 0;
+		return hasHeightUpgrade() ? ItemUtil.getStack(inputSlots, 2).getCount() : 0;
 	}
 
 	private boolean hasSpeedUpgrade() {
-		return !inputSlots.getStackInSlot(3).isEmpty() && inputSlots.getStackInSlot(3).getItem() == ModItems.XP_SOLIDIFIER_UPGRADE.get();
+		return !ItemUtil.getStack(inputSlots, 3).isEmpty() && ItemUtil.getStack(inputSlots, 3).getItem() == ModItems.XP_SOLIDIFIER_UPGRADE.get();
 	}
 
 	public int getSpeedModifierAmount() {
-		return hasSpeedUpgrade() ? inputSlots.getStackInSlot(3).getCount() : 0;
+		return hasSpeedUpgrade() ? ItemUtil.getStack(inputSlots, 3).getCount() : 0;
 	}
 
 	public AABB getAABBWithModifiers() {
@@ -233,8 +241,6 @@ public class BlockEntityMGUSpawner extends BlockEntity implements MenuProvider, 
 		double z = getBlockPos().getZ() + 0.5D;
 		return new AABB(x - 1.5D - getWidthModifierAmount(), y - 0.5D - getHeightModifierAmount(), z - 1.5D - getWidthModifierAmount(), x + 1.5D + getWidthModifierAmount(), y + 0.5D + getHeightModifierAmount(), z + 1.5D + getWidthModifierAmount()).move(getoffsetX(), getoffsetY(), getoffsetZ());
 	}
-
-	@OnlyIn(Dist.CLIENT)
 	public AABB getAABBForRender() {
 		return new AABB(- 1D - getWidthModifierAmount(), - 0D - getHeightModifierAmount(), - 1D - getWidthModifierAmount(), 2D + getWidthModifierAmount(), 1D + getHeightModifierAmount(), 2D + getWidthModifierAmount()).move(getoffsetX(), getoffsetY(), getoffsetZ());
 	}
@@ -261,50 +267,45 @@ public class BlockEntityMGUSpawner extends BlockEntity implements MenuProvider, 
 	}
 
 	@Override
-	public void loadAdditional(@Nonnull CompoundTag nbt, @Nonnull HolderLookup.Provider registries) {
-		super.loadAdditional(nbt, registries);
-		inputSlots.deserializeNBT(registries, nbt.getCompound("inputSlots"));
-		fuelSlot.deserializeNBT(registries, nbt.getCompound("fuelSlot"));
-		isOn = nbt.getBoolean("isOn");
-		showRenderBox = nbt.getBoolean("showRenderBox");
-		offsetX = nbt.getInt("offsetX");
-		offsetY = nbt.getInt("offsetY");
-		offsetZ = nbt.getInt("offsetZ");
-		spawning_progress = nbt.getInt("spawning_progress");
+	protected void loadAdditional(@Nonnull ValueInput input) {
+		super.loadAdditional(input);
+		inputSlots.deserialize(input.childOrEmpty("inputSlots"));
+		fuelSlot.deserialize(input.childOrEmpty("fuelSlot"));
+		isOn = input.getBooleanOr("isOn", false);
+		showRenderBox = input.getBooleanOr("showRenderBox", false);
+		offsetX = input.getIntOr("offsetX", 0);
+		offsetY = input.getIntOr("offsetY", 0);
+		offsetZ = input.getIntOr("offsetZ", 0);
+		spawning_progress = input.getIntOr("spawning_progress", 0);
 	}
 
 	@Override
-	public void saveAdditional(@Nonnull CompoundTag nbt, @Nonnull HolderLookup.Provider registries) {
-		super.saveAdditional(nbt, registries);
-		nbt.put("inputSlots", inputSlots.serializeNBT(registries));
-		nbt.put("fuelSlot", fuelSlot.serializeNBT(registries));
-		nbt.putBoolean("isOn", isOn);
-		nbt.putBoolean("showRenderBox", showRenderBox);
-		nbt.putInt("offsetX", offsetX);
-		nbt.putInt("offsetY", offsetY);
-		nbt.putInt("offsetZ", offsetZ);
-		nbt.putInt("spawning_progress", spawning_progress);
+	protected void saveAdditional(@Nonnull ValueOutput output) {
+		super.saveAdditional(output);
+		inputSlots.serialize(output.child("inputSlots"));
+		fuelSlot.serialize(output.child("fuelSlot"));
+		output.putBoolean("isOn", isOn);
+		output.putBoolean("showRenderBox", showRenderBox);
+		output.putInt("offsetX", offsetX);
+		output.putInt("offsetY", offsetY);
+		output.putInt("offsetZ", offsetZ);
+		output.putInt("spawning_progress", spawning_progress);
 	}
 
 	@Nonnull
 	@Override
 	public CompoundTag getUpdateTag(@Nonnull HolderLookup.Provider registries) {
-		CompoundTag nbt = new CompoundTag();
-		saveAdditional(nbt, registries);
-		return nbt;
+		return saveCustomOnly(registries);
 	}
 
 	@Override
 	public ClientboundBlockEntityDataPacket getUpdatePacket() {
-		CompoundTag nbt = new CompoundTag();
-		saveAdditional(nbt, level.registryAccess());
 		return ClientboundBlockEntityDataPacket.create(this);
 	}
 
 	@Override
-	public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket packet, @Nonnull HolderLookup.Provider registries) {
-		super.onDataPacket(net, packet, registries);
-		loadAdditional(packet.getTag(), registries);
+	public void onDataPacket(Connection net, ValueInput valueInput) {
+		super.onDataPacket(net, valueInput);
 	}
 
 	public void updateBlock() {
@@ -321,14 +322,12 @@ public class BlockEntityMGUSpawner extends BlockEntity implements MenuProvider, 
 	public AbstractContainerMenu createMenu(int windowID, Inventory playerInventory, Player player) {
 		return new ContainerMGUSpawner(windowID, playerInventory, new FriendlyByteBuf(Unpooled.buffer()).writeBlockPos(worldPosition));
 	}
-
-	@OnlyIn(Dist.CLIENT)
 	public Entity getEntityToRender() {
 		Entity entity = null;
 		if (hasSpawnEggItem()) {
-			ItemStack eggStack = inputSlots.getStackInSlot(0);
+			ItemStack eggStack = ItemUtil.getStack(inputSlots, 0);
 			SpawnEggItem eggItem = (SpawnEggItem) eggStack.getItem();
-			entity = eggItem.getType(eggStack).create(getLevel());
+			entity = eggItem.getType(eggStack).create(getLevel(), EntitySpawnReason.SPAWNER);
 		}
 		return entity;
 	}

@@ -13,10 +13,10 @@ public class LocalWitherSoundEvent {
 	@SubscribeEvent
 	public void onWitherBossDeath(LivingDeathEvent event) {
 		if (event.getEntity() instanceof WitherBoss wither) {
-			Level world = wither.getCommandSenderWorld();
+			Level world = wither.level();
 			BlockPos.MutableBlockPos mutablePos = new BlockPos.MutableBlockPos();
 			boolean playsound = true;
-			if (!world.isClientSide) {
+			if (!world.isClientSide()) {
 				for (int x = -8; x < 8; x++)
 					for (int y = -8; y < 8; y++)
 						for (int z = -8; z < 8; z++)

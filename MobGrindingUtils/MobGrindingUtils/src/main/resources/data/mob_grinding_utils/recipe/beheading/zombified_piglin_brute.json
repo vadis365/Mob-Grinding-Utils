@@ -1,0 +1,15 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "tconstruct"
+    }
+  ],
+  "type": "mob_grinding_utils:beheading",
+  "entity": "minecraft:zombified_piglin",
+  "result": {
+    "count": 1,
+    "id": "tconstruct:zombified_piglin_head"
+  }
+}
+

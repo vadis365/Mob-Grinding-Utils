@@ -1,0 +1,6 @@
+{
+  "model": {
+    "type": "minecraft:model",
+    "model": "mob_grinding_utils:item/fan_upgrade_speed"
+  }
+}

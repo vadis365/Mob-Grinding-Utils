@@ -1,4 +1,5 @@
 {
+  "parent": "minecraft:block/block",
   "render_type": "translucent",
   "textures": {
     "particle": "mob_grinding_utils:block/fluid_xp"

@@ -5,12 +5,15 @@ import mob_grinding_utils.network.BEGuiClick;
 import mob_grinding_utils.BlockEntities.BlockEntityAbsorptionHopper;
 import mob_grinding_utils.BlockEntities.BlockEntityAbsorptionHopper.EnumStatus;
 import mob_grinding_utils.util.RL;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
+import net.minecraft.util.ARGB;
 import net.minecraft.world.entity.player.Inventory;
-import net.neoforged.neoforge.network.PacketDistributor;
+import net.neoforged.neoforge.client.network.ClientPacketDistributor;
+import net.neoforged.neoforge.transfer.fluid.FluidUtil;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -21,12 +24,12 @@ public class GuiAbsorptionHopper extends MGUScreen<ContainerAbsorptionHopper> {
 	protected final ContainerAbsorptionHopper container;
 	private final BlockEntityAbsorptionHopper tile;
 	private TankGauge tankGauge;
+	private GuiMGUButton areaButton;
+
 	public GuiAbsorptionHopper(ContainerAbsorptionHopper container, Inventory playerInventory, Component title) {
-		super(container, playerInventory, title, RL.mgu("textures/gui/absorption_hopper_gui.png"));
+		super(container, playerInventory, title, RL.mgu("textures/gui/absorption_hopper_gui.png"), 248, 226);
 		this.container = container;
 		this.tile = this.container.hopper;
-		imageHeight = 226;
-		imageWidth = 248;
 	}
 
 	@Override
@@ -39,7 +42,7 @@ public class GuiAbsorptionHopper extends MGUScreen<ContainerAbsorptionHopper> {
 
 		Button.OnPress message = button -> {
 			if (button instanceof GuiMGUButton)
-				PacketDistributor.sendToServer(new BEGuiClick(tile.getBlockPos(), ((GuiMGUButton)button).id));
+				ClientPacketDistributor.sendToServer(new BEGuiClick(tile.getBlockPos(), ((GuiMGUButton)button).id));
 		};
 
 		addRenderableWidget(new GuiMGUButton(leftPos + 7, topPos + 17, GuiMGUButton.Size.MEDIUM, 0, Component.literal("Down"), message));
@@ -49,9 +52,10 @@ public class GuiAbsorptionHopper extends MGUScreen<ContainerAbsorptionHopper> {
 		addRenderableWidget(new GuiMGUButton(leftPos + 82, topPos + 34, GuiMGUButton.Size.MEDIUM, 4, Component.literal("West"), message));
 		addRenderableWidget(new GuiMGUButton(leftPos + 82, topPos + 51, GuiMGUButton.Size.MEDIUM, 5, Component.literal("East"), message));
 
-		addRenderableWidget(new GuiMGUButton(leftPos + 173, topPos + 113, GuiMGUButton.Size.LARGE, 6, Component.empty(), (button) -> {
-			PacketDistributor.sendToServer(new BEGuiClick(tile.getBlockPos(), 6));
+		areaButton = addRenderableWidget(new GuiMGUButton(leftPos + 173, topPos + 113, GuiMGUButton.Size.LARGE, 6, areaLabel(), (button) -> {
+			ClientPacketDistributor.sendToServer(new BEGuiClick(tile.getBlockPos(), 6));
 			tile.showRenderBox = !tile.showRenderBox;
+			button.setMessage(areaLabel());
 		}));
 
 		addRenderableWidget(new GuiMGUButton(leftPos + 173, topPos + 25, GuiMGUButton.Size.SMALL, 7, Component.literal("-"), message));
@@ -63,57 +67,67 @@ public class GuiAbsorptionHopper extends MGUScreen<ContainerAbsorptionHopper> {
 	}
 
 	@Override
-	protected void renderTooltip(@Nonnull GuiGraphics gg, int x, int y) {
-		super.renderTooltip(gg, x, y);
+	protected void containerTick() {
+		super.containerTick();
+		if (areaButton != null)
+			areaButton.setMessage(areaLabel());
+	}
+
+	private Component areaLabel() {
+		return Component.literal(!tile.showRenderBox ? "Show Area" : "Hide Area");
+	}
+
+	@Override
+	protected void extractTooltip(@Nonnull GuiGraphicsExtractor gg, int x, int y) {
+		super.extractTooltip(gg, x, y);
 		if (tankGauge.isHovered()) {
 			List<Component> tooltip = new ArrayList<>();
-			tooltip.add(tile.tank.getFluid().getHoverName());
-			tooltip.add(Component.literal(tile.tank.getFluidAmount() + "/" + tile.tank.getCapacity()));
-			gg.renderComponentTooltip(font, tooltip, x, y);
+			var fluid = FluidUtil.getStack(tile.tank, 0);
+			tooltip.add(fluid.getHoverName());
+			tooltip.add(Component.literal(tile.tank.getAmountAsInt(0) + "/" + tile.tank.getCapacityAsInt(0, tile.tank.getResource(0))));
+			gg.setTooltipForNextFrame(font, tooltip, java.util.Optional.empty(), x, y);
 		}
 	}
 
 	@Override
-	protected void renderLabels(GuiGraphics gg, int mouseX, int mouseY) {
-		gg.drawString(font, getTitle(), 8, 6, 4210752, false);
+	protected void extractLabels(GuiGraphicsExtractor gg, int mouseX, int mouseY) {
+		gg.text(font, getTitle(), 8, 6, ARGB.opaque(4210752), false);
 
-		gg.drawString(font, Component.translatable("block.mob_grinding_utils.absorption_hopper_d_u").getString(), 174, 14, 4210752, false);
-		gg.drawString(font, Component.translatable("block.mob_grinding_utils.absorption_hopper_n_s").getString(), 174, 48, 4210752, false);
-		gg.drawString(font, Component.translatable("block.mob_grinding_utils.absorption_hopper_w_e").getString(), 174, 82, 4210752, false);
+		gg.text(font, Component.translatable("block.mob_grinding_utils.absorption_hopper_d_u").getString(), 174, 14, ARGB.opaque(4210752), false);
+		gg.text(font, Component.translatable("block.mob_grinding_utils.absorption_hopper_n_s").getString(), 174, 48, ARGB.opaque(4210752), false);
+		gg.text(font, Component.translatable("block.mob_grinding_utils.absorption_hopper_w_e").getString(), 174, 82, ARGB.opaque(4210752), false);
 
-		gg.drawString(font, !tile.showRenderBox ? "Show Area" : "Hide Area", 207 - font.width(!tile.showRenderBox ? "Show Area" : "Hide Area") / 2.0f, 117, 14737632, true);
+		EnumStatus down = tile.getSideStatus(Direction.DOWN);
+		EnumStatus up = tile.getSideStatus(Direction.UP);
+		EnumStatus north = tile.getSideStatus(Direction.NORTH);
+		EnumStatus south = tile.getSideStatus(Direction.SOUTH);
+		EnumStatus west = tile.getSideStatus(Direction.WEST);
+		EnumStatus east = tile.getSideStatus(Direction.EAST);
 
-		EnumStatus DOWN = tile.getSideStatus(Direction.DOWN);
-		EnumStatus UP = tile.getSideStatus(Direction.UP);
-		EnumStatus NORTH = tile.getSideStatus(Direction.NORTH);
-		EnumStatus SOUTH = tile.getSideStatus(Direction.SOUTH);
-		EnumStatus WEST = tile.getSideStatus(Direction.WEST);
-		EnumStatus EAST = tile.getSideStatus(Direction.EAST);
+		gg.centeredText(font, down.getSerializedName(), 58, 21, getModeColour(down.ordinal()));
+		gg.centeredText(font, up.getSerializedName(), 58, 38, getModeColour(up.ordinal()));
+		gg.centeredText(font, north.getSerializedName(), 58, 55, getModeColour(north.ordinal()));
+		gg.centeredText(font, south.getSerializedName(), 133, 21, getModeColour(south.ordinal()));
+		gg.centeredText(font, west.getSerializedName(), 133, 38, getModeColour(west.ordinal()));
+		gg.centeredText(font, east.getSerializedName(), 133, 55, getModeColour(east.ordinal()));
 
-		gg.drawCenteredString(font, DOWN.getSerializedName(), 58, 21, getModeColour(DOWN.ordinal()));
-		gg.drawCenteredString(font, UP.getSerializedName(), 58, 38, getModeColour(UP.ordinal()));
-		gg.drawCenteredString(font, NORTH.getSerializedName(), 58, 55, getModeColour(NORTH.ordinal()));
-		gg.drawCenteredString(font, SOUTH.getSerializedName(), 133, 21, getModeColour(SOUTH.ordinal()));
-		gg.drawCenteredString(font, WEST.getSerializedName(), 133, 38, getModeColour(WEST.ordinal()));
-		gg.drawCenteredString(font, EAST.getSerializedName(), 133, 55, getModeColour(EAST.ordinal()));
-		gg.drawCenteredString(font, String.valueOf(tile.getoffsetY()), 207, 29, 5285857);//NS
-		gg.drawCenteredString(font, String.valueOf(tile.getoffsetZ()), 207, 63, 5285857);//WE
-		gg.drawCenteredString(font, String.valueOf(tile.getoffsetX()), 207, 97, 5285857);//DU
+		gg.centeredText(font, String.valueOf(tile.getoffsetY()), 207, 29, ARGB.opaque(5285857));
+		gg.centeredText(font, String.valueOf(tile.getoffsetZ()), 207, 63, ARGB.opaque(5285857));
+		gg.centeredText(font, String.valueOf(tile.getoffsetX()), 207, 97, ARGB.opaque(5285857));
 	}
 
 	@Override
-	protected void renderBg(GuiGraphics gg, float partialTicks, int mouseX, int mouseY) {
-		gg.blit(TEX, leftPos, topPos, 0, 0, imageWidth, imageHeight);
-
-		gg.blit(TEX, leftPos + 153, topPos + 8 , 248, 0, 6, 120);
+	public void extractBackground(GuiGraphicsExtractor gg, int mouseX, int mouseY, float partialTicks) {
+		gg.blit(RenderPipelines.GUI_TEXTURED, TEX, leftPos, topPos, 0.0F, 0.0F, imageWidth, imageHeight, 256, 256);
+		gg.blit(RenderPipelines.GUI_TEXTURED, TEX, leftPos + 153, topPos + 8, 248.0F, 0.0F, 6, 120, 256, 256);
 	}
 
 	public int getModeColour(int index) {
 		return switch (index) {
-			case 0 -> 16711680;
-			case 1 -> 5285857;
-			case 2 -> 16776960;
-			default -> 16776960;
+			case 0 -> ARGB.opaque(16711680);
+			case 1 -> ARGB.opaque(5285857);
+			case 2 -> ARGB.opaque(16776960);
+			default -> ARGB.opaque(16776960);
 		};
 	}
 }

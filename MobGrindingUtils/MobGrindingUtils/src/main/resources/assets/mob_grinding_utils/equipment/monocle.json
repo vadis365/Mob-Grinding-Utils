@@ -1,0 +1,14 @@
+{
+  "layers": {
+    "humanoid": [
+      {
+        "texture": "minecraft:chainmail"
+      }
+    ],
+    "humanoid_baby": [
+      {
+        "texture": "minecraft:chainmail"
+      }
+    ]
+  }
+}

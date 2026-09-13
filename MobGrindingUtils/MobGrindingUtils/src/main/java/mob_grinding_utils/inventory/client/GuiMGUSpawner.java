@@ -4,24 +4,25 @@ import mob_grinding_utils.BlockEntities.BlockEntityMGUSpawner;
 import mob_grinding_utils.inventory.server.ContainerMGUSpawner;
 import mob_grinding_utils.network.BEGuiClick;
 import mob_grinding_utils.util.RL;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
+import net.minecraft.util.ARGB;
 import net.minecraft.world.entity.player.Inventory;
-import net.neoforged.neoforge.network.PacketDistributor;
+import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 
 import javax.annotation.Nonnull;
 
 public class GuiMGUSpawner extends MGUScreen<ContainerMGUSpawner> {
 	protected final ContainerMGUSpawner container;
 	private final BlockEntityMGUSpawner tile;
+	private GuiMGUButton areaButton;
 
 	public GuiMGUSpawner(ContainerMGUSpawner container, Inventory playerInventory, Component name) {
-		super(container, playerInventory, name, RL.mgu("textures/gui/entity_spawner_gui.png"));
+		super(container, playerInventory, name, RL.mgu("textures/gui/entity_spawner_gui.png"), 176, 226);
 		this.container = container;
 		this.tile = this.container.tile;
-		imageHeight = 226;
-		imageWidth = 176;
 	}
 
 	@Override
@@ -31,12 +32,13 @@ public class GuiMGUSpawner extends MGUScreen<ContainerMGUSpawner> {
 
 		Button.OnPress message = button -> {
 			if (button instanceof GuiMGUButton)
-				PacketDistributor.sendToServer(new BEGuiClick(tile.getBlockPos(), ((GuiMGUButton)button).id));
+				ClientPacketDistributor.sendToServer(new BEGuiClick(tile.getBlockPos(), ((GuiMGUButton)button).id));
 		};
 
-		addRenderableWidget(new GuiMGUButton(leftPos + 101, topPos + 113, GuiMGUButton.Size.LARGE, 0, Component.empty(), (button) -> {
-			PacketDistributor.sendToServer(new BEGuiClick(tile.getBlockPos(), 0));
+		areaButton = addRenderableWidget(new GuiMGUButton(leftPos + 101, topPos + 113, GuiMGUButton.Size.LARGE, 0, areaLabel(), (button) -> {
+			ClientPacketDistributor.sendToServer(new BEGuiClick(tile.getBlockPos(), 0));
 			tile.showRenderBox = !tile.showRenderBox;
+			button.setMessage(areaLabel());
 		}));
 
 		addRenderableWidget(new GuiMGUButton(leftPos + 101, topPos + 25, GuiMGUButton.Size.SMALL, 1, Component.literal("-"), message));
@@ -48,29 +50,38 @@ public class GuiMGUSpawner extends MGUScreen<ContainerMGUSpawner> {
 	}
 
 	@Override
-	protected void renderLabels(@Nonnull GuiGraphics gg, int mouseX, int mouseY) {
-		gg.drawString(font, title, 8, imageHeight - 220, 4210752, false);
+	protected void containerTick() {
+		super.containerTick();
+		if (areaButton != null)
+			areaButton.setMessage(areaLabel());
+	}
 
-		gg.drawString(font, Component.translatable("block.mob_grinding_utils.absorption_hopper_d_u"), 102, 14, 4210752, false);
-
-		gg.drawString(font, Component.translatable("block.mob_grinding_utils.absorption_hopper_n_s"), 102, 48, 4210752, false);
-		gg.drawString(font, Component.translatable("block.mob_grinding_utils.absorption_hopper_w_e"), 102, 82, 4210752, false);
-
-		gg.drawCenteredString(font, !tile.showRenderBox ? "Show Area" : "Hide Area", 135, 117, 14737632);
-
-		if(tile.getProgress() > 0)
-			gg.drawCenteredString(font, "Attempting Spawn", 52, 98, 4210752);
-
-		gg.drawCenteredString(font, String.valueOf(tile.getoffsetY()), 135, 29, 5285857);//NS
-		gg.drawCenteredString(font, String.valueOf(tile.getoffsetZ()), 135, 63, 5285857);//WE
-		gg.drawCenteredString(font, String.valueOf(tile.getoffsetX()), 135, 97, 5285857);//DU
+	private Component areaLabel() {
+		return Component.literal(!tile.showRenderBox ? "Show Area" : "Hide Area");
 	}
 
 	@Override
-	protected void renderBg(@Nonnull GuiGraphics gg, float partialTicks, int mouseX, int mouseY) {
-		super.renderBg(gg, partialTicks, mouseX, mouseY);
+	protected void extractLabels(@Nonnull GuiGraphicsExtractor gg, int mouseX, int mouseY) {
+		gg.text(font, title, 8, imageHeight - 220, ARGB.opaque(4210752), false);
 
-		gg.blit(TEX, leftPos + 44, topPos + 71 - tile.getProgressScaled(28), 178, 28 - tile.getProgressScaled(28), 16, 28);
+		gg.text(font, Component.translatable("block.mob_grinding_utils.absorption_hopper_d_u"), 102, 14, ARGB.opaque(4210752), false);
+		gg.text(font, Component.translatable("block.mob_grinding_utils.absorption_hopper_n_s"), 102, 48, ARGB.opaque(4210752), false);
+		gg.text(font, Component.translatable("block.mob_grinding_utils.absorption_hopper_w_e"), 102, 82, ARGB.opaque(4210752), false);
+
+		if (tile.getProgress() > 0) {
+			String attempting = "Attempting Spawn";
+			gg.text(font, attempting, (int) (52 - font.width(attempting) / 2.0f), 98, ARGB.opaque(4210752), false);
+		}
+
+		gg.centeredText(font, String.valueOf(tile.getoffsetY()), 135, 29, ARGB.opaque(5285857));
+		gg.centeredText(font, String.valueOf(tile.getoffsetZ()), 135, 63, ARGB.opaque(5285857));
+		gg.centeredText(font, String.valueOf(tile.getoffsetX()), 135, 97, ARGB.opaque(5285857));
 	}
 
+	@Override
+	public void extractBackground(@Nonnull GuiGraphicsExtractor gg, int mouseX, int mouseY, float partialTicks) {
+		super.extractBackground(gg, mouseX, mouseY, partialTicks);
+		int progress = tile.getProgressScaled(28);
+		gg.blit(RenderPipelines.GUI_TEXTURED, TEX, leftPos + 44, topPos + 71 - progress, 178.0F, 28.0F - progress, 16, 28, 256, 256);
+	}
 }

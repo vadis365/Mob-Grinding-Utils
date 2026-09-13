@@ -2,20 +2,21 @@ package mob_grinding_utils.client.particles;
 
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.*;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 
-import javax.annotation.Nonnull;
 import java.awt.*;
 
-public class ParticleFluidXP extends TextureSheetParticle {
+public class ParticleFluidXP extends SingleQuadParticle {
 
     @SuppressWarnings("unused")
     private final SpriteSet sprites;
 
-    public ParticleFluidXP(ClientLevel world, double x, double y, double z, double tx, double ty, double tz, int count, int color, float scale, SpriteSet sprite) {
-        super(world, x, y, z, 0.0D, 0.0D, 0.0D);
-        this.sprites = sprite;
+    public ParticleFluidXP(ClientLevel world, double x, double y, double z, double tx, double ty, double tz, int count, int color, float scale, TextureAtlasSprite sprite, SpriteSet spriteSet) {
+        super(world, x, y, z, 0.0D, 0.0D, 0.0D, sprite);
+        this.sprites = spriteSet;
         xd = 0.0D;
         yd = 0.0D;
         zd = 0.0D;
@@ -41,34 +42,39 @@ public class ParticleFluidXP extends TextureSheetParticle {
         xo = x;
         yo = y;
         zo = z;
-        yd -= (double) gravity;
+        yd -= gravity;
         move(xd, yd, zd);
         yd *= 0.9800000190734863D;
         if (this.age++ >= this.lifetime)
             this.remove();
     }
 
-    @Nonnull
     @Override
-    public ParticleRenderType getRenderType() {
-		return ParticleRenderType.PARTICLE_SHEET_TRANSLUCENT;
-	}
+    public SingleQuadParticle.Layer getLayer() {
+        return SingleQuadParticle.Layer.TRANSLUCENT;
+    }
 
     @Override
-    public int getLightColor(float partialTicks) {
-		return 15728880;
-	}
+    public ParticleRenderType getGroup() {
+        return ParticleRenderType.SINGLE_QUADS;
+    }
+
+    @Override
+    protected int getLightCoords(float partialTicks) {
+        return 15728880;
+    }
+
     public static class Factory implements ParticleProvider<SimpleParticleType> {
         SpriteSet sprites;
 
         public Factory(SpriteSet sprite) {
-        	this.sprites = sprite;
-		}
+            this.sprites = sprite;
+        }
 
         @Override
-        public Particle createParticle(SimpleParticleType typeIn, ClientLevel world, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
-            ParticleFluidXP particle = new ParticleFluidXP(world, x + world.random.nextDouble() - 0.5D * 0.05D, y + 0.125D, z + world.random.nextDouble() - 0.5D * 0.05D, xSpeed, ySpeed, zSpeed, 20, 16776960, 0.125F, sprites);
-            particle.pickSprite(sprites);
+        public Particle createParticle(SimpleParticleType typeIn, ClientLevel world, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed, RandomSource random) {
+            TextureAtlasSprite sprite = sprites.get(random);
+            ParticleFluidXP particle = new ParticleFluidXP(world, x + random.nextDouble() - 0.5D * 0.05D, y + 0.125D, z + random.nextDouble() - 0.5D * 0.05D, xSpeed, ySpeed, zSpeed, 20, 16776960, 0.125F, sprite, sprites);
             return particle;
         }
     }

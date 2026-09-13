@@ -32,27 +32,30 @@ public class ChickenFuseEvent {
     }
 
     @SubscribeEvent
-    public void startChickenFuse(EntityTickEvent.Post event) { // TODO uh oh? is this right?!
+    public void startChickenFuse(EntityTickEvent.Post event) {
         Entity entity = event.getEntity();
         if (entity instanceof Chicken) {
             Level world = entity.level();
             if (world instanceof ServerLevel serverLevel) {
                 CompoundTag nbt = entity.getPersistentData();
-                if (nbt.contains("shouldExplode") && nbt.contains("countDown") && nbt.contains("mguMobName")) {
-                    int startTime = event.getEntity().getPersistentData().getIntOr("countDown", 0);
+                // nutritious/cursed feeds never set mguMobName — only DNA feed does
+                if (nbt.contains("shouldExplode")) {
+                    int startTime = nbt.getIntOr("countDown", 0);
 
                     if (startTime <= 19) {
-                        nbt.putInt("countDown", nbt.getIntOr("countDown", 0) + 1);
+                        nbt.putInt("countDown", startTime + 1);
                         PacketDistributor.sendToAllPlayers(new ChickenSyncPacket((LivingEntity) entity, nbt));
                     }
 
                     if (startTime >= 20) {
-                        Optional<EntityType<?>> entityMob = EntityType.byString(event.getEntity().getPersistentData().getStringOr("mguMobName", ""));
-                        entityMob.ifPresent((mob) -> {
-                            ItemStack eggItem = getSpawnEgg(mob);
-                            if (eggItem != ItemStack.EMPTY)
-                                entity.spawnAtLocation(serverLevel, eggItem, 0.0F);
-                        });
+                        if (nbt.contains("mguMobName")) {
+                            Optional<EntityType<?>> entityMob = EntityType.byString(nbt.getStringOr("mguMobName", ""));
+                            entityMob.ifPresent((mob) -> {
+                                ItemStack eggItem = getSpawnEgg(mob);
+                                if (eggItem != ItemStack.EMPTY)
+                                    entity.spawnAtLocation(serverLevel, eggItem, 0.0F);
+                            });
+                        }
 
                         if (nbt.getBooleanOr("nutritious", false))
                             entity.spawnAtLocation(serverLevel, new ItemStack(ModItems.GOLDEN_EGG.get()), 0.0F);

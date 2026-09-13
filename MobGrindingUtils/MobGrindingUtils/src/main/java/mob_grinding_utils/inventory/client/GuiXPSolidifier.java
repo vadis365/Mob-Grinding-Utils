@@ -4,28 +4,30 @@ import mob_grinding_utils.inventory.server.ContainerXPSolidifier;
 import mob_grinding_utils.network.BEGuiClick;
 import mob_grinding_utils.BlockEntities.BlockEntityXPSolidifier;
 import mob_grinding_utils.util.RL;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
+import net.minecraft.util.ARGB;
 import net.minecraft.world.entity.player.Inventory;
-import net.neoforged.neoforge.network.PacketDistributor;
+import net.neoforged.neoforge.client.network.ClientPacketDistributor;
+import net.neoforged.neoforge.transfer.fluid.FluidUtil;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class GuiXPSolidifier extends MGUScreen<ContainerXPSolidifier> {
     protected final ContainerXPSolidifier container;
     private final BlockEntityXPSolidifier tile;
 
     private TankGauge tankGauge;
+    private GuiMGUButton onOffButton;
 
     public GuiXPSolidifier(ContainerXPSolidifier screenContainer, Inventory inv, Component titleIn) {
-        super(screenContainer, inv, titleIn, RL.mgu("textures/gui/solidifier_gui.png"));
+        super(screenContainer, inv, titleIn, RL.mgu("textures/gui/solidifier_gui.png"), 176, 186);
         container = screenContainer;
         tile = container.tile;
-
-        imageHeight = 186;
-        imageWidth = 176;
     }
 
     @Override
@@ -36,39 +38,49 @@ public class GuiXPSolidifier extends MGUScreen<ContainerXPSolidifier> {
         addRenderableWidget(tankGauge);
 
         addRenderableWidget(new GuiMGUButton(leftPos + 62, topPos + 72, GuiMGUButton.Size.SOLIDIFIER, 0, Component.literal("Push") ,
-            (button) -> PacketDistributor.sendToServer(new BEGuiClick(tile.getBlockPos(), 0))));
+            (button) -> ClientPacketDistributor.sendToServer(new BEGuiClick(tile.getBlockPos(), 0))));
 
-        addRenderableWidget(new GuiMGUButton(leftPos + 148, topPos + 8, GuiMGUButton.Size.SOLIDIFIER_ON, 0, Component.literal("") ,
-            (button) -> PacketDistributor.sendToServer(new BEGuiClick(tile.getBlockPos(), 1))));
+        onOffButton = addRenderableWidget(new GuiMGUButton(leftPos + 148, topPos + 8, GuiMGUButton.Size.SOLIDIFIER_ON, 0, onOffLabel(),
+            (button) -> ClientPacketDistributor.sendToServer(new BEGuiClick(tile.getBlockPos(), 1))));
     }
 
     @Override
-    protected void renderLabels(@Nonnull GuiGraphics gg, int x, int y) {
-        gg.drawString(font, Component.translatable("block.mob_grinding_utils.xpsolidifier"), 7, 6, 0x404040, false);
-        gg.drawString(font, Component.translatable("container.inventory"), 8, this.imageHeight - 96 + 2, 4210752, false);
-        gg.drawString(font, tile.isOn ? "On" : "Off", 158 - font.width(tile.isOn ? "On" : "Off") / 2.0f, 12, 14737632, true);
+    protected void containerTick() {
+        super.containerTick();
+        if (onOffButton != null)
+            onOffButton.setMessage(onOffLabel());
+    }
+
+    private Component onOffLabel() {
+        return Component.literal(tile.isOn ? "On" : "Off");
     }
 
     @Override
-    protected void renderBg(@Nonnull GuiGraphics gg, float partialTicks, int mouseX, int mouseY) {
-        int zLevel = 0;
-        gg.blit(TEX, leftPos, topPos, 0, 0, imageWidth, imageHeight);
-
-        gg.drawString(font, tile.outputDirection.getSerializedName(), leftPos + 124 - font.width(tile.outputDirection.getSerializedName()) / 2.0f, topPos + 76, 5285857, false);
-
-        gg.blit(TEX, leftPos + 7, topPos + 17 , 178, 0, 6, 71);
-
-        gg.blit(TEX, leftPos + 91, topPos + 36, 178, 73, tile.getProgressScaled(24), 17);
+    protected void extractLabels(@Nonnull GuiGraphicsExtractor gg, int x, int y) {
+        gg.text(font, Component.translatable("block.mob_grinding_utils.xpsolidifier"), 7, 6, ARGB.opaque(0x404040), false);
+        gg.text(font, Component.translatable("container.inventory"), 8, this.imageHeight - 96 + 2, ARGB.opaque(4210752), false);
     }
 
     @Override
-    protected void renderTooltip(@Nonnull GuiGraphics gg, int x, int y) {
-        super.renderTooltip(gg, x, y);
+    public void extractBackground(@Nonnull GuiGraphicsExtractor gg, int mouseX, int mouseY, float partialTicks) {
+        gg.blit(RenderPipelines.GUI_TEXTURED, TEX, leftPos, topPos, 0.0F, 0.0F, imageWidth, imageHeight, 256, 256);
+
+        String dir = tile.outputDirection.getSerializedName();
+        gg.text(font, dir, (int) (leftPos + 124 - font.width(dir) / 2.0f), topPos + 76, ARGB.opaque(5285857), false);
+
+        gg.blit(RenderPipelines.GUI_TEXTURED, TEX, leftPos + 7, topPos + 17, 178.0F, 0.0F, 6, 71, 256, 256);
+        gg.blit(RenderPipelines.GUI_TEXTURED, TEX, leftPos + 91, topPos + 36, 178.0F, 73.0F, tile.getProgressScaled(24), 17, 256, 256);
+    }
+
+    @Override
+    protected void extractTooltip(@Nonnull GuiGraphicsExtractor gg, int x, int y) {
+        super.extractTooltip(gg, x, y);
         if (tankGauge.isHovered()) {
             List<Component> tooltip = new ArrayList<>();
-            tooltip.add(tile.tank.getFluid().getHoverName());
-            tooltip.add(Component.literal(tile.tank.getFluidAmount() + "/" + tile.tank.getCapacity()));
-            gg.renderComponentTooltip(font, tooltip, x, y);
+            var fluid = FluidUtil.getStack(tile.tank, 0);
+            tooltip.add(fluid.getHoverName());
+            tooltip.add(Component.literal(tile.tank.getAmountAsInt(0) + "/" + tile.tank.getCapacityAsInt(0, tile.tank.getResource(0))));
+            gg.setTooltipForNextFrame(font, tooltip, Optional.empty(), x, y);
         }
     }
 }
