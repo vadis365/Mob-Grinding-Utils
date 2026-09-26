@@ -15,80 +15,83 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.neoforge.network.PacketDistributor;
+import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.fluid.FluidResource;
+import net.neoforged.neoforge.transfer.transaction.Transaction;
 
 import javax.annotation.Nonnull;
 import java.util.Optional;
 
 public class BlockEntityXPTap extends BlockEntity {
-	
-	public BlockEntityXPTap(BlockPos pos, BlockState state) {
-		super(ModBlocks.XP_TAP.getTileEntityType(), pos, state);
-	}
 
-	public boolean active;
+    public BlockEntityXPTap(BlockPos pos, BlockState state) {
+        super(ModBlocks.XP_TAP.getTileEntityType(), pos, state);
+    }
 
-	public static <T extends BlockEntity> void serverTick(Level world, BlockPos worldPosition, BlockState blockState, T t) {
-		if (t instanceof BlockEntityXPTap blockEntityXPTap && blockEntityXPTap.active) {
-			BlockPos blockPos = worldPosition.relative(world.getBlockState(worldPosition).getValue(BlockXPTap.FACING).getOpposite());
-			BlockEntity tileentity = world.getBlockEntity(blockPos);
-			if (tileentity != null) {
-				Optional<IFluidHandler> fluidHandler = CapHelper.getFluidHandler(world, blockPos, world.getBlockState(worldPosition).getValue(BlockXPTap.FACING));
-				fluidHandler.ifPresent((handler) -> {
-					if (handler.getTanks() > 0 && handler.getFluidInTank(0).getAmount() >= 20 && handler.getFluidInTank(0).getFluid().is(ModTags.Fluids.EXPERIENCE) && world.getGameTime() % 3 == 0) {
-						int xpAmount = EntityXPOrbFalling.getExperienceValue(Math.min(20, handler.getFluidInTank(0).getAmount() / 20));
-						if (!handler.drain(xpAmount * 20, IFluidHandler.FluidAction.EXECUTE).isEmpty()) {
-							blockEntityXPTap.spawnXP(world, worldPosition, xpAmount, tileentity);
-							PacketDistributor.sendToPlayersNear((ServerLevel) world, null, t.getBlockPos().getX(), t.getBlockPos().getY(), t.getBlockPos().getZ(), 30,new TapParticlePacket(worldPosition));
-						}
-					}
-				});
-			}
-		}
-	}
+    public boolean active;
 
-	public void spawnXP(Level world, BlockPos pos, int xp, BlockEntity tankTile) {
-		tankTile.setChanged();
-		EntityXPOrbFalling orb = new EntityXPOrbFalling(world, pos.getX() + 0.5D, pos.getY() - 0.125D, pos.getZ() + 0.5D, xp);
-		world.addFreshEntity(orb);
-	}
+    public static <T extends BlockEntity> void serverTick(Level world, BlockPos worldPosition, BlockState blockState, T t) {
+        if (t instanceof BlockEntityXPTap blockEntityXPTap && blockEntityXPTap.active) {
+            BlockPos blockPos = worldPosition.relative(world.getBlockState(worldPosition).getValue(BlockXPTap.FACING).getOpposite());
+            BlockEntity tileentity = world.getBlockEntity(blockPos);
+            if (tileentity != null) {
+                Optional<ResourceHandler<FluidResource>> fluidHandler = CapHelper.getFluidHandler(world, blockPos, world.getBlockState(worldPosition).getValue(BlockXPTap.FACING));
+                fluidHandler.ifPresent((handler) -> {
+                    if (handler.getAmountAsInt(0) >= 20 && handler.getResource(0).is(ModTags.Fluids.EXPERIENCE) && world.getGameTime() % 3 == 0) {
+                        int xpAmount = EntityXPOrbFalling.getExperienceValue(Math.min(20, handler.getAmountAsInt(0) / 20));
+                        try (Transaction transaction = Transaction.openRoot()) {
+                            if (handler.extract(handler.getResource(0),  xpAmount * 20, transaction) == xpAmount * 20) {
+                                transaction.commit();
+                                blockEntityXPTap.spawnXP(world, worldPosition, xpAmount, tileentity);
+                                PacketDistributor.sendToPlayersNear((ServerLevel) world, null, t.getBlockPos().getX(), t.getBlockPos().getY(), t.getBlockPos().getZ(), 30,new TapParticlePacket(worldPosition));
+                            }
+                        }
+                    }
+                });
+            }
+        }
+    }
 
-	public void setActive(boolean isActive) {
-		active = isActive;
-		getLevel().sendBlockUpdated(worldPosition, getLevel().getBlockState(worldPosition), getLevel().getBlockState(worldPosition), 3);
-	}
+    public void spawnXP(Level world, BlockPos pos, int xp, BlockEntity tankTile) {
+        tankTile.setChanged();
+        EntityXPOrbFalling orb = new EntityXPOrbFalling(world, pos.getX() + 0.5D, pos.getY() - 0.125D, pos.getZ() + 0.5D, xp);
+        world.addFreshEntity(orb);
+    }
 
-	@Override
-	public void saveAdditional(@Nonnull CompoundTag nbt, @Nonnull HolderLookup.Provider registries) {
-		super.saveAdditional(nbt, registries);
-		nbt.putBoolean("active", active);
-	}
+    public void setActive(boolean isActive) {
+        active = isActive;
+        getLevel().sendBlockUpdated(worldPosition, getLevel().getBlockState(worldPosition), getLevel().getBlockState(worldPosition), 3);
+    }
 
-	@Override
-	public void loadAdditional(@Nonnull CompoundTag nbt, @Nonnull HolderLookup.Provider registries) {
-		super.loadAdditional(nbt, registries);
-		active = nbt.getBoolean("active");
-	}
+    @Override
+    public void saveAdditional(@Nonnull ValueOutput valueOutput) {
+        super.saveAdditional(valueOutput);
+        valueOutput.putBoolean("active", active);
+    }
 
-	@Nonnull
-	@Override
-	public CompoundTag getUpdateTag(@Nonnull HolderLookup.Provider registries) {
-		CompoundTag nbt = new CompoundTag();
-		saveAdditional(nbt, registries);
-		return nbt;
-	}
+    @Override
+    public void loadAdditional(@Nonnull ValueInput valueInput) {
+        super.loadAdditional(valueInput);
+        active = valueInput.getBooleanOr("active", false);
+    }
 
-	@Override
-	public ClientboundBlockEntityDataPacket getUpdatePacket() {
-		CompoundTag nbt = new CompoundTag();
-		saveAdditional(nbt, level.registryAccess());
-		return ClientboundBlockEntityDataPacket.create(this);
-	}
+    @Nonnull
+    @Override
+    public CompoundTag getUpdateTag(@Nonnull HolderLookup.Provider registries) {
+        return saveCustomOnly(registries);
+    }
 
-	@Override
-	public void onDataPacket(@Nonnull Connection net, ClientboundBlockEntityDataPacket packet, @Nonnull HolderLookup.Provider registries) {
-		if (packet.getTag() != null)
-			loadAdditional(packet.getTag(), registries);
-	}
+    @Override
+    public ClientboundBlockEntityDataPacket getUpdatePacket() {
+        return ClientboundBlockEntityDataPacket.create(this);
+    }
+
+    @Override
+    public void onDataPacket(@Nonnull Connection net, ValueInput valueInput) {
+        super.onDataPacket(net, valueInput);
+        loadAdditional(valueInput);
+    }
 }
