@@ -24,11 +24,11 @@ public class BlockTankJumbo extends BlockTank {
     }
 
     public BlockTankJumbo(Block.Properties properties) {
-		super(properties);
-	}
+        super(properties);
+    }
 
-	@Override
-	public BlockEntity newBlockEntity(@Nonnull BlockPos pos, @Nonnull BlockState state) {
-		return new BlockEntityJumboTank(pos, state);
-	}
+    @Override
+    public BlockEntity newBlockEntity(@Nonnull BlockPos pos, @Nonnull BlockState state) {
+        return new BlockEntityJumboTank(pos, state);
+    }
 }

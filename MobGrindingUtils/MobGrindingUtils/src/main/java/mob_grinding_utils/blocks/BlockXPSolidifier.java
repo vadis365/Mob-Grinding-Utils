@@ -1,9 +1,9 @@
 package mob_grinding_utils.blocks;
 
 import com.mojang.serialization.MapCodec;
+import mob_grinding_utils.BlockEntities.BlockEntityXPSolidifier;
 import mob_grinding_utils.components.FluidContents;
 import mob_grinding_utils.components.MGUComponents;
-import mob_grinding_utils.BlockEntities.BlockEntityXPSolidifier;
 import mob_grinding_utils.util.CapHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
@@ -12,8 +12,10 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.Item;
@@ -31,8 +33,9 @@ import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.phys.BlockHitResult;
 import net.neoforged.neoforge.fluids.FluidStack;
-import net.neoforged.neoforge.fluids.FluidUtil;
-import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.fluid.FluidResource;
+import net.neoforged.neoforge.transfer.fluid.FluidUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -88,20 +91,18 @@ public class BlockXPSolidifier extends BaseEntityBlock {
     }
 
     @Override
-    protected void onRemove(@Nonnull BlockState state, @Nonnull Level level, @Nonnull BlockPos pos, @Nonnull BlockState newState, boolean movedByPiston) {
-        if (state.getBlock() != newState.getBlock()) {
-            BlockEntity blockEntity = level.getBlockEntity(pos);
-            if (blockEntity instanceof BlockEntityXPSolidifier entity) {
-                if(!entity.inputSlots.getStackInSlot(0).isEmpty())
-                    Containers.dropItemStack(level, pos.getX(), pos.getY(), pos.getZ(), entity.inputSlots.getStackInSlot(0));
-                if(!entity.inputSlots.getStackInSlot(1).isEmpty())
-                    Containers.dropItemStack(level, pos.getX(), pos.getY(), pos.getZ(), entity.inputSlots.getStackInSlot(1));
-                if(!entity.outputSlot.getStackInSlot(0).isEmpty())
-                    Containers.dropItemStack(level, pos.getX(), pos.getY(), pos.getZ(), entity.outputSlot.getStackInSlot(0));
-            }
+    protected void affectNeighborsAfterRemoval(@Nonnull BlockState state, @Nonnull ServerLevel level, @Nonnull BlockPos pos, boolean movedByPiston) {
+        BlockEntity blockEntity = level.getBlockEntity(pos);
+        if (blockEntity instanceof BlockEntityXPSolidifier entity) {
+            if(!entity.inputSlots.getStackInSlot(0).isEmpty())
+                Containers.dropItemStack(level, pos.getX(), pos.getY(), pos.getZ(), entity.inputSlots.getStackInSlot(0));
+            if(!entity.inputSlots.getStackInSlot(1).isEmpty())
+                Containers.dropItemStack(level, pos.getX(), pos.getY(), pos.getZ(), entity.inputSlots.getStackInSlot(1));
+            if(!entity.outputSlot.getStackInSlot(0).isEmpty())
+                Containers.dropItemStack(level, pos.getX(), pos.getY(), pos.getZ(), entity.outputSlot.getStackInSlot(0));
         }
 
-        super.onRemove(state, level, pos, newState, movedByPiston);
+        super.affectNeighborsAfterRemoval(state, level, pos, movedByPiston);
     }
 
     @Override
@@ -111,29 +112,29 @@ public class BlockXPSolidifier extends BaseEntityBlock {
 
     @Nonnull
     @Override
-    public ItemInteractionResult useItemOn(@Nonnull ItemStack stack, @Nonnull BlockState state, Level level, @Nonnull BlockPos pos, @Nonnull Player player, @Nonnull InteractionHand hand, @Nonnull BlockHitResult hit) {
+    public InteractionResult useItemOn(@Nonnull ItemStack stack, @Nonnull BlockState state, Level level, @Nonnull BlockPos pos, @Nonnull Player player, @Nonnull InteractionHand hand, @Nonnull BlockHitResult hit) {
         if (level.isClientSide()) {
-            return ItemInteractionResult.SUCCESS;
+            return InteractionResult.SUCCESS;
         } else {
             BlockEntity blockEntity = level.getBlockEntity(pos);
             if (blockEntity instanceof BlockEntityXPSolidifier entityXPSolidifier) {
                 if (!player.getItemInHand(hand).isEmpty() && player.getItemInHand(hand).getItem() instanceof BucketItem) { // fixy later, Flanks: ?!?
-                    Optional<IFluidHandler> fluidHandler = CapHelper.getFluidHandler(level, pos, hit.getDirection());
+                    Optional<ResourceHandler<FluidResource>> fluidHandler = CapHelper.getFluidHandler(level, pos, hit.getDirection());
                     fluidHandler.ifPresent((handler) -> {
-                        if (player.getItemInHand(hand).isEmpty() && !handler.getFluidInTank(0).isEmpty())
-                            player.displayClientMessage(Component.translatable(handler.getFluidInTank(0).getHoverName().getString() + ": "+ handler.getFluidInTank(0).getAmount()+"/"+handler.getTankCapacity(0)), true);
+                        if (player.getItemInHand(hand).isEmpty() && handler.getAmountAsInt(0) != 0)
+                            player.sendOverlayMessage(Component.translatable(handler.getResource(0).getHoverName().getString() + ": "+ handler.getAmountAsInt(0)+"/"+handler.getCapacityAsInt(0, handler.getResource(0))));
                         else
                             FluidUtil.interactWithFluidHandler(player, hand, level, pos, hit.getDirection());
                     });
-                    return ItemInteractionResult.SUCCESS;
+                    return InteractionResult.SUCCESS;
                 }
                 else {
                     player.openMenu(entityXPSolidifier, pos);
-                    return ItemInteractionResult.SUCCESS;
+                    return InteractionResult.SUCCESS;
                 }
             }
         }
-        return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+        return InteractionResult.PASS;
     }
 
     @Override

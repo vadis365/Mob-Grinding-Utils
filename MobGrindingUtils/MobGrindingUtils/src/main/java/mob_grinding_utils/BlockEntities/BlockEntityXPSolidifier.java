@@ -13,6 +13,7 @@ import mob_grinding_utils.util.CapHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
@@ -34,26 +35,28 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
-import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
 import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.ItemHandlerHelper;
-import net.neoforged.neoforge.items.ItemStackHandler;
+import net.neoforged.neoforge.transfer.fluid.FluidResource;
+import net.neoforged.neoforge.transfer.fluid.FluidStacksResourceHandler;
+import net.neoforged.neoforge.transfer.item.ItemStacksResourceHandler;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Optional;
 
 public class BlockEntityXPSolidifier extends BlockEntity implements MenuProvider, BEGuiClickable {
-	public FluidTank tank = new FluidTank(1000 *  16);
+	public FluidStacksResourceHandler tank = new FluidStacksResourceHandler(1, 1000 *  16);
 	private int prevFluidLevel = 0;
 	public int moulding_progress = 0;
 	public int MAX_MOULDING_TIME = 100;
 	public boolean isOn = false;
 	private RecipeHolder<SolidifyRecipe> currentRecipe = null;
 
-	public ItemStackHandler inputSlots = new ItemStackHandler(2);
-	public ItemStackHandler outputSlot = new ItemStackHandler(1);
+	public ItemStacksResourceHandler inputSlots = new ItemStacksResourceHandler(2);
+	public ItemStacksResourceHandler outputSlot = new ItemStacksResourceHandler(1);
 
 	public boolean active;
 	public int animationTicks, prevAnimationTicks;
@@ -93,10 +96,10 @@ public class BlockEntityXPSolidifier extends BlockEntity implements MenuProvider
 		}
 	}
 
-	public FluidTank getTank(@Nullable Direction side) {
+	public FluidStacksResourceHandler getTank(@Nullable Direction side) {
 		return tank;
 	}
-	public IItemHandler getOutput(@Nullable Direction side) {
+	public ItemStacksResourceHandler getOutput(@Nullable Direction side) {
 		return outputSlot;
 	}
 
@@ -120,7 +123,7 @@ public class BlockEntityXPSolidifier extends BlockEntity implements MenuProvider
 	public static <T extends BlockEntity> void tick(Level level, BlockPos worldPosition, BlockState blockState, T t) {
 		if(t instanceof BlockEntityXPSolidifier tile) {
 			if(tile.isOn) {
-				if (level.isClientSide && tile.active) {
+				if (level.isClientSide() && tile.active) {
 					tile.prevAnimationTicks = tile.animationTicks;
 					if (tile.animationTicks < tile.MAX_MOULDING_TIME)
 						tile.animationTicks += 1 + tile.getModifierAmount();
@@ -134,11 +137,11 @@ public class BlockEntityXPSolidifier extends BlockEntity implements MenuProvider
 					tile.prevAnimationTicks = tile.animationTicks = 0;
 
 				if (tile.currentRecipe != null) {
-					if (!tile.currentRecipe.value().matches(tile.inputSlots.getStackInSlot(0)))
+					if (!tile.currentRecipe.value().matches(tile.inputSlots.getResource(0).toStack()))
 						tile.currentRecipe = null;
 				} else {
-					if (!tile.inputSlots.getStackInSlot(0).isEmpty())
-						tile.currentRecipe = getRecipeForMould(tile.inputSlots.getStackInSlot(0));
+					if (tile.inputSlots.getAmountAsInt(0) != 0)
+						tile.currentRecipe = getRecipeForMould(tile.inputSlots.getResource(0).toStack());
 				}
 
 
@@ -242,7 +245,7 @@ public class BlockEntityXPSolidifier extends BlockEntity implements MenuProvider
 	}
 
 	private boolean hasMould() {
-		return currentRecipe != null && currentRecipe.value().matches(inputSlots.getStackInSlot(0));
+		return currentRecipe != null && currentRecipe.value().matches(inputSlots.getResource(0).toStack());
 	}
 
 	@Nullable
@@ -251,15 +254,15 @@ public class BlockEntityXPSolidifier extends BlockEntity implements MenuProvider
 	}
 
 	private boolean isOutputEmpty() {
-		return outputSlot.getStackInSlot(0).isEmpty();
+		return outputSlot.getResource(0).isEmpty();
 	}
 
 	private boolean hasUpgrade() {
-		return !inputSlots.getStackInSlot(1).isEmpty() && inputSlots.getStackInSlot(1).getItem() == ModItems.XP_SOLIDIFIER_UPGRADE.get();
+		return !inputSlots.getResource(1).isEmpty() && inputSlots.getResource(1).getItem() == ModItems.XP_SOLIDIFIER_UPGRADE.get();
 	}
 
 	public int getModifierAmount() {
-		return hasUpgrade() ? inputSlots.getStackInSlot(1).getCount() : 0;
+		return hasUpgrade() ? inputSlots.getAmountAsInt(1) : 0;
 	}
 
 	private void setProgress(int counter) {
@@ -398,7 +401,7 @@ public class BlockEntityXPSolidifier extends BlockEntity implements MenuProvider
 	}
 
 	public int getScaledFluid(int scale) {
-		return tank.getFluid() != null ? (int) ((float) tank.getFluid().getAmount() / (float) tank.getCapacity() * scale) : 0;
+		return tank.getAmountAsInt(0) == 0 ? 0 : (int) ((float) tank.getAmountAsInt(0) / (float) tank.getCapacityAsInt(0, FluidResource.EMPTY) * scale);
 	}
 
 	@Nonnull
@@ -414,16 +417,17 @@ public class BlockEntityXPSolidifier extends BlockEntity implements MenuProvider
 	}
 
 	@Override
-	protected void applyImplicitComponents(@Nonnull DataComponentInput componentInput) {
+	protected void applyImplicitComponents(@Nonnull DataComponentGetter componentInput) {
 		super.applyImplicitComponents(componentInput);
 
-		tank.setFluid(componentInput.getOrDefault(MGUComponents.FLUID, FluidContents.EMPTY).get());
+        FluidStack fluidStack = componentInput.getOrDefault(MGUComponents.FLUID, FluidContents.EMPTY).get();
+		tank.set(0, FluidResource.of(fluidStack.getFluid()), fluidStack.amount());
 	}
 
 	@Override
 	protected void collectImplicitComponents(@Nonnull DataComponentMap.Builder builder) {
 		super.collectImplicitComponents(builder);
 
-		builder.set(MGUComponents.FLUID, FluidContents.of(tank.getFluid()));
+		builder.set(MGUComponents.FLUID, FluidContents.of(tank.getResource(0).toStack(tank.getAmountAsInt(0))));
 	}
 }
