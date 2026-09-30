@@ -1,4 +1,5 @@
-/*  //Unused for now.
+/*
+  //Unused for now.
 package mob_grinding_utils;
 
 import net.minecraft.core.HolderSet;

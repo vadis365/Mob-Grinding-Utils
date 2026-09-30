@@ -33,6 +33,8 @@ import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.fluids.FluidStack;
@@ -200,9 +202,9 @@ public class BlockEntityXPSolidifier extends BlockEntity implements MenuProvider
 				}
 			}
 
-			if (tile.prevFluidLevel != tile.tank.getFluidAmount()){
+			if (tile.prevFluidLevel != tile.tank.getAmountAsInt(0)){
 				tile.updateBlock();
-				tile.prevFluidLevel = tile.tank.getFluidAmount();
+				tile.prevFluidLevel = tile.tank.getAmountAsInt(0);
 			}
 		}
 	}
@@ -225,7 +227,7 @@ public class BlockEntityXPSolidifier extends BlockEntity implements MenuProvider
 	@OnlyIn(Dist.CLIENT)
 	public ItemStack getCachedOutPutRenderStack() {
 		if(hasMould()) {
-			if(inputSlots.getStackInSlot(0).getItem() == ModItems.SOLID_XP_MOULD_BABY.get())
+			if(inputSlots.getResource(0).is(ModItems.SOLID_XP_MOULD_BABY.get()))
 				return new ItemStack(ModItems.SOLID_XP_BABY.get(), 1);
 		}
 		return ItemStack.EMPTY;
@@ -237,7 +239,7 @@ public class BlockEntityXPSolidifier extends BlockEntity implements MenuProvider
 	}
 
 	private boolean hasFluid() {
-		return currentRecipe != null && !tank.getFluid().isEmpty() && tank.getFluid().getAmount() >= currentRecipe.value().fluidAmount() && tank.getFluidInTank(0).getFluid().is(ModTags.Fluids.EXPERIENCE);
+		return currentRecipe != null && !tank.getResource(0).isEmpty() && tank.getAmountAsInt(0) >= currentRecipe.value().fluidAmount() && tank.getResource(0).is(ModTags.Fluids.EXPERIENCE);
 	}
 
 	private boolean canOperate() {
@@ -336,8 +338,9 @@ public class BlockEntityXPSolidifier extends BlockEntity implements MenuProvider
 	}
 
 	@Override
-	public void loadAdditional(@Nonnull CompoundTag nbt, @Nonnull HolderLookup.Provider registries) {
-		super.loadAdditional(nbt, registries);
+	public void loadAdditional(@Nonnull ValueInput input) {
+		super.loadAdditional(input);
+
 		tank.readFromNBT(registries, nbt);
 		inputSlots.deserializeNBT(registries, nbt.getCompound("inputSlots"));
 		outputSlot.deserializeNBT(registries, nbt.getCompound("outputSlot"));
@@ -353,8 +356,9 @@ public class BlockEntityXPSolidifier extends BlockEntity implements MenuProvider
 	}
 
 	@Override
-	public void saveAdditional(@Nonnull CompoundTag nbt, @Nonnull HolderLookup.Provider registries) {
-		super.saveAdditional(nbt, registries);
+	public void saveAdditional(@Nonnull ValueOutput output) {
+		super.saveAdditional(output);
+
 		tank.writeToNBT(registries, nbt);
 		nbt.put("inputSlots", inputSlots.serializeNBT(registries));
 		nbt.put("outputSlot", outputSlot.serializeNBT(registries));
@@ -369,15 +373,11 @@ public class BlockEntityXPSolidifier extends BlockEntity implements MenuProvider
 	@Nonnull
 	@Override
 	public CompoundTag getUpdateTag(@Nonnull HolderLookup.Provider registries) {
-		CompoundTag nbt = new CompoundTag();
-		saveAdditional(nbt, registries);
-		return nbt;
+		return saveCustomOnly(registries);
 	}
 
 	@Override
 	public ClientboundBlockEntityDataPacket getUpdatePacket() {
-		CompoundTag nbt = new CompoundTag();
-		saveAdditional(nbt, level.registryAccess());
 		return ClientboundBlockEntityDataPacket.create(this);
 	}
 
