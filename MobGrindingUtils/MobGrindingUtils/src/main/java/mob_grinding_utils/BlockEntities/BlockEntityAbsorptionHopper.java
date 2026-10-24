@@ -38,6 +38,8 @@ import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
 import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.ItemHandlerHelper;
+import net.neoforged.neoforge.transfer.fluid.FluidStacksResourceHandler;
+import net.neoforged.neoforge.transfer.item.ItemStacksResourceHandler;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -65,10 +67,10 @@ public class BlockEntityAbsorptionHopper extends BlockEntityInventoryHelper impl
 		updateBlock();
 	}
 
-	public IItemHandler getItemHandler(@Nullable Direction side) {
+	public ItemStacksResourceHandler getItemHandler(@Nullable Direction side) {
 		return itemHandler;
 	}
-	public FluidTank getTank(final Direction side) {
+	public FluidStacksResourceHandler getTank(final Direction side) {
 		return tank;
 	}
 

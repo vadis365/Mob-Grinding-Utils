@@ -126,7 +126,7 @@ public class MobGrindingUtils {
 
 			modBus.addListener(this::onClientExtensions);
 			modBus.addListener(ModColourManager::registerBlockHandlers);
-			modBus.addListener(ModColourManager::registerItemHandlers);
+			//modBus.addListener(ModColourManager::registerItemHandlers); //TODO dont think we need this anymore.
 		}
 
 		modBus.addListener(this::setup);
@@ -171,8 +171,8 @@ public class MobGrindingUtils {
 		neoBus.register(new BossBarHidingEvent());
 		neoBus.addListener(this::worldUnload);
 
-		ItemBlockRenderTypes.setRenderLayer(ModBlocks.FLUID_XP_FLOWING.get(), RenderType.translucent());
-		ItemBlockRenderTypes.setRenderLayer(ModBlocks.FLUID_XP.get(), RenderType.translucent());
+//		ItemBlockRenderTypes.setRenderLayer(ModBlocks.FLUID_XP_FLOWING.get(), RenderType.translucent());
+//		ItemBlockRenderTypes.setRenderLayer(ModBlocks.FLUID_XP.get(), RenderType.translucent()); //TODO fluid rendertypes?
 
 		//event.enqueueWork(ModColourManager::registerColourHandlers);
 	}
@@ -275,7 +275,7 @@ public class MobGrindingUtils {
 	private void sendPersistentData(ServerPlayer playerEntity) {
 		CompoundTag nbt = playerEntity.getPersistentData();
 		if (nbt.contains("MGU_WitherMuffle") || nbt.contains("MGU_DragonMuffle")) {
-			PacketDistributor.sendToPlayer(playerEntity, new FlagSyncPacket(nbt.getBoolean("MGU_WitherMuffle"), nbt.getBoolean("MGU_DragonMuffle")));
+			PacketDistributor.sendToPlayer(playerEntity, new FlagSyncPacket(nbt.getBoolean("MGU_WitherMuffle").orElse(false), nbt.getBoolean("MGU_DragonMuffle").orElse(false)));
 		}
 	}
 
@@ -283,8 +283,8 @@ public class MobGrindingUtils {
 		CompoundTag nbt = event.getOriginal().getPersistentData();
 		if (nbt.contains("MGU_WitherMuffle") || nbt.contains("MGU_DragonMuffle")) {
 			CompoundTag newNBT = event.getEntity().getPersistentData();
-			newNBT.putBoolean("MGU_WitherMuffle", nbt.getBoolean("MGU_WitherMuffle"));
-			newNBT.putBoolean("MGU_DragonMuffle", nbt.getBoolean("MGU_DragonMuffle"));
+			newNBT.putBoolean("MGU_WitherMuffle", nbt.getBoolean("MGU_WitherMuffle").orElse(false));
+			newNBT.putBoolean("MGU_DragonMuffle", nbt.getBoolean("MGU_DragonMuffle").orElse(false));
 		}
 	}
 
