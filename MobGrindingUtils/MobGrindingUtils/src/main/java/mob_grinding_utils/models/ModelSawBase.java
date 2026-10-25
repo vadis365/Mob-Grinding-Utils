@@ -61,13 +61,14 @@ public class ModelSawBase extends Model {
     }
 
     public void submitBase(PoseStack matrixStackIn, SubmitNodeCollector nodeCollector, int packedLightIn, int packedOverlayIn, Identifier texture) {
-        ImmutableList.of(base, plinth)
-        .forEach((part) -> nodeCollector.submitModelPart(part, matrixStackIn, RenderTypes.entitySolid(texture), packedLightIn, packedOverlayIn, null));
+        nodeCollector.submitModelPart(base, matrixStackIn, RenderTypes.entitySolid(texture), packedLightIn, packedOverlayIn, null);
+        nodeCollector.submitModelPart(plinth, matrixStackIn, RenderTypes.entitySolid(texture), packedLightIn, packedOverlayIn, null);
     }
 
     public void submitAxle(PoseStack matrixStackIn, SubmitNodeCollector nodeCollector, int packedLightIn, int packedOverlayIn, Identifier texture) {
-        ImmutableList.of(axle, axle2, axleTop)
-        .forEach((part) -> nodeCollector.submitModelPart(part, matrixStackIn, RenderTypes.entitySolid(texture), packedLightIn, packedOverlayIn, null));
+        nodeCollector.submitModelPart(axle, matrixStackIn, RenderTypes.entitySolid(texture), packedLightIn, packedOverlayIn, null);
+        nodeCollector.submitModelPart(axle2, matrixStackIn, RenderTypes.entitySolid(texture), packedLightIn, packedOverlayIn, null);
+        nodeCollector.submitModelPart(axleTop, matrixStackIn, RenderTypes.entitySolid(texture), packedLightIn, packedOverlayIn, null);
     }
 
     public void submitMace(PoseStack matrixStackIn, SubmitNodeCollector nodeCollector, int packedLightIn, int packedOverlayIn, Identifier texture) {
