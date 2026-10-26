@@ -1,63 +1,88 @@
 package mob_grinding_utils.client.render;
 
-import com.mojang.blaze3d.platform.GlStateManager;
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import mob_grinding_utils.BlockEntities.BlockEntityMGUSpawner;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.LevelRenderer;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider.Context;
-import net.minecraft.world.entity.Entity;
+import net.minecraft.client.renderer.blockentity.state.BlockEntityRenderState;
+import net.minecraft.client.renderer.entity.state.EntityRenderState;
+import net.minecraft.client.renderer.feature.ModelFeatureRenderer;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
+import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 
 import javax.annotation.Nonnull;
 
 @OnlyIn(Dist.CLIENT)
-public class TileEntityMGUSpawnerRenderer implements BlockEntityRenderer<BlockEntityMGUSpawner> {
+public class TileEntityMGUSpawnerRenderer implements BlockEntityRenderer<BlockEntityMGUSpawner, TileEntityMGUSpawnerRenderer.MGUSpawnerRenderState> {
 
-	public TileEntityMGUSpawnerRenderer(Context context) {
-	}
+    public TileEntityMGUSpawnerRenderer(Context context) {
+    }
 
-	@Override
-	public void render(@Nonnull BlockEntityMGUSpawner tile, float partialTicks, @Nonnull PoseStack matrixStack, @Nonnull MultiBufferSource buffer, int combinedLight, int combinedOverlay) {
-		if (tile == null || !tile.hasLevel())
-			return;
+    @Override
+    public void submit(MGUSpawnerRenderState state, @Nonnull PoseStack poseStack, @Nonnull SubmitNodeCollector submitNodeCollector, @Nonnull CameraRenderState camera) {
 
-		if (tile.isOn && tile.hasSpawnEggItem() && tile.getEntityToRender() != null) {
-			float ticks = tile.animationTicks + (tile.animationTicks - tile.prevAnimationTicks)  * partialTicks;
-			Entity entity = tile.getEntityToRender();
-			matrixStack.pushPose();
-			matrixStack.translate(0.5D, 0.75D, 0.5D);
-			RenderSystem.enableBlend();
-			
-			RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
-			//RenderSystem.color4f(1.0F, 1.0F, 1.0F, 0.65F);
-			matrixStack.mulPose(Axis.YP.rotationDegrees(ticks));
-			matrixStack.scale(0.125F, 0.125F, 0.125F);
-			Minecraft.getInstance().getEntityRenderDispatcher().render(entity, 0D, 0D, 0D, 0F, 0F, matrixStack, buffer, combinedLight);
-			//RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-			matrixStack.popPose();
-		}
+        if (state.shouldRender) {
+            float ticks = state.ticks;
+            EntityRenderState entity = state.entityToRender;
 
-		if (!tile.showRenderBox)
-			return;
+            poseStack.pushPose();
+            poseStack.translate(0.5D, 0.75D, 0.5D);
 
-		matrixStack.pushPose();
-		matrixStack.translate(-0.0005D, -0.0005D, -0.0005D);
-		matrixStack.scale(0.999F, 0.999F, 0.999F);
+            poseStack.mulPose(Axis.YP.rotationDegrees(ticks));
+            poseStack.scale(0.125F, 0.125F, 0.125F);
+            Minecraft.getInstance().getEntityRenderDispatcher().submit(entity, camera, 0d, 0d, 0d, poseStack, submitNodeCollector);
+            poseStack.popPose();
+        }
 
-		LevelRenderer.renderLineBox(matrixStack, buffer.getBuffer(RenderType.lines()), tile.getAABBForRender(), 1F, 0F, 0F, 1F);
-		matrixStack.popPose();
-	}
+        if (!state.showRenderBox)
+            return;
 
-	@Override
-	public AABB getRenderBoundingBox(BlockEntityMGUSpawner blockEntity) {
-		return blockEntity.getAABBWithModifiers();
-	}
+        poseStack.pushPose();
+        poseStack.translate(-0.0005D, -0.0005D, -0.0005D);
+        poseStack.scale(0.999F, 0.999F, 0.999F);
+
+        submitNodeCollector.submitCustomGeometry(poseStack, RenderTypes.lines(), (pose, nodes) -> LineBoxRenderer.render(pose, nodes, state.AABBForRender, 0xFF0000FF));
+        poseStack.popPose();
+    }
+
+    @Nonnull
+    @Override
+    public AABB getRenderBoundingBox(BlockEntityMGUSpawner blockEntity) {
+        return blockEntity.getAABBWithModifiers();
+    }
+
+    @Override
+    public MGUSpawnerRenderState createRenderState() {
+        return null;
+    }
+
+    @Override
+    public void extractRenderState(BlockEntityMGUSpawner blockEntity, MGUSpawnerRenderState state, float partialTicks, @Nonnull Vec3 cameraPosition, ModelFeatureRenderer.CrumblingOverlay breakProgress) {
+        BlockEntityRenderer.super.extractRenderState(blockEntity, state, partialTicks, cameraPosition, breakProgress);
+        state.showRenderBox = blockEntity.showRenderBox;
+        state.AABBForRender = blockEntity.getAABBForRender();
+        state.ticks = blockEntity.animationTicks + (blockEntity.animationTicks - blockEntity.prevAnimationTicks)  * partialTicks;
+        state.partialTicks = partialTicks;
+        state.hasSpawnEggItem = blockEntity.hasSpawnEggItem();
+        if (blockEntity.getEntityToRender() != null)
+            state.entityToRender = Minecraft.getInstance().getEntityRenderDispatcher().extractEntity(blockEntity.getEntityToRender(), partialTicks);
+        state.shouldRender = blockEntity.isOn && state.hasSpawnEggItem && blockEntity.getEntityToRender() != null;
+    }
+
+    public static class MGUSpawnerRenderState extends BlockEntityRenderState {
+        public boolean showRenderBox;
+        public AABB AABBForRender;
+        public boolean shouldRender;
+        public boolean hasSpawnEggItem;
+        public float ticks;
+        public EntityRenderState entityToRender;
+        public float partialTicks;
+    }
 }

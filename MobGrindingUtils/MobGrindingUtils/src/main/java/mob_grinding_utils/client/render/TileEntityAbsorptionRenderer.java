@@ -61,7 +61,7 @@ public class TileEntityAbsorptionRenderer implements BlockEntityRenderer<BlockEn
         poseStack.translate(-0.0005D, -0.0005D, -0.0005D);
         poseStack.scale(0.999F, 0.999F, 0.999F);
 
-        nodeCollector.submitCustomGeometry(poseStack, RenderTypes.lines(), new LineBoxRenderer(renderState.getAABBForRender, new Color(1F, 1F, 0F, 1F)));
+        nodeCollector.submitCustomGeometry(poseStack, RenderTypes.lines(), (pose, nodes) -> LineBoxRenderer.render(pose, nodes, renderState.getAABBForRender, 0xFFFF00FF));
         poseStack.popPose();
     }
 
