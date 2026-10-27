@@ -9,44 +9,44 @@ import net.minecraft.world.entity.LivingEntity;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 public record ChickenSyncPacket(int chickenID, CompoundTag nbt) implements CustomPacketPayload {
-	public static final Type<ChickenSyncPacket> TYPE = new Type<>(RL.mgu("chicken_sync"));
-	public static final StreamCodec<FriendlyByteBuf, ChickenSyncPacket> STREAM_CODEC = CustomPacketPayload.codec(
-			ChickenSyncPacket::write,
-			ChickenSyncPacket::new
-	);
+    public static final Type<ChickenSyncPacket> TYPE = new Type<>(RL.mgu("chicken_sync"));
+    public static final StreamCodec<FriendlyByteBuf, ChickenSyncPacket> STREAM_CODEC = CustomPacketPayload.codec(
+            ChickenSyncPacket::write,
+            ChickenSyncPacket::new
+    );
 
 
-	public ChickenSyncPacket(LivingEntity chicken, CompoundTag chickenNBT) {
-		this(chicken.getId(), chickenNBT);
-	}
+    public ChickenSyncPacket(LivingEntity chicken, CompoundTag chickenNBT) {
+        this(chicken.getId(), chickenNBT);
+    }
 
-	public ChickenSyncPacket(FriendlyByteBuf buf) {
-		this(buf.readInt(), buf.readNbt());
-	}
+    public ChickenSyncPacket(FriendlyByteBuf buf) {
+        this(buf.readInt(), buf.readNbt());
+    }
 
-	public static void handle(ChickenSyncPacket message, final IPayloadContext ctx) {
-		ctx.enqueueWork(() -> {
-			MGUClientPackets.HandleChickenSync(message);
-		});
-	}
+    public static void handle(ChickenSyncPacket message, final IPayloadContext ctx) {
+        ctx.enqueueWork(() -> {
+            MGUClientPackets.HandleChickenSync(message);
+        });
+    }
 
-	public void write(FriendlyByteBuf buf) {
-		buf.writeInt(chickenID);
-		buf.writeNbt(nbt);
-	}
+    public void write(FriendlyByteBuf buf) {
+        buf.writeInt(chickenID);
+        buf.writeNbt(nbt);
+    }
 
-	@Override
-	public int chickenID() {
-		return chickenID;
-	}
+    @Override
+    public int chickenID() {
+        return chickenID;
+    }
 
-	@Override
-	public CompoundTag nbt() {
-		return nbt;
-	}
+    @Override
+    public CompoundTag nbt() {
+        return nbt;
+    }
 
-	@Override
-	public Type<? extends CustomPacketPayload> type() {
-		return TYPE;
-	}
+    @Override
+    public Type<? extends CustomPacketPayload> type() {
+        return TYPE;
+    }
 }

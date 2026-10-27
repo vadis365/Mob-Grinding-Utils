@@ -7,8 +7,6 @@ import mob_grinding_utils.components.FluidContents;
 import mob_grinding_utils.components.MGUComponents;
 import mob_grinding_utils.models.ModelTankBlock;
 import mob_grinding_utils.util.RL;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.model.geom.EntityModelSet;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.client.renderer.special.SpecialModelRenderer;
@@ -35,8 +33,7 @@ public class TileTankStackItemRenderer implements SpecialModelRenderer<TileTankS
     private FluidStack fluidStack;
 
     public TileTankStackItemRenderer(SpecialModelRenderer.BakingContext context) {
-        EntityModelSet EntityModelSetThatIsntNULL = Minecraft.getInstance().getEntityModels();
-        tank_model = new ModelTankBlock(EntityModelSetThatIsntNULL.bakeLayer(ModelLayers.TANK));
+        tank_model = new ModelTankBlock(context.entityModelSet().bakeLayer(ModelLayers.TANK));
     }
 
     @Override
@@ -75,7 +72,7 @@ public class TileTankStackItemRenderer implements SpecialModelRenderer<TileTankS
 
     @Override
     public void getExtents(Consumer<Vector3fc> output) {
-
+        tank_model.tank_box.getExtentsForGui(new PoseStack(), output);
     }
 
     @Override

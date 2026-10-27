@@ -5,6 +5,7 @@ import mob_grinding_utils.models.ChickenBodyModel;
 import mob_grinding_utils.util.RL;
 import net.minecraft.client.model.animal.chicken.ChickenModel;
 import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.world.entity.animal.chicken.Chicken;
 import net.neoforged.api.distmarker.Dist;
