@@ -50,12 +50,8 @@ public class TileEntityTankRenderer implements BlockEntityRenderer<BlockEntityTa
         if (!state.shouldRenderFluid)
             return;
 
-        Fluid fluid = state.fluidResource.getFluid();
+        Fluid fluid = state.fluid;
         float height = (0.96875F / state.fluidCapacity) * state.fluidAmount;
-
-        FluidModel fluidModel = Minecraft.getInstance().getModelManager().getFluidStateModelSet().get(fluid.defaultFluidState());
-        int fluidColor = fluidModel.fluidTintSource().color(fluid.defaultFluidState());
-        TextureAtlasSprite fluidStillSprite = fluidModel.stillMaterial().sprite();
 
         poseStack.pushPose();
         poseStack.translate(0D, 0D, 0D);
@@ -65,11 +61,7 @@ public class TileEntityTankRenderer implements BlockEntityRenderer<BlockEntityTa
         xMin = 0.015625F;
         zMin = 0.015625F;
         yMin = 0.015625F;
-        float alpha = 1F;
-        float red = (fluidColor >> 16 & 0xFF) / 255.0F;
-        float green = (fluidColor >> 8 & 0xFF) / 255.0F;
-        float blue = (fluidColor & 0xFF) / 255.0F;
-        renderFluidCube(poseStack, nodeCollector, fluidStillSprite, xMax, xMin, yMin, height, zMin, zMax, fluidColor, state.lightCoords);
+        renderFluidCube(poseStack, nodeCollector, fluid, xMax, xMin, yMin, height, zMin, zMax, state.lightCoords);
         poseStack.popPose();
 
     }
@@ -78,8 +70,11 @@ public class TileEntityTankRenderer implements BlockEntityRenderer<BlockEntityTa
         return tile instanceof BlockEntityJumboTank ? TANK_JUMBO_TEXTURE : tile instanceof BlockEntitySinkTank ? TANK_SINK_TEXTURE : TANK_TEXTURE;
     }
 
-    public static void renderFluidCube(PoseStack poseStack, SubmitNodeCollector nodeCollector, TextureAtlasSprite textureAtlasSprite, float xMax, float xMin, float yMin, float height, float zMin, float zMax, int color, int combinedLight) {
-        nodeCollector.submitCustomGeometry(poseStack, RenderTypes.translucentMovingBlock(), (pose, vertexConsumer) -> renderCuboid(vertexConsumer, pose, xMax, xMin, yMin, height, zMin, zMax, textureAtlasSprite, color, combinedLight));
+    public static void renderFluidCube(PoseStack poseStack, SubmitNodeCollector nodeCollector, Fluid fluid, float xMax, float xMin, float yMin, float height, float zMin, float zMax, int combinedLight) {
+        FluidModel fluidModel = Minecraft.getInstance().getModelManager().getFluidStateModelSet().get(fluid.defaultFluidState());
+        int fluidColor = fluidModel.fluidTintSource().color(fluid.defaultFluidState());
+        TextureAtlasSprite fluidStillSprite = fluidModel.stillMaterial().sprite();
+        nodeCollector.submitCustomGeometry(poseStack, RenderTypes.translucentMovingBlock(), (pose, vertexConsumer) -> renderCuboid(vertexConsumer, pose, xMax, xMin, yMin, height, zMin, zMax, fluidStillSprite, fluidColor, combinedLight));
     }
 
     public static void renderCuboid(VertexConsumer buffer, PoseStack.Pose pose, float xMax, float xMin, float yMin, float height, float zMin, float zMax, TextureAtlasSprite textureAtlasSprite, int color, int combinedLight) {
@@ -141,7 +136,7 @@ public class TileEntityTankRenderer implements BlockEntityRenderer<BlockEntityTa
     public void extractRenderState(BlockEntityTank blockEntity, TankRenderState state, float partialTicks, @Nonnull Vec3 cameraPosition, ModelFeatureRenderer.CrumblingOverlay breakProgress) {
         BlockEntityRenderer.super.extractRenderState(blockEntity, state, partialTicks, cameraPosition, breakProgress);
         state.shouldRenderFluid = !blockEntity.tank.getResource(0).isEmpty() && blockEntity.tank.getAmountAsInt(0) > 0;
-        state.fluidResource = blockEntity.tank.getResource(0);
+        state.fluid = blockEntity.tank.getResource(0).getFluid();
         state.fluidAmount = blockEntity.tank.getAmountAsInt(0);
         state.fluidCapacity = blockEntity.tank.getCapacityAsInt(0, FluidResource.EMPTY);
         state.texture = getTexture(blockEntity);
@@ -149,7 +144,7 @@ public class TileEntityTankRenderer implements BlockEntityRenderer<BlockEntityTa
 
     public static class TankRenderState extends BlockEntityRenderState {
         public boolean shouldRenderFluid;
-        public FluidResource fluidResource;
+        public Fluid fluid;
         public int fluidAmount;
         public int fluidCapacity;
         public Identifier texture;

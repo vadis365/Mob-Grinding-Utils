@@ -10,11 +10,9 @@ import mob_grinding_utils.util.RL;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.geom.EntityModelSet;
 import net.minecraft.client.renderer.SubmitNodeCollector;
-import net.minecraft.client.renderer.block.FluidModel;
 import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.client.renderer.special.SpecialModelRenderer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -59,10 +57,6 @@ public class TileTankStackItemRenderer implements SpecialModelRenderer<TileTankS
             tankMax = 1024000F;
         float height = (0.96875F / tankMax) * fluidLevel; // volumes hardcoded until config
 
-        FluidModel fluidModel = Minecraft.getInstance().getModelManager().getFluidStateModelSet().get(fluidStack.getFluid().defaultFluidState());
-        int fluidColor = fluidModel.fluidTintSource().color(fluidStack.getFluid().defaultFluidState());
-
-        TextureAtlasSprite fluidStillSprite = fluidModel.stillMaterial().sprite();
         poseStack.pushPose();
         poseStack.translate(0D, 0D, 0D);
         float xMax, zMax, xMin, zMin, yMin = 0;
@@ -71,11 +65,7 @@ public class TileTankStackItemRenderer implements SpecialModelRenderer<TileTankS
         xMin = 0.015625F;
         zMin = 0.015625F;
         yMin = 0.015625F;
-        float alpha = 1F;
-        float red = (fluidColor >> 16 & 0xFF) / 255.0F;
-        float green = (fluidColor >> 8 & 0xFF) / 255.0F;
-        float blue = (fluidColor & 0xFF) / 255.0F;
-        TileEntityTankRenderer.renderFluidCube(poseStack, nodeCollector, fluidStillSprite, xMax, xMin, yMin, height, zMin, zMax, fluidColor, lightCoords);
+        TileEntityTankRenderer.renderFluidCube(poseStack, nodeCollector, fluidStack.getFluid(), xMax, xMin, yMin, height, zMin, zMax, lightCoords);
         poseStack.popPose();
     }
 

@@ -7,6 +7,7 @@ import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 
@@ -21,7 +22,7 @@ public class ModelXPSolidifier extends Model {
     public ModelPart rack_right;
 
     public ModelXPSolidifier(ModelPart root) {
-		super(RenderType::entitySolid);
+        super(root, tex -> RenderTypes.entitySolid((net.minecraft.resources.Identifier) tex));
 		this.tank = root.getChild("tank");
 		this.top = root.getChild("top");
 		this.rack = root.getChild("rack");

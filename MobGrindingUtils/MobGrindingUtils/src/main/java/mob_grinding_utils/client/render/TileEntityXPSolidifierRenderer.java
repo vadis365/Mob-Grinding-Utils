@@ -1,266 +1,203 @@
 package mob_grinding_utils.client.render;
 
-import com.mojang.blaze3d.platform.GlStateManager;
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
-import mob_grinding_utils.ModBlocks;
+import mob_grinding_utils.BlockEntities.BlockEntityXPSolidifier;
+import mob_grinding_utils.BlockEntities.BlockEntityXPSolidifier.OutputDirection;
 import mob_grinding_utils.blocks.BlockXPSolidifier;
 import mob_grinding_utils.client.ModelLayers;
 import mob_grinding_utils.models.ModelXPSolidifier;
-import mob_grinding_utils.BlockEntities.BlockEntityXPSolidifier;
-import mob_grinding_utils.BlockEntities.BlockEntityXPSolidifier.OutputDirection;
 import mob_grinding_utils.util.RL;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider.Context;
+import net.minecraft.client.renderer.blockentity.state.BlockEntityRenderState;
+import net.minecraft.client.renderer.feature.ModelFeatureRenderer;
+import net.minecraft.client.renderer.item.ItemModelResolver;
+import net.minecraft.client.renderer.item.ItemStackRenderState;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
+import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.inventory.InventoryMenu;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemDisplayContext;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.phys.Vec3;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
-import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
-import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.transfer.fluid.FluidResource;
+
+import javax.annotation.Nonnull;
 
 @OnlyIn(Dist.CLIENT)
-public class TileEntityXPSolidifierRenderer implements BlockEntityRenderer<BlockEntityXPSolidifier> {
-	private static final ResourceLocation TEXTURE = RL.mgu("textures/tiles/xp_solidifier.png");
-	private static final ResourceLocation TEXTURE_NO_PUSH = RL.mgu("textures/tiles/xp_solidifier_no_push.png");
-	private final ModelXPSolidifier xp_solidifier_model;
+public class TileEntityXPSolidifierRenderer implements BlockEntityRenderer<BlockEntityXPSolidifier, TileEntityXPSolidifierRenderer.XPSolidifierRenderState> {
+    private static final Identifier TEXTURE = RL.mgu("textures/tiles/xp_solidifier.png");
+    private static final Identifier TEXTURE_NO_PUSH = RL.mgu("textures/tiles/xp_solidifier_no_push.png");
+    private final ModelXPSolidifier xp_solidifier_model;
+    private final ItemModelResolver itemModelRenderer;
 
-	public TileEntityXPSolidifierRenderer(Context context) {
-		xp_solidifier_model = new ModelXPSolidifier(context.bakeLayer(ModelLayers.XPSOLIDIFIER));
-	}
+    public TileEntityXPSolidifierRenderer(Context context) {
+        xp_solidifier_model = new ModelXPSolidifier(context.bakeLayer(ModelLayers.XPSOLIDIFIER));
+        itemModelRenderer = context.itemModelResolver();
+    }
 
-	@Override
-	public void render(BlockEntityXPSolidifier tile, float partialTicks, PoseStack matrixStack, MultiBufferSource bufferIn, int combinedLight, int combinedOverlay) {
-		if(tile == null || !tile.hasLevel())
-			return;
+    @Override
+    public void submit(XPSolidifierRenderState state, @Nonnull PoseStack poseStack, @Nonnull SubmitNodeCollector nodeCollector, @Nonnull CameraRenderState camera) {
+        poseStack.pushPose();
+        poseStack.translate(0.5D, 1.5D, 0.5D);
+        poseStack.scale(-0.9999F, -0.9999F, 0.9999F);
 
-		BlockState state = tile.getLevel().getBlockState(tile.getBlockPos());
+        switch (state.outputDirection) {
+        case NONE:
+        case NORTH:
+            poseStack.mulPose(Axis.YP.rotationDegrees(90F));
+            break;
+        case SOUTH:
+            poseStack.mulPose(Axis.YN.rotationDegrees(90F));
+            break;
+        case WEST:
+            poseStack.mulPose(Axis.YP.rotationDegrees(0F));
+            break;
+        case EAST:
+            poseStack.mulPose(Axis.YN.rotationDegrees(180F));
+            break;
+        default:
+            poseStack.mulPose(Axis.YP.rotationDegrees(90F));
+            break;
+        }
+        nodeCollector.submitModelPart(xp_solidifier_model.top, poseStack, RenderTypes.entityCutout(state.outputDirection == OutputDirection.NONE ? TEXTURE_NO_PUSH : TEXTURE), state.lightCoords, OverlayTexture.NO_OVERLAY, null, 0xFFFFFFFF, state.breakProgress);
+        poseStack.popPose();
 
-		if(state == null || state.getBlock() != ModBlocks.XPSOLIDIFIER.getBlock())
-			return;
+        poseStack.pushPose();
+        poseStack.translate(0.5D, 1.5D, 0.5D);
+        poseStack.scale(-0.9999F, -0.9999F, 0.9999F); //don't want to cull, but also don't want z-fighty nonsense
 
-		Direction facing = state.getValue(BlockXPSolidifier.FACING);
+        switch (state.facing) {
+        case NORTH:
+            poseStack.mulPose(Axis.YP.rotationDegrees(0F));
+            break;
+        case SOUTH:
+            poseStack.mulPose(Axis.YP.rotationDegrees(180F));
+            break;
+        case WEST:
+            poseStack.mulPose(Axis.YN.rotationDegrees(90F));
+            break;
+        case EAST:
+            poseStack.mulPose(Axis.YP.rotationDegrees(90F));
+            break;
+        default:
+            break;
+        }
 
-		float ticks = tile.prevAnimationTicks + (tile.animationTicks - tile.prevAnimationTicks)  * partialTicks;
-		
-		matrixStack.pushPose();
-		matrixStack.translate(0.5D, 1.5D, 0.5D);
-		matrixStack.scale(-0.9999F, -0.9999F, 0.9999F);
+        poseStack.pushPose();
 
-		switch (tile.outputDirection) {
-		case NONE:
-		case NORTH:
-			matrixStack.mulPose(Axis.YP.rotationDegrees(90F));
-			break;
-		case SOUTH:
-			matrixStack.mulPose(Axis.YN.rotationDegrees(90F));
-			break;
-		case WEST:
-			matrixStack.mulPose(Axis.YP.rotationDegrees(0F));
-			break;
-		case EAST:
-			matrixStack.mulPose(Axis.YN.rotationDegrees(180F));
-			break;
-		default:
-			matrixStack.mulPose(Axis.YP.rotationDegrees(90F));
-			break;
-		}
+        if(state.ticks > 0 && state.ticks <= 20F)
+            poseStack.translate(0D, state.ticks * 0.009375F, 0D);
+        if(state.ticks > 20F && state.ticks <= 60)
+            poseStack.translate(0D, 0.1875F, 0D);
+        if(state.ticks > 60F && state.ticks <= 80F)
+            poseStack.translate(0D, (80F - state.ticks)  * 0.009375F, 0D);
+        if(state.ticks > 80F || state.ticks <= 0)
+            poseStack.translate(0D, 0D, 0D);
+        nodeCollector.submitModelPart(xp_solidifier_model.rack, poseStack, RenderTypes.entityCutout(TEXTURE), state.lightCoords, OverlayTexture.NO_OVERLAY, null, 0xFFFFFFFF, state.breakProgress);
 
-		RenderSystem.enableBlend();
-		RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
-		xp_solidifier_model.renderExport(matrixStack, bufferIn.getBuffer(RenderType.entitySmoothCutout(tile.outputDirection == OutputDirection.NONE ? TEXTURE_NO_PUSH : TEXTURE)), combinedLight, OverlayTexture.NO_OVERLAY, 0xFFFFFFFF);
-		RenderSystem.disableBlend();
-	    RenderSystem.defaultBlendFunc();
-		matrixStack.popPose();
+        poseStack.pushPose();
+        poseStack.translate(0D, 0.60625D, -0.22D);
+        poseStack.mulPose(Axis.XP.rotationDegrees(90.0F));
+        poseStack.scale(1.25F, 1.25F, 1.25F);
+        state.mouldState.submit(poseStack, nodeCollector, state.lightCoords, OverlayTexture.NO_OVERLAY, 0);
+        poseStack.popPose();
+        poseStack.popPose();
+        nodeCollector.submitModelPart(xp_solidifier_model.tank, poseStack, RenderTypes.entityCutout(TEXTURE), state.lightCoords, OverlayTexture.NO_OVERLAY, null, 0xFFFFFFFF, state.breakProgress);
+        poseStack.pushPose();
+        poseStack.translate(0D, 0.79375D, -0.22D);
+        poseStack.mulPose(Axis.XP.rotationDegrees(90.0F));
+        poseStack.scale(1.25F, 1.25F, 1.25F);
+/*		ItemStack stackResult = state.stackResult;
+        if (stackResult.isEmpty() && !tile.getCachedOutPutRenderStack().isEmpty() && tile.getProgress() > 60) { //may want to add some earlier blending fade here
+            Minecraft.getInstance().getTextureManager().bindForSetup(InventoryMenu.BLOCK_ATLAS);
+            Minecraft.getInstance().getItemRenderer().render(tile.getCachedOutPutRenderStack(), ItemDisplayContext.GROUND, false, poseStack, bufferIn, combinedLight, combinedOverlay, Minecraft.getInstance().getItemRenderer() .getModel(tile.getCachedOutPutRenderStack(), null, null, 0));
+        } else if (!stackResult.isEmpty()) {
+            Minecraft.getInstance().getTextureManager().bindForSetup(InventoryMenu.BLOCK_ATLAS);
+            Minecraft.getInstance().getItemRenderer().render(stackResult, ItemDisplayContext.GROUND, false, poseStack, bufferIn, combinedLight, combinedOverlay, Minecraft.getInstance().getItemRenderer().getModel(stackResult, null, null, 0));
+        }*/ //TODO i forget what this did...
+        state.resultState.submit(poseStack, nodeCollector, state.lightCoords, OverlayTexture.NO_OVERLAY, 0);
+        poseStack.popPose();
+        poseStack.popPose();
 
-		matrixStack.pushPose();
-		matrixStack.translate(0.5D, 1.5D, 0.5D);
-		matrixStack.scale(-0.9999F, -0.9999F, 0.9999F); //don't want to cull, but also don't want z-fighty nonsense
+        if (state.fluidAmount < 1 || state.fluid == null)
+            return;
 
-		switch (facing) {
-		case NORTH:
-			matrixStack.mulPose(Axis.YP.rotationDegrees(0F));
-			break;
-		case SOUTH:
-			matrixStack.mulPose(Axis.YP.rotationDegrees(180F));
-			break;
-		case WEST:
-			matrixStack.mulPose(Axis.YN.rotationDegrees(90F));
-			break;
-		case EAST:
-			matrixStack.mulPose(Axis.YP.rotationDegrees(90F));
-			break;
-		default:
-			break;
-		}
-		
-		matrixStack.pushPose();
-		RenderSystem.enableBlend();
-		
-		if(ticks > 0 && ticks <= 20F)
-			matrixStack.translate(0D, ticks * 0.009375F, 0D);
-		if(ticks > 20F && ticks <= 60)
-			matrixStack.translate(0D, 0.1875F, 0D);
-		if(ticks > 60F && ticks <= 80F)
-			matrixStack.translate(0D, (80F - ticks)  * 0.009375F, 0D);
-		if(ticks > 80F || ticks <= 0)
-			matrixStack.translate(0D, 0D, 0D);
-		RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
-		xp_solidifier_model.renderRack(matrixStack, bufferIn.getBuffer(RenderType.entitySmoothCutout(TEXTURE)), combinedLight, OverlayTexture.NO_OVERLAY, 0xFFFFFFFF);
-		
-		matrixStack.pushPose();
-		matrixStack.translate(0D, 0.60625D, -0.22D);
-		matrixStack.mulPose(Axis.XP.rotationDegrees(90.0F));
-		matrixStack.scale(1.25F, 1.25F, 1.25F);
-		ItemStack stackMould = tile.inputSlots.getStackInSlot(0);
-		if (!stackMould.isEmpty()) {
-			Minecraft.getInstance().getTextureManager().bindForSetup(InventoryMenu.BLOCK_ATLAS);
-			Minecraft.getInstance().getItemRenderer().render(stackMould, ItemDisplayContext.GROUND, false, matrixStack, bufferIn, combinedLight, combinedOverlay, Minecraft.getInstance().getItemRenderer().getModel(stackMould, null, null, 0));
-		}
-		matrixStack.popPose();
-		
-		RenderSystem.disableBlend();
-	    RenderSystem.defaultBlendFunc();
-	    matrixStack.popPose();
-	    
-		RenderSystem.enableBlend();
-		RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
-		xp_solidifier_model.renderToBuffer(matrixStack, bufferIn.getBuffer(RenderType.entitySmoothCutout(TEXTURE)), combinedLight, OverlayTexture.NO_OVERLAY, 0xFFFFFFFF);
-		
-		matrixStack.pushPose();
-		matrixStack.translate(0D, 0.79375D, -0.22D);
-		matrixStack.mulPose(Axis.XP.rotationDegrees(90.0F));
-		matrixStack.scale(1.25F, 1.25F, 1.25F);
-		ItemStack stackResult = tile.outputSlot.getStackInSlot(0);
-		if (stackResult.isEmpty() && !tile.getCachedOutPutRenderStack().isEmpty() && tile.getProgress() > 60) { //may want to add some earlier blending fade here
-			Minecraft.getInstance().getTextureManager().bindForSetup(InventoryMenu.BLOCK_ATLAS);
-			Minecraft.getInstance().getItemRenderer().render(tile.getCachedOutPutRenderStack(), ItemDisplayContext.GROUND, false, matrixStack, bufferIn, combinedLight, combinedOverlay, Minecraft.getInstance().getItemRenderer() .getModel(tile.getCachedOutPutRenderStack(), null, null, 0));
-		} else if (!stackResult.isEmpty()) {
-			Minecraft.getInstance().getTextureManager().bindForSetup(InventoryMenu.BLOCK_ATLAS);
-			Minecraft.getInstance().getItemRenderer().render(stackResult, ItemDisplayContext.GROUND, false, matrixStack, bufferIn, combinedLight, combinedOverlay, Minecraft.getInstance().getItemRenderer().getModel(stackResult, null, null, 0));
-		}
-		matrixStack.popPose();
+        float height = (0.46875F / state.fluidCapacity) * state.fluidAmount;
 
-		RenderSystem.disableBlend();
-	    RenderSystem.defaultBlendFunc();
-		matrixStack.popPose();
+        poseStack.pushPose();
+        poseStack.translate(0D, 0D, 0D);
+        float xMax, zMax, xMin, zMin, yMin = 0;
+        xMax = 1.984375F;
+        zMax = 1.984375F;
+        xMin = 0.015625F;
+        zMin = 0.015625F;
+        yMin = 0.015625F;
+        TileEntityTankRenderer.renderFluidCube(poseStack, nodeCollector, state.fluid, xMax, xMin, yMin, height, zMin, zMax, state.lightCoords);
+        poseStack.popPose();
 
-		if (tile.tank.getFluid().isEmpty())
-			return;
-		float fluidLevel = tile.tank.getFluidAmount();
-		if (fluidLevel < 1)
-			return;
-		FluidStack fluidStack = new FluidStack(tile.tank.getFluid().getFluidHolder(), 100);
-		float height = (0.46875F / tile.tank.getCapacity()) * tile.tank.getFluidAmount();
+        if(state.ticks > 20F && state.ticks < 60 && state.hasMould) {
+            poseStack.pushPose();
+            switch (state.facing) {
+            case NORTH:
+                poseStack.translate(0D, 0D, 0D);
+                break;
+            case SOUTH:
+                poseStack.translate(0D, 0D, 0.125D);
+                break;
+            case WEST:
+                poseStack.translate(-0.0625D, 0D, 0.0625D);
+                break;
+            case EAST:
+                poseStack.translate(0.0625D, 0D, 0.0625D);
+                break;
+            default:
+                break;
+            }
+            xMax = 1.62F;
+            zMax = 1.5F;
+            xMin = 0.38F;
+            zMin = 0.25F;
+            yMin = 0.6875F;
+            TileEntityTankRenderer.renderFluidCube(poseStack, nodeCollector, state.fluid, xMax, xMin, yMin, 0.6875F + state.ticks * 0.000625F, zMin, zMax, state.lightCoords);
+            poseStack.popPose();
+        }
 
-		var fluidExtensions = IClientFluidTypeExtensions.of(fluidStack.getFluid());
+    }
 
-		TextureAtlasSprite fluidStillSprite = Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(fluidExtensions.getStillTexture());
-		VertexConsumer buffer = bufferIn.getBuffer(RenderType.translucent());
-		int fluidColor = fluidExtensions.getTintColor();
-		matrixStack.pushPose();
-		matrixStack.translate(0D, 0D, 0D);
-		float xMax, zMax, xMin, zMin, yMin = 0;
-		xMax = 1.984375F;
-		zMax = 1.984375F;
-		xMin = 0.015625F;
-		zMin = 0.015625F;
-		yMin = 0.015625F;
-		float alpha = 1F;
-		float red = (fluidColor >> 16 & 0xFF) / 255.0F;
-		float green = (fluidColor >> 8 & 0xFF) / 255.0F;
-		float blue = (fluidColor & 0xFF) / 255.0F;
-		renderCuboid(buffer, matrixStack, xMax, xMin, yMin, height, zMin, zMax, fluidStillSprite, red, green, blue, alpha, combinedLight);
-		matrixStack.popPose();
+    @Override
+    public XPSolidifierRenderState createRenderState() {
+        return new XPSolidifierRenderState();
+    }
 
-		if(ticks > 20F && ticks < 60 && !stackMould.isEmpty()) {
-			matrixStack.pushPose();
-			switch (facing) {
-			case NORTH:
-				matrixStack.translate(0D, 0D, 0D);
-				break;
-			case SOUTH:
-				matrixStack.translate(0D, 0D, 0.125D);
-				break;
-			case WEST:
-				matrixStack.translate(-0.0625D, 0D, 0.0625D);
-				break;
-			case EAST:
-				matrixStack.translate(0.0625D, 0D, 0.0625D);
-				break;
-			default:
-				break;
-			}
-			xMax = 1.62F;
-			zMax = 1.5F;
-			xMin = 0.38F;
-			zMin = 0.25F;
-			yMin = 0.6875F;
-			renderCuboid(buffer, matrixStack, xMax, xMin, yMin, 0.6875F + ticks * 0.000625F, zMin, zMax, fluidStillSprite, red, green, blue, alpha, combinedLight);
-			matrixStack.popPose();
-		}
+    @Override
+    public void extractRenderState(BlockEntityXPSolidifier blockEntity, XPSolidifierRenderState state, float partialTicks, @Nonnull Vec3 cameraPosition, ModelFeatureRenderer.CrumblingOverlay breakProgress) {
+        BlockEntityRenderer.super.extractRenderState(blockEntity, state, partialTicks, cameraPosition, breakProgress);
+        state.outputDirection = blockEntity.outputDirection;
+        state.facing = blockEntity.getBlockState().getValue(BlockXPSolidifier.FACING);
+        state.ticks = blockEntity.prevAnimationTicks + (blockEntity.animationTicks - blockEntity.prevAnimationTicks) * partialTicks;
+        state.fluid = blockEntity.tank.getResource(0).getFluid();
+        state.fluidAmount = blockEntity.tank.getAmountAsInt(0);
+        state.fluidCapacity = blockEntity.tank.getCapacityAsInt(0, FluidResource.EMPTY);
+        state.hasMould = !blockEntity.inputSlots.getResource(0).isEmpty() && blockEntity.inputSlots.getAmountAsInt(0) > 0;
+        itemModelRenderer.updateForTopItem(state.mouldState, blockEntity.inputSlots.getResource(0).toStack(), ItemDisplayContext.GROUND, blockEntity.getLevel(), null, 0);
+        itemModelRenderer.updateForTopItem(state.resultState, blockEntity.outputSlot.getResource(0).toStack(), ItemDisplayContext.GROUND, blockEntity.getLevel(), null, 0);
+    }
 
-	}
-
-	private void renderCuboid(VertexConsumer buffer, PoseStack matrixStack, float xMax, float xMin, float yMin, float height, float zMin, float zMax, TextureAtlasSprite textureAtlasSprite, float red, float green, float blue, float alpha, int combinedLight) {
-
-		float uMin = textureAtlasSprite.getU0();
-		float uMax = textureAtlasSprite.getU1();
-		float vMin = textureAtlasSprite.getV0();
-		float vMax = textureAtlasSprite.getV1();
-
-		float vHeight = vMax - vMin;
-
-		// top
-		addVertexWithUV(buffer, matrixStack, xMax, height, zMax, uMax, vMin, red, green, blue, alpha, combinedLight);
-		addVertexWithUV(buffer, matrixStack, xMax, height, zMin, uMin, vMin, red, green, blue, alpha, combinedLight);
-		addVertexWithUV(buffer, matrixStack, xMin, height, zMin, uMin, vMax, red, green, blue, alpha, combinedLight);
-		addVertexWithUV(buffer, matrixStack, xMin, height, zMax, uMax, vMax, red, green, blue, alpha, combinedLight);
-
-		// north
-		addVertexWithUV(buffer, matrixStack, xMax, yMin, zMin, uMax, vMin, red, green, blue, alpha, combinedLight);
-		addVertexWithUV(buffer, matrixStack, xMin, yMin, zMin, uMin, vMin, red, green, blue, alpha, combinedLight);
-		addVertexWithUV(buffer, matrixStack, xMin, height, zMin, uMin, vMin + (vHeight * height), red, green, blue, alpha, combinedLight);
-		addVertexWithUV(buffer, matrixStack, xMax, height, zMin, uMax, vMin + (vHeight * height), red, green, blue, alpha, combinedLight);
-
-		// south
-		addVertexWithUV(buffer, matrixStack, xMax, yMin, zMax, uMin, vMin, red, green, blue, alpha, combinedLight);
-		addVertexWithUV(buffer, matrixStack, xMax, height, zMax, uMin, vMin + (vHeight * height), red, green, blue, alpha, combinedLight);
-		addVertexWithUV(buffer, matrixStack, xMin, height, zMax, uMax, vMin + (vHeight * height), red, green, blue, alpha, combinedLight);
-		addVertexWithUV(buffer, matrixStack, xMin, yMin, zMax, uMax, vMin, red, green, blue, alpha, combinedLight);
-
-		// east
-		addVertexWithUV(buffer, matrixStack, xMax, yMin, zMin, uMin, vMin, red, green, blue, alpha, combinedLight);
-		addVertexWithUV(buffer, matrixStack, xMax, height, zMin, uMin, vMin + (vHeight * height), red, green, blue, alpha, combinedLight);
-		addVertexWithUV(buffer, matrixStack, xMax, height, zMax, uMax, vMin + (vHeight * height), red, green, blue, alpha, combinedLight);
-		addVertexWithUV(buffer, matrixStack, xMax, yMin, zMax, uMax, vMin, red, green, blue, alpha, combinedLight);
-
-		// west
-		addVertexWithUV(buffer, matrixStack, xMin, yMin, zMax, uMin, vMin, red, green, blue, alpha, combinedLight);
-		addVertexWithUV(buffer, matrixStack, xMin, height, zMax, uMin, vMin + (vHeight * height), red, green, blue, alpha, combinedLight);
-		addVertexWithUV(buffer, matrixStack, xMin, height, zMin, uMax, vMin + (vHeight * height), red, green, blue, alpha, combinedLight);
-		addVertexWithUV(buffer, matrixStack, xMin, yMin, zMin, uMax, vMin, red, green, blue, alpha, combinedLight);
-
-		// down
-		addVertexWithUV(buffer, matrixStack, xMax, yMin, zMin, uMax, vMin, red, green, blue, alpha, combinedLight);
-		addVertexWithUV(buffer, matrixStack, xMax, yMin, zMax, uMin, vMin, red, green, blue, alpha, combinedLight);
-		addVertexWithUV(buffer, matrixStack, xMin, yMin, zMax, uMin, vMax, red, green, blue, alpha, combinedLight);
-		addVertexWithUV(buffer, matrixStack, xMin, yMin, zMin, uMax, vMax, red, green, blue, alpha, combinedLight);
-	}
-
-	private void addVertexWithUV(VertexConsumer buffer, PoseStack matrixStack, float x, float y, float z, float u, float v, float red, float green, float blue, float alpha, int combinedLight) {
-		buffer.addVertex(matrixStack.last().pose(), x / 2f, y, z / 2f).setColor(red, green, blue, alpha).setUv(u, v).setUv2(combinedLight, 240).setNormal(1, 0, 0);
-	}
-
+    public static class XPSolidifierRenderState extends BlockEntityRenderState {
+        public OutputDirection outputDirection = OutputDirection.NONE;
+        public Direction facing = Direction.NORTH;
+        public float ticks = 0F;
+        public Fluid fluid;
+        public int fluidAmount;
+        public int fluidCapacity;
+        public ItemStackRenderState mouldState = new ItemStackRenderState();
+        public ItemStackRenderState resultState = new ItemStackRenderState();
+        public boolean hasMould = false;
+    }
 }
