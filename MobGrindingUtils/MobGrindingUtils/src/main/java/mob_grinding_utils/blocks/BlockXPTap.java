@@ -26,6 +26,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.material.MapColor;
+import net.minecraft.world.level.redstone.Orientation;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
@@ -129,13 +130,13 @@ public class BlockXPTap extends DirectionalBlock implements EntityBlock {
     }
 
     @Override
-    public void neighborChanged(@Nonnull BlockState state, Level world, @Nonnull BlockPos pos, @Nonnull Block block, @Nonnull BlockPos fromPos, boolean isMoving) {
+    public void neighborChanged(@Nonnull BlockState state, Level world, @Nonnull BlockPos pos, @Nonnull Block block, @Nullable Orientation orientation, boolean isMoving) {
         Direction facing = world.getBlockState(pos).getValue(FACING);
         if (!canPlaceAt(world, pos.relative(facing.getOpposite()), facing)) {
             popResource(world, pos, new ItemStack(ModBlocks.XP_TAP.getItem(), 1));
             world.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
         }
-        super.neighborChanged(state, world, pos, block, fromPos, isMoving);
+        super.neighborChanged(state, world, pos, block, orientation, isMoving);
     }
 
     @Override

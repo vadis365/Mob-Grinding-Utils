@@ -101,7 +101,7 @@ public class MobGrindingUtils {
 
 	public static final List<RecipeHolder<SolidifyRecipe>> SOLIDIFIER_RECIPES = new ArrayList<>();
 	public static final List<RecipeHolder<BeheadingRecipe>> BEHEADING_RECIPES = new ArrayList<>();
-	public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<SolidifyRecipe>> SOLIDIFIER_RECIPE = RECIPES.register(SolidifyRecipe.NAME, SolidifyRecipe.Serializer::new);
+	public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<SolidifyRecipe>> SOLIDIFIER_RECIPE = RECIPES.register(SolidifyRecipe.NAME, () -> SolidifyRecipe.SERIALIZER);
 	public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<BeheadingRecipe>> BEHEADING_RECIPE = RECIPES.register(BeheadingRecipe.NAME, () -> BeheadingRecipe.SERIALIZER);
 	public static final DeferredHolder<RecipeType<?>, RecipeType<SolidifyRecipe>> SOLIDIFIER_TYPE = RECIPE_TYPES.register("solidify", RecipeType::simple);
 	public static final DeferredHolder<RecipeType<?>, RecipeType<BeheadingRecipe>> BEHEADING_TYPE = RECIPE_TYPES.register("beheading", RecipeType::simple);

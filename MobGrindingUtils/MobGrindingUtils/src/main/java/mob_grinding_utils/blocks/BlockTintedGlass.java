@@ -5,9 +5,11 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.ScheduledTickAccess;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -48,13 +50,8 @@ public class BlockTintedGlass extends Block {
     }
 
     @Override
-    public boolean propagatesSkylightDown(@Nonnull BlockState state, @Nonnull BlockGetter reader, @Nonnull BlockPos pos) {
+    public boolean propagatesSkylightDown(@Nonnull BlockState state) {
         return false;
-    }
-
-    @Override
-    public int getLightBlock (@Nonnull BlockState state, BlockGetter world, @Nonnull BlockPos pos) {
-        return world.getMaxLightLevel();
     }
 
     @Override
@@ -69,16 +66,15 @@ public class BlockTintedGlass extends Block {
             .setValue(CONNECTED_UP, this.isSideConnectable(world, pos, Direction.UP))
             .setValue(CONNECTED_WEST, this.isSideConnectable(world, pos, Direction.WEST));
     }
-
     @Nonnull
     @Override
-    public BlockState updateShape(BlockState stateIn, @Nonnull Direction facing, @Nonnull BlockState facingState, @Nonnull LevelAccessor world, @Nonnull BlockPos pos, @Nonnull BlockPos facingPos) {
-        return stateIn.setValue(CONNECTED_DOWN, this.isSideConnectable(world, pos, Direction.DOWN))
-            .setValue(CONNECTED_EAST, this.isSideConnectable(world, pos, Direction.EAST))
-            .setValue(CONNECTED_NORTH, this.isSideConnectable(world, pos, Direction.NORTH))
-            .setValue(CONNECTED_SOUTH, this.isSideConnectable(world, pos, Direction.SOUTH))
-            .setValue(CONNECTED_UP, this.isSideConnectable(world, pos, Direction.UP))
-            .setValue(CONNECTED_WEST, this.isSideConnectable(world, pos, Direction.WEST));
+    public BlockState updateShape(BlockState state, @Nonnull LevelReader level, @Nonnull ScheduledTickAccess ticks, @Nonnull BlockPos pos, @Nonnull Direction directionToNeighbour, @Nonnull BlockPos neighbourPos, @Nonnull BlockState neighbourState, @Nonnull RandomSource random) {
+        return state.setValue(CONNECTED_DOWN, this.isSideConnectable(level, pos, Direction.DOWN))
+            .setValue(CONNECTED_EAST, this.isSideConnectable(level, pos, Direction.EAST))
+            .setValue(CONNECTED_NORTH, this.isSideConnectable(level, pos, Direction.NORTH))
+            .setValue(CONNECTED_SOUTH, this.isSideConnectable(level, pos, Direction.SOUTH))
+            .setValue(CONNECTED_UP, this.isSideConnectable(level, pos, Direction.UP))
+            .setValue(CONNECTED_WEST, this.isSideConnectable(level, pos, Direction.WEST));
     }
 
     @Override

@@ -68,6 +68,6 @@ public class SolidifierCategory implements IRecipeCategory<SolidifyRecipe> {
                 });
             });
         builder.addSlot(RecipeIngredientRole.OUTPUT, 70, 5)
-            .addItemStack(recipe.getResultItem(RegistryAccess.EMPTY));
+            .add(recipe.getResultItem().copy());
     }
 }

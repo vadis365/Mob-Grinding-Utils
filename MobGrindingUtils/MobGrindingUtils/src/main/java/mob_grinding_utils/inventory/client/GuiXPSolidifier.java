@@ -4,7 +4,6 @@ import mob_grinding_utils.inventory.server.ContainerXPSolidifier;
 import mob_grinding_utils.network.BEGuiClick;
 import mob_grinding_utils.BlockEntities.BlockEntityXPSolidifier;
 import mob_grinding_utils.util.RL;
-import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import net.neoforged.neoforge.network.PacketDistributor;
