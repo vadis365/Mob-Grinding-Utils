@@ -1,66 +1,45 @@
 package mob_grinding_utils.client.jei;
 
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
-import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.drawable.IDrawableStatic;
+import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.neoforge.NeoForgeTypes;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
-import mezz.jei.api.recipe.RecipeType;
-import mezz.jei.api.recipe.category.IRecipeCategory;
+import mezz.jei.api.recipe.category.AbstractRecipeCategory;
 import mob_grinding_utils.ModBlocks;
-import mob_grinding_utils.Reference;
 import mob_grinding_utils.recipe.SolidifyRecipe;
+import mob_grinding_utils.util.RL;
 import net.minecraft.ChatFormatting;
-import net.minecraft.core.RegistryAccess;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.neoforged.neoforge.fluids.FluidStack;
 
 import javax.annotation.Nonnull;
 import java.util.List;
 
-public class SolidifierCategory implements IRecipeCategory<SolidifyRecipe> {
-    public static final ResourceLocation ID = ResourceLocation.fromNamespaceAndPath(Reference.MOD_ID, "solidifier_jei");
-
+public class SolidifierCategory extends AbstractRecipeCategory<SolidifyRecipe> {
     private final IDrawableStatic background;
 
     public SolidifierCategory(IGuiHelper guiHelper) {
-        background = guiHelper.drawableBuilder(ResourceLocation.fromNamespaceAndPath(Reference.MOD_ID, "textures/gui/solidifier_jei.png"), 0, 0, 91, 26).setTextureSize(91, 26).build();
-    }
-
-    @Nonnull
-    @Override
-    public RecipeType<SolidifyRecipe> getRecipeType() {
-        return JEIPlugin.SOLIDIFY_TYPE;
-    }
-
-    @Nonnull
-    @Override
-    public Component getTitle() {
-        return Component.translatable("mob_grinding_utiles.jei.solidifier");
-    }
-
-    @Nonnull
-    @Override
-    public IDrawable getBackground() {
-        return background;
+        super(JEIPlugin.SOLIDIFY_TYPE, Component.translatable("mob_grinding_utils.jei.solidifier"), null, 91, 26);
+        background = guiHelper.drawableBuilder(RL.mgu("textures/gui/solidifier_jei.png"), 0, 0, 91, 26).setTextureSize(91, 26).build();
     }
 
     @Override
-    public IDrawable getIcon() {
-        return null;
+    public void draw(SolidifyRecipe recipe, @Nonnull IRecipeSlotsView recipeSlotsView, @Nonnull GuiGraphicsExtractor guiGraphics, double mouseX, double mouseY) {
+        background.draw(guiGraphics, 0, 0);
     }
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, SolidifyRecipe recipe, @Nonnull IFocusGroup focuses) {
-        builder.addSlot(RecipeIngredientRole.CATALYST, 5,5)
-            .addIngredients(recipe.mould());
+        builder.addSlot(RecipeIngredientRole.INPUT, 5,5)
+            .add(recipe.mould());
 
         builder.addSlot(RecipeIngredientRole.INPUT, 37, 5)
             .addIngredients(NeoForgeTypes.FLUID_STACK, List.of(new FluidStack(ModBlocks.FLUID_XP.get(), recipe.fluidAmount())))
-            .addTooltipCallback((recipeSlot, tooltip) -> {
+            .addRichTooltipCallback((recipeSlot, tooltip) -> {
                 var ingredient = recipeSlot.getDisplayedIngredient(NeoForgeTypes.FLUID_STACK);
                 ingredient.ifPresent(fluidStack -> {
                     tooltip.add(Component.literal(fluidStack.getAmount() + " mB"));

@@ -29,7 +29,7 @@
   "mob_grinding_utils.jei.any_experience": "accepts any: forge:experience",
 
   "_comment": "JEI Titles",
-  "mob_grinding_utiles.jei.solidifier" : "Solidifier Recipe",
+  "mob_grinding_utils.jei.solidifier" : "Solidifier Recipe",
 
   "_comment": "Jei Info Tabs",
   "block.mob_grinding_utils.jumbo_tank.jei.info": "A larger version of the Singularity Tank, Holds 1024 buckets worth of any liquid.",
