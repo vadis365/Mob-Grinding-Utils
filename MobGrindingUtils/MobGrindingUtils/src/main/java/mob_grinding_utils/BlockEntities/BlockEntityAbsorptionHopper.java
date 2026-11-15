@@ -4,7 +4,6 @@ import io.netty.buffer.Unpooled;
 import mob_grinding_utils.ModBlocks;
 import mob_grinding_utils.ModItems;
 import mob_grinding_utils.inventory.server.ContainerAbsorptionHopper;
-import mob_grinding_utils.inventory.server.InventoryWrapperAH;
 import mob_grinding_utils.util.CapHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -16,7 +15,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.Container;
-import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.WorldlyContainer;
 import net.minecraft.world.entity.Entity;
@@ -33,14 +31,11 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
-import net.neoforged.neoforge.fluids.FluidStack;
-import net.neoforged.neoforge.fluids.capability.IFluidHandler;
-import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
-import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.ItemHandlerHelper;
 import net.neoforged.neoforge.transfer.ResourceHandler;
 import net.neoforged.neoforge.transfer.fluid.FluidResource;
 import net.neoforged.neoforge.transfer.fluid.FluidStacksResourceHandler;
+import net.neoforged.neoforge.transfer.item.ItemResource;
 import net.neoforged.neoforge.transfer.item.ItemStacksResourceHandler;
 import net.neoforged.neoforge.transfer.transaction.Transaction;
 
@@ -50,14 +45,13 @@ import java.util.List;
 import java.util.Optional;
 
 
-public class BlockEntityAbsorptionHopper extends BlockEntityInventoryHelper implements MenuProvider, BEGuiClickable {
+public class BlockEntityAbsorptionHopper extends BlockEntity implements MenuProvider, BEGuiClickable {
 	public FluidStacksResourceHandler tank = new FluidStacksResourceHandler(1, 1000 *  16);
-	private final IItemHandler itemHandler;
-	private static final int[] SLOTS = new int[] {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16};
+    private ItemStacksResourceHandler upgradeHandler = new ItemStacksResourceHandler(1);
+	private ItemStacksResourceHandler itemHandler = new ItemStacksResourceHandler(17);
 	public int prevTankAmount;
 	public BlockEntityAbsorptionHopper(BlockPos pos, BlockState state) {
-		super(ModBlocks.ABSORPTION_HOPPER.getTileEntityType(), 17, pos, state);
-		itemHandler = createUnSidedHandler();
+		super(ModBlocks.ABSORPTION_HOPPER.getTileEntityType(), pos, state);
 	}
 
 	@Override
@@ -219,11 +213,11 @@ public class BlockEntityAbsorptionHopper extends BlockEntityInventoryHelper impl
 
 	public static <T extends BlockEntity> void serverTick(Level level, BlockPos worldPosition, BlockState blockState, T t) {
 		if (t instanceof BlockEntityAbsorptionHopper tile) {
-			tile.prevTankAmount = tile.tank.getFluidAmount();
+			tile.prevTankAmount = tile.tank.getAmountAsInt(0);
 			for (Direction facing : Direction.values()) {
 				if (tile.status[facing.ordinal()] == EnumStatus.STATUS_OUTPUT_ITEM) {
 					BlockEntity otherTile = level.getBlockEntity(worldPosition.relative(facing));
-					Optional<IItemHandler> handlerOptional = CapHelper.getItemHandler(level, worldPosition.relative(facing), facing.getOpposite());
+					Optional<ResourceHandler<ItemResource>> handlerOptional = CapHelper.getItemHandler(level, worldPosition.relative(facing), facing.getOpposite());
 					if (otherTile != null && handlerOptional.isPresent()) {
 						handlerOptional.ifPresent((handler) -> {
 							if (level.getGameTime() % 8 == 0) {
@@ -262,14 +256,19 @@ public class BlockEntityAbsorptionHopper extends BlockEntityInventoryHelper impl
 				if (tile.status[facing.ordinal()] == EnumStatus.STATUS_OUTPUT_FLUID) {
 					Optional<ResourceHandler<FluidResource>> handlerOptional = CapHelper.getFluidHandler(level, worldPosition.relative(facing), facing.getOpposite());
 					handlerOptional.ifPresent((receptacle) -> {
-						int tanks = receptacle.getTanks();
+						int tanks = receptacle.size();
 						for (int x = 0; x < tanks; x++) {
-							if (receptacle.getTankCapacity(x) > 0) {
-								FluidStack contents = receptacle.getFluidInTank(x);
-								if (!tile.tank.getFluid().isEmpty()) {
-									if (contents.isEmpty() || contents.getAmount() <= receptacle.getTankCapacity(x) - 100 && contents.is(tile.tank.getFluid().getFluid())) {
-										receptacle.fill(tile.tank.drain(new FluidStack(tile.tank.getFluid().getFluid(), 100), IFluidHandler.FluidAction.EXECUTE), IFluidHandler.FluidAction.EXECUTE);
-										tile.setChanged();
+							if (receptacle.getCapacityAsInt(x, FluidResource.EMPTY) > 0) {
+								FluidResource contents = receptacle.getResource(x);
+								if (!tile.tank.getResource(0).isEmpty()) {
+									if (contents.isEmpty() || receptacle.getAmountAsInt(x) <= receptacle.getCapacityAsInt(x, tile.tank.getResource(0)) - 100 && contents.getFluid().isSame(tile.tank.getResource(0).getFluid())) {
+                                        Transaction transaction = Transaction.openRoot();
+                                        if(tile.tank.extract(0, tile.tank.getResource(0), 100, transaction) == 100 && receptacle.insert(x, tile.tank.getResource(0), 100, transaction) == 100) {
+                                            transaction.commit();
+                                            tile.setChanged();
+                                        }
+                                        else
+                                            transaction.close();
 									}
 								}
 							}
@@ -289,12 +288,6 @@ public class BlockEntityAbsorptionHopper extends BlockEntityInventoryHelper impl
 			if (tile.prevTankAmount != tile.tank.getAmountAsInt(0))
 				tile.updateBlock();
 		}
-	}
-
-	@Override
-	@Nullable
-	public ItemStack removeItem(int index, int count) {
-		return ContainerHelper.removeItem(getItems(), index, count);
 	}
 
 	public boolean captureDroppedItems() {
@@ -355,38 +348,11 @@ public class BlockEntityAbsorptionHopper extends BlockEntityInventoryHelper impl
 	}
 
 	private boolean hasUpgrade() {
-		return !getItems().get(0).isEmpty() && getItems().get(0).getItem() == ModItems.ABSORPTION_UPGRADE.get();
+        return upgradeHandler.getResource(0).is(ModItems.ABSORPTION_UPGRADE.get());
 	}
 
 	public int getModifierAmount() {
-		return hasUpgrade() ? getItems().get(0).getCount() : 0;
-	}
-
-	@Nonnull
-	@Override
-	public ItemStack removeItemNoUpdate(int index) {
-		return ContainerHelper.takeItem(getItems(), index);
-	}
-
-	@Override
-	public boolean canPlaceItem(int slot, ItemStack stack) {
-		return slot != 0;
-	}
-
-	@Nonnull
-	@Override
-	public int[] getSlotsForFace(Direction side) {
-		return SLOTS;
-	}
-
-	@Override
-	public boolean canPlaceItemThroughFace(int slot, ItemStack stack, Direction direction) {
-		return canPlaceItem(slot, stack);
-	}
-
-	@Override
-	public boolean canTakeItemThroughFace(int slot, ItemStack stack, Direction direction) {
-		return slot != 0;
+		return hasUpgrade() ?  upgradeHandler.getAmountAsInt(0) : 0;
 	}
 
 	private boolean isInventoryFull(Container inventoryIn, Direction side) {
@@ -473,10 +439,6 @@ public class BlockEntityAbsorptionHopper extends BlockEntityInventoryHelper impl
 	}
 
 // FLUID & INVENTORY CAPABILITIES STUFF
-
-	protected IItemHandler createUnSidedHandler() {
-		return new InventoryWrapperAH(this);
-	}
 
 	public int getScaledFluid(int scale) {
 		return !tank.getResource(0).isEmpty() ? (int) ((float) tank.getAmountAsInt(0) / (float) tank.getCapacityAsInt(0, FluidResource.EMPTY) * scale) : 0;

@@ -39,11 +39,12 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
-import net.neoforged.neoforge.items.IItemHandler;
-import net.neoforged.neoforge.items.ItemHandlerHelper;
+import net.neoforged.neoforge.transfer.ResourceHandler;
 import net.neoforged.neoforge.transfer.fluid.FluidResource;
 import net.neoforged.neoforge.transfer.fluid.FluidStacksResourceHandler;
+import net.neoforged.neoforge.transfer.item.ItemResource;
 import net.neoforged.neoforge.transfer.item.ItemStacksResourceHandler;
+import net.neoforged.neoforge.transfer.transaction.Transaction;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -165,24 +166,24 @@ public class BlockEntityXPSolidifier extends BlockEntity implements MenuProvider
 
 				if (!level.isClientSide() &&  tile.outputDirection != OutputDirection.NONE && tile.getOutputFacing() != null) {
 					BlockEntity otherTile = level.getBlockEntity(worldPosition.relative(tile.getOutputFacing()));
-					Optional<IItemHandler> handlerOptional = CapHelper.getItemHandler(level, worldPosition.relative(tile.getOutputFacing()), tile.getOutputFacing().getOpposite());
+					Optional<ResourceHandler<ItemResource>> handlerOptional = CapHelper.getItemHandler(level, worldPosition.relative(tile.getOutputFacing()), tile.getOutputFacing().getOpposite());
 					if (otherTile != null && handlerOptional.isPresent()) {
 						handlerOptional.ifPresent((handler) -> {
-							if (!tile.outputSlot.getStackInSlot(0).isEmpty()) {
-								ItemStack stack = tile.outputSlot.getStackInSlot(0).copy();
-								stack.setCount(1);
-								ItemStack stack1 = ItemHandlerHelper.insertItem(handler, stack, true);
-								if (stack1.isEmpty()) {
-									ItemHandlerHelper.insertItem(handler, tile.outputSlot.extractItem(0, 1, false), false);
-									tile.setChanged();
-								}
+							if (!tile.outputSlot.getResource(0).isEmpty()) {
+								ItemResource stack = tile.outputSlot.getResource(0);
+                                Transaction transaction = Transaction.openRoot();
+                                if(handler.insert(stack, 1, transaction) == 1 && tile.outputSlot.extract(0, stack, 1, transaction) == 1) {
+                                    transaction.commit();
+                                    tile.setChanged();
+                                } else
+                                    transaction.close();
 							}
 						});
 					} else if (otherTile instanceof Container iinventory) {
-						if (tile.isInventoryFull(iinventory, tile.getOutputFacing()))
+						if (tile.isOtherInventoryFull(iinventory, tile.getOutputFacing()))
 							return;
-						if (!tile.outputSlot.getStackInSlot(0).isEmpty()) {
-							ItemStack stack = tile.outputSlot.getStackInSlot(0).copy();
+						if (!tile.outputSlot.getResource(0).isEmpty()) {
+							ItemStack stack = tile.outputSlot.getResource(0).toStack();
 							ItemStack stack1 = putStackInInventoryAllSlots(iinventory, tile.outputSlot.extractItem(0, 1, false), tile.getOutputFacing().getOpposite());
 							if (stack1.isEmpty() || stack1.getCount() == 0)
 								iinventory.setChanged();
@@ -275,7 +276,7 @@ public class BlockEntityXPSolidifier extends BlockEntity implements MenuProvider
 		return moulding_progress;
 	}
 
-	private boolean isInventoryFull(Container inventoryIn, Direction side) {
+	private boolean isOtherInventoryFull(Container inventoryIn, Direction side) {
 		if (inventoryIn instanceof WorldlyContainer isidedinventory) {
 			int[] aint = isidedinventory.getSlotsForFace(side);
 
