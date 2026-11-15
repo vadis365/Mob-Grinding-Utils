@@ -38,7 +38,6 @@ import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.fluids.FluidStack;
-import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.neoforged.neoforge.transfer.ResourceHandler;
 import net.neoforged.neoforge.transfer.fluid.FluidResource;
 import net.neoforged.neoforge.transfer.fluid.FluidStacksResourceHandler;
@@ -51,170 +50,182 @@ import javax.annotation.Nullable;
 import java.util.Optional;
 
 public class BlockEntityXPSolidifier extends BlockEntity implements MenuProvider, BEGuiClickable {
-	public FluidStacksResourceHandler tank = new FluidStacksResourceHandler(1, 1000 *  16);
-	private int prevFluidLevel = 0;
-	public int moulding_progress = 0;
-	public int MAX_MOULDING_TIME = 100;
-	public boolean isOn = false;
-	private RecipeHolder<SolidifyRecipe> currentRecipe = null;
+    public FluidStacksResourceHandler tank = new FluidStacksResourceHandler(1, 1000 *  16);
+    private int prevFluidLevel = 0;
+    public int moulding_progress = 0;
+    public int MAX_MOULDING_TIME = 100;
+    public boolean isOn = false;
+    private RecipeHolder<SolidifyRecipe> currentRecipe = null;
 
-	public ItemStacksResourceHandler inputSlots = new ItemStacksResourceHandler(2);
-	public ItemStacksResourceHandler outputSlot = new ItemStacksResourceHandler(1);
+    public ItemStacksResourceHandler inputSlots = new ItemStacksResourceHandler(2);
+    public ItemStacksResourceHandler outputSlot = new ItemStacksResourceHandler(1);
 
-	public boolean active;
-	public int animationTicks, prevAnimationTicks;
+    public boolean active;
+    public int animationTicks, prevAnimationTicks;
 
-	public BlockEntityXPSolidifier(BlockPos pos, BlockState state) {
-		super(ModBlocks.XPSOLIDIFIER.getTileEntityType(), pos, state);
-	}
+    public BlockEntityXPSolidifier(BlockPos pos, BlockState state) {
+        super(ModBlocks.XPSOLIDIFIER.getTileEntityType(), pos, state);
+    }
 
-	@Override
-	public void buttonClicked(int buttonID) {
-		switch (buttonID) {
-			case 0 -> toggleOutput();
-			case 1 -> toggleOnOff();
-		}
-		updateBlock();
-	}
+    @Override
+    public void buttonClicked(int buttonID) {
+        switch (buttonID) {
+            case 0 -> toggleOutput();
+            case 1 -> toggleOnOff();
+        }
+        updateBlock();
+    }
 
-	public enum OutputDirection implements StringRepresentable {
-		NONE("none"),
-		NORTH("north"),
-		EAST("east"),
-		SOUTH("south"),
-		WEST("west");
+    public enum OutputDirection implements StringRepresentable {
+        NONE("none"),
+        NORTH("north"),
+        EAST("east"),
+        SOUTH("south"),
+        WEST("west");
 
-		final String name;
-		OutputDirection(String nameIn) { name = nameIn; }
+        final String name;
+        OutputDirection(String nameIn) { name = nameIn; }
 
-		@Nonnull
-		@Override
-		public String getSerializedName() { return name; }
+        @Nonnull
+        @Override
+        public String getSerializedName() { return name; }
 
-		public static OutputDirection fromString(String string) {
-			for (OutputDirection direction : OutputDirection.values())
-				if (direction.name.equals(string))
-					return direction;
-			return OutputDirection.NONE;
-		}
-	}
+        public static OutputDirection fromString(String string) {
+            for (OutputDirection direction : OutputDirection.values())
+                if (direction.name.equals(string))
+                    return direction;
+            return OutputDirection.NONE;
+        }
+    }
 
-	public FluidStacksResourceHandler getTank(@Nullable Direction side) {
-		return tank;
-	}
-	public ItemStacksResourceHandler getOutput(@Nullable Direction side) {
-		return outputSlot;
-	}
+    public FluidStacksResourceHandler getTank(@Nullable Direction side) {
+        return tank;
+    }
+    public ItemStacksResourceHandler getOutput(@Nullable Direction side) {
+        return outputSlot;
+    }
 
-	public OutputDirection outputDirection = OutputDirection.NONE;
+    public OutputDirection outputDirection = OutputDirection.NONE;
 
-	public void toggleOutput() {
-		switch (outputDirection) {
-			case WEST -> outputDirection = OutputDirection.NONE;
-			case SOUTH -> outputDirection = OutputDirection.WEST;
-			case EAST -> outputDirection = OutputDirection.SOUTH;
-			case NORTH -> outputDirection = OutputDirection.EAST;
-			case NONE -> outputDirection = OutputDirection.NORTH;
-		}
-		setChanged();
-	}
+    public void toggleOutput() {
+        switch (outputDirection) {
+            case WEST -> outputDirection = OutputDirection.NONE;
+            case SOUTH -> outputDirection = OutputDirection.WEST;
+            case EAST -> outputDirection = OutputDirection.SOUTH;
+            case NORTH -> outputDirection = OutputDirection.EAST;
+            case NONE -> outputDirection = OutputDirection.NORTH;
+        }
+        setChanged();
+    }
 
-	public void toggleOnOff() {
-		isOn = !isOn;
-	}
+    public void toggleOnOff() {
+        isOn = !isOn;
+    }
 
-	public static <T extends BlockEntity> void tick(Level level, BlockPos worldPosition, BlockState blockState, T t) {
-		if(t instanceof BlockEntityXPSolidifier tile) {
-			if(tile.isOn) {
-				if (level.isClientSide() && tile.active) {
-					tile.prevAnimationTicks = tile.animationTicks;
-					if (tile.animationTicks < tile.MAX_MOULDING_TIME)
-						tile.animationTicks += 1 + tile.getModifierAmount();
-					if (tile.animationTicks >= tile.MAX_MOULDING_TIME) {
-						tile.animationTicks -= tile.MAX_MOULDING_TIME;
-						tile.prevAnimationTicks -= tile.MAX_MOULDING_TIME;
-					}
-				}
+    public static <T extends BlockEntity> void tick(Level level, BlockPos worldPosition, BlockState blockState, T t) {
+        if(t instanceof BlockEntityXPSolidifier tile) {
+            if(tile.isOn) {
+                if (level.isClientSide() && tile.active) {
+                    tile.prevAnimationTicks = tile.animationTicks;
+                    if (tile.animationTicks < tile.MAX_MOULDING_TIME)
+                        tile.animationTicks += 1 + tile.getModifierAmount();
+                    if (tile.animationTicks >= tile.MAX_MOULDING_TIME) {
+                        tile.animationTicks -= tile.MAX_MOULDING_TIME;
+                        tile.prevAnimationTicks -= tile.MAX_MOULDING_TIME;
+                    }
+                }
 
-				if (level.isClientSide() && !tile.active)
-					tile.prevAnimationTicks = tile.animationTicks = 0;
+                if (level.isClientSide() && !tile.active)
+                    tile.prevAnimationTicks = tile.animationTicks = 0;
 
-				if (tile.currentRecipe != null) {
-					if (!tile.currentRecipe.value().matches(tile.inputSlots.getResource(0).toStack()))
-						tile.currentRecipe = null;
-				} else {
-					if (tile.inputSlots.getAmountAsInt(0) != 0)
-						tile.currentRecipe = getRecipeForMould(tile.inputSlots.getResource(0).toStack());
-				}
+                if (tile.currentRecipe != null) {
+                    if (!tile.currentRecipe.value().matches(tile.inputSlots.getResource(0).toStack()))
+                        tile.currentRecipe = null;
+                } else {
+                    if (tile.inputSlots.getAmountAsInt(0) != 0)
+                        tile.currentRecipe = getRecipeForMould(tile.inputSlots.getResource(0).toStack());
+                }
 
 
-				if (tile.hasFluid() && tile.canOperate()) {
-					tile.setActive(true);
-					tile.setProgress(tile.getProgress() + 1 + tile.getModifierAmount());
-					if (tile.getProgress() >= tile.MAX_MOULDING_TIME) {
-						tile.setActive(false);
-						tile.outputSlot.setStackInSlot(0, tile.currentRecipe.value().result());
-						tile.tank.drain(tile.currentRecipe.value().fluidAmount(), IFluidHandler.FluidAction.EXECUTE);
-						return;
-					}
-				} else {
-					if (tile.getProgress() > 0) {
-						tile.setProgress(0);
-						tile.setActive(false);
-					}
-				}
+                if (tile.hasFluid() && tile.canOperate()) {
+                    tile.setActive(true);
+                    tile.setProgress(tile.getProgress() + 1 + tile.getModifierAmount());
+                    if (tile.getProgress() >= tile.MAX_MOULDING_TIME) {
+                        tile.setActive(false);
+                        Transaction transaction = Transaction.openRoot();
+                        if(tile.tank.extract(0, tile.tank.getResource(0), tile.currentRecipe.value().fluidAmount(), transaction) == tile.currentRecipe.value().fluidAmount()) {
+                            tile.outputSlot.set(0, ItemResource.of(tile.currentRecipe.value().result()), 1);
+                            transaction.commit();
+                        }
+                        else
+                            transaction.close();
+                        return;
+                    }
+                } else {
+                    if (tile.getProgress() > 0) {
+                        tile.setProgress(0);
+                        tile.setActive(false);
+                    }
+                }
 
-				if (!level.isClientSide() &&  tile.outputDirection != OutputDirection.NONE && tile.getOutputFacing() != null) {
-					BlockEntity otherTile = level.getBlockEntity(worldPosition.relative(tile.getOutputFacing()));
-					Optional<ResourceHandler<ItemResource>> handlerOptional = CapHelper.getItemHandler(level, worldPosition.relative(tile.getOutputFacing()), tile.getOutputFacing().getOpposite());
-					if (otherTile != null && handlerOptional.isPresent()) {
-						handlerOptional.ifPresent((handler) -> {
-							if (!tile.outputSlot.getResource(0).isEmpty()) {
-								ItemResource stack = tile.outputSlot.getResource(0);
+                if (!level.isClientSide() &&  tile.outputDirection != OutputDirection.NONE && tile.getOutputFacing() != null) {
+                    BlockEntity otherTile = level.getBlockEntity(worldPosition.relative(tile.getOutputFacing()));
+                    Optional<ResourceHandler<ItemResource>> handlerOptional = CapHelper.getItemHandler(level, worldPosition.relative(tile.getOutputFacing()), tile.getOutputFacing().getOpposite());
+                    if (otherTile != null && handlerOptional.isPresent()) {
+                        handlerOptional.ifPresent((handler) -> {
+                            if (!tile.outputSlot.getResource(0).isEmpty()) {
+                                ItemResource stack = tile.outputSlot.getResource(0);
                                 Transaction transaction = Transaction.openRoot();
                                 if(handler.insert(stack, 1, transaction) == 1 && tile.outputSlot.extract(0, stack, 1, transaction) == 1) {
                                     transaction.commit();
                                     tile.setChanged();
                                 } else
                                     transaction.close();
-							}
-						});
-					} else if (otherTile instanceof Container iinventory) {
-						if (tile.isOtherInventoryFull(iinventory, tile.getOutputFacing()))
-							return;
-						if (!tile.outputSlot.getResource(0).isEmpty()) {
-							ItemStack stack = tile.outputSlot.getResource(0).toStack();
-							ItemStack stack1 = putStackInInventoryAllSlots(iinventory, tile.outputSlot.extractItem(0, 1, false), tile.getOutputFacing().getOpposite());
-							if (stack1.isEmpty() || stack1.getCount() == 0)
-								iinventory.setChanged();
-							else
-								tile.outputSlot.setStackInSlot(0, stack);
-						}
-					}
-				}
-			}
-			else {
-				if (level.isClientSide())
-					tile.prevAnimationTicks = tile.animationTicks = 0;
+                            }
+                        });
+                    } else if (otherTile instanceof Container iInventory) {
+                        if (tile.isOtherInventoryFull(iInventory, tile.getOutputFacing()))
+                            return;
+                        if (!tile.outputSlot.getResource(0).isEmpty()) {
+                            Transaction transaction = Transaction.openRoot();
+                            ItemResource stack = tile.outputSlot.getResource(0);
+                            if(tile.outputSlot.extract(0, stack, 1, transaction) == 1) {
+                                ItemStack result = putStackInInventoryAllSlots(iInventory, stack.toStack(), tile.getOutputFacing().getOpposite());
+                                if (result.isEmpty() || result.getCount() == 0) {
+                                    iInventory.setChanged();
+                                    transaction.commit();
+                                }
+                                else
+                                    transaction.close();
+                            }
+                            else
+                                transaction.close();
+                        }
+                    }
+                }
+            }
+            else {
+                if (level.isClientSide())
+                    tile.prevAnimationTicks = tile.animationTicks = 0;
 
-				if (tile.getProgress() > 0) {
-					tile.setActive(false);
-					tile.setProgress(0);
-				}
-			}
+                if (tile.getProgress() > 0) {
+                    tile.setActive(false);
+                    tile.setProgress(0);
+                }
+            }
 
-			if (tile.prevFluidLevel != tile.tank.getAmountAsInt(0)){
-				tile.updateBlock();
-				tile.prevFluidLevel = tile.tank.getAmountAsInt(0);
-			}
-		}
-	}
+            if (tile.prevFluidLevel != tile.tank.getAmountAsInt(0)){
+                tile.updateBlock();
+                tile.prevFluidLevel = tile.tank.getAmountAsInt(0);
+            }
+        }
+    }
 
-	public void setActive(boolean isActive) {
-		active = isActive;
-	}
+    public void setActive(boolean isActive) {
+        active = isActive;
+    }
 
-	private Direction getOutputFacing() {
+    private Direction getOutputFacing() {
         return switch (outputDirection) {
             case WEST -> Direction.WEST;
             case SOUTH -> Direction.SOUTH;
@@ -225,210 +236,215 @@ public class BlockEntityXPSolidifier extends BlockEntity implements MenuProvider
 
     }
 
-	@OnlyIn(Dist.CLIENT)
-	public ItemStack getCachedOutPutRenderStack() {
-		if(hasMould()) {
-			if(inputSlots.getResource(0).is(ModItems.SOLID_XP_MOULD_BABY.get()))
-				return new ItemStack(ModItems.SOLID_XP_BABY.get(), 1);
-		}
-		return ItemStack.EMPTY;
-	}
+    @OnlyIn(Dist.CLIENT)
+    public ItemStack getCachedOutPutRenderStack() {
+        if(hasMould()) {
+            if(inputSlots.getResource(0).is(ModItems.SOLID_XP_MOULD_BABY.get()))
+                return new ItemStack(ModItems.SOLID_XP_BABY.get(), 1);
+        }
+        return ItemStack.EMPTY;
+    }
 
-	@OnlyIn(Dist.CLIENT)
-	public int getProgressScaled(int count) {
-		return getProgress() * count / (MAX_MOULDING_TIME);
-	}
+    @OnlyIn(Dist.CLIENT)
+    public int getProgressScaled(int count) {
+        return getProgress() * count / (MAX_MOULDING_TIME);
+    }
 
-	private boolean hasFluid() {
-		return currentRecipe != null && !tank.getResource(0).isEmpty() && tank.getAmountAsInt(0) >= currentRecipe.value().fluidAmount() && tank.getResource(0).is(ModTags.Fluids.EXPERIENCE);
-	}
+    private boolean hasFluid() {
+        return currentRecipe != null && !tank.getResource(0).isEmpty() && tank.getAmountAsInt(0) >= currentRecipe.value().fluidAmount() && tank.getResource(0).is(ModTags.Fluids.EXPERIENCE);
+    }
 
-	private boolean canOperate() {
-		return hasMould() && isOutputEmpty();
-	}
+    private boolean canOperate() {
+        return hasMould() && isOutputEmpty();
+    }
 
-	private boolean hasMould() {
-		return currentRecipe != null && currentRecipe.value().matches(inputSlots.getResource(0).toStack());
-	}
+    private boolean hasMould() {
+        return currentRecipe != null && currentRecipe.value().matches(inputSlots.getResource(0).toStack());
+    }
 
-	@Nullable
-	public static RecipeHolder<SolidifyRecipe> getRecipeForMould(ItemStack stack) {
-		return MobGrindingUtils.SOLIDIFIER_RECIPES.stream().filter(recipe -> recipe.value().matches(stack)).findFirst().orElse(null);
-	}
+    @Nullable
+    public static RecipeHolder<SolidifyRecipe> getRecipeForMould(ItemStack stack) {
+        return MobGrindingUtils.SOLIDIFIER_RECIPES.stream().filter(recipe -> recipe.value().matches(stack)).findFirst().orElse(null);
+    }
 
-	private boolean isOutputEmpty() {
-		return outputSlot.getResource(0).isEmpty();
-	}
+    private boolean isOutputEmpty() {
+        return outputSlot.getResource(0).isEmpty();
+    }
 
-	private boolean hasUpgrade() {
-		return !inputSlots.getResource(1).isEmpty() && inputSlots.getResource(1).getItem() == ModItems.XP_SOLIDIFIER_UPGRADE.get();
-	}
+    private boolean hasUpgrade() {
+        return !inputSlots.getResource(1).isEmpty() && inputSlots.getResource(1).getItem() == ModItems.XP_SOLIDIFIER_UPGRADE.get();
+    }
 
-	public int getModifierAmount() {
-		return hasUpgrade() ? inputSlots.getAmountAsInt(1) : 0;
-	}
+    public int getModifierAmount() {
+        return hasUpgrade() ? inputSlots.getAmountAsInt(1) : 0;
+    }
 
-	private void setProgress(int counter) {
-		moulding_progress = counter;
-	}
+    private void setProgress(int counter) {
+        moulding_progress = counter;
+    }
 
-	public int getProgress() {
-		return moulding_progress;
-	}
+    public int getProgress() {
+        return moulding_progress;
+    }
 
-	private boolean isOtherInventoryFull(Container inventoryIn, Direction side) {
-		if (inventoryIn instanceof WorldlyContainer isidedinventory) {
-			int[] aint = isidedinventory.getSlotsForFace(side);
+    private boolean isOtherInventoryFull(Container inventoryIn, Direction side) {
+        if (inventoryIn instanceof WorldlyContainer isidedinventory) {
+            int[] aint = isidedinventory.getSlotsForFace(side);
 
-			for (int k : aint) {
-				ItemStack itemstack1 = isidedinventory.getItem(k);
+            for (int k : aint) {
+                ItemStack itemstack1 = isidedinventory.getItem(k);
 
-				if (itemstack1.isEmpty() || itemstack1.getCount() != itemstack1.getMaxStackSize())
-					return false;
-			}
-		} else {
-			int i = inventoryIn.getContainerSize();
+                if (itemstack1.isEmpty() || itemstack1.getCount() != itemstack1.getMaxStackSize())
+                    return false;
+            }
+        } else {
+            int i = inventoryIn.getContainerSize();
 
-			for (int j = 0; j < i; ++j) {
-				ItemStack itemstack = inventoryIn.getItem(j);
+            for (int j = 0; j < i; ++j) {
+                ItemStack itemstack = inventoryIn.getItem(j);
 
-				if (itemstack.isEmpty() || itemstack.getCount() != itemstack.getMaxStackSize())
-					return false;
-			}
-		}
+                if (itemstack.isEmpty() || itemstack.getCount() != itemstack.getMaxStackSize())
+                    return false;
+            }
+        }
 
-		return true;
-	}
+        return true;
+    }
 
-	public static ItemStack putStackInInventoryAllSlots(Container inventory, ItemStack stack, @Nullable Direction facing) {
-		if (inventory instanceof WorldlyContainer isidedinventory && facing != null && !(inventory instanceof BlockEntityXPSolidifier) && inventory.canPlaceItem(0, stack.copy())) {
-			int[] aint = isidedinventory.getSlotsForFace(facing);
-			for (int k = 0; k < aint.length && !stack.isEmpty(); ++k)
-				stack = insertStack(inventory, stack, aint[k], facing);
-		} else {
-			int i = inventory.getContainerSize();
-			for (int j = 0; j < i && !stack.isEmpty(); ++j)
-				stack = insertStack(inventory, stack, j, facing);
-		}
-		return stack;
-	}
+    public static ItemStack putStackInInventoryAllSlots(Container inventory, ItemStack stack, @Nullable Direction facing) {
+        if (inventory instanceof WorldlyContainer isidedinventory && facing != null && !(inventory instanceof BlockEntityXPSolidifier) && inventory.canPlaceItem(0, stack.copy())) {
+            int[] aint = isidedinventory.getSlotsForFace(facing);
+            for (int k = 0; k < aint.length && !stack.isEmpty(); ++k)
+                stack = insertStack(inventory, stack, aint[k], facing);
+        } else {
+            int i = inventory.getContainerSize();
+            for (int j = 0; j < i && !stack.isEmpty(); ++j)
+                stack = insertStack(inventory, stack, j, facing);
+        }
+        return stack;
+    }
 
-	private static boolean canInsertItemInSlot(Container inventoryIn, ItemStack stack, int index, Direction side) {
-		return inventoryIn.canPlaceItem(index, stack) && (!(inventoryIn instanceof WorldlyContainer) || ((WorldlyContainer) inventoryIn).canPlaceItemThroughFace(index, stack, side));
-	}
+    private static boolean canInsertItemInSlot(Container inventoryIn, ItemStack stack, int index, Direction side) {
+        return inventoryIn.canPlaceItem(index, stack) && (!(inventoryIn instanceof WorldlyContainer) || ((WorldlyContainer) inventoryIn).canPlaceItemThroughFace(index, stack, side));
+    }
 
-	private static ItemStack insertStack( Container inventory, ItemStack stack, int index, Direction side) {
-		ItemStack itemstack = inventory.getItem(index);
-		if (canInsertItemInSlot(inventory, stack, index, side)) {
-			if (itemstack.isEmpty()) {
-				inventory.setItem(index, stack);
-				stack = ItemStack.EMPTY;
-			}
-			else if (canCombine(itemstack, stack)) {
-				int i = stack.getMaxStackSize() - itemstack.getCount();
-				int j = Math.min(stack.getCount(), i);
-				stack.shrink(j);
-				itemstack.grow(j);
-			}
-		}
-		return stack;
-	}
+    private static ItemStack insertStack( Container inventory, ItemStack stack, int index, Direction side) {
+        ItemStack itemstack = inventory.getItem(index);
+        if (canInsertItemInSlot(inventory, stack, index, side)) {
+            if (itemstack.isEmpty()) {
+                inventory.setItem(index, stack);
+                stack = ItemStack.EMPTY;
+            }
+            else if (canCombine(itemstack, stack)) {
+                int i = stack.getMaxStackSize() - itemstack.getCount();
+                int j = Math.min(stack.getCount(), i);
+                stack.shrink(j);
+                itemstack.grow(j);
+            }
+        }
+        return stack;
+    }
 
-	private static boolean canCombine(ItemStack stack1, ItemStack stack2) {
-		return stack1.getItem() != stack2.getItem() ? false : (stack1.getDamageValue() != stack2.getDamageValue() ? false : (stack1.getCount() > stack1.getMaxStackSize() ? false : ItemStack.isSameItemSameComponents(stack1, stack2)));
-	}
+    private static boolean canCombine(ItemStack stack1, ItemStack stack2) {
+        return stack1.getItem() != stack2.getItem() ? false : (stack1.getDamageValue() != stack2.getDamageValue() ? false : (stack1.getCount() > stack1.getMaxStackSize() ? false : ItemStack.isSameItemSameComponents(stack1, stack2)));
+    }
 
-	@Override
-	public void loadAdditional(@Nonnull ValueInput input) {
-		super.loadAdditional(input);
+    @Override
+    public void loadAdditional(@Nonnull ValueInput input) {
+        super.loadAdditional(input);
 
-		tank.readFromNBT(registries, nbt);
-		inputSlots.deserializeNBT(registries, nbt.getCompound("inputSlots"));
-		outputSlot.deserializeNBT(registries, nbt.getCompound("outputSlot"));
-		outputDirection = OutputDirection.fromString(nbt.getString("outputDirection"));
-		isOn = nbt.getBoolean("isOn");
-		active = nbt.getBoolean("active");
-		moulding_progress = nbt.getInt("moulding_progress");
-		if (nbt.contains("currentRecipe")) {
-			Identifier id = Identifier.tryParse(nbt.getString("currentRecipe"));
-			MobGrindingUtils.SOLIDIFIER_RECIPES.stream().filter(recipe -> recipe.id().equals(id))
-				.findFirst().ifPresent(recipe -> this.currentRecipe = recipe);
-		}
-	}
+        input.read("tank", FluidStack.CODEC)
+                .ifPresent(fluidStack -> tank.set(0, FluidResource.of(fluidStack.getFluid()), fluidStack.amount()));
 
-	@Override
-	public void saveAdditional(@Nonnull ValueOutput output) {
-		super.saveAdditional(output);
+        input.child("inputSlots").ifPresent(inputSlots::deserialize);
+        input.child("outputSlot").ifPresent(outputSlot::deserialize);
 
-		tank.writeToNBT(registries, nbt);
-		nbt.put("inputSlots", inputSlots.serializeNBT(registries));
-		nbt.put("outputSlot", outputSlot.serializeNBT(registries));
-		nbt.putString("outputDirection", outputDirection.getSerializedName());
-		nbt.putBoolean("isOn", isOn);
-		nbt.putBoolean("active", active);
-		nbt.putInt("moulding_progress", moulding_progress);
-		if (currentRecipe != null)
-			nbt.putString("currentRecipe", currentRecipe.id().toString());
-	}
+        input.getString("outputDirection").ifPresent(s -> outputDirection = OutputDirection.fromString(s));
+        isOn = input.getBooleanOr("isOn", false);
+        active = input.getBooleanOr("active", false);
+        moulding_progress = input.getIntOr("moulding_progress", 0);
+        input.getString("currentRecipe").ifPresent(s -> {
+            Identifier id = Identifier.tryParse(s);
+            MobGrindingUtils.SOLIDIFIER_RECIPES.stream().filter(recipe -> recipe.id().equals(id))
+                .findFirst().ifPresent(recipe -> this.currentRecipe = recipe);
+        });
+    }
 
-	@Nonnull
-	@Override
-	public CompoundTag getUpdateTag(@Nonnull HolderLookup.Provider registries) {
-		return saveCustomOnly(registries);
-	}
+    @Override
+    public void saveAdditional(@Nonnull ValueOutput output) {
+        super.saveAdditional(output);
 
-	@Override
-	public ClientboundBlockEntityDataPacket getUpdatePacket() {
-		return ClientboundBlockEntityDataPacket.create(this);
-	}
+        if (!tank.getResource(0).isEmpty())
+            output.store("tank", FluidStack.CODEC, tank.getResource(0).toStack(tank.getAmountAsInt(0)));
 
-	@Override
-	public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket packet, @Nonnull HolderLookup.Provider registries) {
-		super.onDataPacket(net, packet, registries);
-		loadAdditional(packet.getTag(), registries);
-		onContentsChanged();
-	}
+        inputSlots.serialize(output.child("inputSlots"));
+        outputSlot.serialize(output.child("outputSlot"));
+        output.putString("outputDirection", outputDirection.getSerializedName());
+        output.putBoolean("isOn", isOn);
+        output.putBoolean("active", active);
+        output.putInt("moulding_progress", moulding_progress);
+        if (currentRecipe != null)
+            output.putString("currentRecipe", currentRecipe.id().toString());
+    }
 
-	public void updateBlock() {
-		getLevel().sendBlockUpdated(worldPosition, getLevel().getBlockState(worldPosition), getLevel().getBlockState(worldPosition), 3);
-	}
+    @Nonnull
+    @Override
+    public CompoundTag getUpdateTag(@Nonnull HolderLookup.Provider registries) {
+        return saveCustomOnly(registries);
+    }
 
-	public void onContentsChanged() {
-		if (this.level != null && level.isClientSide()) {
-			final BlockState state = level.getBlockState(getBlockPos());
-			level.sendBlockUpdated(getBlockPos(), state, state, 8);
-			setChanged();
-		}
-	}
+    @Override
+    public ClientboundBlockEntityDataPacket getUpdatePacket() {
+        return ClientboundBlockEntityDataPacket.create(this);
+    }
 
-	public int getScaledFluid(int scale) {
-		return tank.getAmountAsInt(0) == 0 ? 0 : (int) ((float) tank.getAmountAsInt(0) / (float) tank.getCapacityAsInt(0, FluidResource.EMPTY) * scale);
-	}
+    @Override
+    public void onDataPacket(Connection net, ValueInput packet) {
+        super.onDataPacket(net, packet);
+        loadAdditional(packet);
+        onContentsChanged();
+    }
 
-	@Nonnull
-	@Override
-	public Component getDisplayName() {
-		return Component.translatable("block.mob_grinding_utils.xpsolidifier");
-	}
+    public void updateBlock() {
+        getLevel().sendBlockUpdated(worldPosition, getLevel().getBlockState(worldPosition), getLevel().getBlockState(worldPosition), 3);
+    }
 
-	@Nullable
-	@Override
-	public AbstractContainerMenu createMenu(int windowID, @Nonnull Inventory playerInventory, @Nonnull Player player) {
-		return new ContainerXPSolidifier(windowID, playerInventory, new FriendlyByteBuf(Unpooled.buffer()).writeBlockPos(worldPosition));
-	}
+    public void onContentsChanged() {
+        if (this.level != null && level.isClientSide()) {
+            final BlockState state = level.getBlockState(getBlockPos());
+            level.sendBlockUpdated(getBlockPos(), state, state, 8);
+            setChanged();
+        }
+    }
 
-	@Override
-	protected void applyImplicitComponents(@Nonnull DataComponentGetter componentInput) {
-		super.applyImplicitComponents(componentInput);
+    public int getScaledFluid(int scale) {
+        return tank.getAmountAsInt(0) == 0 ? 0 : (int) ((float) tank.getAmountAsInt(0) / (float) tank.getCapacityAsInt(0, FluidResource.EMPTY) * scale);
+    }
+
+    @Nonnull
+    @Override
+    public Component getDisplayName() {
+        return Component.translatable("block.mob_grinding_utils.xpsolidifier");
+    }
+
+    @Nullable
+    @Override
+    public AbstractContainerMenu createMenu(int windowID, @Nonnull Inventory playerInventory, @Nonnull Player player) {
+        return new ContainerXPSolidifier(windowID, playerInventory, new FriendlyByteBuf(Unpooled.buffer()).writeBlockPos(worldPosition));
+    }
+
+    @Override
+    protected void applyImplicitComponents(@Nonnull DataComponentGetter componentInput) {
+        super.applyImplicitComponents(componentInput);
 
         FluidStack fluidStack = componentInput.getOrDefault(MGUComponents.FLUID, FluidContents.EMPTY).get();
-		tank.set(0, FluidResource.of(fluidStack.getFluid()), fluidStack.amount());
-	}
+        tank.set(0, FluidResource.of(fluidStack.getFluid()), fluidStack.amount());
+    }
 
-	@Override
-	protected void collectImplicitComponents(@Nonnull DataComponentMap.Builder builder) {
-		super.collectImplicitComponents(builder);
+    @Override
+    protected void collectImplicitComponents(@Nonnull DataComponentMap.Builder builder) {
+        super.collectImplicitComponents(builder);
 
-		builder.set(MGUComponents.FLUID, FluidContents.of(tank.getResource(0).toStack(tank.getAmountAsInt(0))));
-	}
+        builder.set(MGUComponents.FLUID, FluidContents.of(tank.getResource(0).toStack(tank.getAmountAsInt(0))));
+    }
 }
