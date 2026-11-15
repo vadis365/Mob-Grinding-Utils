@@ -48,6 +48,8 @@ public class BlockEntitySinkTank extends BlockEntityTank {
                     PacketDistributor.sendToPlayersNear((ServerLevel) level, null, getBlockPos().getX(), getBlockPos().getY(), getBlockPos().getZ(), 30, new TapParticlePacket(getBlockPos().above()));
                     return true;
                 }
+                else
+                    transaction.close();
             }
         }
         return false;

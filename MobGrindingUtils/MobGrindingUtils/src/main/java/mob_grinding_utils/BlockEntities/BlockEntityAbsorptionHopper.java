@@ -38,8 +38,11 @@ import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
 import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.ItemHandlerHelper;
+import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.fluid.FluidResource;
 import net.neoforged.neoforge.transfer.fluid.FluidStacksResourceHandler;
 import net.neoforged.neoforge.transfer.item.ItemStacksResourceHandler;
+import net.neoforged.neoforge.transfer.transaction.Transaction;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -48,7 +51,7 @@ import java.util.Optional;
 
 
 public class BlockEntityAbsorptionHopper extends BlockEntityInventoryHelper implements MenuProvider, BEGuiClickable {
-	public FluidTank tank = new FluidTank(1000 *  16);
+	public FluidStacksResourceHandler tank = new FluidStacksResourceHandler(1, 1000 *  16);
 	private final IItemHandler itemHandler;
 	private static final int[] SLOTS = new int[] {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16};
 	public int prevTankAmount;
@@ -257,7 +260,7 @@ public class BlockEntityAbsorptionHopper extends BlockEntityInventoryHelper impl
 				}
 
 				if (tile.status[facing.ordinal()] == EnumStatus.STATUS_OUTPUT_FLUID) {
-					Optional<IFluidHandler> handlerOptional = CapHelper.getFluidHandler(level, worldPosition.relative(facing), facing.getOpposite());
+					Optional<ResourceHandler<FluidResource>> handlerOptional = CapHelper.getFluidHandler(level, worldPosition.relative(facing), facing.getOpposite());
 					handlerOptional.ifPresent((receptacle) -> {
 						int tanks = receptacle.getTanks();
 						for (int x = 0; x < tanks; x++) {
@@ -279,11 +282,11 @@ public class BlockEntityAbsorptionHopper extends BlockEntityInventoryHelper impl
 			if (level.getGameTime() % 3 == 0 && !level.hasNeighborSignal(worldPosition)) {
 				if (!tile.isInventoryFull(tile, null))
 					tile.captureDroppedItems();
-				if (tile.tank.getFluid().isEmpty() || tile.tank.getFluid().is(ModBlocks.FLUID_XP.get()))
+				if (tile.tank.getResource(0).isEmpty() || tile.tank.getResource(0).getFluid().isSame(ModBlocks.FLUID_XP.get()))
 					tile.captureDroppedXP();
 			}
 
-			if (tile.prevTankAmount != tile.tank.getFluidAmount())
+			if (tile.prevTankAmount != tile.tank.getAmountAsInt(0))
 				tile.updateBlock();
 		}
 	}
@@ -308,10 +311,15 @@ public class BlockEntityAbsorptionHopper extends BlockEntityInventoryHelper impl
 	public boolean captureDroppedXP() {
 		for (ExperienceOrb entity : getCaptureXP()) {
 			int xpAmount = entity.getValue();
-			if (tank.getFluidAmount() < tank.getCapacity() - xpAmount * 20) {
-				tank.fill(new FluidStack(ModBlocks.FLUID_XP.get(), xpAmount * 20), IFluidHandler.FluidAction.EXECUTE);
-				entity.value = 0;
-				entity.remove(Entity.RemovalReason.DISCARDED);
+			if (tank.getAmountAsInt(0) < tank.getCapacityAsInt(0, FluidResource.EMPTY) - xpAmount * 20) {
+                Transaction transaction = Transaction.openRoot();
+                if (tank.insert(0, FluidResource.of(ModBlocks.FLUID_XP), xpAmount * 20, transaction) == xpAmount * 20) {
+                    transaction.commit();
+                    entity.setValue(0);
+                    entity.remove(Entity.RemovalReason.DISCARDED);
+                }
+                else
+                    transaction.close();
 			}
 			return true;
 		}
@@ -471,7 +479,7 @@ public class BlockEntityAbsorptionHopper extends BlockEntityInventoryHelper impl
 	}
 
 	public int getScaledFluid(int scale) {
-		return tank.getFluid() != null ? (int) ((float) tank.getFluid().getAmount() / (float) tank.getCapacity() * scale) : 0;
+		return !tank.getResource(0).isEmpty() ? (int) ((float) tank.getAmountAsInt(0) / (float) tank.getCapacityAsInt(0, FluidResource.EMPTY) * scale) : 0;
 	}
 
 	@Override

@@ -1,16 +1,16 @@
 package mob_grinding_utils.inventory.server;
 
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.items.IItemHandler;
-import net.neoforged.neoforge.items.SlotItemHandler;
+import net.neoforged.neoforge.transfer.item.ItemStacksResourceHandler;
+import net.neoforged.neoforge.transfer.item.ResourceHandlerSlot;
 
 import javax.annotation.Nonnull;
 
-public class SlotRestrictSizeOnly extends SlotItemHandler {
+public class SlotRestrictSizeOnly extends ResourceHandlerSlot {
     private final int stackLimit;
 
-    public SlotRestrictSizeOnly(IItemHandler itemHandler, int index, int xPosition, int yPosition, int max) {
-        super(itemHandler, index, xPosition, yPosition);
+    public SlotRestrictSizeOnly(ItemStacksResourceHandler itemHandler, int index, int xPosition, int yPosition, int max) {
+        super(itemHandler, itemHandler::set, index, xPosition, yPosition);
         this.stackLimit = max;
     }
 
